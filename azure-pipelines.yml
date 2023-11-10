@@ -1,0 +1,63 @@
+# Node.js
+# Build a general Node.js project with npm.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+trigger:
+    branches:
+        include:
+            - main
+    tags:
+        include:
+            - 'v*'
+
+pool:
+    vmImage: ubuntu-latest
+
+stages:
+    - stage: Build
+      jobs:
+          - job: Ubuntu_x64
+            displayName: Build Ubuntu X64
+            steps:
+                - task: NodeTool@0
+                  inputs:
+                      versionSpec: '16.x'
+                  displayName: 'Install Node.js'
+
+                - task: Cache@2
+                  inputs:
+                      key: '"npm" | "$(Agent.OS)" | package-lock.json'
+                      restoreKeys: |
+                          npm | "$(Agent.OS)"
+                          npm
+                      path: $(System.DefaultWorkingDirectory)/node_modules
+                  displayName: Cache NPM packages
+
+                - script: |
+                      npm ci
+                      npm run build
+                  displayName: 'Build'
+
+                - publish: $(System.DefaultWorkingDirectory)/build
+                  artifact: DistFolder
+
+    #- stage: DeployStaging
+    #  displayName: Deploy Staging
+    #  dependsOn: Build
+    #  condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/main'))
+    #  jobs:
+    #      - job: AzureSWA
+    #        displayName: Deploy to static app
+    #        steps:
+    #            - download: current
+    #              artifact: DistFolder
+    #            - task: AzureStaticWebApp@0
+    #              inputs:
+    #                  app_location: 'DistFolder'
+    #                  #api_location: 's/api'
+    #                  output_location: 'DistFolder'
+    #                  cwd: $(Pipeline.Workspace)
+    #                  skip_api_build: true
+    #                  skip_app_build: true
+    #                  azure_static_web_apps_api_token: $(deployment_token)
