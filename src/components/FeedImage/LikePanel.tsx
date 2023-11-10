@@ -1,7 +1,7 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback } from 'react';
 import style from './style.module.css';
 import IconButton from '@mui/material/IconButton';
-import ActionPanel from '../ActionPanel';
+import ActionPanel from './ActionPanel';
 
 export type LikeKind = 'none' | 'like' | 'love' | 'laugh' | 'wow' | 'anger' | 'sad';
 

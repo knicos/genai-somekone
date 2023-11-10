@@ -1,7 +1,7 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback } from 'react';
 import style from './style.module.css';
 import { Button } from '@mui/material';
-import ActionPanel from '../ActionPanel';
+import ActionPanel from './ActionPanel';
 import PersonIcon from '@mui/icons-material/Person';
 import PeopleIcon from '@mui/icons-material/People';
 import PublicIcon from '@mui/icons-material/Public';
