@@ -1,0 +1,200 @@
+.instaImage {
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.placeholder {
+    width: 500px;
+    height: 500px;
+    flex-shrink: 0;
+}
+
+.buttonRow {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-top: 0.4rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-bottom: 0.5rem;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    /*background: #0000005e;*/
+    color: white;
+}
+
+.buttonRow :global .MuiButtonBase-root {
+    background: #00000022;
+}
+
+.buttonRow :global .MuiButtonBase-root:hover {
+    background: #0000005e;
+    transform: scale(1.1);
+}
+
+.captionRow {
+    padding-left: 0.4rem;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    /*margin-bottom: 2rem;*/
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+    max-width: 500px;
+    width: 100%;
+}
+
+.imageContainer {
+    position: relative;
+    filter: brightness(0.5);
+    transition: filter 0.4s;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.activeImageContainer {
+    composes: imageContainer;
+    filter: brightness(1);
+}
+
+.name {
+    font-weight: bold;
+    margin-top: 0.8rem;
+    margin-bottom: 1rem;
+    padding-left: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: white;
+}
+
+.author {
+    text-shadow: 0 0 5px black;
+}
+
+.avatar {
+    border-radius: 50%;
+    width: 1.7rem;
+    height: 1.7rem;
+    border: 2px solid silver;
+    background: pink;
+}
+
+.liked {
+    color: red;
+}
+
+.iconContainer {
+    width: 35px;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 35px;
+}
+
+.likeIcon {
+    font-size: 25px;
+}
+
+.bubble {
+    background: white;
+    border-radius: 41px;
+    padding: 0.2rem;
+    border-bottom-left-radius: 0;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 5px #888;
+}
+
+.panel {
+    position: absolute;
+    animation: fadein 0.2s;
+}
+
+.left {
+    left: 1rem;
+}
+
+.right {
+    right: 1rem;
+}
+
+.top {
+    top: calc(1rem + 51px);
+}
+
+.bottom {
+    bottom: calc(1rem + 51px);
+}
+
+.hfull {
+    left: 1rem;
+    right: 1rem;
+}
+
+.panel :global .MuiButtonBase-root:hover {
+    transform: scale(1.1);
+}
+
+.likeIcon {
+    font-size: 25px;
+}
+
+@keyframes fadein {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.commentbubble {
+    background: white;
+    border-radius: 10px;
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 5px #888;
+}
+
+.commentbubble input {
+    padding: 0.5rem;
+}
+
+.commentList {
+    padding: 0.5rem;
+    margin-top: 1rem;
+}
+
+.sharecontainer {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    align-items: flex-end;
+}
+
+.sharecontainer :global .MuiButtonBase-root {
+    background: white;
+    text-transform: none;
+    box-shadow: 0 0 5px #888;
+    padding: 0.5rem 1rem;
+}
+
+.shareLabel {
+    font-weight: bold;
+    color: white;
+    text-shadow: 0 0 5px black;
+}

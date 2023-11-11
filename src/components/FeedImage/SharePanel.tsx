@@ -29,7 +29,7 @@ export default function SharePanel({ onClose, onChange }: Props) {
             vertical="bottom"
             onClose={onClose}
         >
-            <div className={style.container}>
+            <div className={style.sharecontainer}>
                 <div className={style.shareLabel}>Share with</div>
                 <Button
                     date-type="individual"

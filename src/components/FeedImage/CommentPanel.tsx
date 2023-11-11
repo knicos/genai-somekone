@@ -22,7 +22,7 @@ export default function CommentPanel({ onClose }: Props) {
             vertical="bottom"
             onClose={onClose}
         >
-            <div className={style.bubble}>
+            <div className={style.commentbubble}>
                 <TextField
                     variant="outlined"
                     placeholder="write a comment..."

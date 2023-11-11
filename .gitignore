@@ -3,3 +3,4 @@ build
 .env
 .vite
 dist
+storybook-static
