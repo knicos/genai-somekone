@@ -11,7 +11,7 @@ export async function loadFile(file: File | Blob): Promise<void> {
 
     const promises: Promise<void>[] = [];
 
-    zip.forEach((path: string, data: JSZip.JSZipObject) => {
+    zip.forEach((_, data: JSZip.JSZipObject) => {
         if (data.name === 'content.json') {
             promises.push(
                 data.async('string').then((r) => {

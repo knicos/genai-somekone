@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import style from './style.module.css';
 import ImageFeed from '../../components/ImageFeed/ImageFeed';
 import { loadFile } from '../../services/loader/fileLoader';
