@@ -22,7 +22,7 @@ export interface Edge {
     weight: number;
     source: string;
     destination: string;
-    metadata: any;
+    metadata: unknown;
 }
 
 export interface WeightedNode {

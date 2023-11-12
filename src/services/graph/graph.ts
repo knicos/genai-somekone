@@ -116,7 +116,7 @@ export function getEdges(node: string | string[], count?: number): Edge[] {
             const n = node[i];
             const candidates = edgeSrcIndex.get(n);
             if (candidates) {
-                resultSet.push.apply(resultSet, candidates);
+                resultSet.push(...candidates);
             }
             if (count && resultSet.length > count) break;
         }
@@ -138,14 +138,14 @@ export function getEdgesOfType(type: EdgeType | EdgeType[], node: string | strin
                     const t = type[j];
                     const candidates = edgeTypeSrcIndex.get(`${t}:${n}`);
                     if (candidates) {
-                        resultSet.push.apply(resultSet, candidates);
+                        resultSet.push(...candidates);
                     }
                     if (count && resultSet.length > count) break;
                 }
             } else {
                 const candidates = edgeTypeSrcIndex.get(`${type}:${n}`);
                 if (candidates) {
-                    resultSet.push.apply(resultSet, candidates);
+                    resultSet.push(...candidates);
                 }
             }
             if (count && resultSet.length > count) break;
@@ -158,7 +158,7 @@ export function getEdgesOfType(type: EdgeType | EdgeType[], node: string | strin
                 const t = type[i];
                 const candidates = edgeTypeSrcIndex.get(`${t}:${node}`);
                 if (candidates) {
-                    resultSet.push.apply(resultSet, candidates);
+                    resultSet.push(...candidates);
                 }
                 if (count && resultSet.length > count) break;
             }

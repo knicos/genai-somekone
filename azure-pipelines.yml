@@ -15,7 +15,24 @@ pool:
     vmImage: ubuntu-latest
 
 stages:
+    - stage: Static
+      jobs:
+          - job: ESLint
+            displayName: ESLint
+            steps:
+                - task: Cache@2
+                  inputs:
+                      key: '"npm" | "$(Agent.OS)" | package-lock.json'
+                      restoreKeys: |
+                          npm | "$(Agent.OS)"
+                          npm
+                      path: $(System.DefaultWorkingDirectory)/node_modules
+                  displayName: Cache NPM packages
+                - script: |
+                      npm ci
+                      npm run lint
     - stage: Build
+      dependsOn: Static
       jobs:
           - job: Ubuntu_x64
             displayName: Build Ubuntu X64
@@ -42,22 +59,76 @@ stages:
                 - publish: $(System.DefaultWorkingDirectory)/dist
                   artifact: DistFolder
 
-    #- stage: DeployStaging
-    #  displayName: Deploy Staging
-    #  dependsOn: Build
-    #  condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/main'))
-    #  jobs:
-    #      - job: AzureSWA
-    #        displayName: Deploy to static app
-    #        steps:
-    #            - download: current
-    #              artifact: DistFolder
-    #            - task: AzureStaticWebApp@0
-    #              inputs:
-    #                  app_location: 'DistFolder'
-    #                  #api_location: 's/api'
-    #                  output_location: 'DistFolder'
-    #                  cwd: $(Pipeline.Workspace)
-    #                  skip_api_build: true
-    #                  skip_app_build: true
-    #                  azure_static_web_apps_api_token: $(deployment_token)
+    - stage: Test
+      dependsOn: Build
+      jobs:
+          - job: Ubuntu_x64
+            displayName: Test Ubuntu X64
+            steps:
+                - task: Cache@2
+                  inputs:
+                      key: '"npm" | "$(Agent.OS)" | package-lock.json'
+                      restoreKeys: |
+                          npm | "$(Agent.OS)"
+                          npm
+                      path: $(System.DefaultWorkingDirectory)/node_modules
+                  displayName: Cache NPM packages
+                - download: current
+                  artifact: DistFolder
+                - script: |
+                      npm ci
+                      CI=true npm test
+                  displayName: 'Test'
+                - task: PublishTestResults@2
+                  displayName: Publish Test Results
+                  condition: succeededOrFailed()
+                  inputs:
+                      testRunner: JUnit
+                      testResultsFiles: '**/junit.xml'
+
+    - stage: DeployProduction
+      displayName: Deploy Production
+      dependsOn: Test
+      condition: and(succeeded(), contains(variables['build.sourceBranch'], 'refs/tags/v'))
+      jobs:
+          - job: AzureSWA
+            displayName: Deploy to static app
+            steps:
+                - download: current
+                  artifact: DistFolder
+                - task: AzureStaticWebApp@0
+                  inputs:
+                      app_location: 'DistFolder'
+                      output_location: 'DistFolder'
+                      cwd: $(Pipeline.Workspace)
+                      skip_api_build: true
+                      skip_app_build: true
+                      azure_static_web_apps_api_token: $(deployment_token)
+          #- job: Github
+          #  displayName: Github Mirror
+          #  steps:
+          #      - script: |
+          #            git config user.name "Nicolas Pope"
+          #            git config user.email "npope@uef.fi"
+          #            git fetch --unshallow origin
+          #            git push --prune $(git_token) +refs/remotes/origin/*:refs/heads/* +refs/tags/*:refs/tags/*
+
+    - stage: DeployStaging
+      displayName: Deploy Staging
+      dependsOn: Test
+      condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/main'))
+      jobs:
+          - job: AzureSWA
+            displayName: Deploy to static app
+            steps:
+                - download: current
+                  artifact: DistFolder
+                - task: AzureStaticWebApp@0
+                  inputs:
+                      app_location: 'DistFolder'
+                      output_location: 'DistFolder'
+                      cwd: $(Pipeline.Workspace)
+                      skip_api_build: true
+                      skip_app_build: true
+                      azure_static_web_apps_api_token: $(deployment_token)
+                      deployment_environment: staging

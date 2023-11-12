@@ -9,10 +9,14 @@ import {
 } from 'react-router-dom';
 import './App.css';
 
+interface RouterError {
+    status: number;
+}
+
 function ErrorComponent() {
     const error = useRouteError();
 
-    if ((error as any).status === 404) {
+    if ((error as RouterError).status === 404) {
         return (
             <section className="errorView">
                 <h1>Page not found</h1>

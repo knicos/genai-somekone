@@ -1,6 +1,6 @@
 import { getNodesByType, getRelated } from '../graph/graph';
 import { getTasteProfile } from '../profiler/profiler';
-import { getTopicId, getTopicLabel } from '../concept/concept';
+import { getTopicLabel } from '../concept/concept';
 
 const factors = new Map<string, number>();
 

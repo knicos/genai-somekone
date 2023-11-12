@@ -65,7 +65,7 @@ export default function ImageFeed({ images, onView, onMore, onLog }: Props) {
     }, [onLog]);
 
     const doEnter = useCallback(
-        (e: any) => {
+        (e: unknown) => {
             setActive(true);
             console.log(e);
             onLog({ activity: 'begin', timestamp: Date.now() });

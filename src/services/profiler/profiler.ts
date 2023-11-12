@@ -1,10 +1,10 @@
 import { LogEntry } from './profilerTypes';
-import { addEdge, addNode, addOrAccumulateEdge, getEdgeWeights, getRelated } from '../graph/graph';
-import { getTopicChildren, getTopicLabel, getTopicParent } from '../concept/concept';
+import { addNode, addOrAccumulateEdge, getRelated } from '../graph/graph';
+import { getTopicLabel } from '../concept/concept';
 
 let userID: string;
 
-function updateParentAffinity(topic: string) {
+/*function updateParentAffinity(topic: string) {
     const parent = getTopicParent(topic);
 
     if (parent) {
@@ -20,7 +20,7 @@ function updateParentAffinity(topic: string) {
         addEdge('topic', userID, parent.id, affinity);
         updateParentAffinity(parent.id);
     }
-}
+}*/
 
 function affinityBoost(content: string, weight: number) {
     const topics = getRelated('topic', content || '');
