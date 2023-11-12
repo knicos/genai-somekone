@@ -1,33 +1,76 @@
-import { useState } from 'react';
-import reactLogo from './assets/react.svg';
+import React from 'react';
+import {
+    RouterProvider,
+    Route,
+    createBrowserRouter,
+    createRoutesFromElements,
+    useRouteError,
+    Navigate,
+} from 'react-router-dom';
 import './App.css';
 
-function App() {
-    const [count, setCount] = useState(0);
+function ErrorComponent() {
+    const error = useRouteError();
+
+    if ((error as any).status === 404) {
+        return (
+            <section className="errorView">
+                <h1>Page not found</h1>
+            </section>
+        );
+    }
 
     return (
-        <>
-            <div>
+        <section className="errorView">
+            <h1>Something went wrong</h1>
+            <p>
+                Please report this issue to{' '}
                 <a
-                    href="https://react.dev"
+                    href="https://github.com/knicos/genai-tm/issues"
                     target="_blank"
+                    rel="noreferrer"
                 >
-                    <img
-                        src={reactLogo}
-                        className="logo react"
-                        alt="React logo"
+                    our project on github
+                </a>{' '}
+                if you have time, including the information below. Refresh the page to try again.
+            </p>
+            <p className="code">{JSON.stringify(error)}</p>
+        </section>
+    );
+}
+
+const router = createBrowserRouter(
+    createRoutesFromElements(
+        <Route
+            path="/"
+            ErrorBoundary={ErrorComponent}
+        >
+            <Route
+                index
+                element={
+                    <Navigate
+                        replace
+                        to="/app/genagram"
                     />
-                </a>
-            </div>
-            <h1>Vite + React</h1>
-            <div className="card">
-                <button onClick={() => setCount((count) => count + 1)}>count is {count}</button>
-                <p>
-                    Edit <code>src/App.tsx</code> and save to test HMR
-                </p>
-            </div>
-            <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
-        </>
+                }
+            />
+            <Route
+                path="app/genagram/:code"
+                lazy={() => import('./views/Genagram/Genagram')}
+            />
+            <Route
+                path="app/genagram"
+                lazy={() => import('./views/Genagram/Genagram')}
+            />
+        </Route>
+    )
+);
+
+function App() {
+    return (
+        <React.Suspense fallback={<div></div>}>
+            <RouterProvider router={router} />
+        </React.Suspense>
     );
 }
 

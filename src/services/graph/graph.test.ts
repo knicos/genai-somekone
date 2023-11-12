@@ -1,5 +1,5 @@
 import { describe, it, beforeEach } from 'vitest';
-import { addNode, getNodeType, resetGraph } from './graph';
+import { addNode, getNodeType, resetGraph, getNodesByType } from './graph';
 
 describe('graph.addNode', () => {
     beforeEach(() => resetGraph());
@@ -34,5 +34,22 @@ describe('graph.getNodeType', () => {
 
     it('returns null if the id does not exist', async ({ expect }) => {
         expect(getNodeType('somenodeid')).toBeNull();
+    });
+});
+
+describe('graph.getNodesByType', () => {
+    beforeEach(() => resetGraph());
+
+    it('returns all nodes of a type only', async ({ expect }) => {
+        const id1 = addNode('content');
+        const id2 = addNode('content');
+        const id3 = addNode('topic');
+
+        const nodes = getNodesByType('content');
+
+        expect(nodes).toHaveLength(2);
+        expect(nodes).toContain(id1);
+        expect(nodes).toContain(id2);
+        expect(nodes).not.toContain(id3);
     });
 });

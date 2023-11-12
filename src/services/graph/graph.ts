@@ -16,6 +16,30 @@ export function resetGraph() {
     edgeTypeSrcIndex.clear();
 }
 
+export function removeNode(id: string) {
+    // Remove all edges first.
+    const edges = edgeSrcIndex.get(id);
+    if (edges) {
+        edges.forEach((edge) => {
+            const id = `${edge.destination}:${edge.type}:${edge.source}`;
+            const srctypeid = `${edge.type}:${edge.source}`;
+            edgeStore.delete(id);
+            edgeSrcIndex.delete(edge.source);
+            edgeTypeSrcIndex.delete(srctypeid);
+        });
+    }
+
+    const node = nodeStore.get(id);
+    if (node) {
+        const typeIndex = nodeTypeIndex.get(node.type);
+        nodeTypeIndex.set(
+            node.type,
+            (typeIndex || []).filter((f) => f.id !== id)
+        );
+        nodeStore.delete(id);
+    }
+}
+
 export function addNode(type: NodeType, id?: string): string {
     const nid = id ? id : uuidv4();
     if (nodeStore.has(nid)) throw new Error('id_exists');
