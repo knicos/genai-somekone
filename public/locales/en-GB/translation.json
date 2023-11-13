@@ -1,0 +1,23 @@
+{
+    "feed": {
+        "actions": {
+            "follow": "Follow",
+            "unfollow": "Unfollow",
+            "share": {
+                "private": "Private",
+                "friends": "Friends",
+                "everyone": "Everyone"
+            }
+        },
+        "titles": {
+            "shareWith": "Share with",
+            "main": "Genagram"
+        },
+        "placeholders": {
+            "comment": "write a comment here..."
+        },
+        "messages": {
+            "noComments": "No comments yet."
+        }
+    }
+}

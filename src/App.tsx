@@ -7,6 +7,7 @@ import {
     useRouteError,
     Navigate,
 } from 'react-router-dom';
+import { RecoilRoot } from 'recoil';
 import './App.css';
 
 interface RouterError {
@@ -73,7 +74,9 @@ const router = createBrowserRouter(
 function App() {
     return (
         <React.Suspense fallback={<div></div>}>
-            <RouterProvider router={router} />
+            <RecoilRoot>
+                <RouterProvider router={router} />
+            </RecoilRoot>
         </React.Suspense>
     );
 }

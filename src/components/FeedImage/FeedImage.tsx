@@ -11,6 +11,7 @@ import Avatar from '@mui/material/Avatar';
 import SharePanel, { ShareKind } from './SharePanel';
 import CommentPanel from './CommentPanel';
 import { getContentData, getContentMetadata } from '../../services/content/content';
+import { useTranslation } from 'react-i18next';
 
 type ActionPanel = 'none' | 'like' | 'comment' | 'share' | 'discard' | 'author';
 
@@ -68,6 +69,7 @@ function stringAvatar(name: string) {
 }
 
 export default function FeedImage({ id, onClick, onLike, onFollow, onShare, active, visible }: Props) {
+    const { t } = useTranslation();
     const contentData = getContentData(id); //useRecoilValue(contentCache(id));
     const contentMeta = getContentMetadata(id);
     const [liked, setLiked] = useState<LikeKind>('none');
@@ -130,7 +132,7 @@ export default function FeedImage({ id, onClick, onLike, onFollow, onShare, acti
                         size="small"
                         onClick={doFollow}
                     >
-                        {followed ? 'Unfollow' : 'Follow'}
+                        {followed ? t('feed.actions.unfollow') : t('feed.actions.follow')}
                     </SButton>
                 </div>
                 <img

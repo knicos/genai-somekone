@@ -77,7 +77,7 @@ stages:
                   artifact: DistFolder
                 - script: |
                       npm ci
-                      CI=true npm test
+                      CI=true npm run ci:test
                   displayName: 'Test'
                 - task: PublishTestResults@2
                   displayName: Publish Test Results

@@ -5,12 +5,14 @@ import { loadFile } from '../../services/loader/fileLoader';
 import { generateFeed } from '../../services/recommender/recommender';
 import { LogEntry } from '../../services/profiler/profilerTypes';
 import { addLogEntry } from '../../services/profiler/profiler';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
     content?: string;
 }
 
 export default function Feed({ content }: Props) {
+    const { t } = useTranslation();
     const [feedList, setFeedList] = useState<string[]>([]);
 
     const doMore = useCallback(() => {
@@ -45,7 +47,7 @@ export default function Feed({ content }: Props) {
                         width={48}
                         height={48}
                     />
-                    <h1>Genagram</h1>
+                    <h1>{t('feed.titles.main')}</h1>
                 </div>
             </div>
 

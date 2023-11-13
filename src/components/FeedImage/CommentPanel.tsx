@@ -1,6 +1,7 @@
 import style from './style.module.css';
 import TextField from '@mui/material/TextField';
 import ActionPanel from './ActionPanel';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
     onClose?: () => void;
@@ -8,6 +9,7 @@ interface Props {
 }
 
 export default function CommentPanel({ onClose }: Props) {
+    const { t } = useTranslation();
     /*const doClick = useCallback(
         (e: React.MouseEvent) => {
             if (onChange) onChange();
@@ -25,9 +27,9 @@ export default function CommentPanel({ onClose }: Props) {
             <div className={style.commentbubble}>
                 <TextField
                     variant="outlined"
-                    placeholder="write a comment..."
+                    placeholder={t('feed.placeholders.comment')}
                 />
-                <div className={style.commentList}>No comments yet.</div>
+                <div className={style.commentList}>{t('feed.messages.noComments')}</div>
             </div>
         </ActionPanel>
     );
