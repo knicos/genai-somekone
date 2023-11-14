@@ -31,7 +31,10 @@ export default function SharePanel({ onClose, onChange }: Props) {
             vertical="bottom"
             onClose={onClose}
         >
-            <div className={style.sharecontainer}>
+            <div
+                className={style.sharecontainer}
+                data-testid="feed-image-share-panel"
+            >
                 <div className={style.shareLabel}>{t('feed.titles.shareWith')}</div>
                 <Button
                     date-type="individual"
@@ -44,6 +47,7 @@ export default function SharePanel({ onClose, onChange }: Props) {
                     data-type="friends"
                     onClick={doClick}
                     startIcon={<PeopleIcon />}
+                    data-testid="share-friends-button"
                 >
                     {t('feed.actions.share.friends')}
                 </Button>

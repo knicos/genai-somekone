@@ -14,7 +14,8 @@ export type LogActivity =
     | 'dwell'
     | 'follow'
     | 'begin'
-    | 'end';
+    | 'end'
+    | 'seen';
 
 export interface LogEntry {
     activity: LogActivity;

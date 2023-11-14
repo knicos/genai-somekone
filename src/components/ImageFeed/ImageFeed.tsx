@@ -16,7 +16,7 @@ interface Props {
 
 export default function ImageFeed({ images, onView, onMore, onLog }: Props) {
     const containerRef = useRef<HTMLDivElement>(null);
-    const [viewed, setViewed] = useState(-1);
+    const [viewed, setViewed] = useState(0);
     const prevRef = useRef<number>(-1);
     const startRef = useRef<number>(0);
     const canMoreRef = useRef(true);
@@ -30,6 +30,7 @@ export default function ImageFeed({ images, onView, onMore, onLog }: Props) {
     useEffect(() => {
         const now = Date.now();
         if (viewed === prevRef.current) return;
+        onLog({ activity: 'seen', id: images[viewed], timestamp: Date.now() });
         if (prevRef.current >= 0) {
             const delta = now - startRef.current;
             //if (delta > 1000) {
@@ -64,15 +65,11 @@ export default function ImageFeed({ images, onView, onMore, onLog }: Props) {
         onLog({ activity: 'end', timestamp: Date.now(), value: Date.now() - durationRef.current });
     }, [onLog]);
 
-    const doEnter = useCallback(
-        (e: unknown) => {
-            setActive(true);
-            console.log(e);
-            onLog({ activity: 'begin', timestamp: Date.now() });
-            durationRef.current = Date.now();
-        },
-        [onLog]
-    );
+    const doEnter = useCallback(() => {
+        setActive(true);
+        onLog({ activity: 'begin', timestamp: Date.now() });
+        durationRef.current = Date.now();
+    }, [onLog]);
 
     const doLike = useCallback(
         (id: string, kind: LikeKind) => {
@@ -111,6 +108,13 @@ export default function ImageFeed({ images, onView, onMore, onLog }: Props) {
         [onLog]
     );
 
+    const doComment = useCallback(
+        (id: string, l: number) => {
+            onLog({ activity: 'comment', id, timestamp: Date.now(), value: l });
+        },
+        [onLog]
+    );
+
     return (
         <div
             className={style.outer}
@@ -131,6 +135,7 @@ export default function ImageFeed({ images, onView, onMore, onLog }: Props) {
                         onLike={doLike}
                         onFollow={doFollow}
                         onShare={doShare}
+                        onComment={doComment}
                         active={active && (ix === viewed || (ix === 0 && viewed === -1))}
                         visible={Math.abs(ix - viewed) < 5}
                     />

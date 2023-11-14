@@ -26,11 +26,15 @@ export default function LikePanel({ onClose, onChange }: Props) {
             vertical="bottom"
             onClose={onClose}
         >
-            <div className={style.bubble}>
+            <div
+                className={style.bubble}
+                data-testid="feed-image-like-panel"
+            >
                 <IconButton
                     color="inherit"
                     data-type="like"
                     onClick={doClick}
+                    data-testid="like-button"
                 >
                     <span className={style.likeIcon}>👍</span>
                 </IconButton>
@@ -52,6 +56,7 @@ export default function LikePanel({ onClose, onChange }: Props) {
                     color="inherit"
                     data-type="wow"
                     onClick={doClick}
+                    data-testid="wow-button"
                 >
                     <span className={style.likeIcon}>😯</span>
                 </IconButton>

@@ -68,7 +68,7 @@ function stringAvatar(name: string) {
     };
 }
 
-export default function FeedImage({ id, onClick, onLike, onFollow, onShare, active, visible }: Props) {
+export default function FeedImage({ id, onClick, onLike, onFollow, onShare, onComment, active, visible }: Props) {
     const { t } = useTranslation();
     const contentData = getContentData(id); //useRecoilValue(contentCache(id));
     const contentMeta = getContentMetadata(id);
@@ -92,6 +92,15 @@ export default function FeedImage({ id, onClick, onLike, onFollow, onShare, acti
             if (onShare) onShare(id, kind);
         },
         [onShare, id]
+    );
+
+    const doComment = useCallback(
+        (l: number) => {
+            if (onComment) {
+                onComment(id, l);
+            }
+        },
+        [onComment]
     );
 
     const doShowPanel = useCallback(() => {
@@ -131,6 +140,7 @@ export default function FeedImage({ id, onClick, onLike, onFollow, onShare, acti
                         variant={followed ? 'outlined' : 'contained'}
                         size="small"
                         onClick={doFollow}
+                        data-testid="feed-image-follow-button"
                     >
                         {followed ? t('feed.actions.unfollow') : t('feed.actions.follow')}
                     </SButton>
@@ -140,12 +150,14 @@ export default function FeedImage({ id, onClick, onLike, onFollow, onShare, acti
                     className={style.instaImage}
                     src={contentData}
                     alt="Insta Upload"
+                    data-testid="feed-image-element"
                 />
                 <div className={style.buttonRow}>
                     <IconButton
                         className={liked !== 'none' ? style.liked : ''}
                         onClick={doShowPanel}
                         color="inherit"
+                        data-testid="feed-image-like-button"
                     >
                         {liked !== 'none' ? (
                             <div className={style.iconContainer}>{LIKEMAP[liked]}</div>
@@ -159,6 +171,7 @@ export default function FeedImage({ id, onClick, onLike, onFollow, onShare, acti
                     <IconButton
                         color="inherit"
                         onClick={doShowComments}
+                        data-testid="feed-image-comment-button"
                     >
                         <ChatBubbleOutlineIcon
                             color="inherit"
@@ -168,6 +181,7 @@ export default function FeedImage({ id, onClick, onLike, onFollow, onShare, acti
                     <IconButton
                         color="inherit"
                         onClick={doShowSharePanel}
+                        data-testid="feed-image-share-button"
                     >
                         <ReplyIcon
                             color="inherit"
@@ -188,7 +202,12 @@ export default function FeedImage({ id, onClick, onLike, onFollow, onShare, acti
                         onChange={doShare}
                     />
                 )}
-                {activePanel === 'comment' && <CommentPanel onClose={doCloseLike} />}
+                {activePanel === 'comment' && (
+                    <CommentPanel
+                        onClose={doCloseLike}
+                        onComment={doComment}
+                    />
+                )}
             </div>
         </div>
     );
