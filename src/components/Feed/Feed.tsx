@@ -1,10 +1,10 @@
 import { useState, useCallback, useEffect } from 'react';
 import style from './style.module.css';
-import ImageFeed from '../../components/ImageFeed/ImageFeed';
-import { loadFile } from '../../services/loader/fileLoader';
-import { generateFeed } from '../../services/recommender/recommender';
-import { LogEntry } from '../../services/profiler/profilerTypes';
-import { addLogEntry } from '../../services/profiler/profiler';
+import ImageFeed from '@genaism/components/ImageFeed/ImageFeed';
+import { loadFile } from '@genaism/services/loader/fileLoader';
+import { generateFeed } from '@genaism/services/recommender/recommender';
+import { LogEntry } from '@genaism/services/profiler/profilerTypes';
+import { addLogEntry } from '@genaism/services/profiler/profiler';
 import { useTranslation } from 'react-i18next';
 
 interface Props {

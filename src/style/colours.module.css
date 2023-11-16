@@ -1,0 +1,13 @@
+@value textDark: #314e25;
+@value textLight: #f7f9f5;
+@value bgColourful1: #0A869A;
+@value bgColourful2: #fd9d32;
+@value bgColourful3: #e04f66;
+@value bgSubdued1: #e5f6fd;
+@value bgSubdued2: #fecb8b;
+@value bgSubdued3: #ff9499;
+@value backgroundDark: #446D33;
+@value backgroundLight: #d9e3cf;
+@value primary: #008297;
+@value primaryHover: rgba(0, 130, 151, 0.04);
+@value secondary: rgb(174, 37, 174);

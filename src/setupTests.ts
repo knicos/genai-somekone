@@ -22,6 +22,9 @@ vi.mock('react-i18next', () => ({
         type: '3rdParty',
         init: () => {},
     },
+    Trans: function Trans({ i18nKey }: { i18nKey: string }) {
+        return i18nKey;
+    },
 }));
 
 // runs a cleanup after each test case (e.g. clearing jsdom)

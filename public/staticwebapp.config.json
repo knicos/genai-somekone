@@ -1,7 +1,11 @@
 {
     "routes": [
         {
-            "route": "/app*",
+            "route": "/feed*",
+            "rewrite": "index.html"
+        },
+        {
+            "route": "/dashboard*",
             "rewrite": "index.html"
         }
     ]

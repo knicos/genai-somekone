@@ -9,6 +9,8 @@ import {
 } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import './App.css';
+import { ThemeProvider } from '@mui/material/styles';
+import { theme } from './style/theme';
 
 interface RouterError {
     status: number;
@@ -55,17 +57,25 @@ const router = createBrowserRouter(
                 element={
                     <Navigate
                         replace
-                        to="/app/genagram"
+                        to="/feed"
                     />
                 }
             />
             <Route
-                path="app/genagram/:code"
+                path="feed/:code"
                 lazy={() => import('./views/Genagram/Genagram')}
             />
             <Route
-                path="app/genagram"
+                path="feed"
                 lazy={() => import('./views/Genagram/Genagram')}
+            />
+            <Route
+                path="dashboard"
+                lazy={() => import('./views/Dashboard/Dashboard')}
+            />
+            <Route
+                path="create"
+                lazy={() => import('./views/Create/Create')}
             />
         </Route>
     )
@@ -73,11 +83,13 @@ const router = createBrowserRouter(
 
 function App() {
     return (
-        <React.Suspense fallback={<div></div>}>
-            <RecoilRoot>
-                <RouterProvider router={router} />
-            </RecoilRoot>
-        </React.Suspense>
+        <ThemeProvider theme={theme}>
+            <React.Suspense fallback={<div></div>}>
+                <RecoilRoot>
+                    <RouterProvider router={router} />
+                </RecoilRoot>
+            </React.Suspense>
+        </ThemeProvider>
     );
 }
 

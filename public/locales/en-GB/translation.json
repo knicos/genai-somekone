@@ -19,5 +19,16 @@
         "messages": {
             "noComments": "No comments yet."
         }
+    },
+    "dashboard": {
+        "messages": {
+            "connection": "Go to <PageLink><Code>{{linkText}}</Code></PageLink> and enter the code <Code>{{codeText}}</Code>, or use the QR code.",
+            "waitingPeople": "Waiting for people...",
+            "onePerson": "{{count}} person has joined.",
+            "manyPeople": "{{count}} people have joined."
+        },
+        "actions": {
+            "start": "Start"
+        }
     }
 }

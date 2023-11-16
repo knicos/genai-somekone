@@ -1,0 +1,44 @@
+.gridContainer {
+    display: grid;
+    gap: 2rem;
+    background: #444;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    align-items: center;
+    padding: 2rem;
+    box-sizing: border-box;
+}
+
+.gridContainer1 {
+    composes: gridContainer;
+    grid-template-columns: repeat(1, 1fr);
+    grid-template-rows: repeat(1, 1fr);
+}
+
+.gridContainer2 {
+    composes: gridContainer;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+}
+
+.gridContainer3 {
+    composes: gridContainer;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+}
+
+.gridContainer4 {
+    composes: gridContainer;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+}
+
+.gridItem {
+    /*aspect-ratio: 16/9;*/
+    background: white;
+    border-radius: 6px;
+    align-self: stretch;
+}
