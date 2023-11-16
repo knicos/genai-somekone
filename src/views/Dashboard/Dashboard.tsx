@@ -9,8 +9,8 @@ import style from './style.module.css';
 import { EventProtocol } from '../../protocol/protocol';
 import { Button } from '@mui/material';
 import randomId from '../../util/randomId';
-import GridLayout from '../../components/GridLayout/GridLayout';
 import { useTranslation, Trans } from 'react-i18next';
+import Graph from '@genaism/components/Graph/Graph';
 
 interface UserInfo {
     username: string;
@@ -24,6 +24,7 @@ export function Component() {
     const [params] = useSearchParams();
     const [config, setConfig] = useState<SMConfig | null>(null);
     const [users, setUsers] = useState<UserInfo[]>([]);
+    const [showStartDialog, setShowStartDialog] = useState(true);
 
     const dataHandler = useCallback(
         (data: EventProtocol, conn: DataConnection) => {
@@ -54,42 +55,61 @@ export function Component() {
         }
     }, [params]);
 
+    const doStart = useCallback(() => setShowStartDialog(false), []);
+
     return ready ? (
         <main className={style.dashboard}>
-            <GridLayout>{users.map((u) => u.username)}</GridLayout>
-            <div className={style.groupedItems}>
-                <div className={style.connectMessage}>
-                    <QRCode url={`${window.location.origin}/feed/${MYCODE}`} />
-                    <div>
-                        <Trans
-                            values={{ linkText: window.location.host, codeText: MYCODE }}
-                            i18nKey="dashboard.messages.connection"
-                            components={{
-                                PageLink: (
-                                    <a
-                                        href={`${window.location.origin}`}
-                                        target="_blank"
-                                        rel="noreferrer"
-                                    />
-                                ),
-                                Code: <em />,
-                            }}
-                        />
+            <Graph
+                nodes={users.map((u) => ({
+                    id: u.username,
+                    size: 100,
+                    component: (
+                        <>
+                            <circle
+                                r={100}
+                                fill="white"
+                            />
+                            <text textAnchor="middle">{u.username}</text>
+                        </>
+                    ),
+                }))}
+            />
+            {showStartDialog && (
+                <div className={style.groupedItems}>
+                    <div className={style.connectMessage}>
+                        <QRCode url={`${window.location.origin}/feed/${MYCODE}`} />
+                        <div>
+                            <Trans
+                                values={{ linkText: window.location.host, codeText: MYCODE }}
+                                i18nKey="dashboard.messages.connection"
+                                components={{
+                                    PageLink: (
+                                        <a
+                                            href={`${window.location.origin}`}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                        />
+                                    ),
+                                    Code: <em />,
+                                }}
+                            />
+                        </div>
+                    </div>
+                    <div className={style.userListing}>
+                        {users.length === 0 && <div>{t('dashboard.messages.waitingPeople')}</div>}
+                        {users.length === 1 && <div>{t('dashboard.messages.onePerson', { count: users.length })}</div>}
+                        {users.length > 1 && <div>{t('dashboard.messages.manyPeople', { count: users.length })}</div>}
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            data-testid="dashboard-start-button"
+                            onClick={doStart}
+                        >
+                            {t('dashboard.actions.start')}
+                        </Button>
                     </div>
                 </div>
-                <div className={style.userListing}>
-                    {users.length === 0 && <div>{t('dashboard.messages.waitingPeople')}</div>}
-                    {users.length === 1 && <div>{t('dashboard.messages.onePerson', { count: users.length })}</div>}
-                    {users.length > 1 && <div>{t('dashboard.messages.manyPeople', { count: users.length })}</div>}
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        data-testid="dashboard-start-button"
-                    >
-                        {t('dashboard.actions.start')}
-                    </Button>
-                </div>
-            </div>
+            )}
         </main>
     ) : (
         <div></div>
