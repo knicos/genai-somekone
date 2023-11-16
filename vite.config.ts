@@ -10,6 +10,10 @@ export default defineConfig({
         environment: 'jsdom',
         setupFiles: './src/setupTests.ts',
         clearMocks: true,
+        coverage: {
+            provider: 'v8',
+            reporter: ['cobertura', 'html'],
+        },
     },
     resolve: {
         alias: {

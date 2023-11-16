@@ -85,6 +85,12 @@ stages:
                   inputs:
                       testRunner: JUnit
                       testResultsFiles: '**/junit.xml'
+                - task: PublishCodeCoverageResults@1
+                  inputs:
+                      codeCoverageTool: 'Cobertura'
+                      summaryFileLocation: 'coverage/cobertura-coverage.xml'
+                      pathToSources: 'src'
+                      reportDirectory: 'coverage'
 
     - stage: DeployProduction
       displayName: Deploy Production
