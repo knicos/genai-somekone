@@ -3,22 +3,24 @@ import style from './style.module.css';
 import ImageFeed from '@genaism/components/ImageFeed/ImageFeed';
 import { loadFile } from '@genaism/services/loader/fileLoader';
 import { generateFeed } from '@genaism/services/recommender/recommender';
-import { LogEntry } from '@genaism/services/profiler/profilerTypes';
+import { LogEntry, ProfileSummary } from '@genaism/services/profiler/profilerTypes';
 import { addLogEntry } from '@genaism/services/profiler/profiler';
 import { useTranslation } from 'react-i18next';
 
 interface Props {
     content?: string;
+    onProfile?: (profile: ProfileSummary) => void;
 }
 
-export default function Feed({ content }: Props) {
+export default function Feed({ content, onProfile }: Props) {
     const { t } = useTranslation();
     const [feedList, setFeedList] = useState<string[]>([]);
 
     const doMore = useCallback(() => {
-        const f = generateFeed(5);
+        const [f, profile] = generateFeed(5);
         setFeedList((old) => [...old, ...f]);
-    }, [setFeedList]);
+        if (onProfile) onProfile(profile);
+    }, [setFeedList, onProfile]);
 
     const doLog = useCallback((data: LogEntry) => {
         addLogEntry(data);
@@ -32,8 +34,9 @@ export default function Feed({ content }: Props) {
                 return;
             }
             await loadFile(await result.blob());
-            const f = generateFeed(5);
+            const [f, profile] = generateFeed(5);
             setFeedList((old) => [...old, ...f]);
+            if (onProfile) onProfile(profile);
         });
     }, [content]);
 

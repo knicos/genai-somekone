@@ -1,3 +1,5 @@
+import { WeightedNode } from '@genaism/services/graph/graphTypes';
+
 export type LogActivity =
     | 'like'
     | 'love'
@@ -22,4 +24,10 @@ export interface LogEntry {
     id?: string;
     timestamp: number;
     value?: number;
+}
+
+export interface ProfileSummary {
+    taste: WeightedNode[];
+    engagedContent: WeightedNode[];
+    similarUsers: WeightedNode[];
 }

@@ -3,7 +3,6 @@ import { Peer as P2P, DataConnection } from 'peerjs';
 
 export interface PeerEvent {
     event: string;
-    peers?: string[];
 }
 
 function isPeerEvent(data: unknown): data is PeerEvent {
@@ -25,14 +24,30 @@ interface Props<T> extends Callbacks<T> {
 
 export type PeerProps<T> = Props<T>;
 
-interface PeerState {
+interface PeerCloseEvent extends PeerEvent {
+    event: 'eter:close';
+}
+
+interface PeerJoinEvent extends PeerEvent {
+    event: 'eter:join';
+}
+
+interface PeerWelcomeEvent extends PeerEvent {
+    event: 'eter:welcome';
+}
+
+export type BuiltinEvent = PeerWelcomeEvent | PeerCloseEvent | PeerJoinEvent;
+
+type SenderType<T> = (data: T | BuiltinEvent) => void;
+
+interface PeerState<T> {
     connections: Map<string, DataConnection>;
     peers: Set<string>;
-    sender?: (data: unknown) => void;
+    sender?: SenderType<T>;
 }
 
 interface PeerReturn<T> {
-    send?: (data: T) => void;
+    send?: SenderType<T>;
     ready: boolean;
     peer?: P2P;
 }
@@ -47,10 +62,10 @@ export default function usePeer<T extends PeerEvent>({
     onConnect,
 }: Props<T>): PeerReturn<T> {
     const [peer, setPeer] = useState<P2P>();
-    const connRef = useRef<PeerState>();
+    const connRef = useRef<PeerState<T>>();
     const cbRef = useRef<Callbacks<T>>({});
     const [webrtc, setWebRTC] = useState(false);
-    const [sender, setSender] = useState<(data: unknown) => void>();
+    const [sender, setSender] = useState<SenderType<T>>();
 
     useEffect(() => {
         cbRef.current.onClose = onClose;
@@ -84,14 +99,11 @@ export default function usePeer<T extends PeerEvent>({
             peers: new Set<string>(),
         };
 
-        console.log('Constructed peer');
-
         npeer.on('open', () => {
-            console.log('Open peer');
             if (cbRef.current.onOpen) {
                 cbRef.current.onOpen();
             }
-            setSender(() => (data: unknown) => {
+            setSender(() => (data: T) => {
                 if (connRef.current) {
                     for (const conn of connRef.current.connections.values()) {
                         if (conn.open) conn.send(data);
@@ -100,27 +112,19 @@ export default function usePeer<T extends PeerEvent>({
             });
             if (server) {
                 const conn = npeer.connect(server, { reliable: true });
-                console.log('CONN ID', conn.connectionId, conn);
-                if (conn.open) {
-                    console.log('Already open');
-                }
+
                 conn.on('open', () => {
-                    console.log('Joining session');
                     connRef.current?.connections.set(conn.connectionId, conn);
                     connRef.current?.peers.add(conn.peer);
                     conn.send({ event: 'eter:join' });
                     if (cbRef.current.onConnect) cbRef.current.onConnect(conn);
-                    setSender(() => (s: unknown) => {
+                    setSender(() => (s: T) => {
                         conn.send(s);
                     });
                 });
                 conn.on('data', async (data: unknown) => {
                     if (isPeerEvent(data)) {
-                        if (data.event === 'peers') {
-                            console.log('GOT PEERS', data.peers);
-                        } else {
-                            if (cbRef.current.onData) cbRef.current.onData(data as T, conn);
-                        }
+                        if (cbRef.current.onData) cbRef.current.onData(data as T, conn);
                     }
                 });
                 conn.on('error', (err: Error) => {
@@ -130,7 +134,7 @@ export default function usePeer<T extends PeerEvent>({
                 conn.on('close', () => {
                     connRef.current?.connections.delete(conn.connectionId);
                     connRef.current?.peers.delete(conn.peer); // TODO: Check no other connections from peer
-                    console.log('Connection closed');
+
                     if (cbRef.current.onClose) cbRef.current.onClose(conn);
                 });
             }
@@ -139,11 +143,10 @@ export default function usePeer<T extends PeerEvent>({
             if (cbRef.current.onClose) cbRef.current.onClose();
         });
         npeer.on('connection', (conn) => {
-            console.log('CONN ID', conn.connectionId, conn);
             conn.on('data', async (data: unknown) => {
                 if (isPeerEvent(data)) {
                     if (data.event === 'peers') {
-                        console.log('GOT PEERS', data.peers);
+                        // console.log('GOT PEERS', data.peers);
                     } else {
                         if (cbRef.current.onData) {
                             cbRef.current.onData(data as T, conn);
@@ -156,12 +159,7 @@ export default function usePeer<T extends PeerEvent>({
                 if (cbRef.current.onError) cbRef.current.onError(err);
             });
 
-            if (conn.open) {
-                console.log('Already open');
-            }
-
             conn.on('open', () => {
-                console.log('Connection opened');
                 connRef.current?.connections.set(conn.connectionId, conn);
                 connRef.current?.peers.add(conn.peer);
                 if (connRef.current) {
@@ -173,14 +171,12 @@ export default function usePeer<T extends PeerEvent>({
             });
 
             conn.on('close', () => {
-                console.log('Connection closed');
                 connRef.current?.connections.delete(conn.connectionId);
                 connRef.current?.peers.delete(conn.peer);
             });
         });
 
-        npeer.on('disconnected', (id) => {
-            console.log('Disconnected', id);
+        npeer.on('disconnected', () => {
             /*const conn = connRef.current?.connections.get(id);
             if (conn) {
                 connRef.current?.peers.delete(conn.peer);
@@ -188,9 +184,7 @@ export default function usePeer<T extends PeerEvent>({
             }*/
         });
 
-        npeer.on('close', () => {
-            console.log('Peer close');
-        });
+        npeer.on('close', () => {});
 
         npeer.on('error', (err) => {
             const type: string = err.type;
@@ -221,13 +215,12 @@ export default function usePeer<T extends PeerEvent>({
                 connRef.current.connections.forEach((c) => c.close());
             }
             npeer.destroy();
-            console.log('Destroyed old peer');
         };
     }, [code, server, webrtc]);
 
     useEffect(() => {
-        const tabClose = (e: BeforeUnloadEvent) => {
-            e.preventDefault();
+        const tabClose = () => {
+            // e.preventDefault();
             if (connRef.current?.sender) connRef.current?.sender({ event: 'eter:close' });
         };
         window.addEventListener('beforeunload', tabClose);

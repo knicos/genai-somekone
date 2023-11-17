@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import FeedImage from './FeedImage';
-import { addContent } from '../../services/content/content';
-import { resetGraph } from '../../services/graph/graph';
+import { addContent } from '@genaism/services/content/content';
+import { resetGraph } from '@genaism/services/graph/graph';
 import userEvent from '@testing-library/user-event';
 
 const TEST_IMAGE =

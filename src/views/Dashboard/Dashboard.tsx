@@ -11,10 +11,16 @@ import { Button } from '@mui/material';
 import randomId from '../../util/randomId';
 import { useTranslation, Trans } from 'react-i18next';
 import Graph from '@genaism/components/Graph/Graph';
+import { loadFile } from '@genaism/services/loader/fileLoader';
+import { useRecoilCallback } from 'recoil';
+import { ProfileSummary } from '@genaism/services/profiler/profilerTypes';
+import { cachedProfiles } from '@genaism/state/state';
+import ProfileNode from '@genaism/components/ProfileNode/ProfileNode';
 
 interface UserInfo {
     username: string;
     connection: DataConnection;
+    id: string;
 }
 
 const MYCODE = randomId(5);
@@ -25,15 +31,25 @@ export function Component() {
     const [config, setConfig] = useState<SMConfig | null>(null);
     const [users, setUsers] = useState<UserInfo[]>([]);
     const [showStartDialog, setShowStartDialog] = useState(true);
+    const setProfile = useRecoilCallback(
+        ({ set }) =>
+            (id: string, profile: ProfileSummary) => {
+                set(cachedProfiles(id), profile);
+            },
+        []
+    );
 
     const dataHandler = useCallback(
         (data: EventProtocol, conn: DataConnection) => {
+            console.log('GOT DATA', data);
             if (data.event === 'eter:join') {
                 conn.send({ event: 'eter:config', configuration: config });
             } else if (data.event === 'eter:reguser') {
-                setUsers((old) => [...old, { username: data.username, connection: conn }]);
+                setUsers((old) => [...old, { id: data.id, username: data.username, connection: conn }]);
             } else if (data.event === 'eter:close') {
                 setUsers((old) => old.filter((o) => o.connection !== conn));
+            } else if (data.event === 'eter:profile_data') {
+                setProfile(data.id, data.profile);
             }
         },
         [config]
@@ -52,6 +68,16 @@ export function Component() {
             const configObj = JSON.parse(component) as SMConfig;
             // TODO: Validate the config
             setConfig(configObj);
+
+            // Also load the content locally to have the images, topics and users.
+            const url = configObj.content || 'https://tmstore.blob.core.windows.net/projects/smTestContent1.zip';
+            fetch(url).then(async (result) => {
+                if (result.status !== 200) {
+                    console.error(result);
+                    return;
+                }
+                await loadFile(await result.blob());
+            });
         }
     }, [params]);
 
@@ -64,13 +90,10 @@ export function Component() {
                     id: u.username,
                     size: 100,
                     component: (
-                        <>
-                            <circle
-                                r={100}
-                                fill="white"
-                            />
-                            <text textAnchor="middle">{u.username}</text>
-                        </>
+                        <ProfileNode
+                            name={u.username}
+                            id={u.id}
+                        />
                     ),
                 }))}
             />

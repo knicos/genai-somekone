@@ -1,15 +1,15 @@
 import { describe, it, beforeEach, afterEach, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import Feed from './Feed';
-import { addContent } from '../../services/content/content';
-import { resetGraph } from '../../services/graph/graph';
+import { addContent } from '@genaism/services/content/content';
+import { resetGraph } from '@genaism/services/graph/graph';
 
 const TEST_IMAGE =
     'https://images.pexels.com/photos/3030647/pexels-photo-3030647.jpeg?cs=srgb&dl=pexels-nextvoyage-3030647.jpg&fm=jpg';
 
 const { mockLoader, mockGenerate, mockBlob } = vi.hoisted(() => ({
     mockLoader: vi.fn(),
-    mockGenerate: vi.fn(() => ['xyz']),
+    mockGenerate: vi.fn(() => [['xyz']]),
     mockBlob: vi.fn(async () => {}),
 }));
 
@@ -40,7 +40,7 @@ describe('Feed component', () => {
     it('fetches and renders a feed', async ({ expect }) => {
         render(<Feed content="http://testuri.fi" />);
 
-        await expect(screen.findAllByTestId('feed-image-element')).resolves.toHaveLength(1);
+        expect(await screen.findAllByTestId('feed-image-element')).toHaveLength(1);
         expect(global.fetch).toHaveBeenCalledWith('http://testuri.fi');
         await vi.waitFor(() => {
             expect(mockBlob).toHaveBeenCalled();

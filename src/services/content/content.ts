@@ -1,6 +1,6 @@
 import { ContentMetadata } from './contentTypes';
-import { addNode, addEdge, removeNode } from '../graph/graph';
-import { getTopicId } from '../concept/concept';
+import { addNode, addEdge, removeNode } from '@genaism/services/graph/graph';
+import { getTopicId } from '@genaism/services/concept/concept';
 
 const dataStore = new Map<string, string>();
 const metaStore = new Map<string, ContentMetadata>();

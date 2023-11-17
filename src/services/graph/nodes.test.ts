@@ -1,5 +1,6 @@
 import { describe, it, beforeEach } from 'vitest';
-import { addNode, getNodeType, resetGraph, getNodesByType } from './graph';
+import { addNode, getNodeType, getNodesByType } from './nodes';
+import { resetGraph } from './state';
 
 describe('graph.addNode', () => {
     beforeEach(() => resetGraph());

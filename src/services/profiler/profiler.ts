@@ -1,6 +1,6 @@
-import { LogEntry } from './profilerTypes';
-import { addNode, addOrAccumulateEdge, getRelated } from '../graph/graph';
-import { getTopicLabel } from '../concept/concept';
+import { LogEntry, ProfileSummary } from './profilerTypes';
+import { addNode, addOrAccumulateEdge, getRelated } from '@genaism/services/graph/graph';
+import { getTopicLabel } from '@genaism/services/concept/concept';
 
 let userID: string;
 
@@ -62,12 +62,36 @@ export function addLogEntry(data: LogEntry) {
     }
 }
 
+export function getTasteProfileById(id: string, count?: number) {
+    return getRelated('topic', id, count);
+}
+
+export function getTopContentById(id: string, count?: number) {
+    return getRelated('engaged', id, count);
+}
+
 export function getTasteProfile(count?: number) {
-    return getRelated('topic', userID, count);
+    return getTasteProfileById(userID, count);
 }
 
 export function getTopContent(count?: number) {
-    return getRelated('engaged', userID, count);
+    return getTopContentById(userID, count);
+}
+
+export function getProfile(count?: number): ProfileSummary {
+    return {
+        taste: getTasteProfile(count),
+        engagedContent: getTopContent(count),
+        similarUsers: [],
+    };
+}
+
+export function getProfileById(id: string, count?: number): ProfileSummary {
+    return {
+        taste: getTasteProfileById(id, count),
+        engagedContent: getTopContentById(id, count),
+        similarUsers: [],
+    };
 }
 
 export function prettyProfile() {
@@ -80,4 +104,9 @@ export function prettyProfile() {
 
 export function newUser() {
     userID = addNode('user');
+}
+
+export function getMyUserId() {
+    if (!userID) newUser();
+    return userID;
 }

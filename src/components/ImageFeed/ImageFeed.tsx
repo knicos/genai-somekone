@@ -2,9 +2,9 @@ import React, { useRef, useCallback, useState, useEffect } from 'react';
 import IImage from '../FeedImage/FeedImage';
 import style from './style.module.css';
 import CircularProgress from '@mui/material/CircularProgress';
-import { LogActivity, LogEntry } from '../../services/profiler/profilerTypes';
-import { LikeKind } from '../FeedImage/LikePanel';
-import { ShareKind } from '../FeedImage/SharePanel';
+import { LogActivity, LogEntry } from '@genaism/services/profiler/profilerTypes';
+import { LikeKind } from '@genaism/components/FeedImage/LikePanel';
+import { ShareKind } from '@genaism/components/FeedImage/SharePanel';
 import FeedSpacer from './FeedSpacer';
 
 interface Props {

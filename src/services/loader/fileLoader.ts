@@ -1,7 +1,7 @@
 import JSZip from 'jszip';
 
-import { ContentMetadata } from '../content/contentTypes';
-import { addContent } from '../content/content';
+import { ContentMetadata } from '@genaism/services/content/contentTypes';
+import { addContent } from '@genaism/services/content/content';
 
 export async function loadFile(file: File | Blob): Promise<void> {
     const zip = await JSZip.loadAsync(file);

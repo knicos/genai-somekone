@@ -9,6 +9,8 @@ import { SMConfig } from './smConfig';
 import { CircularProgress } from '@mui/material';
 import EnterUsername from './EnterUsername';
 import { EventProtocol } from '../../protocol/protocol';
+import { ProfileSummary } from '@genaism/services/profiler/profilerTypes';
+import { getMyUserId } from '@genaism/services/profiler/profiler';
 
 const MYCODE = randomId(10);
 
@@ -29,16 +31,29 @@ export function Component() {
 
     useEffect(() => {
         if (username && send) {
-            send({ event: 'eter:reguser', username });
+            send({ event: 'eter:reguser', username, id: getMyUserId() });
         }
     }, [username, send]);
+
+    const doProfile = useCallback(
+        (profile: ProfileSummary) => {
+            console.log('PROFILE', profile);
+            if (send) send({ event: 'eter:profile_data', profile, id: getMyUserId() });
+        },
+        [send]
+    );
 
     return (
         <div className={style.page}>
             {code && !ready && <CircularProgress />}
             {!code && !params.has('local') && <EnterCode />}
             {config && !username && <EnterUsername onUsername={setUsername} />}
-            {config && username && <Feed content={config.content} />}
+            {config && username && (
+                <Feed
+                    content={config.content}
+                    onProfile={doProfile}
+                />
+            )}
         </div>
     );
 }

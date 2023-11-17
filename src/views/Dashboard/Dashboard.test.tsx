@@ -1,10 +1,11 @@
 import { describe, it, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
 import { Component as Dashboard } from './Dashboard';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { PeerEvent, PeerProps } from '@genaism/hooks/peer';
 import { EventProtocol } from '@genaism/protocol/protocol';
 import { DataConnection } from 'peerjs';
+import TestWrapper from '@genaism/util/TestWrapper';
 
 const { mockPeer } = vi.hoisted(() => ({
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -18,6 +19,12 @@ vi.mock('@genaism/hooks/peer', () => ({
     default: mockPeer,
 }));
 
+vi.mock('qrcode', () => ({
+    default: {
+        toCanvas: async () => {},
+    },
+}));
+
 describe('Dashboard view', () => {
     it('renders the initial connection screen', async ({ expect }) => {
         render(
@@ -28,7 +35,8 @@ describe('Dashboard view', () => {
                         element={<Dashboard />}
                     />
                 </Routes>
-            </MemoryRouter>
+            </MemoryRouter>,
+            { wrapper: TestWrapper }
         );
 
         expect(screen.getByTestId('dashboard-start-button')).toBeVisible();
@@ -54,14 +62,17 @@ describe('Dashboard view', () => {
                         element={<Dashboard />}
                     />
                 </Routes>
-            </MemoryRouter>
+            </MemoryRouter>,
+            { wrapper: TestWrapper }
         );
 
-        if (propsObj.props.onData) {
-            propsObj.props.onData({ event: 'eter:reguser', username: 'dummy' }, {} as DataConnection);
-        }
+        act(() => {
+            if (propsObj.props.onData) {
+                propsObj.props.onData({ event: 'eter:reguser', username: 'dummy', id: 'xyz1' }, {} as DataConnection);
+            }
+        });
 
-        await vi.waitFor(() => expect(screen.getByText('dashboard.messages.onePerson')).toBeInTheDocument());
+        expect(await screen.findByText('dashboard.messages.onePerson')).toBeInTheDocument();
     });
 
     it('shows two users connected', async ({ expect }) => {
@@ -83,14 +94,17 @@ describe('Dashboard view', () => {
                         element={<Dashboard />}
                     />
                 </Routes>
-            </MemoryRouter>
+            </MemoryRouter>,
+            { wrapper: TestWrapper }
         );
 
-        if (propsObj.props.onData) {
-            propsObj.props.onData({ event: 'eter:reguser', username: 'dummy' }, {} as DataConnection);
-            propsObj.props.onData({ event: 'eter:reguser', username: 'dumm2' }, {} as DataConnection);
-        }
+        act(() => {
+            if (propsObj.props.onData) {
+                propsObj.props.onData({ event: 'eter:reguser', username: 'dummy', id: 'xyz1' }, {} as DataConnection);
+                propsObj.props.onData({ event: 'eter:reguser', username: 'dumm2', id: 'xyz2' }, {} as DataConnection);
+            }
+        });
 
-        await vi.waitFor(() => expect(screen.getByText('dashboard.messages.manyPeople')).toBeInTheDocument());
+        expect(await screen.findByText('dashboard.messages.manyPeople')).toBeInTheDocument();
     });
 });

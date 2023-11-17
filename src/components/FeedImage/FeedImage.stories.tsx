@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
 import FeedImage from './FeedImage';
-import { addContent } from '../../services/content/content';
-import { resetGraph } from '../../services/graph/graph';
+import { addContent } from '@genaism/services/content/content';
+import { resetGraph } from '@genaism/services/graph/graph';
 
 const meta: Meta<typeof FeedImage> = {
     component: FeedImage,

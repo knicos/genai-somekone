@@ -1,6 +1,7 @@
-import { getNodesByType, getRelated } from '../graph/graph';
-import { getTasteProfile } from '../profiler/profiler';
-import { getTopicLabel } from '../concept/concept';
+import { getNodesByType, getRelated } from '@genaism/services/graph/graph';
+import { getProfile } from '@genaism/services/profiler/profiler';
+import { getTopicLabel } from '@genaism/services/concept/concept';
+import { ProfileSummary } from '@genaism/services/profiler/profilerTypes';
 
 const factors = new Map<string, number>();
 
@@ -8,8 +9,8 @@ function calculateCount(high: number, low: number, value: number, max: number) {
     return ((value - low) / (high - low)) * (max - 1) + 1;
 }
 
-function generateTasteBatch(nodes: string[], count: number) {
-    const taste = getTasteProfile(10);
+function generateTasteBatch(profile: ProfileSummary, nodes: string[], count: number) {
+    const taste = profile.taste;
 
     const high = taste[0]?.weight || 0;
     const low = taste[taste.length - 1]?.weight || 0;
@@ -37,19 +38,21 @@ function fillWithRandom(nodes: string[], count: number) {
     console.log('Final node size', nodes.length);
 }
 
-export function generateFeed(count: number): string[] {
+export function generateFeed(count: number): [string[], ProfileSummary] {
     // For each candidate strategy, generate a number of condidates based upon affinity
     // Repeat until there are enough candidates
     // Randomly select from the candidates
 
+    const profile = getProfile(10);
+
     //const nodes = getRelated('content', getTopicId('animal'), count, factors);
     const nodes: string[] = [];
-    generateTasteBatch(nodes, count * 2);
+    generateTasteBatch(profile, nodes, count * 2);
     fillWithRandom(nodes, count);
 
     const nodeArray = nodes;
 
-    if (nodeArray.length < count) return nodeArray;
+    if (nodeArray.length < count) return [nodeArray, profile];
 
     // TODO: Score the results by how much they match profile
     // Or by how they match past engagements of each type.
@@ -71,5 +74,5 @@ export function generateFeed(count: number): string[] {
 
     //console.log('FACTORS', factors);
 
-    return final;
+    return [final, profile];
 }

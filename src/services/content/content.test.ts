@@ -1,6 +1,6 @@
 import { describe, it, beforeEach } from 'vitest';
 import { addContent, getContentData, hasContent, resetContent } from './content';
-import { resetGraph } from '../graph/graph';
+import { getEdgesOfType, resetGraph } from '@genaism/services/graph/graph';
 
 describe('content.addContent', () => {
     beforeEach(() => resetGraph());
@@ -15,10 +15,16 @@ describe('content.addContent', () => {
         expect(hasContent('xyz')).toBe(true);
     });
 
-    /*it('throws if the content already exists', async ({ expect }) => {
-        addContent('someurl', { labels: [], id: 'xyz' });
-        expect(() => addContent('someurl', { labels: [], id: 'xyz' })).toThrowError('id_exists');
-    });*/
+    it('adds new content with labels', async ({ expect }) => {
+        addContent('someurl', {
+            labels: [{ label: 'testlabel', weight: 1.0 }],
+            id: 'xyz',
+            author: 'TestAuthor',
+        });
+
+        expect(hasContent('xyz')).toBe(true);
+        expect(getEdgesOfType('topic', 'xyz')).toHaveLength(1);
+    });
 });
 
 describe('content.getContentData', () => {

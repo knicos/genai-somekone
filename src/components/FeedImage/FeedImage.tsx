@@ -10,7 +10,7 @@ import ReplyIcon from '@mui/icons-material/Reply';
 import Avatar from '@mui/material/Avatar';
 import SharePanel, { ShareKind } from './SharePanel';
 import CommentPanel from './CommentPanel';
-import { getContentData, getContentMetadata } from '../../services/content/content';
+import { getContentData, getContentMetadata } from '@genaism/services/content/content';
 import { useTranslation } from 'react-i18next';
 
 type ActionPanel = 'none' | 'like' | 'comment' | 'share' | 'discard' | 'author';
