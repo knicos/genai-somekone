@@ -1,5 +1,7 @@
 import { cachedProfiles } from '@genaism/state/state';
 import { useRecoilValue } from 'recoil';
+import ImageCloud from '../ImageCloud/ImageCloud';
+import { useState } from 'react';
 
 interface Props {
     name: string;
@@ -7,15 +9,29 @@ interface Props {
 }
 
 export default function ProfileNode({ name, id }: Props) {
+    const [size, setSize] = useState(100);
     const profile = useRecoilValue(cachedProfiles(id));
 
     return (
         <>
             <circle
-                r={100}
+                r={size + 10}
                 fill={profile ? 'white' : 'blue'}
             />
-            <text textAnchor="middle">{name}</text>
+            {profile?.engagedContent.length && (
+                <ImageCloud
+                    content={profile.engagedContent}
+                    size={100}
+                    padding={3}
+                    onSize={setSize}
+                />
+            )}
+            <text
+                y={-size - 15}
+                textAnchor="middle"
+            >
+                {name}
+            </text>
         </>
     );
 }
