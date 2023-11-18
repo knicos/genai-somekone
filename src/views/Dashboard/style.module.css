@@ -1,4 +1,4 @@
-@value textDark, backgroundLight, bgColourful1, bgSubdued1, textLight from "../../style/colours.module.css";
+@value textDark, workspaceBg, backgroundDark, bgColourful1, bgSubdued1, textLight from "../../style/colours.module.css";
 
 .dashboard {
     position: absolute;
@@ -7,9 +7,46 @@
     bottom: 0;
     right: 0;
     display: flex;
-    flex-direction: column;
-    background-color: backgroundLight;
+    flex-direction: row;
+    background-color: workspaceBg;
     color: textDark;
+    justify-content: center;
+    align-items: center;
+}
+
+.dashboard nav {
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.menuContainer {
+    margin: 1rem;
+    background: white;
+    border-radius: 2rem;
+    box-shadow: 1px 1px 8px #888;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding-bottom: 1rem;
+    align-items: center;
+    color: textDark;
+}
+
+.logo {
+    padding: 0.5rem;
+    padding-top: 1rem;
+    margin-bottom: 1rem;
+    background: bgColourful1;
+    line-height: 0;
+}
+
+.workspace {
+    position: relative;
+    flex-grow: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }

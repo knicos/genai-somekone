@@ -3,6 +3,19 @@ import JSZip from 'jszip';
 import { ContentMetadata } from '@genaism/services/content/contentTypes';
 import { addContent } from '@genaism/services/content/content';
 
+export async function getZipBlob(content: string | ArrayBuffer): Promise<Blob> {
+    if (typeof content === 'string') {
+        const result = await fetch(content);
+        if (result.status !== 200) {
+            console.error(result);
+            throw new Error('zip_fetch_failed');
+        }
+        return result.blob();
+    } else {
+        return new Blob([content]);
+    }
+}
+
 export async function loadFile(file: File | Blob): Promise<void> {
     const zip = await JSZip.loadAsync(file);
 

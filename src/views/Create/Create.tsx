@@ -4,8 +4,6 @@ import { compressToEncodedURIComponent } from 'lz-string';
 import { SMConfig } from '../Genagram/smConfig';
 import style from './style.module.css';
 
-const DEFAULT_CONTENT = 'https://tmstore.blob.core.windows.net/projects/smTestContent1.zip';
-
 // About
 // Create new session
 // Select content to use
@@ -13,17 +11,14 @@ const DEFAULT_CONTENT = 'https://tmstore.blob.core.windows.net/projects/smTestCo
 // Start
 export function Component() {
     const [url, setURL] = useState('');
-    const [content] = useState(DEFAULT_CONTENT);
     const { t } = useTranslation();
 
     useEffect(() => {
-        const configObj: SMConfig = {
-            content,
-        };
+        const configObj: SMConfig = {};
         const jsonstr = JSON.stringify(configObj);
         const component = compressToEncodedURIComponent(jsonstr);
         setURL(`/dashboard?c=${component}`);
-    }, [content]);
+    }, []);
 
     return (
         <section className={style.container}>

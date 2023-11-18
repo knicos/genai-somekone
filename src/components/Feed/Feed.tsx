@@ -1,14 +1,14 @@
 import { useState, useCallback, useEffect } from 'react';
 import style from './style.module.css';
 import ImageFeed from '@genaism/components/ImageFeed/ImageFeed';
-import { loadFile } from '@genaism/services/loader/fileLoader';
+import { getZipBlob, loadFile } from '@genaism/services/loader/fileLoader';
 import { generateFeed } from '@genaism/services/recommender/recommender';
 import { LogEntry, ProfileSummary } from '@genaism/services/profiler/profilerTypes';
 import { addLogEntry } from '@genaism/services/profiler/profiler';
 import { useTranslation } from 'react-i18next';
 
 interface Props {
-    content?: string;
+    content?: string | ArrayBuffer;
     onProfile?: (profile: ProfileSummary) => void;
 }
 
@@ -27,17 +27,14 @@ export default function Feed({ content, onProfile }: Props) {
     }, []);
 
     useEffect(() => {
-        const url = content || 'https://tmstore.blob.core.windows.net/projects/smTestContent1.zip';
-        fetch(url).then(async (result) => {
-            if (result.status !== 200) {
-                console.error(result);
-                return;
-            }
-            await loadFile(await result.blob());
-            const [f, profile] = generateFeed(5);
-            setFeedList((old) => [...old, ...f]);
-            if (onProfile) onProfile(profile);
-        });
+        if (content) {
+            getZipBlob(content).then(async (blob) => {
+                await loadFile(blob);
+                const [f, profile] = generateFeed(5);
+                setFeedList((old) => [...old, ...f]);
+                if (onProfile) onProfile(profile);
+            });
+        }
     }, [content]);
 
     return (

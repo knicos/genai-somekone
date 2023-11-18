@@ -6,8 +6,9 @@
 @value bgSubdued1: #e5f6fd;
 @value bgSubdued2: #fecb8b;
 @value bgSubdued3: #ff9499;
-@value backgroundDark: #446D33;
+@value backgroundDark: #5f7377;
 @value backgroundLight: #d9e3cf;
+@value workspaceBg: #dfe5e8;
 @value primary: #008297;
 @value primaryHover: rgba(0, 130, 151, 0.04);
 @value secondary: rgb(174, 37, 174);

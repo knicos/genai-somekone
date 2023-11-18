@@ -10,23 +10,17 @@ const TEST_IMAGE =
 const { mockLoader, mockGenerate, mockBlob } = vi.hoisted(() => ({
     mockLoader: vi.fn(),
     mockGenerate: vi.fn(() => [['xyz']]),
-    mockBlob: vi.fn(async () => {}),
+    mockBlob: vi.fn(async () => new Blob()),
 }));
 
 vi.mock('@genaism/services/loader/fileLoader', () => ({
     loadFile: mockLoader,
+    getZipBlob: mockBlob,
 }));
 
 vi.mock('@genaism/services/recommender/recommender', () => ({
     generateFeed: mockGenerate,
 }));
-
-global.fetch = vi.fn(async () => {
-    return {
-        status: 200,
-        blob: mockBlob,
-    } as unknown as Response;
-});
 
 describe('Feed component', () => {
     beforeEach(() => {
@@ -41,7 +35,6 @@ describe('Feed component', () => {
         render(<Feed content="http://testuri.fi" />);
 
         expect(await screen.findAllByTestId('feed-image-element')).toHaveLength(1);
-        expect(global.fetch).toHaveBeenCalledWith('http://testuri.fi');
         await vi.waitFor(() => {
             expect(mockBlob).toHaveBeenCalled();
             expect(mockLoader).toHaveBeenCalled();
