@@ -8,7 +8,7 @@ import { addLogEntry } from '@genaism/services/profiler/profiler';
 import { useTranslation } from 'react-i18next';
 
 interface Props {
-    content?: string | ArrayBuffer;
+    content?: (string | ArrayBuffer)[];
     onProfile?: (profile: ProfileSummary) => void;
 }
 
@@ -28,11 +28,13 @@ export default function Feed({ content, onProfile }: Props) {
 
     useEffect(() => {
         if (content) {
-            getZipBlob(content).then(async (blob) => {
-                await loadFile(blob);
-                const [f, profile] = generateFeed(5);
-                setFeedList((old) => [...old, ...f]);
-                if (onProfile) onProfile(profile);
+            content.forEach((c) => {
+                getZipBlob(c).then(async (blob) => {
+                    await loadFile(blob);
+                    const [f, profile] = generateFeed(5);
+                    setFeedList((old) => [...old, ...f]);
+                    if (onProfile) onProfile(profile);
+                });
             });
         }
     }, [content]);

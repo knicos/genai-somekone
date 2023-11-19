@@ -7,6 +7,14 @@
         {
             "route": "/dashboard*",
             "rewrite": "index.html"
+        },
+        {
+            "route": "/create*",
+            "rewrite": "index.html"
+        },
+        {
+            "route": "/start*",
+            "rewrite": "index.html"
         }
     ]
 }

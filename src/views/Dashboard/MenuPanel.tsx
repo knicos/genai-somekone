@@ -14,6 +14,7 @@ export default function MenuPanel({ onOpen, onShowShare }: Props) {
         (e: React.ChangeEvent<HTMLInputElement>) => {
             if (e.currentTarget.files && onOpen) {
                 onOpen(e.currentTarget.files[0]);
+                e.currentTarget.value = '';
             }
         },
         [onOpen]

@@ -1,8 +1,6 @@
-import { LogEntry, ProfileSummary } from './profilerTypes';
-import { addNode, addOrAccumulateEdge, getRelated } from '@genaism/services/graph/graph';
-import { getTopicLabel } from '@genaism/services/concept/concept';
-
-let userID: string;
+import { LogEntry } from './profilerTypes';
+import { addOrAccumulateEdge, getRelated } from '@genaism/services/graph/graph';
+import { getCurrentUser } from '../users/users';
 
 /*function updateParentAffinity(topic: string) {
     const parent = getTopicParent(topic);
@@ -25,10 +23,10 @@ let userID: string;
 function affinityBoost(content: string, weight: number) {
     const topics = getRelated('topic', content || '');
     topics.forEach((t) => {
-        addOrAccumulateEdge('topic', userID, t.id, t.weight * weight);
+        addOrAccumulateEdge('topic', getCurrentUser(), t.id, t.weight * weight);
     });
 
-    addOrAccumulateEdge('engaged', userID, content, weight);
+    addOrAccumulateEdge('engaged', getCurrentUser(), content, weight);
 
     // For each parent topic, recalculate user affinity for those topics
     /*topics.forEach((t) => {
@@ -37,8 +35,6 @@ function affinityBoost(content: string, weight: number) {
 }
 
 export function addLogEntry(data: LogEntry) {
-    if (!userID) newUser();
-
     switch (data.activity) {
         case 'like':
             affinityBoost(data.id || '', 0.1);
@@ -60,53 +56,4 @@ export function addLogEntry(data: LogEntry) {
             affinityBoost(data.id || '', 0.3);
             break;
     }
-}
-
-export function getTasteProfileById(id: string, count?: number) {
-    return getRelated('topic', id, count);
-}
-
-export function getTopContentById(id: string, count?: number) {
-    return getRelated('engaged', id, count);
-}
-
-export function getTasteProfile(count?: number) {
-    return getTasteProfileById(userID, count);
-}
-
-export function getTopContent(count?: number) {
-    return getTopContentById(userID, count);
-}
-
-export function getProfile(count?: number): ProfileSummary {
-    return {
-        taste: getTasteProfile(count),
-        engagedContent: getTopContent(count),
-        similarUsers: [],
-    };
-}
-
-export function getProfileById(id: string, count?: number): ProfileSummary {
-    return {
-        taste: getTasteProfileById(id, count),
-        engagedContent: getTopContentById(id, count),
-        similarUsers: [],
-    };
-}
-
-export function prettyProfile() {
-    if (!userID) newUser();
-
-    const topics = getRelated('topic', userID, 10);
-    const names = topics.map((t) => `${getTopicLabel(t.id)} (${t.weight.toFixed(1)})`);
-    console.log(names);
-}
-
-export function newUser() {
-    userID = addNode('user');
-}
-
-export function getMyUserId() {
-    if (!userID) newUser();
-    return userID;
 }

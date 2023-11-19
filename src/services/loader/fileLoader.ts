@@ -2,6 +2,8 @@ import JSZip from 'jszip';
 
 import { ContentMetadata } from '@genaism/services/content/contentTypes';
 import { addContent } from '@genaism/services/content/content';
+import { UserProfile } from '../profiler/profilerTypes';
+import { addUserProfile } from '../users/users';
 
 export async function getZipBlob(content: string | ArrayBuffer): Promise<Blob> {
     if (typeof content === 'string') {
@@ -19,8 +21,10 @@ export async function getZipBlob(content: string | ArrayBuffer): Promise<Blob> {
 export async function loadFile(file: File | Blob): Promise<void> {
     const zip = await JSZip.loadAsync(file);
 
+    console.log('Loading file');
+
     const images = new Map<string, string>();
-    const store: { meta: ContentMetadata[] } = { meta: [] };
+    const store: { meta: ContentMetadata[]; users: UserProfile[] } = { meta: [], users: [] };
 
     const promises: Promise<void>[] = [];
 
@@ -29,6 +33,12 @@ export async function loadFile(file: File | Blob): Promise<void> {
             promises.push(
                 data.async('string').then((r) => {
                     store.meta = JSON.parse(r);
+                })
+            );
+        } else if (data.name === 'users.json') {
+            promises.push(
+                data.async('string').then((r) => {
+                    store.users = JSON.parse(r);
                 })
             );
         } else {
@@ -50,5 +60,13 @@ export async function loadFile(file: File | Blob): Promise<void> {
 
     store.meta.forEach((v) => {
         addContent(images.get(v.id) || '', v);
+    });
+
+    store.users.forEach((u) => {
+        try {
+            addUserProfile(u);
+        } catch (e) {
+            console.warn('User already exists');
+        }
     });
 }

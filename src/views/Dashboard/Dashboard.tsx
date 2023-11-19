@@ -2,21 +2,18 @@ import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { SMConfig } from '../Genagram/smConfig';
 import { decompressFromEncodedURIComponent } from 'lz-string';
-import usePeer from '../../hooks/peer';
+import usePeer from '@genaism/hooks/peer';
 import { DataConnection } from 'peerjs';
 import style from './style.module.css';
-import { EventProtocol } from '../../protocol/protocol';
-import randomId from '../../util/randomId';
-import Graph from '@genaism/components/Graph/Graph';
+import { EventProtocol } from '@genaism/protocol/protocol';
+import randomId from '@genaism/util/randomId';
 import { getZipBlob, loadFile } from '@genaism/services/loader/fileLoader';
-import { useRecoilCallback } from 'recoil';
-import { ProfileSummary } from '@genaism/services/profiler/profilerTypes';
-import { cachedProfiles } from '@genaism/state/state';
-import ProfileNode from '@genaism/components/ProfileNode/ProfileNode';
 import { UserInfo } from './userInfo';
 import StartDialog from './StartDialog';
 import DEFAULT_CONFIG from '../Genagram/defaultConfig.json';
 import MenuPanel from './MenuPanel';
+import { setUserName, updateProfile } from '@genaism/services/users/users';
+import SocialGraph from '@genaism/components/SocialGraph/SocialGraph';
 
 const MYCODE = randomId(5);
 
@@ -25,13 +22,6 @@ export function Component() {
     const [config, setConfig] = useState<SMConfig | null>(null);
     const [users, setUsers] = useState<UserInfo[]>([]);
     const [showStartDialog, setShowStartDialog] = useState(true);
-    const setProfile = useRecoilCallback(
-        ({ set }) =>
-            (id: string, profile: ProfileSummary) => {
-                set(cachedProfiles(id), profile);
-            },
-        []
-    );
 
     const dataHandler = useCallback(
         (data: EventProtocol, conn: DataConnection) => {
@@ -39,11 +29,12 @@ export function Component() {
             if (data.event === 'eter:join') {
                 conn.send({ event: 'eter:config', configuration: config });
             } else if (data.event === 'eter:reguser') {
+                setUserName(data.id, data.username);
                 setUsers((old) => [...old, { id: data.id, username: data.username, connection: conn }]);
             } else if (data.event === 'eter:close') {
                 setUsers((old) => old.filter((o) => o.connection !== conn));
             } else if (data.event === 'eter:profile_data') {
-                setProfile(data.id, data.profile);
+                updateProfile(data.id, data.profile);
             }
         },
         [config]
@@ -65,10 +56,14 @@ export function Component() {
         }
 
         if (configObj.content) {
-            getZipBlob(configObj.content).then(async (blob) => {
-                configObj.content = await blob.arrayBuffer();
-                setConfig(configObj);
-                await loadFile(blob);
+            configObj.content.forEach((c, ix) => {
+                getZipBlob(c).then(async (blob) => {
+                    if (configObj.content) {
+                        configObj.content[ix] = await blob.arrayBuffer();
+                    }
+                    setConfig(configObj);
+                    await loadFile(blob);
+                });
             });
         } else {
             // Show the file open dialog
@@ -84,8 +79,10 @@ export function Component() {
     const doOpenFile = useCallback(
         (data: Blob) => {
             data.arrayBuffer().then((content) => {
-                const configObj = { ...config, content };
+                const configObj = { ...config, content: [...(config?.content || []), content] };
                 setConfig(configObj);
+
+                // TODO: Allow an optional graph reset here.
                 loadFile(data);
             });
         },
@@ -105,18 +102,7 @@ export function Component() {
                 onShowShare={doShowShare}
             />
             <section className={style.workspace}>
-                <Graph
-                    nodes={users.map((u) => ({
-                        id: u.username,
-                        size: 100,
-                        component: (
-                            <ProfileNode
-                                name={u.username}
-                                id={u.id}
-                            />
-                        ),
-                    }))}
-                />
+                <SocialGraph liveUsers={users.map((u) => u.id)} />
                 {showStartDialog && (
                     <StartDialog
                         users={users}

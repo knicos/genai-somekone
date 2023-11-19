@@ -32,7 +32,7 @@ describe('Feed component', () => {
     });
 
     it('fetches and renders a feed', async ({ expect }) => {
-        render(<Feed content="http://testuri.fi" />);
+        render(<Feed content={['http://testuri.fi']} />);
 
         expect(await screen.findAllByTestId('feed-image-element')).toHaveLength(1);
         await vi.waitFor(() => {

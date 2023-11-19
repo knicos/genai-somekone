@@ -1,6 +1,6 @@
 import { getNodesByType, getRelated } from '@genaism/services/graph/graph';
-import { getProfile } from '@genaism/services/profiler/profiler';
-import { getTopicLabel } from '@genaism/services/concept/concept';
+import { getProfileSummary } from '@genaism/services/users/users';
+import { getTopicId } from '@genaism/services/concept/concept';
 import { ProfileSummary } from '@genaism/services/profiler/profilerTypes';
 
 const factors = new Map<string, number>();
@@ -18,8 +18,8 @@ function generateTasteBatch(profile: ProfileSummary, nodes: string[], count: num
     taste.forEach((t) => {
         if (t.weight > 0) {
             const c = calculateCount(high, low, t.weight, count);
-            const tresult = getRelated('content', t.id, c, factors);
-            console.log('Topic', getTopicLabel(t.id), c, tresult);
+            const tresult = getRelated('content', getTopicId(t.label), c, factors);
+            console.log('Topic', t.label, c, tresult);
             tresult.forEach((tr) => nodes.push(tr.id));
         }
     });
@@ -43,7 +43,7 @@ export function generateFeed(count: number): [string[], ProfileSummary] {
     // Repeat until there are enough candidates
     // Randomly select from the candidates
 
-    const profile = getProfile(10);
+    const profile = getProfileSummary(10);
 
     //const nodes = getRelated('content', getTopicId('animal'), count, factors);
     const nodes: string[] = [];

@@ -1,24 +1,24 @@
-import { cachedProfiles } from '@genaism/state/state';
-import { useRecoilValue } from 'recoil';
 import ImageCloud from '../ImageCloud/ImageCloud';
 import { useState } from 'react';
+import { useUserProfile } from '@genaism/services/users/users';
 
 interface Props {
-    name: string;
     id: string;
 }
 
-export default function ProfileNode({ name, id }: Props) {
+export default function ProfileNode({ id }: Props) {
     const [size, setSize] = useState(100);
-    const profile = useRecoilValue(cachedProfiles(id));
+
+    const profile = useUserProfile(id);
 
     return (
         <>
             <circle
                 r={size + 10}
-                fill={profile ? 'white' : 'blue'}
+                fill="white"
+                opacity="0.5"
             />
-            {profile?.engagedContent.length && (
+            {profile.engagedContent.length && (
                 <ImageCloud
                     content={profile.engagedContent}
                     size={100}
@@ -30,7 +30,7 @@ export default function ProfileNode({ name, id }: Props) {
                 y={-size - 15}
                 textAnchor="middle"
             >
-                {name}
+                {profile.name}
             </text>
         </>
     );

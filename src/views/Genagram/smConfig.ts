@@ -1,4 +1,4 @@
 export interface SMConfig {
-    content?: string | ArrayBuffer;
+    content?: (string | ArrayBuffer)[];
     hideShareProfile?: boolean;
 }

@@ -10,7 +10,7 @@ import { CircularProgress } from '@mui/material';
 import EnterUsername from './EnterUsername';
 import { EventProtocol } from '../../protocol/protocol';
 import { ProfileSummary } from '@genaism/services/profiler/profilerTypes';
-import { getMyUserId } from '@genaism/services/profiler/profiler';
+import { getCurrentUser } from '@genaism/services/users/users';
 
 const MYCODE = randomId(10);
 
@@ -31,14 +31,14 @@ export function Component() {
 
     useEffect(() => {
         if (username && send) {
-            send({ event: 'eter:reguser', username, id: getMyUserId() });
+            send({ event: 'eter:reguser', username, id: getCurrentUser() });
         }
     }, [username, send]);
 
     const doProfile = useCallback(
         (profile: ProfileSummary) => {
             console.log('PROFILE', profile);
-            if (send) send({ event: 'eter:profile_data', profile, id: getMyUserId() });
+            if (send) send({ event: 'eter:profile_data', profile, id: getCurrentUser() });
         },
         [send]
     );
