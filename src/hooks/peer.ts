@@ -1,5 +1,7 @@
 import { useRef, useEffect, useState } from 'react';
 import { Peer as P2P, DataConnection } from 'peerjs';
+import { iceConfig, webrtcActive } from '@genaism/state/webrtcState';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
 export interface PeerEvent {
     event: string;
@@ -64,7 +66,8 @@ export default function usePeer<T extends PeerEvent>({
     const [peer, setPeer] = useState<P2P>();
     const connRef = useRef<PeerState<T>>();
     const cbRef = useRef<Callbacks<T>>({});
-    const [webrtc, setWebRTC] = useState(false);
+    const [webrtc, setWebRTC] = useRecoilState(webrtcActive);
+    const ice = useRecoilValue(iceConfig);
     const [sender, setSender] = useState<SenderType<T>>();
 
     useEffect(() => {
@@ -82,6 +85,7 @@ export default function usePeer<T extends PeerEvent>({
     useEffect(() => {
         if (!webrtc) return;
         if (!code) return;
+        if (!ice) return;
 
         const npeer = new P2P(code, {
             host: import.meta.env.VITE_APP_PEER_SERVER,
@@ -89,8 +93,7 @@ export default function usePeer<T extends PeerEvent>({
             key: import.meta.env.VITE_APP_PEER_KEY || 'peerjs',
             port: import.meta.env.VITE_APP_PEER_PORT ? parseInt(import.meta.env.VITE_APP_PEER_PORT) : 443,
             debug: 0,
-            // config: { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }], sdpSemantics: 'unified-plan' },
-            // config: { iceServers: [] },
+            config: { iceServers: ice.iceServers, sdpSemantics: 'unified-plan' },
         });
         setPeer(npeer);
 
@@ -216,7 +219,7 @@ export default function usePeer<T extends PeerEvent>({
             }
             npeer.destroy();
         };
-    }, [code, server, webrtc]);
+    }, [code, server, webrtc, ice]);
 
     useEffect(() => {
         const tabClose = () => {
