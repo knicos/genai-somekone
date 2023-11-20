@@ -2,10 +2,10 @@ import { useEffect, useMemo, useReducer } from 'react';
 import { EdgeType, NodeType, WeightedNode } from './graphTypes';
 import { getNodesByType } from './nodes';
 import {
-    addEdgeTypeListener,
+    addNodeEdgeTypeListener,
     addNodeListener,
     addNodeTypeListener,
-    removeEdgeTypeListener,
+    removeNodeEdgeTypeListener,
     removeNodeListener,
     removeNodeTypeListener,
 } from './events';
@@ -34,8 +34,8 @@ export function useRelatedNodes(id: string, type: EdgeType, size?: number): Weig
     const [count, trigger] = useReducer((a) => ++a, 0);
     useEffect(() => {
         const handler = () => trigger();
-        addEdgeTypeListener(id, type, handler);
-        return () => removeEdgeTypeListener(id, type, handler);
+        addNodeEdgeTypeListener(id, type, handler);
+        return () => removeNodeEdgeTypeListener(id, type, handler);
     }, [id, type]);
     return useMemo(() => getRelated(type, id, size), [id, type, size, count]);
 }

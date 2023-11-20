@@ -12,7 +12,7 @@ import { UserInfo } from './userInfo';
 import StartDialog from './StartDialog';
 import DEFAULT_CONFIG from '../Genagram/defaultConfig.json';
 import MenuPanel from './MenuPanel';
-import { setUserName, updateProfile } from '@genaism/services/users/users';
+import { setUserName, updateProfile } from '@genaism/services/profiler/profiler';
 import SocialGraph from '@genaism/components/SocialGraph/SocialGraph';
 
 const MYCODE = randomId(5);

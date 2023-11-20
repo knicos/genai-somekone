@@ -10,7 +10,7 @@ import { CircularProgress } from '@mui/material';
 import EnterUsername from './EnterUsername';
 import { EventProtocol } from '../../protocol/protocol';
 import { ProfileSummary } from '@genaism/services/profiler/profilerTypes';
-import { getCurrentUser } from '@genaism/services/users/users';
+import { getCurrentUser } from '@genaism/services/profiler/profiler';
 
 const MYCODE = randomId(10);
 

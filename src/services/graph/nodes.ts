@@ -1,4 +1,4 @@
-import { emitNodeEvent, emitNodeTypeEvent } from './events';
+import { emitNodeTypeEvent } from './events';
 import { NodeType } from './graphTypes';
 import { edgeSrcIndex, edgeStore, edgeTypeSrcIndex, nodeStore, nodeTypeIndex } from './state';
 import { v4 as uuidv4 } from 'uuid';
@@ -25,8 +25,7 @@ export function removeNode(id: string) {
         );
         nodeStore.delete(id);
 
-        emitNodeEvent(id);
-        emitNodeTypeEvent(node.type);
+        emitNodeTypeEvent(node.type, id);
     }
 }
 
@@ -41,8 +40,7 @@ export function addNode(type: NodeType, id?: string): string {
     const typeArray = nodeTypeIndex.get(type);
     if (typeArray) typeArray.push(node);
 
-    emitNodeEvent(nid);
-    emitNodeTypeEvent(type);
+    emitNodeTypeEvent(type, nid);
 
     return nid;
 }
@@ -58,8 +56,7 @@ export function addNodeIfNotExists(type: NodeType, id: string) {
     const typeArray = nodeTypeIndex.get(type);
     if (typeArray) typeArray.push(node);
 
-    emitNodeEvent(nid);
-    emitNodeTypeEvent(type);
+    emitNodeTypeEvent(type, nid);
 
     return nid;
 }

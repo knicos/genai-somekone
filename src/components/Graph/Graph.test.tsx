@@ -39,7 +39,7 @@ describe('Graph component', () => {
                     { id: 'xyz2', size: 60, component: <text data-testid="graph-node-2">Hello2</text> },
                     { id: 'xyz3', size: 70, component: <text data-testid="graph-node-3">Hello3</text> },
                 ]}
-                links={[{ source: 'xyz', target: 'xyz1' }]}
+                links={[{ source: 'xyz', target: 'xyz1', strength: 1 }]}
             />
         );
 

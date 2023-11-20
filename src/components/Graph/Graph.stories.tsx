@@ -50,8 +50,8 @@ export const Primary: Story = {
     args: {
         nodes: TEST_NODES1,
         links: [
-            { source: 'xyz1', target: 'xyz2' },
-            { source: 'xyz1', target: 'xyz3' },
+            { source: 'xyz1', target: 'xyz2', strength: 1 },
+            { source: 'xyz1', target: 'xyz3', strength: 0.5 },
         ],
     },
 };

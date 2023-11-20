@@ -30,7 +30,6 @@ export interface LogEntry {
 export interface ProfileSummary {
     taste: WeightedLabel[];
     engagedContent: WeightedNode[];
-    similarUsers: WeightedNode[];
 }
 
 export interface UserProfile extends ProfileSummary {

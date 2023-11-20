@@ -2,8 +2,8 @@ import JSZip from 'jszip';
 
 import { ContentMetadata } from '@genaism/services/content/contentTypes';
 import { addContent } from '@genaism/services/content/content';
-import { UserProfile } from '../profiler/profilerTypes';
-import { addUserProfile } from '../users/users';
+import { UserProfile } from '@genaism/services/profiler/profilerTypes';
+import { addUserProfile } from '@genaism/services/profiler/profiler';
 
 export async function getZipBlob(content: string | ArrayBuffer): Promise<Blob> {
     if (typeof content === 'string') {

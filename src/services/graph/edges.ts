@@ -1,4 +1,4 @@
-import { emitEdgeTypeEvent } from './events';
+import { emitNodeEdgeTypeEvent } from './events';
 import { EdgeType, Edge } from './graphTypes';
 import { edgeSrcIndex, edgeStore, edgeTypeSrcIndex, nodeStore } from './state';
 
@@ -10,7 +10,10 @@ export function addEdge(type: EdgeType, src: string, dest: string, weight?: numb
     const had = edgeStore.has(id);
     edgeStore.set(id, edge);
 
-    if (had) return id;
+    if (had) {
+        emitNodeEdgeTypeEvent(src, type);
+        return id;
+    }
 
     if (!edgeSrcIndex.has(src)) edgeSrcIndex.set(src, []);
     edgeSrcIndex.get(src)?.push(edge);
@@ -19,9 +22,13 @@ export function addEdge(type: EdgeType, src: string, dest: string, weight?: numb
     if (!edgeTypeSrcIndex.has(typesrckey)) edgeTypeSrcIndex.set(typesrckey, []);
     edgeTypeSrcIndex.get(typesrckey)?.push(edge);
 
-    emitEdgeTypeEvent(src, type);
+    emitNodeEdgeTypeEvent(src, type);
 
     return id;
+}
+export function addBiEdge(type: EdgeType, src: string, dest: string, weight?: number) {
+    addEdge(type, src, dest, weight);
+    addEdge(type, dest, src, weight);
 }
 
 export function addOrAccumulateEdge(type: EdgeType, src: string, dest: string, weight: number) {
@@ -40,7 +47,7 @@ export function addOrAccumulateEdge(type: EdgeType, src: string, dest: string, w
         edgeTypeSrcIndex.get(typesrckey)?.push(edge);
     }
 
-    emitEdgeTypeEvent(src, type);
+    emitNodeEdgeTypeEvent(src, type);
 }
 
 export function getEdgeWeights(type: EdgeType, src: string, dest?: string | string[]): number[] {

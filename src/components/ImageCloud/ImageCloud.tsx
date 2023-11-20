@@ -86,7 +86,7 @@ export default function ImageCloud({ content, size, padding, colour, borderSize,
                 }
             }
 
-            if (onSize) onSize(maxDist);
+            if (onSize) onSize(Math.floor(maxDist));
 
             setLocations(results);
         }

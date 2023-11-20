@@ -1,125 +1,113 @@
-import { ProfileSummary, UserProfile } from '../profiler/profilerTypes';
-import { addEdge, addNode, addNodeIfNotExists, getNodesByType, getRelated } from '@genaism/services/graph/graph';
-import { getTopicId, getTopicLabel } from '@genaism/services/concept/concept';
-import { useRelatedNodes } from '../graph/hooks';
+import { getRelated } from '@genaism/services/graph/graph';
+import { getTopicId } from '@genaism/services/concept/concept';
+import { WeightedNode } from '../graph/graphTypes';
+import { getUserProfile } from '../profiler/profiler';
 import { useMemo } from 'react';
+import { UserProfile } from '../profiler/profilerTypes';
 
-let userID: string;
-
-interface UserState {
-    name?: string;
-}
-
-const users = new Map<string, UserState>();
-
-export function getCurrentUser(): string {
-    if (!userID) newUser();
-    return userID;
-}
-
-export function setUserName(id: string, name: string) {
-    const current = users.get(id);
-    users.set(id, { ...current, name });
-}
-
-export function addUserProfile(profile: UserProfile) {
-    console.log('Adding user', profile.name);
-    addNode('user', profile.id);
-    profile.engagedContent.forEach((c) => {
-        addEdge('engaged', profile.id, c.id, c.weight);
-    });
-    profile.taste.forEach((t) => {
-        addEdge('topic', profile.id, getTopicId(t.label), t.weight);
-    });
-    users.set(profile.id, { name: profile.name });
-}
-
-export function updateProfile(id: string, profile: ProfileSummary) {
-    addNodeIfNotExists('user', id);
-    profile.engagedContent.forEach((c) => {
-        addEdge('engaged', id, c.id, c.weight);
-    });
-    profile.taste.forEach((t) => {
-        addEdge('topic', id, getTopicId(t.label), t.weight);
+function identifyCandidateUsers(users: Set<string>, candidates: WeightedNode[]) {
+    candidates.forEach((c) => {
+        users.add(c.id);
     });
 }
 
-export function getUserProfile(id?: string): UserProfile {
-    const aid = id || getCurrentUser();
-    const summary = getProfileSummaryById(aid, 10);
-    const state = users.get(aid) || {};
-    return {
-        ...summary,
-        name: state.name || 'NoName',
-        id: aid,
-        engagement: -1,
-        attributes: {},
-    };
+function cosinesim(A: number[], B: number[]): number {
+    let dotproduct = 0;
+    let mA = 0;
+    let mB = 0;
+
+    for (let i = 0; i < A.length; i++) {
+        dotproduct += A[i] * B[i];
+        mA += A[i] * A[i];
+        mB += B[i] * B[i];
+    }
+
+    mA = Math.sqrt(mA);
+    mB = Math.sqrt(mB);
+    const similarity = dotproduct / (mA * mB);
+
+    return similarity;
 }
 
-export function useUserProfile(id?: string): UserProfile {
-    const aid = id || getCurrentUser();
-    const engagedContent = useRelatedNodes(aid, 'engaged', 10);
-    const taste = useRelatedNodes(aid, 'topic', 10);
+function calculateSimilarity(a: WeightedNode[], b: WeightedNode[]): number {
+    const sumA = a.reduce((p, v) => p + v.weight, 0);
+    const sumB = b.reduce((p, v) => p + v.weight, 0);
+    const normA = a.map((v) => ({ id: v.id, weight: v.weight / sumA }));
+    const normB = b.map((v) => ({ id: v.id, weight: v.weight / sumB }));
 
-    return useMemo(() => {
-        const state = users.get(aid) || {};
+    const labelMap = new Map<string, { a: number; b: number }>();
+    normA.forEach((v) => {
+        labelMap.set(v.id, { a: v.weight, b: 0 });
+    });
+    normB.forEach((v) => {
+        labelMap.set(v.id, { a: labelMap.get(v.id)?.a || 0, b: v.weight });
+    });
+
+    const larray = Array.from(labelMap);
+    const vec1 = larray.map((v) => v[1].a);
+    const vec2 = larray.map((v) => v[1].b);
+    return cosinesim(vec1, vec2);
+}
+
+function generateCandidates(engaged: WeightedNode[], taste: WeightedNode[]): Set<string> {
+    const users = new Set<string>();
+    identifyCandidateUsers(
+        users,
+        getRelated(
+            'engaged',
+            engaged.map((e) => e.id),
+            10
+        )
+    );
+    identifyCandidateUsers(
+        users,
+        getRelated(
+            'topic',
+            taste.map((e) => e.id),
+            10
+        )
+    );
+    return users;
+}
+
+function calculateScores(taste: WeightedNode[], users: string[]): WeightedNode[] {
+    return users.map((user) => {
+        const profile = getUserProfile(user);
         return {
-            engagedContent,
-            taste: taste.map((t) => ({ label: getTopicLabel(t.id), weight: t.weight })),
-            similarUsers: [],
-            name: state.name || 'NoName',
-            id: aid,
-            engagement: -1,
-            attributes: {},
+            id: user,
+            weight: calculateSimilarity(
+                taste,
+                profile.taste.map((t) => ({ id: getTopicId(t.label), weight: t.weight }))
+            ),
         };
-    }, [aid, taste, engagedContent]);
+    });
 }
 
-export function getAllUsers(): string[] {
-    return getNodesByType('user');
+export function findSimilarUsers(id: string): WeightedNode[] {
+    const ownProfile = getUserProfile(id);
+    const engaged = ownProfile.engagedContent;
+    const taste = ownProfile.taste.map((t) => ({ id: getTopicId(t.label), weight: t.weight }));
+
+    // Step 1: Find candidate users.
+    const users = generateCandidates(engaged, taste);
+    users.delete(id);
+
+    // Step 2: Calculate a similarity score
+    // Get the taste profile of every candidate
+    // Compare the taste profiles
+    const userArray = Array.from(users);
+    const scores = calculateScores(taste, userArray);
+
+    // Step 3: Sort and limit the result
+    scores.sort((a, b) => b.weight - a.weight);
+
+    console.log('Simialr', scores);
+
+    return scores.slice(0, 10);
 }
 
-export function getTasteProfileById(id: string, count?: number) {
-    return getRelated('topic', id, count).map((v) => ({ label: getTopicLabel(v.id), weight: v.weight }));
-}
-
-export function getTopContentById(id: string, count?: number) {
-    return getRelated('engaged', id, count);
-}
-
-export function getTasteProfile(count?: number) {
-    return getTasteProfileById(userID, count);
-}
-
-export function getTopContent(count?: number) {
-    return getTopContentById(userID, count);
-}
-
-export function getProfileSummary(count?: number): ProfileSummary {
-    return {
-        taste: getTasteProfile(count),
-        engagedContent: getTopContent(count),
-        similarUsers: [],
-    };
-}
-
-export function getProfileSummaryById(id: string, count?: number): ProfileSummary {
-    return {
-        taste: getTasteProfileById(id, count),
-        engagedContent: getTopContentById(id, count),
-        similarUsers: [],
-    };
-}
-
-export function prettyProfile() {
-    if (!userID) newUser();
-
-    const topics = getRelated('topic', userID, 10);
-    const names = topics.map((t) => `${getTopicLabel(t.id)} (${t.weight.toFixed(1)})`);
-    console.log(names);
-}
-
-export function newUser() {
-    userID = addNode('user');
+export function useSimilarUsers(profile: UserProfile) {
+    return useMemo(() => {
+        return findSimilarUsers(profile.id);
+    }, [profile]);
 }

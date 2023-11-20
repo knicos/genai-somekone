@@ -1,5 +1,5 @@
 import { getNodesByType, getRelated } from '@genaism/services/graph/graph';
-import { getProfileSummary } from '@genaism/services/users/users';
+import { getUserProfile } from '@genaism/services/profiler/profiler';
 import { getTopicId } from '@genaism/services/concept/concept';
 import { ProfileSummary } from '@genaism/services/profiler/profilerTypes';
 
@@ -43,7 +43,7 @@ export function generateFeed(count: number): [string[], ProfileSummary] {
     // Repeat until there are enough candidates
     // Randomly select from the candidates
 
-    const profile = getProfileSummary(10);
+    const profile = getUserProfile();
 
     //const nodes = getRelated('content', getTopicId('animal'), count, factors);
     const nodes: string[] = [];

@@ -3,22 +3,25 @@ import * as d3 from 'd3';
 import style from './style.module.css';
 import gsap from 'gsap';
 
-interface GraphNode {
+export interface GraphNode {
     size: number;
     id: string;
-    component: JSX.Element;
     x?: number;
     y?: number;
+    component: JSX.Element;
+    index?: number;
 }
 
-interface GraphLink {
+export interface GraphLink {
     source: string;
     target: string;
+    strength: number;
 }
 
 interface InternalGraphLink {
     source: GraphNode;
     target: GraphNode;
+    strength: number;
 }
 
 interface Extents {
@@ -29,10 +32,10 @@ interface Extents {
 }
 
 function calculateViewBox(extents: Extents): string {
-    const w = extents.maxX - extents.minX + 100;
-    const h = extents.maxY - extents.minY + 100;
-    const x = extents.minX - 50;
-    const y = extents.minY - 50;
+    const w = Math.floor(extents.maxX - extents.minX + 100);
+    const h = Math.floor(extents.maxY - extents.minY + 100);
+    const x = Math.floor(extents.minX - 50);
+    const y = Math.floor(extents.minY - 50);
     return `${x} ${y} ${w} ${h}`;
 }
 
@@ -45,65 +48,112 @@ export default function Graph({ nodes, links }: Props) {
     const svgRef = useRef<SVGSVGElement>(null);
     const [nodeList, setNodeList] = useState<GraphNode[]>([]);
     const [linkList, setLinkList] = useState<InternalGraphLink[]>([]);
+    const nodeRef = useRef<Map<string, GraphNode>>(new Map<string, GraphNode>());
+    const simRef = useRef<d3.Simulation<GraphNode, undefined>>();
 
     useEffect(() => {
-        const lnodes = nodes;
-        const idMap = new Map<string, GraphNode>();
-        nodes.forEach((n) => {
-            idMap.set(n.id, n);
+        if (simRef.current) simRef.current.stop();
+
+        nodes.forEach((n, ix) => {
+            const cur = nodeRef.current.get(n.id) || { ...n };
+            cur.size = n.size;
+            cur.component = n.component;
+            cur.index = ix;
+            nodeRef.current.set(n.id, cur);
         });
+
+        const lnodes = Array.from(nodeRef.current).map((v) => v[1]);
+        //lnodes.sort((a, b) => (b.index || 0) - (a.index || 0));
+        //console.log('LNODES', lnodes);
+
         const llinks: InternalGraphLink[] = links
             ? links.map((l) => {
-                  const s = idMap.get(l.source);
-                  const t = idMap.get(l.target);
-                  return s && t ? { source: s, target: t } : { source: lnodes[0], target: lnodes[0] };
+                  const s = nodeRef.current.get(l.source);
+                  const t = nodeRef.current.get(l.target);
+                  return s && t
+                      ? { source: s, target: t, strength: l.strength }
+                      : { source: lnodes[0], target: lnodes[0], strength: 1 };
               })
             : [];
 
-        const simulation = d3
-            .forceSimulation(lnodes)
-            .force(
-                'collide',
-                d3.forceCollide().radius((n) => lnodes[n.index || 0].size)
-            )
-            .force('link', d3.forceLink(llinks).strength(1))
-            .force('charge', d3.forceManyBody().strength(-20000).distanceMax(300))
-            .force('x', d3.forceX())
-            .force('y', d3.forceY())
-            .stop();
+        console.log('links', llinks);
 
-        for (
-            let i = 0, n = Math.ceil(Math.log(simulation.alphaMin()) / Math.log(1 - simulation.alphaDecay()));
-            i < n;
-            ++i
-        ) {
-            simulation.tick();
+        if (!simRef.current) {
+            simRef.current = d3
+                .forceSimulation<GraphNode>()
+                .force(
+                    'link',
+                    d3
+                        .forceLink<GraphNode, InternalGraphLink>()
+                        .strength((d) => d.strength)
+                        .distance(
+                            (d) =>
+                                (1 - d.strength) * 6 * (d.source.size + d.target.size) + (d.source.size + d.target.size)
+                        )
+                )
+                .force(
+                    'collide',
+                    d3.forceCollide<GraphNode>((n) => {
+                        return n.size || 5;
+                    })
+                )
+                .force('center', d3.forceCenter());
         }
 
-        const extents: Extents = {
-            minX: 0,
-            minY: 0,
-            maxX: 0,
-            maxY: 0,
-        };
-
-        lnodes.forEach((n) => {
-            extents.minX = Math.min(extents.minX, (n.x || 0) - n.size);
-            extents.minY = Math.min(extents.minY, (n.y || 0) - n.size);
-            extents.maxX = Math.max(extents.maxX, (n.x || 0) + n.size);
-            extents.maxY = Math.max(extents.maxY, (n.y || 0) + n.size);
-        });
-
         setNodeList(lnodes);
-        setLinkList(llinks);
 
-        gsap.to(svgRef.current, {
-            attr: {
-                viewBox: calculateViewBox(extents),
-            },
-            duration: 1,
-        });
-    }, [nodes]);
+        simRef.current.nodes(lnodes);
+        simRef.current.force<d3.ForceLink<GraphNode, InternalGraphLink>>('link')?.links(llinks);
+        simRef.current
+            .on('tick', () => {
+                /*console.log('tick');
+                const extents: Extents = {
+                    minX: 0,
+                    minY: 0,
+                    maxX: 0,
+                    maxY: 0,
+                };
+
+                lnodes.forEach((n) => {
+                    extents.minX = Math.min(extents.minX, (n.x || 0) - n.size);
+                    extents.minY = Math.min(extents.minY, (n.y || 0) - n.size);
+                    extents.maxX = Math.max(extents.maxX, (n.x || 0) + n.size);
+                    extents.maxY = Math.max(extents.maxY, (n.y || 0) + n.size);
+                });
+
+                setViewbox(calculateViewBox(extents));*/
+                setNodeList([...lnodes]);
+            })
+            .on('end', () => {
+                const extents: Extents = {
+                    minX: 0,
+                    minY: 0,
+                    maxX: 0,
+                    maxY: 0,
+                };
+
+                lnodes.forEach((n) => {
+                    extents.minX = Math.min(extents.minX, (n.x || 0) - n.size);
+                    extents.minY = Math.min(extents.minY, (n.y || 0) - n.size);
+                    extents.maxX = Math.max(extents.maxX, (n.x || 0) + n.size);
+                    extents.maxY = Math.max(extents.maxY, (n.y || 0) + n.size);
+                });
+
+                //setNodeList([...lnodes]);
+
+                //console.log('LINKS', llinks);
+
+                gsap.to(svgRef.current, {
+                    attr: {
+                        viewBox: calculateViewBox(extents),
+                    },
+                    duration: 1,
+                });
+            });
+        simRef.current.alpha(0.2).restart();
+
+        setLinkList(llinks);
+    }, [nodes, links]);
 
     return (
         <svg
@@ -123,7 +173,9 @@ export default function Graph({ nodes, links }: Props) {
                             y1={l.source.y}
                             x2={l.target.x}
                             y2={l.target.y}
-                            stroke="black"
+                            stroke="#0A869A"
+                            opacity="0.05"
+                            strokeWidth={1 + Math.floor(l.strength * 20)}
                             data-testid={`graph-link-${ix}`}
                         />
                     ))}
