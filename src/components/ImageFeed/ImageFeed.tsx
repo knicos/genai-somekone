@@ -6,6 +6,11 @@ import { LogActivity, LogEntry } from '@genaism/services/profiler/profilerTypes'
 import { LikeKind } from '@genaism/components/FeedImage/LikePanel';
 import { ShareKind } from '@genaism/components/FeedImage/SharePanel';
 import FeedSpacer from './FeedSpacer';
+import { useTabActive } from '@genaism/hooks/interaction';
+
+const MIN_DWELL_TIME = 2000;
+const MAX_DWELL_TIME = 10000;
+const INTERACTION_TIMEOUT = 5000;
 
 interface Props {
     images: string[];
@@ -19,9 +24,21 @@ export default function ImageFeed({ images, onView, onMore, onLog }: Props) {
     const [viewed, setViewed] = useState(0);
     const prevRef = useRef<number>(-1);
     const startRef = useRef<number>(0);
+    const lastRef = useRef<number>(0);
     const canMoreRef = useRef(true);
     const durationRef = useRef<number>(0);
-    const [active, setActive] = useState(false);
+    const active = useTabActive();
+
+    useEffect(() => {
+        const now = Date.now();
+        if (active) {
+            durationRef.current = now;
+            startRef.current = now;
+            onLog({ activity: 'begin', timestamp: now });
+        } else {
+            onLog({ activity: 'end', timestamp: now, value: now - durationRef.current });
+        }
+    }, [active]);
 
     useEffect(() => {
         canMoreRef.current = true;
@@ -34,7 +51,7 @@ export default function ImageFeed({ images, onView, onMore, onLog }: Props) {
         if (prevRef.current >= 0) {
             const delta = now - startRef.current;
             //if (delta > 1000) {
-            const norm = Math.max(0, Math.min(10, (delta - 1000) / 10000.0));
+            const norm = Math.max(0, Math.min(10, (delta - MIN_DWELL_TIME) / (MAX_DWELL_TIME - MIN_DWELL_TIME)));
             // onView(prevRef.current, norm);
             onLog({ activity: 'dwell', value: norm, id: images[viewed], timestamp: Date.now() });
             //}
@@ -43,12 +60,27 @@ export default function ImageFeed({ images, onView, onMore, onLog }: Props) {
         prevRef.current = viewed;
     }, [viewed, onView, onLog, images]);
 
+    const doInteraction = useCallback(() => {
+        const now = Date.now();
+        if (now - lastRef.current > INTERACTION_TIMEOUT) {
+            startRef.current = now;
+        }
+        lastRef.current = now;
+    }, []);
+
     const doScroll = useCallback(
         (e: React.MouseEvent<HTMLDivElement>) => {
-            const imgIndex = Math.round(
-                (e.currentTarget.scrollTop / (e.currentTarget.scrollHeight - e.currentTarget.clientHeight)) *
-                    (images.length - 1)
-            );
+            const scrollTop = e.currentTarget.scrollTop;
+            const scrollHeight = e.currentTarget.scrollHeight;
+            const clientHeight = e.currentTarget.clientHeight;
+
+            const now = Date.now();
+            if (now - lastRef.current > INTERACTION_TIMEOUT) {
+                startRef.current = now;
+            }
+            lastRef.current = now;
+
+            const imgIndex = Math.round((scrollTop / (scrollHeight - clientHeight)) * (images.length - 1));
             setViewed(imgIndex);
             if (onMore && imgIndex >= images.length - 4) {
                 if (canMoreRef.current) {
@@ -59,17 +91,6 @@ export default function ImageFeed({ images, onView, onMore, onLog }: Props) {
         },
         [images, setViewed, onMore]
     );
-
-    const doLeave = useCallback(() => {
-        setActive(false);
-        onLog({ activity: 'end', timestamp: Date.now(), value: Date.now() - durationRef.current });
-    }, [onLog]);
-
-    const doEnter = useCallback(() => {
-        setActive(true);
-        onLog({ activity: 'begin', timestamp: Date.now() });
-        durationRef.current = Date.now();
-    }, [onLog]);
 
     const doLike = useCallback(
         (id: string, kind: LikeKind) => {
@@ -118,8 +139,10 @@ export default function ImageFeed({ images, onView, onMore, onLog }: Props) {
     return (
         <div
             className={style.outer}
-            onMouseLeave={doLeave}
-            onMouseEnter={doEnter}
+            onMouseMove={doInteraction}
+            onKeyDown={doInteraction}
+            onTouchStart={doInteraction}
+            onMouseDown={doInteraction}
         >
             <div
                 ref={containerRef}

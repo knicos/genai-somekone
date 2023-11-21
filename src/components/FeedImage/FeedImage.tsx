@@ -133,18 +133,20 @@ export default function FeedImage({ id, onClick, onLike, onFollow, onShare, onCo
     return !visible || !contentData || !contentMeta ? null : (
         <div className={style.container}>
             <div className={active ? style.activeImageContainer : style.imageContainer}>
-                <div className={style.name}>
-                    <Avatar {...stringAvatar(contentMeta.author || 'Unknown')} />
-                    <span className={style.author}>{contentMeta.author || 'Unknown'}</span>
-                    <SButton
-                        variant={followed ? 'outlined' : 'contained'}
-                        size="small"
-                        onClick={doFollow}
-                        data-testid="feed-image-follow-button"
-                    >
-                        {followed ? t('feed.actions.unfollow') : t('feed.actions.follow')}
-                    </SButton>
-                </div>
+                {active && (
+                    <div className={style.name}>
+                        <Avatar {...stringAvatar(contentMeta.author || 'Unknown')} />
+                        <span className={style.author}>{contentMeta.author || 'Unknown'}</span>
+                        <SButton
+                            variant={followed ? 'outlined' : 'contained'}
+                            size="small"
+                            onClick={doFollow}
+                            data-testid="feed-image-follow-button"
+                        >
+                            {followed ? t('feed.actions.unfollow') : t('feed.actions.follow')}
+                        </SButton>
+                    </div>
+                )}
                 <img
                     onClick={doClick}
                     className={style.instaImage}
@@ -152,44 +154,46 @@ export default function FeedImage({ id, onClick, onLike, onFollow, onShare, onCo
                     alt="Insta Upload"
                     data-testid="feed-image-element"
                 />
-                <div className={style.buttonRow}>
-                    <IconButton
-                        className={liked !== 'none' ? style.liked : ''}
-                        onClick={doShowPanel}
-                        color="inherit"
-                        data-testid="feed-image-like-button"
-                    >
-                        {liked !== 'none' ? (
-                            <div className={style.iconContainer}>{LIKEMAP[liked]}</div>
-                        ) : (
-                            <ThumbUpOffAltIcon
+                {active && (
+                    <div className={style.buttonRow}>
+                        <IconButton
+                            className={liked !== 'none' ? style.liked : ''}
+                            onClick={doShowPanel}
+                            color="inherit"
+                            data-testid="feed-image-like-button"
+                        >
+                            {liked !== 'none' ? (
+                                <div className={style.iconContainer}>{LIKEMAP[liked]}</div>
+                            ) : (
+                                <ThumbUpOffAltIcon
+                                    color="inherit"
+                                    fontSize="large"
+                                />
+                            )}
+                        </IconButton>
+                        <IconButton
+                            color="inherit"
+                            onClick={doShowComments}
+                            data-testid="feed-image-comment-button"
+                        >
+                            <ChatBubbleOutlineIcon
                                 color="inherit"
                                 fontSize="large"
                             />
-                        )}
-                    </IconButton>
-                    <IconButton
-                        color="inherit"
-                        onClick={doShowComments}
-                        data-testid="feed-image-comment-button"
-                    >
-                        <ChatBubbleOutlineIcon
+                        </IconButton>
+                        <IconButton
                             color="inherit"
-                            fontSize="large"
-                        />
-                    </IconButton>
-                    <IconButton
-                        color="inherit"
-                        onClick={doShowSharePanel}
-                        data-testid="feed-image-share-button"
-                    >
-                        <ReplyIcon
-                            color="inherit"
-                            fontSize="large"
-                            style={{ transform: 'scaleX(-1)' }}
-                        />
-                    </IconButton>
-                </div>
+                            onClick={doShowSharePanel}
+                            data-testid="feed-image-share-button"
+                        >
+                            <ReplyIcon
+                                color="inherit"
+                                fontSize="large"
+                                style={{ transform: 'scaleX(-1)' }}
+                            />
+                        </IconButton>
+                    </div>
+                )}
                 {activePanel === 'like' && (
                     <LikePanel
                         onClose={doCloseLike}

@@ -17,13 +17,14 @@
 
 .placeholder {
     flex-shrink: 0;
-    width: 500px;
+    max-width: 500px;
+    width: 100%;
 }
 
 @media screen and (max-width: 600px) {
     .container {
         padding: 0;
-        scroll-snap-type: y mandatory;
+        /*scroll-snap-type: y mandatory;*/
     }
 }
 
