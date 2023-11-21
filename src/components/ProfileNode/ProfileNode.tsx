@@ -20,8 +20,8 @@ export default function ProfileNode({ id, onLinks, onResize }: Props) {
 
     const doResize = useCallback(
         (s: number) => {
-            setSize(s + 10);
-            onResize(id, s + 10);
+            setSize(s + 20);
+            onResize(id, s + 20);
         },
         [onResize, id]
     );

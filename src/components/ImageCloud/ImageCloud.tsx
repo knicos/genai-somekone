@@ -29,11 +29,11 @@ interface LocationItem {
 
 const BORDER_SIZE = 1.5;
 
-function calculateDistance(c: QTDataItem): number {
-    const d1 = Math.sqrt(c.x0 * c.x0 + c.y0 * c.y0);
-    const d2 = Math.sqrt(c.x1 * c.x1 + c.y0 * c.y0);
-    const d3 = Math.sqrt(c.x0 * c.x0 + c.y1 * c.y1);
-    const d4 = Math.sqrt(c.x1 * c.x1 + c.y1 * c.y1);
+function calculateDistance(minX: number, maxX: number, minY: number, maxY: number): number {
+    const d1 = Math.sqrt(minX * minX + minY * minY);
+    const d2 = Math.sqrt(maxX * maxX + minY * minY);
+    const d3 = Math.sqrt(minX * minX + maxY * maxY);
+    const d4 = Math.sqrt(maxX * maxX + maxY * maxY);
     return Math.max(d1, d2, d3, d4);
 }
 
@@ -42,7 +42,7 @@ export default function ImageCloud({ content, size, padding, colour, borderSize,
 
     useEffect(() => {
         const results: LocationItem[] = [];
-        let maxDist = 0;
+        //let maxDist = 0;
 
         if (content.length > 0) {
             const maxWeight = content[0].weight;
@@ -50,6 +50,10 @@ export default function ImageCloud({ content, size, padding, colour, borderSize,
             const spiral = archimedeanSpiral([size || 500, size || 500]);
             const tree = createQuadTree(0, 0, size || 500, size || 500, 4);
             const tcache = new Map<number, number>();
+
+            let cx = 0;
+            let cy = 0;
+            let total = 0;
 
             for (const c of content) {
                 // TODO: Check how many large images there will be and scale accordingly.
@@ -78,7 +82,11 @@ export default function ImageCloud({ content, size, padding, colour, borderSize,
                             id: c.id,
                         });
 
-                        maxDist = Math.max(maxDist, calculateDistance(candidate));
+                        cx += pos[0] * asize;
+                        cy += pos[1] * asize;
+                        total += asize;
+
+                        //maxDist = Math.max(maxDist, calculateDistance(candidate));
                         break;
                     }
 
@@ -86,7 +94,23 @@ export default function ImageCloud({ content, size, padding, colour, borderSize,
                 }
             }
 
-            if (onSize) onSize(Math.floor(maxDist));
+            cx /= total;
+            cy /= total;
+
+            const dist = { max: 0 };
+
+            // Calculate centroid
+            // Calculate new maxdist
+            // Move results to the centroid
+
+            results.forEach((r) => {
+                r.x -= cx;
+                r.y -= cy;
+                const d = calculateDistance(r.x, r.x + r.size, r.y, r.y + r.size);
+                dist.max = Math.max(dist.max, d);
+            });
+
+            if (onSize) onSize(Math.floor(dist.max));
 
             setLocations(results);
         }

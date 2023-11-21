@@ -94,7 +94,7 @@ export default function Graph({ nodes, links }: Props) {
                 .force(
                     'collide',
                     d3.forceCollide<GraphNode>((n) => {
-                        return n.size || 5;
+                        return (n.size || 5) + 10;
                     })
                 )
                 .force('center', d3.forceCenter());
