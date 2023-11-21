@@ -45,7 +45,7 @@ export function Component() {
 
     return (
         <div className={style.page}>
-            {code && !ready && <CircularProgress />}
+            {code && (!ready || !config) && <CircularProgress />}
             {!code && !params.has('local') && <EnterCode />}
             {config && !username && <EnterUsername onUsername={setUsername} />}
             {config && username && (

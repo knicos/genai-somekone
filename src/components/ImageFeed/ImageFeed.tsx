@@ -70,7 +70,7 @@ export default function ImageFeed({ images, onView, onMore, onLog }: Props) {
 
     const doScroll = useCallback(
         (e: React.MouseEvent<HTMLDivElement>) => {
-            const scrollTop = e.currentTarget.scrollTop;
+            const scrollTop = e.currentTarget.scrollTop + 50;
             const scrollHeight = e.currentTarget.scrollHeight;
             const clientHeight = e.currentTarget.clientHeight;
 

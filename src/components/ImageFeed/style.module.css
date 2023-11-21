@@ -12,13 +12,14 @@
     right: 0;
     bottom: 0;
 
-    gap: 50px;
+    /*gap: 50px;*/
 }
 
 .placeholder {
     flex-shrink: 0;
     max-width: 500px;
     width: 100%;
+    margin-bottom: 50px;
 }
 
 @media screen and (max-width: 600px) {

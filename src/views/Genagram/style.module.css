@@ -10,6 +10,5 @@
 @media screen and (max-width: 600px) {
     .page {
         background: white;
-        align-items: flex-end;
     }
 }

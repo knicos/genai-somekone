@@ -27,15 +27,12 @@ function generateTasteBatch(profile: ProfileSummary, nodes: string[], count: num
 
 function fillWithRandom(nodes: string[], count: number) {
     const allNodes = getNodesByType('content');
-    console.log('NODE SIZE', allNodes.length);
     if (allNodes.length === 0) return;
 
     while (nodes.length < count) {
         const ix = Math.floor(Math.random() * allNodes.length);
         nodes.push(allNodes[ix]);
     }
-
-    console.log('Final node size', nodes.length);
 }
 
 export function generateFeed(count: number): [string[], ProfileSummary] {
@@ -52,15 +49,17 @@ export function generateFeed(count: number): [string[], ProfileSummary] {
 
     const nodeArray = nodes;
 
-    if (nodeArray.length < count) return [nodeArray, profile];
+    if (nodeArray.length < count) {
+        return [nodeArray, profile];
+    }
 
     // TODO: Score the results by how much they match profile
     // Or by how they match past engagements of each type.
     // but each image would need a lot of labels for this to work directly
 
     const selected = new Set<string>();
-    // FIXME: Can loop infinitely.
-    while (selected.size < count) {
+
+    for (let i = 0; i < count; ++i) {
         const ix = Math.floor(Math.random() * nodeArray.length);
         selected.add(nodeArray[ix]);
     }
@@ -71,8 +70,6 @@ export function generateFeed(count: number): [string[], ProfileSummary] {
     final.forEach((n) => {
         factors.set(n, (factors.get(n) || 1) * 0.9);
     });
-
-    //console.log('FACTORS', factors);
 
     return [final, profile];
 }

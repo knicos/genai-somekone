@@ -43,7 +43,7 @@
 .container {
     display: flex;
     flex-direction: column;
-    /*margin-bottom: 2rem;*/
+    margin-bottom: 50px;
     scroll-snap-align: center;
     scroll-snap-stop: always;
     max-width: 500px;
