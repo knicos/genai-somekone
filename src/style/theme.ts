@@ -14,7 +14,7 @@ export const theme = createTheme({
     },
     typography: {
         fontFamily: [
-            'Antika',
+            'Andika',
             '-apple-system',
             'BlinkMacSystemFont',
             '"Segoe UI"',

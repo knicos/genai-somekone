@@ -1,4 +1,4 @@
-import { UserInfo } from './userInfo';
+import { UserInfo } from '../../Dashboard/userInfo';
 import style from './style.module.css';
 import QRCode from '@genaism/components/QRCode/QRCode';
 import { useTranslation, Trans } from 'react-i18next';

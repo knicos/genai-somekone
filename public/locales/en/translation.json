@@ -21,6 +21,18 @@
         }
     },
     "dashboard": {
+        "titles": {
+            "save": "Save"
+        },
+        "labels": {
+            "saveContent": "Save the image content",
+            "saveProfiles": "Save user profiles",
+            "shareTip": "Show the share code",
+            "openTip": "Upload existing saved data",
+            "saveTip": "Download profiles and content",
+            "showLinesTip": "Display lines between similar users",
+            "showOfflineTip": "Show profiles for offline users"
+        },
         "messages": {
             "connection": "Go to <PageLink><Code>{{linkText}}</Code></PageLink> and enter the code <Code>{{codeText}}</Code>, or use the QR code.",
             "waitingPeople": "Waiting for people...",
@@ -28,7 +40,9 @@
             "manyPeople": "{{count}} people have joined."
         },
         "actions": {
-            "start": "Start"
+            "start": "Start",
+            "save": "Download",
+            "cancel": "Cancel"
         }
     }
 }

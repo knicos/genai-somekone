@@ -9,7 +9,7 @@ import {
 } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import './App.css';
-import { ThemeProvider } from '@mui/material/styles';
+import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 import { theme } from './style/theme';
 
 interface RouterError {
@@ -83,13 +83,15 @@ const router = createBrowserRouter(
 
 function App() {
     return (
-        <ThemeProvider theme={theme}>
-            <React.Suspense fallback={<div></div>}>
-                <RecoilRoot>
-                    <RouterProvider router={router} />
-                </RecoilRoot>
-            </React.Suspense>
-        </ThemeProvider>
+        <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={theme}>
+                <React.Suspense fallback={<div></div>}>
+                    <RecoilRoot>
+                        <RouterProvider router={router} />
+                    </RecoilRoot>
+                </React.Suspense>
+            </ThemeProvider>
+        </StyledEngineProvider>
     );
 }
 

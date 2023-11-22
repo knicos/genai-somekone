@@ -1,0 +1,50 @@
+@value bgColourful1, textLight from "../../../style/colours.module.css";
+
+.groupedItems {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    max-width: 600px;
+    box-sizing: border-box;
+    z-index: 2;
+}
+
+.connectMessage {
+    font-size: 1.8rem;
+    background-color: bgColourful1;
+    color: textLight;
+    padding: 2rem;
+    display: flex;
+    gap: 2rem;
+    border-top-right-radius: 16px;
+    border-top-left-radius: 16px;
+    overflow: hidden;
+}
+
+.connectMessage canvas {
+    width: 200px !important;
+    height: 200px !important;
+}
+
+.connectMessage em {
+    font-weight: bold;
+    font-style: normal;
+}
+
+.connectMessage a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.userListing {
+    padding: 2rem;
+    font-size: 1.2rem;
+    background-color: bgColourful1;
+    display: flex;
+    justify-content: space-around;
+    gap: 2rem;
+    flex-wrap: wrap;
+    border-bottom-right-radius: 16px;
+    border-bottom-left-radius: 16px;
+    color: textLight;
+}

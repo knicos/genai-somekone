@@ -9,13 +9,14 @@ import { EventProtocol } from '@genaism/protocol/protocol';
 import randomId from '@genaism/util/randomId';
 import { getZipBlob, loadFile } from '@genaism/services/loader/fileLoader';
 import { UserInfo } from './userInfo';
-import StartDialog from './StartDialog';
+import StartDialog from '../dialogs/StartDialog/StartDialog';
 import DEFAULT_CONFIG from '../Genagram/defaultConfig.json';
 import MenuPanel from './MenuPanel';
 import { setUserName, updateProfile } from '@genaism/services/profiler/profiler';
 import SocialGraph from '@genaism/components/SocialGraph/SocialGraph';
 import { useSetRecoilState } from 'recoil';
 import { menuShowShare } from '@genaism/state/menuState';
+import SaveDialog from '../dialogs/SaveDialog/SaveDialog';
 
 const MYCODE = randomId(5);
 
@@ -102,6 +103,7 @@ export function Component() {
                     code={MYCODE}
                 />
             </section>
+            <SaveDialog />
         </main>
     ) : (
         <div></div>

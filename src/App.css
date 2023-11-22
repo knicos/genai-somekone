@@ -1,0 +1,26 @@
+.MuiPopper-root {
+    font-size: 1rem;
+    padding-left: 5px;
+}
+
+.MuiTooltip-tooltip {
+    font-size: 1rem;
+    padding: 0.3em 0.8rem;
+    background: #5f7377;
+    border-radius: 6px;
+}
+
+.MuiTooltip-arrow {
+    color: #5f7377;
+}
+
+.MuiDialogTitle-root {
+    border-bottom: 2px solid #008297;
+    padding: 0.5rem 1rem;
+    background: #e5f6fd;
+    margin-bottom: 0.5rem;
+}
+
+.MuiDialog-paper {
+    border-radius: 6px;
+}
