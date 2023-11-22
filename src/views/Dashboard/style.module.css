@@ -99,3 +99,10 @@
     border-bottom-left-radius: 16px;
     color: textLight;
 }
+
+.menuSpacer {
+    margin: 0.5rem 0;
+    height: 2px;
+    background: workspaceBg;
+    width: 100%;
+}

@@ -4,16 +4,21 @@ import { useUserProfile } from '@genaism/services/profiler/hooks';
 import { useSimilarUsers } from '@genaism/services/users/users';
 import { GraphLink } from '../Graph/Graph';
 import { WeightedNode } from '@genaism/services/graph/graphTypes';
+import { useRecoilValue } from 'recoil';
+import { settingDisplayLabel, settingShrinkOfflineUsers } from '@genaism/state/settingsState';
 
 interface Props {
     id: string;
+    live?: boolean;
     onLinks: (id: string, links: GraphLink[]) => void;
     onResize: (id: string, size: number) => void;
 }
 
-export default function ProfileNode({ id, onLinks, onResize }: Props) {
+export default function ProfileNode({ id, onLinks, onResize, live }: Props) {
     const [size, setSize] = useState(100);
     const simRef = useRef<WeightedNode[]>();
+    const showLabel = useRecoilValue(settingDisplayLabel);
+    const shrinkOffline = useRecoilValue(settingShrinkOfflineUsers);
 
     const profile = useUserProfile(id);
     const similar = useSimilarUsers(profile);
@@ -39,25 +44,28 @@ export default function ProfileNode({ id, onLinks, onResize }: Props) {
     return (
         <>
             <circle
+                data-testid="profile-circle"
                 r={size}
                 fill="white"
-                stroke="#0A869A"
-                strokeWidth="10"
+                stroke={live ? '#0A869A' : '#888'}
+                strokeWidth={shrinkOffline && !live ? 5 : 10}
             />
-            {profile.engagedContent.length && (
+            {profile.engagedContent.length > 0 && (
                 <ImageCloud
                     content={profile.engagedContent}
-                    size={300}
+                    size={shrinkOffline && !live ? 100 : 300}
                     padding={3}
                     onSize={doResize}
                 />
             )}
-            <text
-                y={-size - 5}
-                textAnchor="middle"
-            >
-                {profile.name}
-            </text>
+            {showLabel && (
+                <text
+                    y={-size - 5}
+                    textAnchor="middle"
+                >
+                    {profile.name}
+                </text>
+            )}
         </>
     );
 }

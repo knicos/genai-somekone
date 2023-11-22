@@ -2,6 +2,8 @@ import { useNodeType } from '@genaism/services/graph/hooks';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import ProfileNode from '../ProfileNode/ProfileNode';
 import Graph, { GraphLink, GraphNode } from '../Graph/Graph';
+import { useRecoilValue } from 'recoil';
+import { settingShowOfflineUsers } from '@genaism/state/settingsState';
 // import FakeNode from '../FakeNode/FakeNode';
 
 interface Props {
@@ -13,6 +15,7 @@ export default function SocialGraph({ liveUsers }: Props) {
     const [links, setLinks] = useState<GraphLink[]>([]);
     const sizesRef = useRef<Map<string, number>>(new Map<string, number>());
     const [nodes, setNodes] = useState<GraphNode[]>([]);
+    const showOfflineUsers = useRecoilValue(settingShowOfflineUsers);
     const users = useNodeType('user');
     const liveSet = useMemo(() => {
         const set = new Set<string>();
@@ -33,26 +36,9 @@ export default function SocialGraph({ liveUsers }: Props) {
     }, []);
 
     const doRedrawNodes = useCallback(() => {
+        const filteredUsers = showOfflineUsers ? users : users.filter((u) => liveSet.has(u));
         setNodes(
-            /*users.map((u) => ({
-                id: u,
-                size: liveSet.has(u) ? sizesRef.current.get(u) || 20 : 5,
-                component: liveSet.has(u) ? (
-                    <ProfileNode
-                        id={u}
-                        onLinks={doUpdateLinks}
-                        onResize={doResize}
-                        key={u}
-                    />
-                ) : (
-                    <FakeNode
-                        id={u}
-                        onLinks={doUpdateLinks}
-                        key={u}
-                    />
-                ),
-            }))*/
-            users.map((u) => ({
+            filteredUsers.map((u) => ({
                 id: u,
                 size: sizesRef.current.get(u) || 20,
                 component: (
@@ -61,11 +47,12 @@ export default function SocialGraph({ liveUsers }: Props) {
                         onLinks={doUpdateLinks}
                         onResize={doResize}
                         key={u}
+                        live={liveSet.has(u)}
                     />
                 ),
             }))
         );
-    }, [users, liveSet]);
+    }, [users, liveSet, showOfflineUsers]);
 
     const doResize = useCallback(
         (id: string, size: number) => {

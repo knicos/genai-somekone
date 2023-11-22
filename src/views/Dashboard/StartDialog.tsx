@@ -3,17 +3,22 @@ import style from './style.module.css';
 import QRCode from '@genaism/components/QRCode/QRCode';
 import { useTranslation, Trans } from 'react-i18next';
 import { LargeButton } from '@genaism/components/Button/Button';
+import { useRecoilState } from 'recoil';
+import { menuShowShare } from '@genaism/state/menuState';
+import { useCallback } from 'react';
 
 interface Props {
     users: UserInfo[];
     code: string;
-    onClose: () => void;
 }
 
-export default function StartDialog({ users, code, onClose }: Props) {
+export default function StartDialog({ users, code }: Props) {
     const { t } = useTranslation();
+    const [showDialog, setShowDialog] = useRecoilState(menuShowShare);
 
-    return (
+    const doClose = useCallback(() => setShowDialog(false), [setShowDialog]);
+
+    return showDialog ? (
         <div className={style.groupedItems}>
             <div className={style.connectMessage}>
                 <QRCode url={`${window.location.origin}/feed/${code}`} />
@@ -42,11 +47,11 @@ export default function StartDialog({ users, code, onClose }: Props) {
                     variant="contained"
                     color="secondary"
                     data-testid="dashboard-start-button"
-                    onClick={onClose}
+                    onClick={doClose}
                 >
                     {t('dashboard.actions.start')}
                 </LargeButton>
             </div>
         </div>
-    );
+    ) : null;
 }

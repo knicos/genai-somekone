@@ -2,6 +2,8 @@ import { useRef, useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import style from './style.module.css';
 import gsap from 'gsap';
+import { useRecoilValue } from 'recoil';
+import { settingDisplayLines, settingLinkDistanceScale } from '@genaism/state/settingsState';
 
 export interface GraphNode {
     size: number;
@@ -50,33 +52,44 @@ export default function Graph({ nodes, links }: Props) {
     const [linkList, setLinkList] = useState<InternalGraphLink[]>([]);
     const nodeRef = useRef<Map<string, GraphNode>>(new Map<string, GraphNode>());
     const simRef = useRef<d3.Simulation<GraphNode, undefined>>();
+    const linkScale = useRecoilValue(settingLinkDistanceScale);
+    const showLines = useRecoilValue(settingDisplayLines);
+
+    useEffect(() => {
+        simRef.current = undefined;
+    }, [showLines, linkScale]);
 
     useEffect(() => {
         if (simRef.current) simRef.current.stop();
+
+        const newNodeRef = new Map<string, GraphNode>();
 
         nodes.forEach((n, ix) => {
             const cur = nodeRef.current.get(n.id) || { ...n };
             cur.size = n.size;
             cur.component = n.component;
             cur.index = ix;
-            nodeRef.current.set(n.id, cur);
+            newNodeRef.set(n.id, cur);
         });
+
+        nodeRef.current = newNodeRef;
 
         const lnodes = Array.from(nodeRef.current).map((v) => v[1]);
         //lnodes.sort((a, b) => (b.index || 0) - (a.index || 0));
         //console.log('LNODES', lnodes);
 
-        const llinks: InternalGraphLink[] = links
-            ? links.map((l) => {
-                  const s = nodeRef.current.get(l.source);
-                  const t = nodeRef.current.get(l.target);
-                  return s && t
-                      ? { source: s, target: t, strength: l.strength }
-                      : { source: lnodes[0], target: lnodes[0], strength: 1 };
-              })
-            : [];
+        const llinks: InternalGraphLink[] =
+            nodes.length > 0 && links
+                ? links.map((l) => {
+                      const s = nodeRef.current.get(l.source);
+                      const t = nodeRef.current.get(l.target);
+                      return s && t
+                          ? { source: s, target: t, strength: l.strength }
+                          : { source: lnodes[0], target: lnodes[0], strength: 1 };
+                  })
+                : [];
 
-        console.log('links', llinks);
+        // console.log('links', llinks);
 
         if (!simRef.current) {
             simRef.current = d3
@@ -88,13 +101,14 @@ export default function Graph({ nodes, links }: Props) {
                         .strength((d) => d.strength)
                         .distance(
                             (d) =>
-                                (1 - d.strength) * 6 * (d.source.size + d.target.size) + (d.source.size + d.target.size)
+                                (1 - d.strength) * linkScale * (d.source.size + d.target.size) +
+                                (d.source.size + d.target.size)
                         )
                 )
                 .force(
                     'collide',
                     d3.forceCollide<GraphNode>((n) => {
-                        return (n.size || 5) + 10;
+                        return (n.size || 5) + 5;
                     })
                 )
                 .force('center', d3.forceCenter());
@@ -106,25 +120,6 @@ export default function Graph({ nodes, links }: Props) {
         simRef.current.force<d3.ForceLink<GraphNode, InternalGraphLink>>('link')?.links(llinks);
         simRef.current
             .on('tick', () => {
-                /*console.log('tick');
-                const extents: Extents = {
-                    minX: 0,
-                    minY: 0,
-                    maxX: 0,
-                    maxY: 0,
-                };
-
-                lnodes.forEach((n) => {
-                    extents.minX = Math.min(extents.minX, (n.x || 0) - n.size);
-                    extents.minY = Math.min(extents.minY, (n.y || 0) - n.size);
-                    extents.maxX = Math.max(extents.maxX, (n.x || 0) + n.size);
-                    extents.maxY = Math.max(extents.maxY, (n.y || 0) + n.size);
-                });
-
-                setViewbox(calculateViewBox(extents));*/
-                setNodeList([...lnodes]);
-            })
-            .on('end', () => {
                 const extents: Extents = {
                     minX: 0,
                     minY: 0,
@@ -149,7 +144,10 @@ export default function Graph({ nodes, links }: Props) {
                     },
                     duration: 1,
                 });
-            });
+
+                setNodeList([...lnodes]);
+            })
+            .on('end', () => {});
         simRef.current.alpha(0.2).restart();
 
         setLinkList(llinks);
@@ -165,21 +163,23 @@ export default function Graph({ nodes, links }: Props) {
             data-testid="graph-svg"
         >
             <g>
-                <g>
-                    {linkList.map((l, ix) => (
-                        <line
-                            key={ix}
-                            x1={l.source.x}
-                            y1={l.source.y}
-                            x2={l.target.x}
-                            y2={l.target.y}
-                            stroke="#0A869A"
-                            opacity="0.05"
-                            strokeWidth={1 + Math.floor(l.strength * 20)}
-                            data-testid={`graph-link-${ix}`}
-                        />
-                    ))}
-                </g>
+                {showLines && (
+                    <g>
+                        {linkList.map((l, ix) => (
+                            <line
+                                key={ix}
+                                x1={l.source.x}
+                                y1={l.source.y}
+                                x2={l.target.x}
+                                y2={l.target.y}
+                                stroke="#0A869A"
+                                opacity="0.05"
+                                strokeWidth={1 + Math.floor(l.strength * 20)}
+                                data-testid={`graph-link-${ix}`}
+                            />
+                        ))}
+                    </g>
+                )}
                 <g>
                     {nodeList.map((n, ix) => (
                         <g

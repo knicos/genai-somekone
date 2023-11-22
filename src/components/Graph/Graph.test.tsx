@@ -1,16 +1,19 @@
 import { describe, it } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import Graph from './Graph';
+import TestWrapper from '@genaism/util/TestWrapper';
 
 describe('Graph component', () => {
     it('renders with no nodes', async ({ expect }) => {
-        render(<Graph nodes={[]} />);
+        render(<Graph nodes={[]} />, { wrapper: TestWrapper });
 
         expect(screen.getByTestId('graph-svg')).toBeInTheDocument();
     });
 
     it('renders with one node', async ({ expect }) => {
-        render(<Graph nodes={[{ id: 'xyz', size: 50, component: <text data-testid="graph-node-1">Hello</text> }]} />);
+        render(<Graph nodes={[{ id: 'xyz', size: 50, component: <text data-testid="graph-node-1">Hello</text> }]} />, {
+            wrapper: TestWrapper,
+        });
 
         expect(screen.getByTestId('graph-node-1')).toBeInTheDocument();
     });
@@ -23,7 +26,8 @@ describe('Graph component', () => {
                     { id: 'xyz2', size: 60, component: <text data-testid="graph-node-2">Hello2</text> },
                     { id: 'xyz3', size: 70, component: <text data-testid="graph-node-3">Hello3</text> },
                 ]}
-            />
+            />,
+            { wrapper: TestWrapper }
         );
 
         expect(screen.getByTestId('graph-node-1')).toBeInTheDocument();
@@ -40,7 +44,8 @@ describe('Graph component', () => {
                     { id: 'xyz3', size: 70, component: <text data-testid="graph-node-3">Hello3</text> },
                 ]}
                 links={[{ source: 'xyz', target: 'xyz1', strength: 1 }]}
-            />
+            />,
+            { wrapper: TestWrapper }
         );
 
         expect(screen.getByTestId('graph-link-0')).toBeInTheDocument();

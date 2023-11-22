@@ -14,6 +14,8 @@ import DEFAULT_CONFIG from '../Genagram/defaultConfig.json';
 import MenuPanel from './MenuPanel';
 import { setUserName, updateProfile } from '@genaism/services/profiler/profiler';
 import SocialGraph from '@genaism/components/SocialGraph/SocialGraph';
+import { useSetRecoilState } from 'recoil';
+import { menuShowShare } from '@genaism/state/menuState';
 
 const MYCODE = randomId(5);
 
@@ -21,7 +23,7 @@ export function Component() {
     const [params] = useSearchParams();
     const [config, setConfig] = useState<SMConfig | null>(null);
     const [users, setUsers] = useState<UserInfo[]>([]);
-    const [showStartDialog, setShowStartDialog] = useState(true);
+    const setShowStartDialog = useSetRecoilState(menuShowShare);
 
     const dataHandler = useCallback(
         (data: EventProtocol, conn: DataConnection) => {
@@ -89,27 +91,16 @@ export function Component() {
         [config]
     );
 
-    const doShowShare = useCallback(() => {
-        setShowStartDialog(true);
-    }, []);
-
-    const doStart = useCallback(() => setShowStartDialog(false), []);
-
     return ready ? (
         <main className={style.dashboard}>
-            <MenuPanel
-                onOpen={doOpenFile}
-                onShowShare={doShowShare}
-            />
+            <MenuPanel onOpen={doOpenFile} />
             <section className={style.workspace}>
                 <SocialGraph liveUsers={users.map((u) => u.id)} />
-                {showStartDialog && (
-                    <StartDialog
-                        users={users}
-                        code={MYCODE}
-                        onClose={doStart}
-                    />
-                )}
+
+                <StartDialog
+                    users={users}
+                    code={MYCODE}
+                />
             </section>
         </main>
     ) : (
