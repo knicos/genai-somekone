@@ -22,7 +22,8 @@
     },
     "dashboard": {
         "titles": {
-            "save": "Save"
+            "save": "Save",
+            "settings": "Settings"
         },
         "labels": {
             "saveContent": "Save the image content",
@@ -31,7 +32,12 @@
             "openTip": "Upload existing saved data",
             "saveTip": "Download profiles and content",
             "showLinesTip": "Display lines between similar users",
-            "showOfflineTip": "Show profiles for offline users"
+            "showOfflineTip": "Show profiles for offline users",
+            "showLines": "Show the similar user lines",
+            "showLabels": "Show user name labels",
+            "showOffline": "Show offline or fake users",
+            "shrinkOffline": "Reduce size of offline users",
+            "edgeScaling": "Change the distance between clusters"
         },
         "messages": {
             "connection": "Go to <PageLink><Code>{{linkText}}</Code></PageLink> and enter the code <Code>{{codeText}}</Code>, or use the QR code.",
@@ -42,7 +48,8 @@
         "actions": {
             "start": "Start",
             "save": "Download",
-            "cancel": "Cancel"
+            "cancel": "Cancel",
+            "close": "Close"
         }
     }
 }

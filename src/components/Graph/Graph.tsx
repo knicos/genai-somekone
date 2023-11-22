@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, useReducer } from 'react';
 import * as d3 from 'd3';
 import style from './style.module.css';
 import gsap from 'gsap';
@@ -48,6 +48,7 @@ interface Props {
 
 export default function Graph({ nodes, links }: Props) {
     const svgRef = useRef<SVGSVGElement>(null);
+    const [redraw, trigger] = useReducer((a) => ++a, 0);
     const [nodeList, setNodeList] = useState<GraphNode[]>([]);
     const [linkList, setLinkList] = useState<InternalGraphLink[]>([]);
     const nodeRef = useRef<Map<string, GraphNode>>(new Map<string, GraphNode>());
@@ -57,6 +58,7 @@ export default function Graph({ nodes, links }: Props) {
 
     useEffect(() => {
         simRef.current = undefined;
+        trigger();
     }, [showLines, linkScale]);
 
     useEffect(() => {
@@ -151,7 +153,7 @@ export default function Graph({ nodes, links }: Props) {
         simRef.current.alpha(0.2).restart();
 
         setLinkList(llinks);
-    }, [nodes, links]);
+    }, [nodes, links, redraw]);
 
     return (
         <svg

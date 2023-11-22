@@ -1,0 +1,8 @@
+.column {
+    display: flex;
+    flex-direction: column;
+}
+
+.label {
+    margin-top: 1rem;
+}

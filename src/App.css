@@ -24,3 +24,7 @@
 .MuiDialog-paper {
     border-radius: 6px;
 }
+
+.MuiDialogContent-root {
+    font-family: Andika;
+}

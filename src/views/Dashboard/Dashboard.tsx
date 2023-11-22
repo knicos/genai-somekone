@@ -17,6 +17,7 @@ import SocialGraph from '@genaism/components/SocialGraph/SocialGraph';
 import { useSetRecoilState } from 'recoil';
 import { menuShowShare } from '@genaism/state/menuState';
 import SaveDialog from '../dialogs/SaveDialog/SaveDialog';
+import SettingsDialog from '../dialogs/SettingsDialog/SettingsDialog';
 
 const MYCODE = randomId(5);
 
@@ -104,6 +105,7 @@ export function Component() {
                 />
             </section>
             <SaveDialog />
+            <SettingsDialog />
         </main>
     ) : (
         <div></div>
