@@ -5,7 +5,8 @@ import { useSimilarUsers } from '@genaism/services/users/users';
 import { GraphLink } from '../Graph/Graph';
 import { WeightedNode } from '@genaism/services/graph/graphTypes';
 import { useRecoilValue } from 'recoil';
-import { settingDisplayLabel, settingShrinkOfflineUsers } from '@genaism/state/settingsState';
+import { settingDisplayLabel, settingNodeMode, settingShrinkOfflineUsers } from '@genaism/state/settingsState';
+import WordCloud from '../WordCloud/WordCloud';
 
 interface Props {
     id: string;
@@ -19,6 +20,7 @@ export default function ProfileNode({ id, onLinks, onResize, live }: Props) {
     const simRef = useRef<WeightedNode[]>();
     const showLabel = useRecoilValue(settingDisplayLabel);
     const shrinkOffline = useRecoilValue(settingShrinkOfflineUsers);
+    const nodeMode = useRecoilValue(settingNodeMode);
 
     const profile = useUserProfile(id);
     const similar = useSimilarUsers(profile);
@@ -47,14 +49,23 @@ export default function ProfileNode({ id, onLinks, onResize, live }: Props) {
                 data-testid="profile-circle"
                 r={size}
                 fill="white"
-                stroke={live ? '#0A869A' : '#888'}
+                stroke={live ? '#0A869A' : '#707070'}
                 strokeWidth={shrinkOffline && !live ? 5 : 10}
             />
-            {profile.engagedContent.length > 0 && (
+            {nodeMode === 'image' && profile.engagedContent.length > 0 && (
                 <ImageCloud
                     content={profile.engagedContent}
                     size={shrinkOffline && !live ? 100 : 300}
                     padding={3}
+                    onSize={doResize}
+                />
+            )}
+            {nodeMode === 'word' && (
+                <WordCloud
+                    content={profile.taste}
+                    size={shrinkOffline && !live ? 100 : 500}
+                    padding={3}
+                    colour={live ? '#0A869A' : '#707070'}
                     onSize={doResize}
                 />
             )}

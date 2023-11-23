@@ -110,7 +110,7 @@ export default function Graph({ nodes, links }: Props) {
                 .force(
                     'collide',
                     d3.forceCollide<GraphNode>((n) => {
-                        return (n.size || 5) + 5;
+                        return (n.size || 5) + 10;
                     })
                 )
                 .force('center', d3.forceCenter());
@@ -175,8 +175,8 @@ export default function Graph({ nodes, links }: Props) {
                                 x2={l.target.x}
                                 y2={l.target.y}
                                 stroke="#0A869A"
-                                opacity="0.05"
-                                strokeWidth={1 + Math.floor(l.strength * 20)}
+                                opacity={l.strength * l.strength * 0.9}
+                                strokeWidth={1 + Math.floor(l.strength * l.strength * 30)}
                                 data-testid={`graph-link-${ix}`}
                             />
                         ))}

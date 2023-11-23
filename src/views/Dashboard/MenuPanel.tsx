@@ -2,14 +2,14 @@ import { IconButton, Tooltip } from '@mui/material';
 import style from './style.module.css';
 import DriveFolderUploadIcon from '@mui/icons-material/DriveFolderUpload';
 import SettingsIcon from '@mui/icons-material/Settings';
-import PolylineIcon from '@mui/icons-material/Polyline';
-import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import CollectionsIcon from '@mui/icons-material/Collections';
+import TextFieldsIcon from '@mui/icons-material/TextFields';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import ShareIcon from '@mui/icons-material/Share';
 import { useCallback } from 'react';
 import { useRecoilState } from 'recoil';
 import { menuShowSave, menuShowSettings, menuShowShare } from '@genaism/state/menuState';
-import { settingDisplayLines, settingShowOfflineUsers } from '@genaism/state/settingsState';
+import { settingNodeMode } from '@genaism/state/settingsState';
 import { useTranslation } from 'react-i18next';
 
 interface Props {
@@ -20,14 +20,13 @@ export default function MenuPanel({ onOpen }: Props) {
     const { t } = useTranslation();
     const [showShare, setShowShare] = useRecoilState(menuShowShare);
     const [showSettings, setShowSettings] = useRecoilState(menuShowSettings);
-    const [showLines, setShowLines] = useRecoilState(settingDisplayLines);
-    const [showOffline, setShowOffline] = useRecoilState(settingShowOfflineUsers);
     const [showSave, setShowSave] = useRecoilState(menuShowSave);
+    const [displayMode, setDisplayMode] = useRecoilState(settingNodeMode);
 
     const doShowShare = useCallback(() => setShowShare((s) => !s), [setShowShare]);
     const doShowSettings = useCallback(() => setShowSettings((s) => !s), [setShowSettings]);
-    const doShowLines = useCallback(() => setShowLines((s) => !s), [setShowLines]);
-    const doShowOffline = useCallback(() => setShowOffline((s) => !s), [setShowOffline]);
+    const doShowImages = useCallback(() => setDisplayMode('image'), [setDisplayMode]);
+    const doShowWords = useCallback(() => setDisplayMode('word'), [setDisplayMode]);
     const doShowSave = useCallback(() => setShowSave((s) => !s), [setShowSave]);
 
     const doOpenFile = useCallback(
@@ -92,27 +91,27 @@ export default function MenuPanel({ onOpen }: Props) {
                 </Tooltip>
                 <div className={style.menuSpacer} />
                 <Tooltip
-                    title={t('dashboard.labels.showLinesTip')}
+                    title={t('dashboard.labels.showImagesTip')}
                     arrow
                     placement="right"
                 >
                     <IconButton
-                        color={showLines ? 'secondary' : 'inherit'}
-                        onClick={doShowLines}
+                        color={displayMode === 'image' ? 'secondary' : 'inherit'}
+                        onClick={doShowImages}
                     >
-                        <PolylineIcon />
+                        <CollectionsIcon />
                     </IconButton>
                 </Tooltip>
                 <Tooltip
-                    title={t('dashboard.labels.showOfflineTip')}
+                    title={t('dashboard.labels.showWordsTip')}
                     arrow
                     placement="right"
                 >
                     <IconButton
-                        color={showOffline ? 'secondary' : 'inherit'}
-                        onClick={doShowOffline}
+                        color={displayMode === 'word' ? 'secondary' : 'inherit'}
+                        onClick={doShowWords}
                     >
-                        <PersonOutlineIcon />
+                        <TextFieldsIcon />
                     </IconButton>
                 </Tooltip>
                 <div className={style.menuSpacer} />

@@ -1,0 +1,13 @@
+@value bgColourful1, textDark from "../../style/colours.module.css";
+
+.cloudItem {
+    transition: transform 1s;
+}
+
+/*.cloudItem rect {
+    fill: bgColourful1;
+}*/
+
+.cloudItem text {
+    fill: textDark;
+}
