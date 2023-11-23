@@ -19,7 +19,7 @@ export default function ImageCloud({ content, size, padding, colour, borderSize,
     const [locations, setLocations] = useState<LocationItem[]>([]);
 
     useEffect(() => {
-        const maxWeight = content.length > 0 ? content[0].weight : 1;
+        const maxWeight = Math.max(0.01, content.length > 0 ? content[0].weight : 1);
         const sizedContent: SizedItem[] = content.map((c) => {
             const asize = Math.floor((c.weight / maxWeight) * (size || 500) * 0.3);
             return {
@@ -30,8 +30,9 @@ export default function ImageCloud({ content, size, padding, colour, borderSize,
         });
 
         const [results, maxDist] = cloudLayout(sizedContent, size || 500, padding);
+        const floorDist = Math.floor(maxDist);
 
-        if (onSize) onSize(Math.floor(maxDist));
+        if (onSize && floorDist !== size) onSize(floorDist);
 
         setLocations(results);
     }, [content, padding, size, onSize]);

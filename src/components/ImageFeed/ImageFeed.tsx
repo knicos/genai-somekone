@@ -44,16 +44,30 @@ export default function ImageFeed({ images, onView, onMore, onLog }: Props) {
         canMoreRef.current = true;
     }, [images]);
 
+    const doSeen = useCallback(
+        (index: number) => {
+            onLog({ activity: 'seen', id: images[index], timestamp: Date.now() });
+        },
+        [images]
+    );
+
+    const doDwell = useCallback(
+        (v: number, index: number) => {
+            onLog({ activity: 'dwell', value: v, id: images[index], timestamp: Date.now() });
+        },
+        [images]
+    );
+
     useEffect(() => {
         const now = Date.now();
         if (viewed === prevRef.current) return;
-        onLog({ activity: 'seen', id: images[viewed], timestamp: Date.now() });
+        doSeen(viewed);
         if (prevRef.current >= 0) {
             const delta = now - startRef.current;
             //if (delta > 1000) {
             const norm = Math.max(0, Math.min(10, (delta - MIN_DWELL_TIME) / (MAX_DWELL_TIME - MIN_DWELL_TIME)));
             // onView(prevRef.current, norm);
-            onLog({ activity: 'dwell', value: norm, id: images[viewed], timestamp: Date.now() });
+            doDwell(norm, prevRef.current);
             //}
         }
         startRef.current = now;

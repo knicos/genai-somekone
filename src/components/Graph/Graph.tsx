@@ -77,18 +77,18 @@ export default function Graph({ nodes, links }: Props) {
         nodeRef.current = newNodeRef;
 
         const lnodes = Array.from(nodeRef.current).map((v) => v[1]);
-        //lnodes.sort((a, b) => (b.index || 0) - (a.index || 0));
-        //console.log('LNODES', lnodes);
 
         const llinks: InternalGraphLink[] =
             nodes.length > 0 && links
-                ? links.map((l) => {
-                      const s = nodeRef.current.get(l.source);
-                      const t = nodeRef.current.get(l.target);
-                      return s && t
-                          ? { source: s, target: t, strength: l.strength }
-                          : { source: lnodes[0], target: lnodes[0], strength: 1 };
-                  })
+                ? links
+                      .map((l) => {
+                          const s = nodeRef.current.get(l.source);
+                          const t = nodeRef.current.get(l.target);
+                          return s && t
+                              ? { source: s, target: t, strength: l.strength }
+                              : { source: lnodes[0], target: lnodes[0], strength: -1 };
+                      })
+                      .filter((l) => l.strength > 0)
                 : [];
 
         // console.log('links', llinks);
@@ -101,10 +101,12 @@ export default function Graph({ nodes, links }: Props) {
                     d3
                         .forceLink<GraphNode, InternalGraphLink>()
                         .strength((d) => d.strength)
-                        .distance(
-                            (d) =>
+                        .distance((d) =>
+                            Math.max(
+                                10,
                                 (1 - d.strength) * linkScale * (d.source.size + d.target.size) +
-                                (d.source.size + d.target.size)
+                                    (d.source.size + d.target.size)
+                            )
                         )
                 )
                 .force(

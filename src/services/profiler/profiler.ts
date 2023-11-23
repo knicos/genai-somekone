@@ -208,5 +208,14 @@ export function addLogEntry(data: LogEntry) {
         case 'share_friends':
             affinityBoost(data.id || '', 0.3);
             break;
+        case 'dwell':
+            affinityBoost(data.id || '', (data.value || 0) * 0.3);
+            break;
+        case 'follow':
+            affinityBoost(data.id || '', 0.5);
+            break;
+        case 'comment':
+            affinityBoost(data.id || '', Math.min(1, (data.value || 0) / 80) * 0.6);
+            break;
     }
 }
