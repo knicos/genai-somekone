@@ -17,13 +17,15 @@
             "comment": "write a comment here..."
         },
         "messages": {
-            "noComments": "No comments yet."
+            "noComments": "No comments yet.",
+            "loading": "Loading your feed..."
         }
     },
     "dashboard": {
         "titles": {
             "save": "Save",
-            "settings": "Settings"
+            "settings": "Settings",
+            "error": "Problem"
         },
         "labels": {
             "saveContent": "Save the image content",
@@ -43,13 +45,23 @@
             "connection": "Go to <PageLink><Code>{{linkText}}</Code></PageLink> and enter the code <Code>{{codeText}}</Code>, or use the QR code.",
             "waitingPeople": "Waiting for people...",
             "onePerson": "{{count}} person has joined.",
-            "manyPeople": "{{count}} people have joined."
+            "manyPeople": "{{count}} people have joined.",
+            "loading": "Creating your social network..."
         },
         "actions": {
             "start": "Start",
             "save": "Download",
             "cancel": "Cancel",
             "close": "Close"
+        },
+        "errors": {
+            "unknown": "There was a problem, please try again.",
+            "content_not_found": "Unable to download the image content",
+            "peer_failed": "Could not connect",
+            "peer_retrying": "Connection lost, retrying...",
+            "peer_nortc": "Unable to start peer-2-peer, do you have an internet connection?",
+            "peer_no_peer": "The peer was not found",
+            "peer_nowebcam": "You must allow use of the webcam to create the conference call"
         }
     }
 }

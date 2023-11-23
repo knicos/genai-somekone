@@ -25,6 +25,11 @@ vi.mock('qrcode', () => ({
     },
 }));
 
+vi.mock('@genaism/services/loader/fileLoader', () => ({
+    getZipBlob: vi.fn(async () => new Blob(['somedata'])),
+    loadFile: vi.fn(async () => {}),
+}));
+
 describe('Dashboard view', () => {
     it('renders the initial connection screen', async ({ expect }) => {
         render(
@@ -39,8 +44,10 @@ describe('Dashboard view', () => {
             { wrapper: TestWrapper }
         );
 
-        expect(screen.getByTestId('dashboard-start-button')).toBeVisible();
-        expect(mockPeer).toHaveBeenCalled();
+        vi.waitFor(() => {
+            expect(screen.getByTestId('dashboard-start-button')).toBeVisible();
+            expect(mockPeer).toHaveBeenCalled();
+        });
     });
 
     it('shows one user connected', async ({ expect }) => {

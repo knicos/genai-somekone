@@ -1,7 +1,8 @@
 import { useRef, useEffect, useState } from 'react';
-import { Peer as P2P, DataConnection } from 'peerjs';
+import { Peer as P2P, DataConnection, PeerError } from 'peerjs';
 import { iceConfig, webrtcActive } from '@genaism/state/webrtcState';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilRefresher_UNSTABLE, useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { errorNotification } from '@genaism/state/errorState';
 
 export interface PeerEvent {
     event: string;
@@ -67,8 +68,10 @@ export default function usePeer<T extends PeerEvent>({
     const connRef = useRef<PeerState<T>>();
     const cbRef = useRef<Callbacks<T>>({});
     const [webrtc, setWebRTC] = useRecoilState(webrtcActive);
+    const refreshRTC = useRecoilRefresher_UNSTABLE(iceConfig);
     const ice = useRecoilValue(iceConfig);
     const [sender, setSender] = useState<SenderType<T>>();
+    const setError = useSetRecoilState(errorNotification);
 
     useEffect(() => {
         cbRef.current.onClose = onClose;
@@ -85,7 +88,22 @@ export default function usePeer<T extends PeerEvent>({
     useEffect(() => {
         if (!webrtc) return;
         if (!code) return;
-        if (!ice) return;
+        if (!ice) {
+            setTimeout(() => {
+                refreshRTC();
+                setError((p) => {
+                    const s = new Set(p);
+                    s.delete('peer_nortc');
+                    return s;
+                });
+            }, 5000);
+            setError((p) => {
+                const s = new Set(p);
+                s.add('peer_nortc');
+                return s;
+            });
+            return;
+        }
 
         const npeer = new P2P(code, {
             host: import.meta.env.VITE_APP_PEER_SERVER,
@@ -106,6 +124,7 @@ export default function usePeer<T extends PeerEvent>({
             if (cbRef.current.onOpen) {
                 cbRef.current.onOpen();
             }
+
             setSender(() => (data: T) => {
                 if (connRef.current) {
                     for (const conn of connRef.current.connections.values()) {
@@ -124,21 +143,39 @@ export default function usePeer<T extends PeerEvent>({
                     setSender(() => (s: T) => {
                         conn.send(s);
                     });
+                    setError((p) => {
+                        const s = new Set(p);
+                        s.delete('peer_failed');
+                        s.delete('peer_retrying');
+                        return s;
+                    });
                 });
                 conn.on('data', async (data: unknown) => {
                     if (isPeerEvent(data)) {
                         if (cbRef.current.onData) cbRef.current.onData(data as T, conn);
                     }
                 });
-                conn.on('error', (err: Error) => {
-                    console.error(err);
+                conn.on('error', (err: PeerError<string>) => {
+                    console.error(err.type);
                     if (cbRef.current.onError) cbRef.current.onError(err);
+                    setError((p) => {
+                        const s = new Set(p);
+                        s.add('peer_failed');
+                        return s;
+                    });
                 });
                 conn.on('close', () => {
                     connRef.current?.connections.delete(conn.connectionId);
                     connRef.current?.peers.delete(conn.peer); // TODO: Check no other connections from peer
 
                     if (cbRef.current.onClose) cbRef.current.onClose(conn);
+                });
+            } else {
+                setError((p) => {
+                    const s = new Set(p);
+                    s.delete('peer_failed');
+                    s.delete('peer_retrying');
+                    return s;
                 });
             }
         });
@@ -195,21 +232,53 @@ export default function usePeer<T extends PeerEvent>({
             switch (type) {
                 case 'disconnected':
                 case 'network':
+                    setError((p) => {
+                        const s = new Set(p);
+                        s.add('peer_retrying');
+                        return s;
+                    });
                     setTimeout(() => npeer.reconnect(), 1000);
                     break;
                 case 'server-error':
+                    setError((p) => {
+                        const s = new Set(p);
+                        s.add('peer_retrying');
+                        return s;
+                    });
                     setTimeout(() => npeer.reconnect(), 5000);
                     break;
                 case 'unavailable-id':
                     // setCode(randomId(8));
                     npeer.destroy();
+                    setError((p) => {
+                        const s = new Set(p);
+                        s.add('peer_failed');
+                        return s;
+                    });
                     setPeer(undefined);
                     break;
                 case 'browser-incompatible':
                     console.error('Your browser does not support WebRTC');
+                    setError((p) => {
+                        const s = new Set(p);
+                        s.add('peer_failed');
+                        return s;
+                    });
+                    break;
+                case 'peer-unavailable':
+                    setError((p) => {
+                        const s = new Set(p);
+                        s.add('peer_no_peer');
+                        return s;
+                    });
                     break;
                 default:
                     npeer.destroy();
+                    setError((p) => {
+                        const s = new Set(p);
+                        s.add('peer_failed');
+                        return s;
+                    });
                     setPeer(undefined);
             }
         });
@@ -227,12 +296,21 @@ export default function usePeer<T extends PeerEvent>({
             if (connRef.current?.sender) connRef.current?.sender({ event: 'eter:close' });
         };
         window.addEventListener('beforeunload', tabClose);
-        navigator?.mediaDevices?.getUserMedia({ video: true }).then((stream) => {
-            stream.getTracks().forEach(function (track) {
-                track.stop();
+        navigator?.mediaDevices
+            ?.getUserMedia({ video: true })
+            .then((stream) => {
+                stream.getTracks().forEach(function (track) {
+                    track.stop();
+                });
+                setWebRTC(true);
+            })
+            .catch(() => {
+                setError((p) => {
+                    const s = new Set(p);
+                    s.add('peer_nowebcam');
+                    return s;
+                });
             });
-            setWebRTC(true);
-        });
 
         return () => {
             window.removeEventListener('beforeunload', tabClose);

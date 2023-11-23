@@ -6,15 +6,18 @@ import usePeer from '../../hooks/peer';
 import randomId from '../../util/randomId';
 import EnterCode from './EnterCode';
 import { SMConfig } from './smConfig';
-import { CircularProgress } from '@mui/material';
 import EnterUsername from './EnterUsername';
 import { EventProtocol } from '../../protocol/protocol';
 import { ProfileSummary } from '@genaism/services/profiler/profilerTypes';
 import { getCurrentUser } from '@genaism/services/profiler/profiler';
+import ErrorDialog from '../dialogs/ErrorDialog/ErrorDialog';
+import Loading from '@genaism/components/Loading/Loading';
+import { useTranslation } from 'react-i18next';
 
 const MYCODE = randomId(10);
 
 export function Component() {
+    const { t } = useTranslation();
     const [params] = useSearchParams();
     const { code } = useParams();
     const [config, setConfig] = useState<SMConfig>();
@@ -44,16 +47,23 @@ export function Component() {
     );
 
     return (
-        <div className={style.page}>
-            {code && (!ready || !config) && <CircularProgress />}
-            {!code && !params.has('local') && <EnterCode />}
-            {config && !username && <EnterUsername onUsername={setUsername} />}
-            {config && username && (
-                <Feed
-                    content={config.content}
-                    onProfile={doProfile}
-                />
-            )}
-        </div>
+        <>
+            <Loading
+                loading={!!code && (!ready || !config)}
+                message={t('feed.messages.loading')}
+            >
+                <div className={style.page}>
+                    {!code && !params.has('local') && <EnterCode />}
+                    {config && !username && <EnterUsername onUsername={setUsername} />}
+                    {config && username && (
+                        <Feed
+                            content={config.content}
+                            onProfile={doProfile}
+                        />
+                    )}
+                </div>
+            </Loading>
+            <ErrorDialog />
+        </>
     );
 }

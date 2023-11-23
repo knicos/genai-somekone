@@ -18,6 +18,9 @@ import { useSetRecoilState } from 'recoil';
 import { menuShowShare } from '@genaism/state/menuState';
 import SaveDialog from '../dialogs/SaveDialog/SaveDialog';
 import SettingsDialog from '../dialogs/SettingsDialog/SettingsDialog';
+import Loading from '@genaism/components/Loading/Loading';
+import ErrorDialog from '../dialogs/ErrorDialog/ErrorDialog';
+import { errorNotification } from '@genaism/state/errorState';
 
 const MYCODE = randomId(5);
 
@@ -26,6 +29,8 @@ export function Component() {
     const [config, setConfig] = useState<SMConfig | null>(null);
     const [users, setUsers] = useState<UserInfo[]>([]);
     const setShowStartDialog = useSetRecoilState(menuShowShare);
+    const [loaded, setLoaded] = useState(false);
+    const setError = useSetRecoilState(errorNotification);
 
     const dataHandler = useCallback(
         (data: EventProtocol, conn: DataConnection) => {
@@ -48,6 +53,7 @@ export function Component() {
             setUsers((old) => old.filter((o) => o.connection !== conn));
         }
     }, []);
+
     const { ready } = usePeer({ code: `sm-${MYCODE}`, onData: dataHandler, onClose: closeHandler });
 
     useEffect(() => {
@@ -61,13 +67,23 @@ export function Component() {
 
         if (configObj.content) {
             configObj.content.forEach((c, ix) => {
-                getZipBlob(c).then(async (blob) => {
-                    if (configObj.content) {
-                        configObj.content[ix] = await blob.arrayBuffer();
-                    }
-                    setConfig(configObj);
-                    await loadFile(blob);
-                });
+                getZipBlob(c)
+                    .then(async (blob) => {
+                        if (configObj.content && blob.arrayBuffer) {
+                            configObj.content[ix] = await blob.arrayBuffer();
+                        }
+
+                        await loadFile(blob);
+                        setConfig(configObj);
+                    })
+                    .catch((e) => {
+                        console.error(e);
+                        setError((p) => {
+                            const s = new Set(p);
+                            s.add('content_not_found');
+                            return s;
+                        });
+                    });
             });
         } else {
             // Show the file open dialog
@@ -79,6 +95,10 @@ export function Component() {
             setShowStartDialog(true);
         }
     }, [users]);
+
+    useEffect(() => {
+        if (ready && config) setLoaded(true);
+    }, [ready, config]);
 
     const doOpenFile = useCallback(
         (data: Blob) => {
@@ -93,21 +113,24 @@ export function Component() {
         [config]
     );
 
-    return ready ? (
-        <main className={style.dashboard}>
-            <MenuPanel onOpen={doOpenFile} />
-            <section className={style.workspace}>
-                <SocialGraph liveUsers={users.map((u) => u.id)} />
+    return (
+        <>
+            <Loading loading={!loaded}>
+                <main className={style.dashboard}>
+                    <MenuPanel onOpen={doOpenFile} />
+                    <section className={style.workspace}>
+                        <SocialGraph liveUsers={users.map((u) => u.id)} />
 
-                <StartDialog
-                    users={users}
-                    code={MYCODE}
-                />
-            </section>
-            <SaveDialog />
-            <SettingsDialog />
-        </main>
-    ) : (
-        <div></div>
+                        <StartDialog
+                            users={users}
+                            code={MYCODE}
+                        />
+                    </section>
+                    <SaveDialog />
+                    <SettingsDialog />
+                </main>
+            </Loading>
+            <ErrorDialog />
+        </>
     );
 }

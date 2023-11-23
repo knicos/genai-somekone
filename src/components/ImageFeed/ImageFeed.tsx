@@ -1,12 +1,12 @@
 import React, { useRef, useCallback, useState, useEffect } from 'react';
 import IImage from '../FeedImage/FeedImage';
 import style from './style.module.css';
-import CircularProgress from '@mui/material/CircularProgress';
 import { LogActivity, LogEntry } from '@genaism/services/profiler/profilerTypes';
 import { LikeKind } from '@genaism/components/FeedImage/LikePanel';
 import { ShareKind } from '@genaism/components/FeedImage/SharePanel';
 import FeedSpacer from './FeedSpacer';
 import { useTabActive } from '@genaism/hooks/interaction';
+import Spinner from '@genaism/components/Spinner/Spinner';
 
 const MIN_DWELL_TIME = 2000;
 const MAX_DWELL_TIME = 10000;
@@ -179,7 +179,7 @@ export default function ImageFeed({ images, onView, onMore, onLog }: Props) {
                 ))}
                 <FeedSpacer size={images.length - viewed - 5} />
                 <div className={style.bottomSpacer}>
-                    <CircularProgress />
+                    <Spinner />
                 </div>
             </div>
         </div>

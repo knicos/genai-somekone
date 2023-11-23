@@ -1,0 +1,15 @@
+@value bgError from "../../../style/colours.module.css";
+
+.errorTitle {
+    background: bgError;
+    border-bottom: 2px solid #fa3e3e;
+}
+
+.errorContent {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 2rem;
+    padding-top: 1rem !important;
+    max-width: 400px;
+}
