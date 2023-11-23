@@ -1,10 +1,9 @@
 import style from './style.module.css';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import Feed from '../../components/Feed/Feed';
 import { useCallback, useEffect, useState } from 'react';
 import usePeer from '../../hooks/peer';
 import randomId from '../../util/randomId';
-import EnterCode from './EnterCode';
 import { SMConfig } from './smConfig';
 import EnterUsername from './EnterUsername';
 import { EventProtocol } from '../../protocol/protocol';
@@ -18,7 +17,6 @@ const MYCODE = randomId(10);
 
 export function Component() {
     const { t } = useTranslation();
-    const [params] = useSearchParams();
     const { code } = useParams();
     const [config, setConfig] = useState<SMConfig>();
     const [username, setUsername] = useState<string>();
@@ -53,7 +51,6 @@ export function Component() {
                 message={t('feed.messages.loading')}
             >
                 <div className={style.page}>
-                    {!code && !params.has('local') && <EnterCode />}
                     {config && !username && <EnterUsername onUsername={setUsername} />}
                     {config && username && (
                         <Feed

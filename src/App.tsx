@@ -57,7 +57,7 @@ const router = createBrowserRouter(
                 element={
                     <Navigate
                         replace
-                        to="/feed"
+                        to="/start"
                     />
                 }
             />
@@ -66,8 +66,8 @@ const router = createBrowserRouter(
                 lazy={() => import('./views/Genagram/Genagram')}
             />
             <Route
-                path="feed"
-                lazy={() => import('./views/Genagram/Genagram')}
+                path="start"
+                lazy={() => import('./views/Start/Start')}
             />
             <Route
                 path="dashboard"

@@ -1,0 +1,54 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100%;
+}
+
+.innerContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100%;
+    gap: 1rem;
+    width: 100%;
+    max-width: 300px;
+}
+
+.spacer {
+    width: 100%;
+    height: 4rem;
+}
+
+.innerContainer :global .MuiInputBase-input {
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.innerContainer :global .MuiInputBase-root {
+    border-radius: 10px;
+}
+
+.innerContainer label {
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.innerContainer fieldset {
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.innerContainer a {
+    font-size: 1.2rem;
+    border-radius: 10px;
+    text-transform: none;
+}
+
+@media screen and (max-width: 600px) {
+    .createButton {
+        display: none;
+    }
+}
