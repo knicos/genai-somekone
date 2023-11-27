@@ -3,7 +3,7 @@
     flex-direction: column;
     overflow-y: scroll;
     align-items: center;
-
+    border-top: 1px solid #eee;
     padding: 0 1rem;
     box-sizing: border-box;
     position: absolute;
@@ -19,14 +19,7 @@
     flex-shrink: 0;
     max-width: 500px;
     width: 100%;
-    margin-bottom: 50px;
-}
-
-@media screen and (max-width: 600px) {
-    .container {
-        padding: 0;
-        /*scroll-snap-type: y mandatory;*/
-    }
+    /*margin-bottom: 50px;*/
 }
 
 .outer {
@@ -56,4 +49,40 @@
 .leaveMessage {
     font-size: 2rem;
     text-align: center;
+}
+
+.titleOuter {
+    width: 100%;
+    /*border-bottom: 1px solid #eee;*/
+    display: flex;
+    justify-content: center;
+    /*flex-grow: 1;*/
+}
+
+.title {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    padding: 0.5rem 0rem;
+    width: 100%;
+    max-width: 500px;
+    box-sizing: border-box;
+    height: 130px;
+    color: #444;
+}
+
+.title > h1 {
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+}
+
+@media screen and (max-width: 600px) {
+    .container {
+        padding: 0;
+        /*scroll-snap-type: y mandatory;*/
+    }
+
+    .title {
+        padding: 0.5rem 1.2rem;
+    }
 }

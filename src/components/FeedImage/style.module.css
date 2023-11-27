@@ -54,7 +54,7 @@
     position: relative;
     filter: brightness(0.4);
     transition: filter 0.4s;
-    border-radius: 10px;
+    /*border-radius: 10px;*/
     overflow: hidden;
     line-height: 0;
 }

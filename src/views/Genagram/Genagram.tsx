@@ -1,14 +1,14 @@
 import style from './style.module.css';
 import { useParams } from 'react-router-dom';
 import Feed from '../../components/Feed/Feed';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import usePeer from '../../hooks/peer';
 import randomId from '../../util/randomId';
 import { SMConfig } from './smConfig';
 import EnterUsername from './EnterUsername';
 import { EventProtocol } from '../../protocol/protocol';
 import { ProfileSummary } from '@genaism/services/profiler/profilerTypes';
-import { getCurrentUser } from '@genaism/services/profiler/profiler';
+import { getActionLogSince, getCurrentUser } from '@genaism/services/profiler/profiler';
 import ErrorDialog from '../dialogs/ErrorDialog/ErrorDialog';
 import Loading from '@genaism/components/Loading/Loading';
 import { useTranslation } from 'react-i18next';
@@ -20,6 +20,7 @@ export function Component() {
     const { code } = useParams();
     const [config, setConfig] = useState<SMConfig>();
     const [username, setUsername] = useState<string>();
+    const logRef = useRef(0);
 
     const onData = useCallback((data: EventProtocol) => {
         console.log('GOT DATA', data);
@@ -38,8 +39,12 @@ export function Component() {
 
     const doProfile = useCallback(
         (profile: ProfileSummary) => {
-            console.log('PROFILE', profile);
-            if (send) send({ event: 'eter:profile_data', profile, id: getCurrentUser() });
+            if (send) {
+                send({ event: 'eter:profile_data', profile, id: getCurrentUser() });
+                const logs = getActionLogSince(logRef.current);
+                logRef.current = Date.now();
+                send({ event: 'eter:action_log', id: getCurrentUser(), log: logs });
+            }
         },
         [send]
     );

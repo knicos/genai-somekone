@@ -12,7 +12,7 @@ import { UserInfo } from './userInfo';
 import StartDialog from '../dialogs/StartDialog/StartDialog';
 import DEFAULT_CONFIG from '../Genagram/defaultConfig.json';
 import MenuPanel from './MenuPanel';
-import { setUserName, updateProfile } from '@genaism/services/profiler/profiler';
+import { appendActionLog, setUserName, updateProfile } from '@genaism/services/profiler/profiler';
 import SocialGraph from '@genaism/components/SocialGraph/SocialGraph';
 import { useSetRecoilState } from 'recoil';
 import { menuShowShare } from '@genaism/state/menuState';
@@ -44,6 +44,8 @@ export function Component() {
                 setUsers((old) => old.filter((o) => o.connection !== conn));
             } else if (data.event === 'eter:profile_data') {
                 updateProfile(data.id, data.profile);
+            } else if (data.event === 'eter:action_log') {
+                appendActionLog(data.log, data.id);
             }
         },
         [config]

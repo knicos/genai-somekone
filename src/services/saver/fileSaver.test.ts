@@ -1,12 +1,13 @@
 import { describe, it, vi } from 'vitest';
-import { UserProfile } from '../profiler/profilerTypes';
+import { LogEntry, UserProfile } from '../profiler/profilerTypes';
 import { saveFile } from './fileSaver';
 import JSZip from 'jszip';
 
-const { mockUsers, mockProfiles, mockSave } = vi.hoisted(() => ({
+const { mockUsers, mockProfiles, mockSave, mockLog } = vi.hoisted(() => ({
     mockUsers: vi.fn(),
     mockProfiles: vi.fn<unknown[], UserProfile>(),
     mockSave: vi.fn(),
+    mockLog: vi.fn<unknown[], LogEntry[]>(),
 }));
 
 vi.mock('@genaism/services/graph/nodes', () => ({
@@ -15,6 +16,7 @@ vi.mock('@genaism/services/graph/nodes', () => ({
 
 vi.mock('@genaism/services/profiler/profiler', () => ({
     getUserProfile: mockProfiles,
+    getActionLog: mockLog,
 }));
 
 vi.mock('file-saver', () => ({
@@ -33,7 +35,7 @@ describe('saveFile()', () => {
             attributes: {},
         }));
 
-        const blob = await saveFile(false, true);
+        const blob = await saveFile(false, true, false);
 
         expect(mockUsers).toHaveBeenCalledTimes(1);
         expect(mockProfiles).toHaveBeenCalledWith('xyz');
@@ -46,5 +48,25 @@ describe('saveFile()', () => {
         const data = JSON.parse(await zip.files['users.json'].async('string'));
         expect(data).toHaveLength(1);
         expect(data[0].name).toBe('TestUser');
+    });
+
+    it('generates a zip containing action logs', async ({ expect }) => {
+        mockUsers.mockImplementation(() => ['xyz']);
+        mockLog.mockImplementation(() => [{ activity: 'like', timestamp: 1 }] as LogEntry[]);
+
+        const blob = await saveFile(false, false, true);
+
+        expect(mockUsers).toHaveBeenCalledTimes(1);
+        expect(mockLog).toHaveBeenCalledWith('xyz');
+        expect(mockSave).toHaveBeenCalledTimes(1);
+
+        const zip = await JSZip.loadAsync(blob);
+        expect(zip.files).toHaveProperty('logs.json');
+        expect(zip.files['logs.json'].name).toBe('logs.json');
+
+        const data = JSON.parse(await zip.files['logs.json'].async('string'));
+        expect(data).toHaveLength(1);
+        expect(data[0].id).toBe('xyz');
+        expect(data[0].log).toHaveLength(1);
     });
 });

@@ -6,7 +6,7 @@ import { LikeKind } from '@genaism/components/FeedImage/LikePanel';
 import { ShareKind } from '@genaism/components/FeedImage/SharePanel';
 import FeedSpacer from './FeedSpacer';
 import { useTabActive } from '@genaism/hooks/interaction';
-import Spinner from '@genaism/components/Spinner/Spinner';
+import { useTranslation } from 'react-i18next';
 
 const MIN_DWELL_TIME = 2000;
 const MAX_DWELL_TIME = 10000;
@@ -20,6 +20,7 @@ interface Props {
 }
 
 export default function ImageFeed({ images, onView, onMore, onLog }: Props) {
+    const { t } = useTranslation();
     const containerRef = useRef<HTMLDivElement>(null);
     const [viewed, setViewed] = useState(0);
     const prevRef = useRef<number>(-1);
@@ -84,9 +85,9 @@ export default function ImageFeed({ images, onView, onMore, onLog }: Props) {
 
     const doScroll = useCallback(
         (e: React.MouseEvent<HTMLDivElement>) => {
-            const scrollTop = e.currentTarget.scrollTop + 50;
             const scrollHeight = e.currentTarget.scrollHeight;
-            const clientHeight = e.currentTarget.clientHeight;
+            const imageHeight = Math.floor((scrollHeight - 50 - 80) / images.length);
+            const scrollTop = e.currentTarget.scrollTop + imageHeight / 2 - 50 - 80;
 
             const now = Date.now();
             if (now - lastRef.current > INTERACTION_TIMEOUT) {
@@ -94,7 +95,7 @@ export default function ImageFeed({ images, onView, onMore, onLog }: Props) {
             }
             lastRef.current = now;
 
-            const imgIndex = Math.round((scrollTop / (scrollHeight - clientHeight)) * (images.length - 1));
+            const imgIndex = Math.round(scrollTop / imageHeight);
             setViewed(imgIndex);
             if (onMore && imgIndex >= images.length - 4) {
                 if (canMoreRef.current) {
@@ -163,6 +164,17 @@ export default function ImageFeed({ images, onView, onMore, onLog }: Props) {
                 className={style.container}
                 onScroll={doScroll}
             >
+                <div className={style.titleOuter}>
+                    <div className={style.title}>
+                        <img
+                            src="/logo48_bw.png"
+                            alt="GenAIMedia Logo"
+                            width={48}
+                            height={48}
+                        />
+                        <h1>{t('feed.titles.main')}</h1>
+                    </div>
+                </div>
                 <div className={style.topSpacer} />
                 <FeedSpacer size={viewed - 4} />
                 {images.map((img, ix) => (
@@ -178,9 +190,6 @@ export default function ImageFeed({ images, onView, onMore, onLog }: Props) {
                     />
                 ))}
                 <FeedSpacer size={images.length - viewed - 5} />
-                <div className={style.bottomSpacer}>
-                    <Spinner />
-                </div>
             </div>
         </div>
     );

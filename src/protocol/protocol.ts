@@ -1,6 +1,6 @@
 import { PeerEvent, BuiltinEvent } from '@genaism/hooks/peer';
 import { SMConfig } from '@genaism/views/Genagram/smConfig';
-import { ProfileSummary } from '@genaism/services/profiler/profilerTypes';
+import { LogEntry, ProfileSummary } from '@genaism/services/profiler/profilerTypes';
 
 export interface ConfigurationEvent extends PeerEvent {
     event: 'eter:config';
@@ -19,4 +19,10 @@ export interface ProfileEvent extends PeerEvent {
     profile: ProfileSummary;
 }
 
-export type EventProtocol = BuiltinEvent | ProfileEvent | UserRegistrationEvent | ConfigurationEvent;
+export interface ActionLogEvent extends PeerEvent {
+    event: 'eter:action_log';
+    id: string;
+    log: LogEntry[];
+}
+
+export type EventProtocol = BuiltinEvent | ProfileEvent | UserRegistrationEvent | ConfigurationEvent | ActionLogEvent;

@@ -1,6 +1,6 @@
 import { act, render, screen } from '@testing-library/react';
 import { beforeEach, describe, it, vi } from 'vitest';
-import { addUserProfile } from '@genaism/services/profiler/profiler';
+import { addUserProfile, appendActionLog, getActionLogSince } from '@genaism/services/profiler/profiler';
 import { resetGraph } from '@genaism/services/graph/state';
 import { addEdge } from '@genaism/services/graph/edges';
 import { addNode } from '@genaism/services/graph/nodes';
@@ -51,5 +51,26 @@ describe('User hooks.useUserProfile', () => {
 
         render(<UserComponent action={action} />);
         expect(screen.getByText('TestUser2')).toBeInTheDocument();
+    });
+});
+
+describe('Action Logs.getActionLogSince', () => {
+    it('only returns new items', async ({ expect }) => {
+        appendActionLog(
+            [
+                { timestamp: 10, activity: 'like' },
+                { timestamp: 11, activity: 'like' },
+                { timestamp: 12, activity: 'like' },
+                { timestamp: 13, activity: 'like' },
+                { timestamp: 14, activity: 'like' },
+            ],
+            'xyz'
+        );
+
+        const results = getActionLogSince(12, 'xyz');
+
+        expect(results).toHaveLength(2);
+        expect(results[0].timestamp).toBe(13);
+        expect(results[1].timestamp).toBe(14);
     });
 });

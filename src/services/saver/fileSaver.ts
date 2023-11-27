@@ -1,7 +1,7 @@
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 import { getNodesByType } from '@genaism/services/graph/nodes';
-import { getUserProfile } from '@genaism/services/profiler/profiler';
+import { getActionLog, getUserProfile } from '@genaism/services/profiler/profiler';
 
 /*function transformConcepts(concepts: ConceptNode[]): ConceptEntry[] {
     const mapping = new Map<number, ConceptEntry>();
@@ -32,7 +32,7 @@ import { getUserProfile } from '@genaism/services/profiler/profiler';
     return roots;
 }*/
 
-async function generateBlob(incContent: boolean, incProfiles: boolean) {
+async function generateBlob(incContent: boolean, incProfiles: boolean, incLogs: boolean) {
     const zip = new JSZip();
 
     if (incContent) {
@@ -50,18 +50,24 @@ async function generateBlob(incContent: boolean, incProfiles: boolean) {
         zip.file('concepts.json', JSON.stringify(transformConcepts(concepts), undefined, 4));*/
     }
 
+    const users = getNodesByType('user');
+
     if (incProfiles) {
-        const users = getNodesByType('user');
         const profiles = users.map((u) => getUserProfile(u));
         zip.file('users.json', JSON.stringify(profiles, undefined, 4));
+    }
+
+    if (incLogs) {
+        const logs = users.map((u) => ({ id: u, log: getActionLog(u) }));
+        zip.file('logs.json', JSON.stringify(logs, undefined, 4));
     }
 
     const blob = await zip.generateAsync({ type: 'blob' });
     return blob;
 }
 
-export async function saveFile(includeContent: boolean, includeProfiles: boolean) {
-    const blob = await generateBlob(includeContent, includeProfiles);
+export async function saveFile(includeContent: boolean, includeProfiles: boolean, incLogs: boolean) {
+    const blob = await generateBlob(includeContent, includeProfiles, incLogs);
     saveAs(blob, 'genagram.zip');
     return blob;
 }

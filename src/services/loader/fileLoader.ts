@@ -2,8 +2,8 @@ import JSZip from 'jszip';
 
 import { ContentMetadata } from '@genaism/services/content/contentTypes';
 import { addContent } from '@genaism/services/content/content';
-import { UserProfile } from '@genaism/services/profiler/profilerTypes';
-import { addUserProfile } from '@genaism/services/profiler/profiler';
+import { LogEntry, UserProfile } from '@genaism/services/profiler/profilerTypes';
+import { addUserProfile, appendActionLog } from '@genaism/services/profiler/profiler';
 
 export async function getZipBlob(content: string | ArrayBuffer): Promise<Blob> {
     if (typeof content === 'string') {
@@ -18,13 +18,18 @@ export async function getZipBlob(content: string | ArrayBuffer): Promise<Blob> {
     }
 }
 
+interface LogItem {
+    id: string;
+    log: LogEntry[];
+}
+
 export async function loadFile(file: File | Blob): Promise<void> {
     const zip = await JSZip.loadAsync(file);
 
     console.log('Loading file');
 
     const images = new Map<string, string>();
-    const store: { meta: ContentMetadata[]; users: UserProfile[] } = { meta: [], users: [] };
+    const store: { meta: ContentMetadata[]; users: UserProfile[]; logs: LogItem[] } = { meta: [], users: [], logs: [] };
 
     const promises: Promise<void>[] = [];
 
@@ -39,6 +44,12 @@ export async function loadFile(file: File | Blob): Promise<void> {
             promises.push(
                 data.async('string').then((r) => {
                     store.users = JSON.parse(r);
+                })
+            );
+        } else if (data.name === 'logs.json') {
+            promises.push(
+                data.async('string').then((r) => {
+                    store.logs = JSON.parse(r);
                 })
             );
         } else {
@@ -68,5 +79,9 @@ export async function loadFile(file: File | Blob): Promise<void> {
         } catch (e) {
             console.warn('User already exists');
         }
+    });
+
+    store.logs.forEach((l) => {
+        appendActionLog(l.log, l.id);
     });
 }

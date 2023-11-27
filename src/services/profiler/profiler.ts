@@ -15,6 +15,7 @@ import { emitProfileEvent } from '../profiler/events';
 let userID: string;
 
 const users = new Map<string, UserProfile>();
+const logs = new Map<string, LogEntry[]>();
 
 const outOfDate = new Set<string>();
 
@@ -188,6 +189,10 @@ function affinityBoost(content: string, weight: number) {
 }
 
 export function addLogEntry(data: LogEntry) {
+    const logArray: LogEntry[] = logs.get(getCurrentUser()) || [];
+    logArray.push(data);
+    logs.set(getCurrentUser(), logArray);
+
     switch (data.activity) {
         case 'like':
             affinityBoost(data.id || '', 0.1);
@@ -218,4 +223,30 @@ export function addLogEntry(data: LogEntry) {
             affinityBoost(data.id || '', Math.min(1, (data.value || 0) / 80) * 0.6);
             break;
     }
+}
+
+export function appendActionLog(data: LogEntry[], id?: string) {
+    const aid = id || getCurrentUser();
+    const logArray: LogEntry[] = logs.get(aid) || [];
+    logArray.push(...data);
+    logs.set(aid, logArray);
+}
+
+export function getActionLog(id?: string): LogEntry[] {
+    const aid = id || getCurrentUser();
+    return logs.get(aid) || [];
+}
+
+export function getActionLogSince(timestamp: number, id?: string): LogEntry[] {
+    const result: LogEntry[] = [];
+    const log = getActionLog(id);
+
+    for (let i = log.length - 1; i >= 0; --i) {
+        if (log[i].timestamp > timestamp) {
+            result.push(log[i]);
+        } else {
+            break;
+        }
+    }
+    return result.reverse();
 }

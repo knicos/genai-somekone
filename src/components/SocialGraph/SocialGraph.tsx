@@ -72,6 +72,7 @@ export default function SocialGraph({ liveUsers }: Props) {
             onUnselect={() => {
                 setFocusNode(undefined);
                 setZoom(1);
+                setCenter([0, 0]);
             }}
             focusNode={focusNode}
             zoom={zoom}

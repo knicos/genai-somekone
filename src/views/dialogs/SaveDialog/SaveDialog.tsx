@@ -13,6 +13,7 @@ export default function SaveDialog() {
     const [showDialog, setShowDialog] = useRecoilState(menuShowSave);
     const [saveContent, setSaveContent] = useState(false);
     const [saveProfiles, setSaveProfiles] = useState(true);
+    const [saveLogs, setSaveLogs] = useState(true);
 
     const doClose = useCallback(() => setShowDialog(false), [setShowDialog]);
 
@@ -24,8 +25,11 @@ export default function SaveDialog() {
         setSaveProfiles(e.currentTarget.checked);
     }, []);
 
+    const doSaveLogs = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+        setSaveLogs(e.currentTarget.checked);
+    }, []);
     const doSave = useCallback(() => {
-        saveFile(saveContent, saveProfiles);
+        saveFile(saveContent, saveProfiles, saveLogs);
         setShowDialog(false);
     }, [setShowDialog, saveContent, saveProfiles]);
 
@@ -52,6 +56,15 @@ export default function SaveDialog() {
                             <Checkbox
                                 checked={saveProfiles}
                                 onChange={doSaveProfiles}
+                            />
+                        }
+                        label={t('dashboard.labels.saveProfiles')}
+                    />
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={saveLogs}
+                                onChange={doSaveLogs}
                             />
                         }
                         label={t('dashboard.labels.saveProfiles')}
