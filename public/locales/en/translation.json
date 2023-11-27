@@ -39,7 +39,9 @@
             "showLabels": "Show user name labels",
             "showOffline": "Show offline or fake users",
             "shrinkOffline": "Reduce size of offline users",
-            "edgeScaling": "Change the distance between clusters"
+            "edgeScaling": "Change the distance between clusters",
+            "similarPercent": "Similarity threshold for link display",
+            "nodeCharge": "Strength of separation force"
         },
         "messages": {
             "connection": "Go to <PageLink><Code>{{linkText}}</Code></PageLink> and enter the code <Code>{{codeText}}</Code>, or use the QR code.",

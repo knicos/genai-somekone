@@ -9,8 +9,10 @@ import {
     settingDisplayLabel,
     settingDisplayLines,
     settingLinkDistanceScale,
+    settingNodeCharge,
     settingShowOfflineUsers,
     settingShrinkOfflineUsers,
+    settingSimilarPercent,
 } from '@genaism/state/settingsState';
 
 export default function SettingsDialog() {
@@ -21,6 +23,8 @@ export default function SettingsDialog() {
     const [showOffline, setShowOffline] = useRecoilState(settingShowOfflineUsers);
     const [shrinkOffline, setShrinkOffline] = useRecoilState(settingShrinkOfflineUsers);
     const [edgeScale, setEdgeScale] = useRecoilState(settingLinkDistanceScale);
+    const [similarPercent, setSimilarPercent] = useRecoilState(settingSimilarPercent);
+    const [nodeCharge, setNodeCharge] = useRecoilState(settingNodeCharge);
 
     const doClose = useCallback(() => setShowDialog(false), [setShowDialog]);
 
@@ -37,6 +41,14 @@ export default function SettingsDialog() {
     const doEdgeScale = useCallback(
         (_: unknown, value: number | number[]) => setEdgeScale(value as number),
         [setEdgeScale]
+    );
+    const doSimilarPercent = useCallback(
+        (_: unknown, value: number | number[]) => setSimilarPercent(value as number),
+        [setSimilarPercent]
+    );
+    const doNodeCharge = useCallback(
+        (_: unknown, value: number | number[]) => setNodeCharge(value as number),
+        [setNodeCharge]
     );
 
     return (
@@ -90,6 +102,22 @@ export default function SettingsDialog() {
                         min={1}
                         max={20}
                         step={1}
+                    />
+                    <div className={style.label}>{t('dashboard.labels.similarPercent')}</div>
+                    <Slider
+                        value={similarPercent}
+                        onChange={doSimilarPercent}
+                        min={0}
+                        max={1}
+                        step={0.1}
+                    />
+                    <div className={style.label}>{t('dashboard.labels.nodeCharge')}</div>
+                    <Slider
+                        value={nodeCharge}
+                        onChange={doNodeCharge}
+                        min={0}
+                        max={10}
+                        step={0.5}
                     />
                 </div>
             </DialogContent>

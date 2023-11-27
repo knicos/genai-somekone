@@ -5,7 +5,12 @@ import { useSimilarUsers } from '@genaism/services/users/users';
 import { GraphLink } from '../Graph/Graph';
 import { WeightedNode } from '@genaism/services/graph/graphTypes';
 import { useRecoilValue } from 'recoil';
-import { settingDisplayLabel, settingNodeMode, settingShrinkOfflineUsers } from '@genaism/state/settingsState';
+import {
+    settingDisplayLabel,
+    settingNodeMode,
+    settingShrinkOfflineUsers,
+    settingSimilarPercent,
+} from '@genaism/state/settingsState';
 import WordCloud from '../WordCloud/WordCloud';
 import style from './style.module.css';
 
@@ -23,6 +28,7 @@ export default function ProfileNode({ id, onLinks, onResize, live, selected }: P
     const showLabel = useRecoilValue(settingDisplayLabel);
     const shrinkOffline = useRecoilValue(settingShrinkOfflineUsers);
     const nodeMode = useRecoilValue(settingNodeMode);
+    const similarPercent = useRecoilValue(settingSimilarPercent);
 
     const profile = useUserProfile(id);
     const similar = useSimilarUsers(profile);
@@ -36,44 +42,47 @@ export default function ProfileNode({ id, onLinks, onResize, live, selected }: P
     );
 
     useEffect(() => {
-        if (simRef.current !== similar) {
-            simRef.current = similar;
-            const maxWeight = similar[0]?.weight || 0;
-            onLinks(
-                id,
-                similar
-                    .filter((s) => s.weight >= maxWeight * 0.8)
-                    .map((s) => ({ source: id, target: s.id, strength: s.weight }))
-            );
-        }
-    }, [similar, onLinks]);
+        //if (simRef.current !== similar) {
+        simRef.current = similar;
+        const maxWeight = similar[0]?.weight || 0;
+        onLinks(
+            id,
+            similar
+                .filter((s) => s.weight >= maxWeight * (1 - similarPercent))
+                .map((s) => ({ source: id, target: s.id, strength: s.weight }))
+        );
+        //}
+    }, [similar, onLinks, similarPercent]);
+
+    const reduced = shrinkOffline && !live;
+    const asize = reduced ? size * 0.4 : size;
 
     return (
         <g className={style.group}>
             <circle
                 className={selected ? style.selectedCircle : style.outerCircle}
                 data-testid="profile-selected"
-                r={selected ? size + 20 : size}
+                r={selected ? asize + 20 : asize}
             />
             <circle
                 data-testid="profile-circle"
-                r={size}
+                r={asize}
                 fill="white"
                 stroke={live ? '#0A869A' : '#707070'}
-                strokeWidth={shrinkOffline && !live ? 5 : 10}
+                strokeWidth={reduced ? 5 : 10}
             />
-            {nodeMode === 'image' && profile.engagedContent.length > 0 && (
+            {!reduced && nodeMode === 'image' && profile.engagedContent.length > 0 && (
                 <ImageCloud
                     content={profile.engagedContent}
-                    size={shrinkOffline && !live ? 100 : 300}
+                    size={300}
                     padding={3}
                     onSize={doResize}
                 />
             )}
-            {nodeMode === 'word' && (
+            {!reduced && nodeMode === 'word' && (
                 <WordCloud
                     content={profile.taste}
-                    size={shrinkOffline && !live ? 100 : 500}
+                    size={500}
                     padding={3}
                     colour={live ? '#0A869A' : '#707070'}
                     onSize={doResize}
@@ -81,7 +90,7 @@ export default function ProfileNode({ id, onLinks, onResize, live, selected }: P
             )}
             {showLabel && (
                 <text
-                    y={-size - 5}
+                    y={-asize - 5}
                     textAnchor="middle"
                 >
                     {profile.name}

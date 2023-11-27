@@ -15,6 +15,16 @@ export const settingLinkDistanceScale = atom<number>({
     default: 6,
 });
 
+export const settingSimilarPercent = atom<number>({
+    key: 'settingsimilarpercent',
+    default: 0.2,
+});
+
+export const settingNodeCharge = atom<number>({
+    key: 'settingnodecharge',
+    default: 2,
+});
+
 export const settingShrinkOfflineUsers = atom<boolean>({
     key: 'settingshrinkofflineusers',
     default: false,

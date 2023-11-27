@@ -3,7 +3,7 @@ import * as d3 from 'd3';
 import style from './style.module.css';
 import gsap from 'gsap';
 import { useRecoilValue } from 'recoil';
-import { settingDisplayLines, settingLinkDistanceScale } from '@genaism/state/settingsState';
+import { settingDisplayLines, settingLinkDistanceScale, settingNodeCharge } from '@genaism/state/settingsState';
 
 export interface GraphNode {
     size: number;
@@ -87,6 +87,7 @@ export default function Graph({
     const simRef = useRef<d3.Simulation<GraphNode, undefined>>();
     const linkScale = useRecoilValue(settingLinkDistanceScale);
     const showLines = useRecoilValue(settingDisplayLines);
+    const charge = useRecoilValue(settingNodeCharge);
     const internalState = useRef<InternalState>(DEFAULT_STATE);
     const [extents, setExtents] = useState<Extents>(DEFAULT_EXTENTS);
     const [actualCenter, setActualCenter] = useState<[number, number]>([0, 0]);
@@ -102,7 +103,7 @@ export default function Graph({
     useEffect(() => {
         simRef.current = undefined;
         trigger();
-    }, [showLines, linkScale]);
+    }, [showLines, linkScale, charge]);
 
     useEffect(() => {
         if (simRef.current) simRef.current.stop();
@@ -145,12 +146,13 @@ export default function Graph({
         if (!simRef.current) {
             simRef.current = d3
                 .forceSimulation<GraphNode>()
-                .force('charge', d3.forceManyBody().strength(-50000))
+                //.force('center', d3.forceCenter())
+                .force('charge', d3.forceManyBody().strength(-10000 * charge))
                 .force(
                     'link',
                     d3
                         .forceLink<GraphNode, InternalGraphLink>()
-                        .strength((d) => d.strength)
+                        .strength((d) => d.strength * d.strength)
                         .distance((d) =>
                             Math.max(
                                 10,
@@ -165,8 +167,7 @@ export default function Graph({
                         return (n.size || 5) + 10;
                     })
                 )
-                .force('x', d3.forceX())
-                .force('y', d3.forceY());
+                .force('center', d3.forceCenter());
         }
 
         setNodeList(lnodes);

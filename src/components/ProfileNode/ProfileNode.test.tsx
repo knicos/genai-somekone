@@ -4,6 +4,7 @@ import ProfileNode from './ProfileNode';
 import { UserProfile } from '@genaism/services/profiler/profilerTypes';
 import TestWrapper from '@genaism/util/TestWrapper';
 import { settingDisplayLabel, settingShrinkOfflineUsers } from '@genaism/state/settingsState';
+import { WeightedNode } from '@genaism/services/graph/graphTypes';
 
 const { mockProfile, mockSimilar } = vi.hoisted(() => ({
     mockProfile: vi.fn<unknown[], UserProfile>(() => ({
@@ -14,7 +15,7 @@ const { mockProfile, mockSimilar } = vi.hoisted(() => ({
         taste: [{ label: 'taste1', weight: 0.5 }],
         attributes: {},
     })),
-    mockSimilar: vi.fn(),
+    mockSimilar: vi.fn(() => [] as WeightedNode[]),
 }));
 
 vi.mock('@genaism/services/profiler/hooks', () => ({
