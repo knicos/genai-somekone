@@ -8,7 +8,9 @@ export type EdgeType =
     | 'engaged'
     | 'common_attribute'
     | 'parent'
-    | 'child';
+    | 'child'
+    | 'seen_topic'
+    | 'engaged_topic';
 
 export type NodeType = 'content' | 'topic' | 'user' | 'attribute';
 

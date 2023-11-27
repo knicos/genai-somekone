@@ -7,6 +7,8 @@ import {
     getNodesByType,
     getRelated,
     addOrAccumulateEdge,
+    getEdgeWeights,
+    addEdge,
 } from '@genaism/services/graph/graph';
 import { getTopicId, getTopicLabel } from '@genaism/services/concept/concept';
 import { addEdgeTypeListener } from '../graph/events';
@@ -177,7 +179,12 @@ export function newUser() {
 function affinityBoost(content: string, weight: number) {
     const topics = getRelated('topic', content || '');
     topics.forEach((t) => {
-        addOrAccumulateEdge('topic', getCurrentUser(), t.id, t.weight * weight);
+        const engageScore = (getEdgeWeights('engaged_topic', getCurrentUser(), t.id)[0] || 0) + t.weight * weight;
+        addEdge('engaged_topic', getCurrentUser(), t.id, engageScore);
+
+        const seenScore = getEdgeWeights('seen_topic', getCurrentUser(), t.id)[0] || 1;
+
+        addEdge('topic', getCurrentUser(), t.id, engageScore / seenScore);
     });
 
     addOrAccumulateEdge('engaged', getCurrentUser(), content, weight);
@@ -188,12 +195,22 @@ function affinityBoost(content: string, weight: number) {
     });*/
 }
 
+function seeTopics(content: string) {
+    const topics = getRelated('topic', content || '');
+    topics.forEach((t) => {
+        addOrAccumulateEdge('seen_topic', getCurrentUser(), t.id, 1.0);
+    });
+}
+
 export function addLogEntry(data: LogEntry) {
     const logArray: LogEntry[] = logs.get(getCurrentUser()) || [];
     logArray.push(data);
     logs.set(getCurrentUser(), logArray);
 
     switch (data.activity) {
+        case 'seen':
+            seeTopics(data.id || '');
+            break;
         case 'like':
             affinityBoost(data.id || '', 0.1);
             break;

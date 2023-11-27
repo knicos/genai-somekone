@@ -163,4 +163,19 @@ describe('graph.getEdgesOfType', () => {
         const edges = getEdgesOfType('liked', [id1, id2]);
         expect(edges).toHaveLength(2);
     });
+
+    it('gives the updated edge weight', async ({ expect }) => {
+        const id1 = addNode('content');
+        const id2 = addNode('content');
+        addEdge('comment', id1, id2, 1.0);
+
+        const edges = getEdgesOfType('comment', id1);
+        expect(edges).toHaveLength(1);
+        expect(edges[0].weight).toBe(1);
+
+        addEdge('comment', id1, id2, 2.0);
+        const edges2 = getEdgesOfType('comment', id1);
+        expect(edges2).toHaveLength(1);
+        expect(edges2[0].weight).toBe(2);
+    });
 });

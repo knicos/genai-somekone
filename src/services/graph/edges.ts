@@ -6,14 +6,16 @@ export function addEdge(type: EdgeType, src: string, dest: string, weight?: numb
     if (!nodeStore.has(src) || !nodeStore.has(dest)) return null;
 
     const id = `${dest}:${type}:${src}`;
-    const edge = { type, source: src, destination: dest, weight: weight || 0, metadata: {} };
-    const had = edgeStore.has(id);
-    edgeStore.set(id, edge);
+    const oldEdge = edgeStore.get(id);
 
-    if (had) {
+    if (oldEdge) {
+        oldEdge.weight = weight || 0;
         emitNodeEdgeTypeEvent(src, type);
         return id;
     }
+
+    const edge = { type, source: src, destination: dest, weight: weight || 0, metadata: {} };
+    edgeStore.set(id, edge);
 
     if (!edgeSrcIndex.has(src)) edgeSrcIndex.set(src, []);
     edgeSrcIndex.get(src)?.push(edge);
