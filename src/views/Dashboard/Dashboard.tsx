@@ -117,7 +117,6 @@ export function Component() {
         <>
             <Loading loading={!loaded}>
                 <main className={style.dashboard}>
-                    <MenuPanel onOpen={doOpenFile} />
                     <section className={style.workspace}>
                         <SocialGraph liveUsers={users.map((u) => u.id)} />
 
@@ -126,6 +125,7 @@ export function Component() {
                             code={MYCODE}
                         />
                     </section>
+                    <MenuPanel onOpen={doOpenFile} />
                     <SaveDialog />
                     <SettingsDialog />
                 </main>

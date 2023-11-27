@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import style from './style.module.css';
 import cloudLayout, { LocationItem, SizedItem } from '@genaism/components/ImageCloud/cloudLayout';
 import { WeightedLabel } from '@genaism/services/content/contentTypes';
@@ -12,7 +12,7 @@ interface Props {
     onSize?: (size: number) => void;
 }
 
-export default function WordCloud({ content, size, padding, onSize, colour }: Props) {
+const WordCloud = memo(function Cloud({ content, size, padding, onSize, colour }: Props) {
     const gRef = useRef<SVGGElement>(null);
     const [locations, setLocations] = useState(new Map<string, LocationItem>());
 
@@ -96,4 +96,6 @@ export default function WordCloud({ content, size, padding, onSize, colour }: Pr
             })}
         </g>
     );
-}
+});
+
+export default WordCloud;

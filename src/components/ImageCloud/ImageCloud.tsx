@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { WeightedNode } from '@genaism/services/graph/graphTypes';
 import { getContentData } from '@genaism/services/content/content';
 import style from './style.module.css';
@@ -15,7 +15,7 @@ interface Props {
 
 const BORDER_SIZE = 1.5;
 
-export default function ImageCloud({ content, size, padding, colour, borderSize, onSize }: Props) {
+const ImageCloud = memo(function Cloud({ content, size, padding, colour, borderSize, onSize }: Props) {
     const [locations, setLocations] = useState<LocationItem[]>([]);
 
     useEffect(() => {
@@ -72,4 +72,6 @@ export default function ImageCloud({ content, size, padding, colour, borderSize,
             ))}
         </g>
     );
-}
+});
+
+export default ImageCloud;

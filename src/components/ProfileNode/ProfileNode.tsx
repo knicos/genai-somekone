@@ -7,15 +7,17 @@ import { WeightedNode } from '@genaism/services/graph/graphTypes';
 import { useRecoilValue } from 'recoil';
 import { settingDisplayLabel, settingNodeMode, settingShrinkOfflineUsers } from '@genaism/state/settingsState';
 import WordCloud from '../WordCloud/WordCloud';
+import style from './style.module.css';
 
 interface Props {
     id: string;
     live?: boolean;
+    selected?: boolean;
     onLinks: (id: string, links: GraphLink[]) => void;
     onResize: (id: string, size: number) => void;
 }
 
-export default function ProfileNode({ id, onLinks, onResize, live }: Props) {
+export default function ProfileNode({ id, onLinks, onResize, live, selected }: Props) {
     const [size, setSize] = useState(100);
     const simRef = useRef<WeightedNode[]>();
     const showLabel = useRecoilValue(settingDisplayLabel);
@@ -36,15 +38,23 @@ export default function ProfileNode({ id, onLinks, onResize, live }: Props) {
     useEffect(() => {
         if (simRef.current !== similar) {
             simRef.current = similar;
+            const maxWeight = similar[0]?.weight || 0;
             onLinks(
                 id,
-                similar.map((s) => ({ source: id, target: s.id, strength: s.weight }))
+                similar
+                    .filter((s) => s.weight >= maxWeight * 0.8)
+                    .map((s) => ({ source: id, target: s.id, strength: s.weight }))
             );
         }
     }, [similar, onLinks]);
 
     return (
-        <>
+        <g className={style.group}>
+            <circle
+                className={selected ? style.selectedCircle : style.outerCircle}
+                data-testid="profile-selected"
+                r={selected ? size + 20 : size}
+            />
             <circle
                 data-testid="profile-circle"
                 r={size}
@@ -77,6 +87,6 @@ export default function ProfileNode({ id, onLinks, onResize, live }: Props) {
                     {profile.name}
                 </text>
             )}
-        </>
+        </g>
     );
 }

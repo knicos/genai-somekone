@@ -11,6 +11,7 @@ import { RecoilRoot } from 'recoil';
 import './App.css';
 import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 import { theme } from './style/theme';
+import Loading from './components/Loading/Loading';
 
 interface RouterError {
     status: number;
@@ -85,7 +86,14 @@ function App() {
     return (
         <StyledEngineProvider injectFirst>
             <ThemeProvider theme={theme}>
-                <React.Suspense fallback={<div></div>}>
+                <React.Suspense
+                    fallback={
+                        <Loading
+                            loading={true}
+                            message="..."
+                        />
+                    }
+                >
                     <RecoilRoot>
                         <RouterProvider router={router} />
                     </RecoilRoot>

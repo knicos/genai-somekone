@@ -24,6 +24,9 @@ export default function SocialGraph({ liveUsers }: Props) {
         });
         return set;
     }, [liveUsers]);
+    const [focusNode, setFocusNode] = useState<string | undefined>();
+    const [zoom, setZoom] = useState(1);
+    const [center, setCenter] = useState<[number, number] | undefined>();
 
     const doUpdateLinks = useCallback((id: string, links: GraphLink[]) => {
         console.log('UPDATE LINKS', id, links);
@@ -41,15 +44,6 @@ export default function SocialGraph({ liveUsers }: Props) {
             filteredUsers.map((u) => ({
                 id: u,
                 size: sizesRef.current.get(u) || 20,
-                component: (
-                    <ProfileNode
-                        id={u}
-                        onLinks={doUpdateLinks}
-                        onResize={doResize}
-                        key={u}
-                        live={liveSet.has(u)}
-                    />
-                ),
             }))
         );
     }, [users, liveSet, showOfflineUsers]);
@@ -70,6 +64,30 @@ export default function SocialGraph({ liveUsers }: Props) {
         <Graph
             links={links}
             nodes={nodes}
-        />
+            onSelect={(n: Readonly<GraphNode>) => {
+                if (!focusNode) setZoom(0.5);
+                setCenter([n.x || 0, n.y || 0]);
+                setFocusNode(n.id);
+            }}
+            onUnselect={() => {
+                setFocusNode(undefined);
+                setZoom(1);
+            }}
+            focusNode={focusNode}
+            zoom={zoom}
+            onZoom={setZoom}
+            center={center}
+        >
+            {nodes.map((n) => (
+                <ProfileNode
+                    id={n.id}
+                    onLinks={doUpdateLinks}
+                    onResize={doResize}
+                    key={n.id}
+                    live={liveSet.has(n.id)}
+                    selected={n.id === focusNode}
+                />
+            ))}
+        </Graph>
     );
 }

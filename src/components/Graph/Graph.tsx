@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState, useReducer } from 'react';
+import { useRef, useEffect, useState, useReducer, MouseEvent, WheelEvent, PropsWithChildren } from 'react';
 import * as d3 from 'd3';
 import style from './style.module.css';
 import gsap from 'gsap';
@@ -10,8 +10,9 @@ export interface GraphNode {
     id: string;
     x?: number;
     y?: number;
-    component: JSX.Element;
     index?: number;
+    fx?: number;
+    fy?: number;
 }
 
 export interface GraphLink {
@@ -33,20 +34,51 @@ interface Extents {
     maxY: number;
 }
 
-function calculateViewBox(extents: Extents): string {
-    const w = Math.floor(extents.maxX - extents.minX + 100);
-    const h = Math.floor(extents.maxY - extents.minY + 100);
-    const x = Math.floor(extents.minX - 50);
-    const y = Math.floor(extents.minY - 50);
+function calculateViewBox(extents: Extents, padding: number, zoom: number, center: [number, number]): string {
+    const pw = Math.max(500, extents.maxX - extents.minX);
+    const ph = Math.max(500, extents.maxY - extents.minY);
+    const w = Math.floor(pw * zoom + 2 * padding);
+    const h = Math.floor(ph * zoom + 2 * padding);
+    const x = Math.floor(center[0] - w / 2);
+    const y = Math.floor(center[1] - h / 2);
     return `${x} ${y} ${w} ${h}`;
 }
 
-interface Props {
+interface Props extends PropsWithChildren {
     nodes: GraphNode[];
     links?: GraphLink[];
+    onSelect?: (node: Readonly<GraphNode>) => void;
+    onUnselect?: () => void;
+    focusNode?: string;
+    zoom?: number;
+    center?: [number, number];
+    onZoom?: (z: number) => void;
 }
 
-export default function Graph({ nodes, links }: Props) {
+interface InternalState {
+    focusNode?: string;
+}
+
+const DEFAULT_STATE: InternalState = {};
+
+const DEFAULT_EXTENTS: Extents = {
+    minX: -500,
+    minY: -500,
+    maxX: 500,
+    maxY: 500,
+};
+
+export default function Graph({
+    nodes,
+    links,
+    onSelect,
+    onUnselect,
+    focusNode,
+    zoom,
+    onZoom,
+    children,
+    center,
+}: Props) {
     const svgRef = useRef<SVGSVGElement>(null);
     const [redraw, trigger] = useReducer((a) => ++a, 0);
     const [nodeList, setNodeList] = useState<GraphNode[]>([]);
@@ -55,6 +87,17 @@ export default function Graph({ nodes, links }: Props) {
     const simRef = useRef<d3.Simulation<GraphNode, undefined>>();
     const linkScale = useRecoilValue(settingLinkDistanceScale);
     const showLines = useRecoilValue(settingDisplayLines);
+    const internalState = useRef<InternalState>(DEFAULT_STATE);
+    const [extents, setExtents] = useState<Extents>(DEFAULT_EXTENTS);
+    const [actualCenter, setActualCenter] = useState<[number, number]>([0, 0]);
+
+    internalState.current.focusNode = focusNode;
+
+    useEffect(() => {
+        if (center) {
+            setActualCenter(center);
+        }
+    }, [center]);
 
     useEffect(() => {
         simRef.current = undefined;
@@ -69,8 +112,14 @@ export default function Graph({ nodes, links }: Props) {
         nodes.forEach((n, ix) => {
             const cur = nodeRef.current.get(n.id) || { ...n };
             cur.size = n.size;
-            cur.component = n.component;
             cur.index = ix;
+            if (internalState.current.focusNode === n.id) {
+                cur.fx = cur.x;
+                cur.fy = cur.y;
+            } else {
+                cur.fx = undefined;
+                cur.fy = undefined;
+            }
             newNodeRef.set(n.id, cur);
         });
 
@@ -96,6 +145,7 @@ export default function Graph({ nodes, links }: Props) {
         if (!simRef.current) {
             simRef.current = d3
                 .forceSimulation<GraphNode>()
+                .force('charge', d3.forceManyBody().strength(-50000))
                 .force(
                     'link',
                     d3
@@ -115,7 +165,8 @@ export default function Graph({ nodes, links }: Props) {
                         return (n.size || 5) + 10;
                     })
                 )
-                .force('center', d3.forceCenter());
+                .force('x', d3.forceX())
+                .force('y', d3.forceY());
         }
 
         setNodeList(lnodes);
@@ -124,31 +175,6 @@ export default function Graph({ nodes, links }: Props) {
         simRef.current.force<d3.ForceLink<GraphNode, InternalGraphLink>>('link')?.links(llinks);
         simRef.current
             .on('tick', () => {
-                const extents: Extents = {
-                    minX: 0,
-                    minY: 0,
-                    maxX: 0,
-                    maxY: 0,
-                };
-
-                lnodes.forEach((n) => {
-                    extents.minX = Math.min(extents.minX, (n.x || 0) - n.size);
-                    extents.minY = Math.min(extents.minY, (n.y || 0) - n.size);
-                    extents.maxX = Math.max(extents.maxX, (n.x || 0) + n.size);
-                    extents.maxY = Math.max(extents.maxY, (n.y || 0) + n.size);
-                });
-
-                //setNodeList([...lnodes]);
-
-                //console.log('LINKS', llinks);
-
-                gsap.to(svgRef.current, {
-                    attr: {
-                        viewBox: calculateViewBox(extents),
-                    },
-                    duration: 1,
-                });
-
                 setNodeList([...lnodes]);
             })
             .on('end', () => {});
@@ -156,6 +182,33 @@ export default function Graph({ nodes, links }: Props) {
 
         setLinkList(llinks);
     }, [nodes, links, redraw]);
+
+    useEffect(() => {
+        const newExtents: Extents = {
+            minX: 10000,
+            minY: 10000,
+            maxX: -10000,
+            maxY: -10000,
+        };
+
+        nodeList.forEach((n) => {
+            newExtents.minX = Math.min(newExtents.minX, (n.x || 0) - n.size);
+            newExtents.minY = Math.min(newExtents.minY, (n.y || 0) - n.size);
+            newExtents.maxX = Math.max(newExtents.maxX, (n.x || 0) + n.size);
+            newExtents.maxY = Math.max(newExtents.maxY, (n.y || 0) + n.size);
+        });
+        setExtents(newExtents);
+    }, [nodeList]);
+
+    useEffect(() => {
+        gsap.to(svgRef.current, {
+            attr: {
+                viewBox: calculateViewBox(extents, 50, zoom || 1, actualCenter),
+            },
+            duration: 0.3,
+            //ease: 'none',
+        });
+    }, [zoom, extents, actualCenter]);
 
     return (
         <svg
@@ -165,6 +218,8 @@ export default function Graph({ nodes, links }: Props) {
             height="100%"
             viewBox="-500 -500 1000 1000"
             data-testid="graph-svg"
+            onClick={() => onUnselect && onUnselect()}
+            onWheel={(e: WheelEvent<SVGSVGElement>) => onZoom && onZoom(Math.max(0.1, (zoom || 1) + e.deltaY * 0.002))}
         >
             <g>
                 {showLines && (
@@ -189,8 +244,13 @@ export default function Graph({ nodes, links }: Props) {
                         <g
                             key={ix}
                             transform={`translate(${Math.floor(n.x || 0)},${Math.floor(n.y || 0)})`}
+                            onClick={(e: MouseEvent<SVGGElement>) => {
+                                if (onSelect) onSelect(n);
+                                e.stopPropagation();
+                            }}
+                            className={style.node}
                         >
-                            {n.component}
+                            {Array.isArray(children) ? children[ix] : nodeList.length === 1 ? children : null}
                         </g>
                     ))}
                 </g>

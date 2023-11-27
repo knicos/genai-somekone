@@ -17,7 +17,7 @@ export const settingLinkDistanceScale = atom<number>({
 
 export const settingShrinkOfflineUsers = atom<boolean>({
     key: 'settingshrinkofflineusers',
-    default: true,
+    default: false,
 });
 
 export const settingShowOfflineUsers = atom<boolean>({

@@ -11,9 +11,14 @@ describe('Graph component', () => {
     });
 
     it('renders with one node', async ({ expect }) => {
-        render(<Graph nodes={[{ id: 'xyz', size: 50, component: <text data-testid="graph-node-1">Hello</text> }]} />, {
-            wrapper: TestWrapper,
-        });
+        render(
+            <Graph nodes={[{ id: 'xyz', size: 50 }]}>
+                <text data-testid="graph-node-1">Hello</text>
+            </Graph>,
+            {
+                wrapper: TestWrapper,
+            }
+        );
 
         expect(screen.getByTestId('graph-node-1')).toBeInTheDocument();
     });
@@ -22,11 +27,15 @@ describe('Graph component', () => {
         render(
             <Graph
                 nodes={[
-                    { id: 'xyz', size: 50, component: <text data-testid="graph-node-1">Hello</text> },
-                    { id: 'xyz2', size: 60, component: <text data-testid="graph-node-2">Hello2</text> },
-                    { id: 'xyz3', size: 70, component: <text data-testid="graph-node-3">Hello3</text> },
+                    { id: 'xyz', size: 50 },
+                    { id: 'xyz2', size: 60 },
+                    { id: 'xyz3', size: 70 },
                 ]}
-            />,
+            >
+                <text data-testid="graph-node-1">Hello</text>
+                <text data-testid="graph-node-2">Hello2</text>
+                <text data-testid="graph-node-3">Hello3</text>
+            </Graph>,
             { wrapper: TestWrapper }
         );
 
@@ -39,12 +48,16 @@ describe('Graph component', () => {
         render(
             <Graph
                 nodes={[
-                    { id: 'xyz', size: 50, component: <text data-testid="graph-node-1">Hello</text> },
-                    { id: 'xyz2', size: 60, component: <text data-testid="graph-node-2">Hello2</text> },
-                    { id: 'xyz3', size: 70, component: <text data-testid="graph-node-3">Hello3</text> },
+                    { id: 'xyz', size: 50 },
+                    { id: 'xyz2', size: 60 },
+                    { id: 'xyz3', size: 70 },
                 ]}
                 links={[{ source: 'xyz', target: 'xyz2', strength: 1 }]}
-            />,
+            >
+                <text data-testid="graph-node-1">Hello</text>
+                <text data-testid="graph-node-2">Hello2</text>
+                <text data-testid="graph-node-3">Hello3</text>
+            </Graph>,
             { wrapper: TestWrapper }
         );
 
@@ -55,12 +68,16 @@ describe('Graph component', () => {
         render(
             <Graph
                 nodes={[
-                    { id: 'xyz', size: 50, component: <text data-testid="graph-node-1">Hello</text> },
-                    { id: 'xyz2', size: 60, component: <text data-testid="graph-node-2">Hello2</text> },
-                    { id: 'xyz3', size: 70, component: <text data-testid="graph-node-3">Hello3</text> },
+                    { id: 'xyz', size: 50 },
+                    { id: 'xyz2', size: 60 },
+                    { id: 'xyz3', size: 70 },
                 ]}
                 links={[{ source: 'xyz', target: 'xyz1', strength: 1 }]}
-            />,
+            >
+                <text data-testid="graph-node-1">Hello</text>
+                <text data-testid="graph-node-2">Hello2</text>
+                <text data-testid="graph-node-3">Hello3</text>
+            </Graph>,
             { wrapper: TestWrapper }
         );
 

@@ -145,7 +145,7 @@ describe('ProfileNode component', () => {
 
         mockSimilar.mockImplementation(() => [
             { id: 'ddd', weight: 2 },
-            { id: 'sss', weight: 1 },
+            { id: 'sss', weight: 1.9 },
         ]);
 
         render(
@@ -168,7 +168,7 @@ describe('ProfileNode component', () => {
 
         expect(linksFn).toHaveBeenCalledWith('xyz', [
             { source: 'xyz', target: 'ddd', strength: 2 },
-            { source: 'xyz', target: 'sss', strength: 1 },
+            { source: 'xyz', target: 'sss', strength: 1.9 },
         ]);
     });
 });
