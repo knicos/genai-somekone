@@ -28,3 +28,15 @@
 .MuiDialogContent-root {
     font-family: Andika;
 }
+
+.MuiSpeedDialAction-staticTooltipLabel {
+    width: max-content;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    color: white;
+    background: #5f7377;
+    border-radius: 6px;
+}
+
+h1 {
+    color: #444;
+}

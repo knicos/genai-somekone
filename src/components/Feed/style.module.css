@@ -1,3 +1,5 @@
+@value borderGrey from "../../style/colours.module.css";
+
 .feedView {
     height: 100%;
     max-height: 1000px;
@@ -14,7 +16,7 @@
 
 .footerOuter {
     width: 100%;
-    border-top: 1px solid #eee;
+    border-top: 1px solid borderGrey;
     display: flex;
     justify-content: center;
     flex-grow: 1;

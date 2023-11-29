@@ -14,3 +14,8 @@ export const menuShowSettings = atom<boolean>({
     key: 'menushowsettings',
     default: false,
 });
+
+export const menuShowData = atom<boolean>({
+    key: 'menushowdata',
+    default: false,
+});

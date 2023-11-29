@@ -1,9 +1,11 @@
+@value borderGrey from "../../style/colours.module.css";
+
 .container {
     display: flex;
     flex-direction: column;
     overflow-y: scroll;
     align-items: center;
-    border-top: 1px solid #eee;
+    border-top: 1px solid borderGrey;
     padding: 0 1rem;
     box-sizing: border-box;
     position: absolute;

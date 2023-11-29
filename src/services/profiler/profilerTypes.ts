@@ -18,7 +18,9 @@ export type LogActivity =
     | 'follow'
     | 'begin'
     | 'end'
-    | 'seen';
+    | 'seen'
+    | 'inactive'
+    | 'engagement';
 
 export interface LogEntry {
     activity: LogActivity;

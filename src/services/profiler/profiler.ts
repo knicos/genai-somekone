@@ -14,6 +14,9 @@ import { getTopicId, getTopicLabel } from '@genaism/services/concept/concept';
 import { addEdgeTypeListener } from '../graph/events';
 import { emitProfileEvent } from '../profiler/events';
 
+const MIN_DWELL_TIME = 2000;
+const MAX_DWELL_TIME = 10000;
+
 let userID: string;
 
 const users = new Map<string, UserProfile>();
@@ -202,8 +205,20 @@ function seeTopics(content: string) {
     });
 }
 
+function normDwell(d: number): number {
+    return Math.max(0, Math.min(10, (d - MIN_DWELL_TIME) / (MAX_DWELL_TIME - MIN_DWELL_TIME)));
+}
+
 export function addLogEntry(data: LogEntry) {
     const logArray: LogEntry[] = logs.get(getCurrentUser()) || [];
+    const changed = logArray.length > 0 ? logArray[logArray.length - 1].id !== data.id : false;
+
+    if (changed) {
+        const prev = logArray[logArray.length - 1];
+        const weight = getEdgeWeights('engaged', getCurrentUser(), prev.id)[0] || 0;
+        appendActionLog([{ activity: 'engagement', id: prev.id, value: weight, timestamp: Date.now() }]);
+    }
+
     logArray.push(data);
     logs.set(getCurrentUser(), logArray);
 
@@ -231,7 +246,7 @@ export function addLogEntry(data: LogEntry) {
             affinityBoost(data.id || '', 0.3);
             break;
         case 'dwell':
-            affinityBoost(data.id || '', (data.value || 0) * 0.3);
+            affinityBoost(data.id || '', normDwell(data.value || 0) * 0.3);
             break;
         case 'follow':
             affinityBoost(data.id || '', 0.5);

@@ -194,19 +194,19 @@ export default function FeedImage({ id, onClick, onLike, onFollow, onShare, onCo
                         </IconButton>
                     </div>
                 )}
-                {activePanel === 'like' && (
+                {active && activePanel === 'like' && (
                     <LikePanel
                         onClose={doCloseLike}
                         onChange={doLike}
                     />
                 )}
-                {activePanel === 'share' && (
+                {active && activePanel === 'share' && (
                     <SharePanel
                         onClose={doCloseLike}
                         onChange={doShare}
                     />
                 )}
-                {activePanel === 'comment' && (
+                {active && activePanel === 'comment' && (
                     <CommentPanel
                         onClose={doCloseLike}
                         onComment={doComment}

@@ -20,6 +20,24 @@
         "messages": {
             "noComments": "No comments yet.",
             "loading": "Loading your feed..."
+        },
+        "actionlog": {
+            "dwell": "Viewed for {{time}} second(s)",
+            "inactive": "Inactive for {{time}} second(s)",
+            "seen": "Image seen",
+            "follow": "Followed creator",
+            "wow": "Reacted with 😯",
+            "love": "Reacted with 😍",
+            "sad": "Reacted with 😢",
+            "anger": "Reacted with 😡",
+            "laugh": "Reacted with 😂",
+            "like": "Liked the image",
+            "share_friends": "Shared with friends",
+            "share_private": "Shared privately",
+            "share_public": "Shared with everyone",
+            "comment": "Comment of length {{length}}",
+            "engagement": "Engagement {{score}}/10",
+            "end": "Stopped using the app"
         }
     },
     "dashboard": {

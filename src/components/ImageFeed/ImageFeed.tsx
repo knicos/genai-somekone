@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useState, useEffect } from 'react';
+import React, { useRef, useCallback, useState, useEffect, FocusEvent } from 'react';
 import IImage from '../FeedImage/FeedImage';
 import style from './style.module.css';
 import { LogActivity, LogEntry } from '@genaism/services/profiler/profilerTypes';
@@ -8,8 +8,6 @@ import FeedSpacer from './FeedSpacer';
 import { useTabActive } from '@genaism/hooks/interaction';
 import { useTranslation } from 'react-i18next';
 
-const MIN_DWELL_TIME = 2000;
-const MAX_DWELL_TIME = 10000;
 const INTERACTION_TIMEOUT = 5000;
 
 interface Props {
@@ -26,9 +24,14 @@ export default function ImageFeed({ images, onView, onMore, onLog }: Props) {
     const prevRef = useRef<number>(-1);
     const startRef = useRef<number>(0);
     const lastRef = useRef<number>(0);
+    const viewedRef = useRef<string>();
     const canMoreRef = useRef(true);
     const durationRef = useRef<number>(0);
     const active = useTabActive();
+    const [focus, setFocus] = useState(false);
+    const ref = useRef<HTMLDivElement>(null);
+
+    viewedRef.current = images[viewed];
 
     useEffect(() => {
         const now = Date.now();
@@ -36,8 +39,11 @@ export default function ImageFeed({ images, onView, onMore, onLog }: Props) {
             durationRef.current = now;
             startRef.current = now;
             onLog({ activity: 'begin', timestamp: now });
+            if (ref.current) {
+                ref.current.focus();
+            }
         } else {
-            onLog({ activity: 'end', timestamp: now, value: now - durationRef.current });
+            onLog({ activity: 'end', timestamp: now, value: now - durationRef.current, id: viewedRef.current || '' });
         }
     }, [active]);
 
@@ -62,15 +68,11 @@ export default function ImageFeed({ images, onView, onMore, onLog }: Props) {
     useEffect(() => {
         const now = Date.now();
         if (viewed === prevRef.current) return;
-        doSeen(viewed);
         if (prevRef.current >= 0) {
             const delta = now - startRef.current;
-            //if (delta > 1000) {
-            const norm = Math.max(0, Math.min(10, (delta - MIN_DWELL_TIME) / (MAX_DWELL_TIME - MIN_DWELL_TIME)));
-            // onView(prevRef.current, norm);
-            doDwell(norm, prevRef.current);
-            //}
+            doDwell(delta, prevRef.current);
         }
+        doSeen(viewed);
         startRef.current = now;
         prevRef.current = viewed;
     }, [viewed, onView, onLog, images]);
@@ -81,21 +83,31 @@ export default function ImageFeed({ images, onView, onMore, onLog }: Props) {
             startRef.current = now;
         }
         lastRef.current = now;
-    }, []);
+
+        if (ref.current && !focus) {
+            ref.current.focus();
+        }
+    }, [focus]);
 
     const doScroll = useCallback(
         (e: React.MouseEvent<HTMLDivElement>) => {
             const scrollHeight = e.currentTarget.scrollHeight;
             const imageHeight = Math.floor((scrollHeight - 50 - 80) / images.length);
             const scrollTop = e.currentTarget.scrollTop + imageHeight / 2 - 50 - 80;
+            const imgIndex = Math.round(scrollTop / imageHeight);
 
             const now = Date.now();
             if (now - lastRef.current > INTERACTION_TIMEOUT) {
+                onLog({
+                    activity: 'inactive',
+                    value: now - lastRef.current,
+                    id: images[imgIndex],
+                    timestamp: Date.now(),
+                });
                 startRef.current = now;
             }
             lastRef.current = now;
 
-            const imgIndex = Math.round(scrollTop / imageHeight);
             setViewed(imgIndex);
             if (onMore && imgIndex >= images.length - 4) {
                 if (canMoreRef.current) {
@@ -103,8 +115,12 @@ export default function ImageFeed({ images, onView, onMore, onLog }: Props) {
                 }
                 canMoreRef.current = false;
             }
+
+            if (ref.current && !focus) {
+                ref.current.focus();
+            }
         },
-        [images, setViewed, onMore]
+        [images, setViewed, onMore, focus, onLog]
     );
 
     const doLike = useCallback(
@@ -154,10 +170,17 @@ export default function ImageFeed({ images, onView, onMore, onLog }: Props) {
     return (
         <div
             className={style.outer}
+            ref={ref}
             onMouseMove={doInteraction}
             onKeyDown={doInteraction}
             onTouchStart={doInteraction}
             onMouseDown={doInteraction}
+            tabIndex={0}
+            onFocus={() => setFocus(true)}
+            onBlur={(e: FocusEvent) => {
+                const ischild = e.currentTarget.contains(e.relatedTarget);
+                if (!ischild) setFocus(false);
+            }}
         >
             <div
                 ref={containerRef}
@@ -185,7 +208,7 @@ export default function ImageFeed({ images, onView, onMore, onLog }: Props) {
                         onFollow={doFollow}
                         onShare={doShare}
                         onComment={doComment}
-                        active={active && (ix === viewed || (ix === 0 && viewed === -1))}
+                        active={focus && active && (ix === viewed || (ix === 0 && viewed === -1))}
                         visible={Math.abs(ix - viewed) < 5}
                     />
                 ))}

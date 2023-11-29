@@ -67,6 +67,10 @@ const router = createBrowserRouter(
                 lazy={() => import('./views/Genagram/Genagram')}
             />
             <Route
+                path="profile/:code"
+                lazy={() => import('./views/ProfileViewer/ProfileViewer')}
+            />
+            <Route
                 path="start"
                 lazy={() => import('./views/Start/Start')}
             />

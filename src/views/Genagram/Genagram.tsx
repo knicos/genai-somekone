@@ -12,6 +12,8 @@ import { getActionLogSince, getCurrentUser } from '@genaism/services/profiler/pr
 import ErrorDialog from '../dialogs/ErrorDialog/ErrorDialog';
 import Loading from '@genaism/components/Loading/Loading';
 import { useTranslation } from 'react-i18next';
+import SpeedMenu from './SpeedMenu';
+import DataPage from './DataPage';
 
 const MYCODE = randomId(10);
 
@@ -21,6 +23,7 @@ export function Component() {
     const [config, setConfig] = useState<SMConfig>();
     const [username, setUsername] = useState<string>();
     const logRef = useRef(0);
+    // const { onTouchStart, onTouchMove, onTouchEnd, swipe, distance } = useSwipe();
 
     const onData = useCallback((data: EventProtocol) => {
         console.log('GOT DATA', data);
@@ -58,11 +61,17 @@ export function Component() {
                 <div className={style.page}>
                     {config && !username && <EnterUsername onUsername={setUsername} />}
                     {config && username && (
-                        <Feed
-                            content={config.content}
-                            onProfile={doProfile}
-                        />
+                        <>
+                            <Feed
+                                content={config.content}
+                                onProfile={doProfile}
+                            />
+                            <div className={style.speedContainer}>
+                                <SpeedMenu />
+                            </div>
+                        </>
                     )}
+                    <DataPage />
                 </div>
             </Loading>
             <ErrorDialog />
