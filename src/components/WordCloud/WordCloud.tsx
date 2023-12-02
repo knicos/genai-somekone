@@ -10,9 +10,10 @@ interface Props {
     colour?: string;
     borderSize?: number;
     onSize?: (size: number) => void;
+    className?: string;
 }
 
-const WordCloud = memo(function Cloud({ content, size, padding, onSize, colour }: Props) {
+const WordCloud = memo(function Cloud({ content, size, padding, onSize, className }: Props) {
     const gRef = useRef<SVGGElement>(null);
     const [locations, setLocations] = useState(new Map<string, LocationItem>());
 
@@ -66,7 +67,7 @@ const WordCloud = memo(function Cloud({ content, size, padding, onSize, colour }
                 return (
                     <g
                         key={ix}
-                        className={style.cloudItem}
+                        className={className || style.cloudItem}
                         transform={l ? `translate(${l.x}, ${l.y})` : 'translate(0,0)'}
                     >
                         {l && (
@@ -76,8 +77,6 @@ const WordCloud = memo(function Cloud({ content, size, padding, onSize, colour }
                                 rx="6px"
                                 width={l.item.width}
                                 height={l.item.height}
-                                fill={colour || 'black'}
-                                opacity="0.2"
                             />
                         )}
                         <text

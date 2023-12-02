@@ -10,7 +10,12 @@ export type EdgeType =
     | 'parent'
     | 'child'
     | 'seen_topic'
-    | 'engaged_topic';
+    | 'engaged_topic'
+    | 'commented_topic'
+    | 'shared_topic'
+    | 'reacted_topic'
+    | 'followed_topic'
+    | 'viewed_topic';
 
 export type NodeType = 'content' | 'topic' | 'user' | 'attribute';
 

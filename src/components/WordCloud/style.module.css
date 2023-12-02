@@ -4,9 +4,10 @@
     transition: transform 1s;
 }
 
-/*.cloudItem rect {
+.cloudItem rect {
     fill: bgColourful1;
-}*/
+    opacity: 0.2;
+}
 
 .cloudItem text {
     fill: textDark;

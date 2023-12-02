@@ -1,8 +1,15 @@
 import { act, render, screen } from '@testing-library/react';
 import { beforeEach, describe, it, vi } from 'vitest';
-import { addUserProfile, appendActionLog, getActionLogSince } from '@genaism/services/profiler/profiler';
+import {
+    addLogEntry,
+    addUserProfile,
+    appendActionLog,
+    getActionLogSince,
+    getCurrentUser,
+    resetProfiles,
+} from '@genaism/services/profiler/profiler';
 import { resetGraph } from '@genaism/services/graph/state';
-import { addEdge } from '@genaism/services/graph/edges';
+import { addEdge, getEdgeWeights } from '@genaism/services/graph/edges';
 import { addNode } from '@genaism/services/graph/nodes';
 import { WeightedNode } from '@genaism/services/graph/graphTypes';
 import { useUserProfile } from './hooks';
@@ -13,7 +20,10 @@ function UserComponent({ action }: { action: (e: WeightedNode[]) => void }) {
     return user.name;
 }
 
-beforeEach(() => resetGraph());
+beforeEach(() => {
+    resetGraph();
+    resetProfiles();
+});
 
 describe('User hooks.useUserProfile', () => {
     it('triggers a rerender on event', async ({ expect }) => {
@@ -22,6 +32,12 @@ describe('User hooks.useUserProfile', () => {
             name: 'TestUser1',
             id: 'xyz',
             engagedContent: [],
+            commentedTopics: [],
+            reactedTopics: [],
+            sharedTopics: [],
+            followedTopics: [],
+            seenTopics: [],
+            viewedTopics: [],
             taste: [],
             engagement: -1,
             attributes: {},
@@ -42,6 +58,12 @@ describe('User hooks.useUserProfile', () => {
             name: 'TestUser2',
             id: 'xyz',
             engagedContent: [],
+            commentedTopics: [],
+            reactedTopics: [],
+            sharedTopics: [],
+            followedTopics: [],
+            seenTopics: [],
+            viewedTopics: [],
             taste: [],
             engagement: -1,
             attributes: {},
@@ -72,5 +94,43 @@ describe('Action Logs.getActionLogSince', () => {
         expect(results).toHaveLength(2);
         expect(results[0].timestamp).toBe(13);
         expect(results[1].timestamp).toBe(14);
+    });
+});
+
+describe('Profiler.addLogEntry', () => {
+    it('updates profile on like', async ({ expect }) => {
+        addNode('content', 'content1');
+        addNode('topic', 'topic1');
+        addEdge('topic', 'content1', 'topic1', 1);
+
+        addLogEntry({ activity: 'like', timestamp: Date.now(), id: 'content1' });
+
+        expect(getEdgeWeights('topic', getCurrentUser(), 'topic1')[0]).toBe(0.1);
+        expect(getEdgeWeights('engaged_topic', getCurrentUser(), 'topic1')[0]).toBe(0.1);
+        expect(getEdgeWeights('reacted_topic', getCurrentUser(), 'topic1')[0]).toBe(1);
+    });
+
+    it('records seen actions', async ({ expect }) => {
+        addNode('content', 'content1');
+        addNode('topic', 'topic1');
+        addEdge('topic', 'content1', 'topic1', 1);
+
+        addLogEntry({ activity: 'seen', timestamp: Date.now(), id: 'content1' });
+
+        expect(getEdgeWeights('seen_topic', getCurrentUser(), 'topic1')[0]).toBe(1);
+    });
+
+    it('accounts for seen in topic score', async ({ expect }) => {
+        addNode('content', 'content1');
+        addNode('topic', 'topic1');
+        addEdge('topic', 'content1', 'topic1', 1);
+
+        addLogEntry({ activity: 'seen', timestamp: Date.now(), id: 'content1' });
+        addLogEntry({ activity: 'seen', timestamp: Date.now(), id: 'content1' });
+        addLogEntry({ activity: 'like', timestamp: Date.now(), id: 'content1' });
+
+        expect(getEdgeWeights('seen_topic', getCurrentUser(), 'topic1')[0]).toBe(2);
+        expect(getEdgeWeights('engaged_topic', getCurrentUser(), 'topic1')[0]).toBe(0.1);
+        expect(getEdgeWeights('topic', getCurrentUser(), 'topic1')[0]).toBe(0.1 / 2);
     });
 });

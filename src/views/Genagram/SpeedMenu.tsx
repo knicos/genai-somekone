@@ -6,11 +6,14 @@ import PersonIcon from '@mui/icons-material/Person';
 import ImageSearchIcon from '@mui/icons-material/ImageSearch';
 import CloseIcon from '@mui/icons-material/Close';
 import { useSetRecoilState } from 'recoil';
-import { menuShowData } from '@genaism/state/menuState';
+import { menuShowData, menuShowProfile } from '@genaism/state/menuState';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export default function SpeedMenu() {
+    const { t } = useTranslation();
     const setShowData = useSetRecoilState(menuShowData);
+    const setShowProfile = useSetRecoilState(menuShowProfile);
     const [showMenu, setShowMenu] = useState(false);
 
     return (
@@ -31,7 +34,7 @@ export default function SpeedMenu() {
             />
             <SpeedDialAction
                 icon={<QueryStatsIcon />}
-                tooltipTitle={'Your data'}
+                tooltipTitle={t('profile.titles.yourData')}
                 tooltipOpen
                 onClick={() => {
                     setShowData(true);
@@ -40,8 +43,12 @@ export default function SpeedMenu() {
             />
             <SpeedDialAction
                 icon={<PersonIcon />}
-                tooltipTitle={'Your profile'}
+                tooltipTitle={t('profile.titles.yourProfile')}
                 tooltipOpen
+                onClick={() => {
+                    setShowProfile(true);
+                    setShowMenu(false);
+                }}
             />
             <SpeedDialAction
                 icon={<ImageSearchIcon />}

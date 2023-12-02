@@ -1,0 +1,17 @@
+@value bgColourful1, textDark from "../../style/colours.module.css";
+
+.word rect {
+    opacity: 0.9;
+    fill: bgColourful1;
+}
+
+.word text {
+    fill: white;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    gap: 0.5rem;
+}

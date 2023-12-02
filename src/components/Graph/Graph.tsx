@@ -146,7 +146,7 @@ export default function Graph({
         if (!simRef.current) {
             simRef.current = d3
                 .forceSimulation<GraphNode>()
-                //.force('center', d3.forceCenter())
+                .force('center', d3.forceCenter())
                 .force('charge', d3.forceManyBody().strength(-10000 * charge))
                 .force(
                     'link',
@@ -166,8 +166,7 @@ export default function Graph({
                     d3.forceCollide<GraphNode>((n) => {
                         return (n.size || 5) + 10;
                     })
-                )
-                .force('center', d3.forceCenter());
+                );
         }
 
         setNodeList(lnodes);

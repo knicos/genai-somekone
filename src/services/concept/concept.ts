@@ -26,7 +26,7 @@ export function getTopicId(label: string): string {
 }
 
 export function getTopicLabel(id: string): string {
-    return topicStore.get(id) || 'NONE';
+    return topicStore.get(id) || id;
 }
 
 export function getTopicParent(id: string): WeightedNode | null {

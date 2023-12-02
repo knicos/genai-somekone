@@ -1,0 +1,21 @@
+@value primary, textDark, bgColourful1, bgSubdued1 from "../../style/colours.module.css";
+
+.container {
+    margin: 1rem 0;
+    background: bgSubdued1;
+    padding-bottom: 0.5rem;
+}
+
+.container h2 {
+    color: textDark;
+    font-size: 1rem;
+    padding: 0.3rem 1rem;
+    margin: 0;
+}
+
+.chart {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0rem 1rem;
+}

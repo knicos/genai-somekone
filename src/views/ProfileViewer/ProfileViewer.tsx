@@ -1,15 +1,14 @@
 import Loading from '@genaism/components/Loading/Loading';
 import usePeer from '@genaism/hooks/peer';
 import { EventProtocol } from '@genaism/protocol/protocol';
-import randomId from '@genaism/util/randomId';
 import { useCallback } from 'react';
 import { useParams } from 'react-router';
 import ErrorDialog from '../dialogs/ErrorDialog/ErrorDialog';
-
-const MYCODE = randomId(10);
+import useRandom from '@genaism/hooks/random';
 
 export function Component() {
     const { code } = useParams();
+    const MYCODE = useRandom(10);
 
     const onData = useCallback((data: EventProtocol) => {
         console.log('GOT DATA', data);

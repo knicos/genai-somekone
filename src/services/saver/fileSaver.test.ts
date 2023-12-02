@@ -31,6 +31,12 @@ describe('saveFile()', () => {
             id: 'xyz',
             engagement: -1,
             engagedContent: [],
+            commentedTopics: [],
+            reactedTopics: [],
+            sharedTopics: [],
+            followedTopics: [],
+            seenTopics: [],
+            viewedTopics: [],
             taste: [],
             attributes: {},
         }));

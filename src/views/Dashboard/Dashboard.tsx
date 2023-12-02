@@ -6,7 +6,6 @@ import usePeer from '@genaism/hooks/peer';
 import { DataConnection } from 'peerjs';
 import style from './style.module.css';
 import { EventProtocol } from '@genaism/protocol/protocol';
-import randomId from '@genaism/util/randomId';
 import { getZipBlob, loadFile } from '@genaism/services/loader/fileLoader';
 import { UserInfo } from './userInfo';
 import StartDialog from '../dialogs/StartDialog/StartDialog';
@@ -21,8 +20,7 @@ import SettingsDialog from '../dialogs/SettingsDialog/SettingsDialog';
 import Loading from '@genaism/components/Loading/Loading';
 import ErrorDialog from '../dialogs/ErrorDialog/ErrorDialog';
 import { errorNotification } from '@genaism/state/errorState';
-
-const MYCODE = randomId(5);
+import useRandom from '@genaism/hooks/random';
 
 export function Component() {
     const [params] = useSearchParams();
@@ -31,6 +29,7 @@ export function Component() {
     const setShowStartDialog = useSetRecoilState(menuShowShare);
     const [loaded, setLoaded] = useState(false);
     const setError = useSetRecoilState(errorNotification);
+    const MYCODE = useRandom(5);
 
     const dataHandler = useCallback(
         (data: EventProtocol, conn: DataConnection) => {

@@ -1,6 +1,6 @@
 import { useUserProfile } from '@genaism/services/profiler/hooks';
 import ImageCloud from '../ImageCloud/ImageCloud';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { LogEntry } from '@genaism/services/profiler/profilerTypes';
 import { getActionLog } from '@genaism/services/profiler/profiler';
 import ActionLogTable from '../ActionLogTable/ActionLogTable';
@@ -11,6 +11,7 @@ interface Props {
 }
 
 export default function Profile({ id }: Props) {
+    const [wcSize, setWCSize] = useState(300);
     const [log, setLog] = useState<LogEntry[]>([]);
     const profile = useUserProfile(id);
 
@@ -19,17 +20,22 @@ export default function Profile({ id }: Props) {
         setLog(alog.filter((a) => !!a.id).reverse());
     }, [profile, id]);
 
+    const doResize = useCallback((size: number) => {
+        setWCSize(size);
+    }, []);
+
     return (
         <div className={style.container}>
             <div>
                 <svg
                     width="100%"
                     height="300px"
-                    viewBox="-250 -150 500 300"
+                    viewBox={`${-(wcSize * 1.67)} ${-wcSize} ${wcSize * 1.67 * 2} ${wcSize * 2}`}
                 >
                     <ImageCloud
                         content={profile.engagedContent}
-                        size={500}
+                        size={300}
+                        onSize={doResize}
                     />
                 </svg>
             </div>

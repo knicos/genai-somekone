@@ -13,16 +13,24 @@ import {
 import { getTopicId, getTopicLabel } from '@genaism/services/concept/concept';
 import { addEdgeTypeListener } from '../graph/events';
 import { emitProfileEvent } from '../profiler/events';
+import { EdgeType } from '../graph/graphTypes';
 
 const MIN_DWELL_TIME = 2000;
 const MAX_DWELL_TIME = 10000;
 
-let userID: string;
+let userID: string | undefined;
 
 const users = new Map<string, UserProfile>();
 const logs = new Map<string, LogEntry[]>();
 
 const outOfDate = new Set<string>();
+
+export function resetProfiles() {
+    users.clear();
+    logs.clear();
+    outOfDate.clear();
+    userID = undefined;
+}
 
 addEdgeTypeListener('engaged', (id: string) => {
     if (users.has(id)) {
@@ -38,7 +46,7 @@ addEdgeTypeListener('topic', (id: string) => {
 });
 
 export function getCurrentUser(): string {
-    if (!userID) newUser();
+    if (!userID) userID = addNode('user');
     return userID;
 }
 
@@ -48,6 +56,12 @@ export function setUserName(id: string, name: string) {
         name,
         engagedContent: [],
         similarUsers: [],
+        seenTopics: [],
+        reactedTopics: [],
+        followedTopics: [],
+        commentedTopics: [],
+        sharedTopics: [],
+        viewedTopics: [],
         taste: [],
         attributes: {},
         engagement: -1,
@@ -123,11 +137,11 @@ export function findTopContentById(id: string, count?: number) {
 }
 
 export function findTasteProfile(count?: number) {
-    return findTasteProfileById(userID, count);
+    return findTasteProfileById(getCurrentUser(), count);
 }
 
 export function findTopContent(count?: number) {
-    return findTopContentById(userID, count);
+    return findTopContentById(getCurrentUser(), count);
 }
 
 export function createProfileSummary(count?: number): ProfileSummary {
@@ -141,18 +155,19 @@ export function createProfileSummaryById(id: string, count?: number): ProfileSum
     return {
         taste,
         engagedContent,
-        /*similarUsers: findSimilarUsers(
-            id,
-            engagedContent,
-            taste.map((t) => ({ id: getTopicId(t.label), weight: t.weight }))
-        ),*/
+        commentedTopics: getRelated('commented_topic', id, count),
+        seenTopics: getRelated('seen_topic', id, count),
+        sharedTopics: getRelated('shared_topic', id, count),
+        followedTopics: getRelated('followed_topic', id, count),
+        reactedTopics: getRelated('reacted_topic', id, count),
+        viewedTopics: getRelated('viewed_topic', id, count),
     };
 }
 
 export function prettyProfile() {
     if (!userID) newUser();
 
-    const topics = getRelated('topic', userID, 10);
+    const topics = getRelated('topic', getCurrentUser(), 10);
     const names = topics.map((t) => `${getTopicLabel(t.id)} (${t.weight.toFixed(1)})`);
     console.log(names);
 }
@@ -160,24 +175,6 @@ export function prettyProfile() {
 export function newUser() {
     userID = addNode('user');
 }
-
-/*function updateParentAffinity(topic: string) {
-    const parent = getTopicParent(topic);
-
-    if (parent) {
-        const children = getTopicChildren(parent.id);
-        const childAffinities = getEdgeWeights(
-            'topic',
-            userID,
-            children.map((c) => c.id)
-        );
-        const affinity = children.reduce((a, child, ix) => {
-            return a + child.weight * childAffinities[ix];
-        }, 0);
-        addEdge('topic', userID, parent.id, affinity);
-        updateParentAffinity(parent.id);
-    }
-}*/
 
 function affinityBoost(content: string, weight: number) {
     const topics = getRelated('topic', content || '');
@@ -191,17 +188,13 @@ function affinityBoost(content: string, weight: number) {
     });
 
     addOrAccumulateEdge('engaged', getCurrentUser(), content, weight);
-
-    // For each parent topic, recalculate user affinity for those topics
-    /*topics.forEach((t) => {
-        updateParentAffinity(t.id);
-    });*/
 }
 
-function seeTopics(content: string) {
+function boostTopics(type: EdgeType, content: string) {
     const topics = getRelated('topic', content || '');
     topics.forEach((t) => {
-        addOrAccumulateEdge('seen_topic', getCurrentUser(), t.id, 1.0);
+        if (t.weight === 0) return;
+        addOrAccumulateEdge(type, getCurrentUser(), t.id, 1.0);
     });
 }
 
@@ -224,10 +217,11 @@ export function addLogEntry(data: LogEntry) {
 
     switch (data.activity) {
         case 'seen':
-            seeTopics(data.id || '');
+            boostTopics('seen_topic', data.id || '');
             break;
         case 'like':
             affinityBoost(data.id || '', 0.1);
+            boostTopics('reacted_topic', data.id || '');
             break;
         case 'laugh':
         case 'anger':
@@ -235,24 +229,31 @@ export function addLogEntry(data: LogEntry) {
         case 'wow':
         case 'love':
             affinityBoost(data.id || '', 0.2);
+            boostTopics('reacted_topic', data.id || '');
             break;
         case 'share_public':
             affinityBoost(data.id || '', 0.5);
+            boostTopics('shared_topic', data.id || '');
             break;
         case 'share_private':
             affinityBoost(data.id || '', 0.1);
+            boostTopics('shared_topic', data.id || '');
             break;
         case 'share_friends':
             affinityBoost(data.id || '', 0.3);
+            boostTopics('shared_topic', data.id || '');
             break;
         case 'dwell':
             affinityBoost(data.id || '', normDwell(data.value || 0) * 0.3);
+            if (data.value && data.value > 2000) boostTopics('viewed_topic', data.id || '');
             break;
         case 'follow':
             affinityBoost(data.id || '', 0.5);
+            boostTopics('followed_topic', data.id || '');
             break;
         case 'comment':
             affinityBoost(data.id || '', Math.min(1, (data.value || 0) / 80) * 0.6);
+            boostTopics('commented_topic', data.id || '');
             break;
     }
 }

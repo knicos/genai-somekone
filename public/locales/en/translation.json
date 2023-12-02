@@ -84,5 +84,19 @@
             "peer_no_peer": "The peer was not found",
             "peer_nowebcam": "You must allow use of the webcam to create the conference call"
         }
+    },
+    "profile": {
+        "titles": {
+            "sharingPreference": "Sharing Preferences",
+            "viewPreference": "Viewing Preferences",
+            "commentPreference": "Commenting Preferences",
+            "followPreference": "Following Preferences",
+            "reactPreference": "Reaction Preferences",
+            "yourData": "Your Data",
+            "yourProfile": "Your Profile"
+        },
+        "actions": {
+            "more": "More"
+        }
     }
 }

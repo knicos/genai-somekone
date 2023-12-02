@@ -19,3 +19,13 @@ export const menuShowData = atom<boolean>({
     key: 'menushowdata',
     default: false,
 });
+
+export const menuShowProfile = atom<boolean>({
+    key: 'menushowprofile',
+    default: false,
+});
+
+export const menuShowFeedActions = atom<boolean>({
+    key: 'menushowfeedactions',
+    default: true,
+});
