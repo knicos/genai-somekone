@@ -12,7 +12,7 @@ import {
 } from '@genaism/services/graph/graph';
 import { getTopicId, getTopicLabel } from '@genaism/services/concept/concept';
 import { addEdgeTypeListener } from '../graph/events';
-import { emitProfileEvent } from '../profiler/events';
+import { emitLogEvent, emitProfileEvent } from '../profiler/events';
 import { EdgeType } from '../graph/graphTypes';
 
 const MIN_DWELL_TIME = 2000;
@@ -32,16 +32,20 @@ export function resetProfiles() {
     userID = undefined;
 }
 
+function triggerProfileEvent(id: string) {
+    const wasOOD = outOfDate.has(id);
+    outOfDate.add(id);
+    if (!wasOOD) emitProfileEvent(id);
+}
+
 addEdgeTypeListener('engaged', (id: string) => {
     if (users.has(id)) {
-        outOfDate.add(id);
-        emitProfileEvent(id);
+        triggerProfileEvent(id);
     }
 });
 addEdgeTypeListener('topic', (id: string) => {
     if (users.has(id)) {
-        outOfDate.add(id);
-        emitProfileEvent(id);
+        triggerProfileEvent(id);
     }
 });
 
@@ -70,6 +74,8 @@ export function setUserName(id: string, name: string) {
 }
 
 export function addUserProfile(profile: UserProfile) {
+    outOfDate.add(profile.id);
+
     console.log('Adding user', profile.name);
     addNode('user', profile.id);
     profile.engagedContent.forEach((c) => {
@@ -80,11 +86,12 @@ export function addUserProfile(profile: UserProfile) {
     });
 
     users.set(profile.id, profile);
-    outOfDate.add(profile.id);
     emitProfileEvent(profile.id);
 }
 
 export function updateProfile(id: string, profile: ProfileSummary) {
+    outOfDate.add(id);
+
     addNodeIfNotExists('user', id);
     profile.engagedContent.forEach((c) => {
         addBiEdge('engaged', id, c.id, c.weight);
@@ -93,8 +100,33 @@ export function updateProfile(id: string, profile: ProfileSummary) {
         addBiEdge('topic', id, getTopicId(t.label), t.weight);
     });
 
-    outOfDate.add(id);
     emitProfileEvent(id);
+}
+
+export function replaceProfile(id: string, profile: ProfileSummary) {
+    const user = users.get(id) || createUserProfile(id, 'NoName');
+    users.set(id, { ...user, ...profile });
+    outOfDate.delete(id);
+    emitProfileEvent(id);
+}
+
+export function createUserProfile(id: string, name: string): UserProfile {
+    const profile: UserProfile = {
+        id: id,
+        name: name,
+        engagement: -1,
+        attributes: {},
+        taste: [],
+        engagedContent: [],
+        reactedTopics: [],
+        commentedTopics: [],
+        seenTopics: [],
+        sharedTopics: [],
+        viewedTopics: [],
+        followedTopics: [],
+    };
+    addUserProfile(profile);
+    return profile;
 }
 
 export function getUserProfile(id?: string): UserProfile {
@@ -102,8 +134,6 @@ export function getUserProfile(id?: string): UserProfile {
     const profile = users.get(aid);
 
     if (profile && !outOfDate.has(aid)) return profile;
-
-    console.log('Recreating profile', id, outOfDate);
 
     const newProfile = recreateUserProfile(aid);
     users.set(aid, newProfile);
@@ -155,12 +185,27 @@ export function createProfileSummaryById(id: string, count?: number): ProfileSum
     return {
         taste,
         engagedContent,
-        commentedTopics: getRelated('commented_topic', id, count),
-        seenTopics: getRelated('seen_topic', id, count),
-        sharedTopics: getRelated('shared_topic', id, count),
-        followedTopics: getRelated('followed_topic', id, count),
-        reactedTopics: getRelated('reacted_topic', id, count),
-        viewedTopics: getRelated('viewed_topic', id, count),
+        commentedTopics: getRelated('commented_topic', id, count).map((r) => ({
+            label: getTopicLabel(r.id),
+            weight: r.weight,
+        })),
+        seenTopics: getRelated('seen_topic', id, count).map((r) => ({ label: getTopicLabel(r.id), weight: r.weight })),
+        sharedTopics: getRelated('shared_topic', id, count).map((r) => ({
+            label: getTopicLabel(r.id),
+            weight: r.weight,
+        })),
+        followedTopics: getRelated('followed_topic', id, count).map((r) => ({
+            label: getTopicLabel(r.id),
+            weight: r.weight,
+        })),
+        reactedTopics: getRelated('reacted_topic', id, count).map((r) => ({
+            label: getTopicLabel(r.id),
+            weight: r.weight,
+        })),
+        viewedTopics: getRelated('viewed_topic', id, count).map((r) => ({
+            label: getTopicLabel(r.id),
+            weight: r.weight,
+        })),
     };
 }
 
@@ -256,6 +301,8 @@ export function addLogEntry(data: LogEntry) {
             boostTopics('commented_topic', data.id || '');
             break;
     }
+
+    emitLogEvent(getCurrentUser());
 }
 
 export function appendActionLog(data: LogEntry[], id?: string) {
@@ -263,6 +310,7 @@ export function appendActionLog(data: LogEntry[], id?: string) {
     const logArray: LogEntry[] = logs.get(aid) || [];
     logArray.push(...data);
     logs.set(aid, logArray);
+    emitLogEvent(aid);
 }
 
 export function getActionLog(id?: string): LogEntry[] {

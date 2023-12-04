@@ -11,13 +11,23 @@ export function Component() {
     const navigate = useNavigate();
     const doKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
-            navigate(`/feed/${(e.target as HTMLInputElement).value}`);
+            const value = (e.target as HTMLInputElement).value;
+            if (value.length === 10) {
+                navigate(`/profile/${value}`);
+            } else {
+                navigate(`/feed/${value}`);
+            }
         }
     }, []);
 
     const doGo = useCallback(() => {
         if (inputRef.current) {
-            navigate(`/feed/${inputRef.current.value}`);
+            const value = inputRef.current.value;
+            if (value.length === 10) {
+                navigate(`/profile/${value}`);
+            } else {
+                navigate(`/feed/${value}`);
+            }
         }
     }, []);
 

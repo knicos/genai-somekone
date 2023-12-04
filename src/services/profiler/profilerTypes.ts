@@ -32,12 +32,12 @@ export interface LogEntry {
 export interface ProfileSummary {
     taste: WeightedLabel[];
     engagedContent: WeightedNode[];
-    seenTopics: WeightedNode[];
-    commentedTopics: WeightedNode[];
-    sharedTopics: WeightedNode[];
-    reactedTopics: WeightedNode[];
-    followedTopics: WeightedNode[];
-    viewedTopics: WeightedNode[];
+    seenTopics: WeightedLabel[];
+    commentedTopics: WeightedLabel[];
+    sharedTopics: WeightedLabel[];
+    reactedTopics: WeightedLabel[];
+    followedTopics: WeightedLabel[];
+    viewedTopics: WeightedLabel[];
 }
 
 export interface UserProfile extends ProfileSummary {

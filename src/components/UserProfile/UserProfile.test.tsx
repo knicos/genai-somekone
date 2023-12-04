@@ -39,9 +39,9 @@ describe('UserProfile component', () => {
             engagement: -1,
             engagedContent: [{ id: 'content1', weight: 1 }],
             commentedTopics: [
-                { id: 'topic1', weight: 0.2 },
-                { id: 'topic2', weight: 0.3 },
-                { id: 'topic3', weight: 0.3 },
+                { label: 'topic1', weight: 0.2 },
+                { label: 'topic2', weight: 0.3 },
+                { label: 'topic3', weight: 0.3 },
             ],
             reactedTopics: [],
             sharedTopics: [],

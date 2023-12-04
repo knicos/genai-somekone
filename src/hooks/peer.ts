@@ -72,6 +72,7 @@ export default function usePeer<T extends PeerEvent>({
     const ice = useRecoilValue(iceConfig);
     const [sender, setSender] = useState<SenderType<T>>();
     const setError = useSetRecoilState(errorNotification);
+    const [ready, setReady] = useState(false);
 
     useEffect(() => {
         cbRef.current.onClose = onClose;
@@ -140,9 +141,10 @@ export default function usePeer<T extends PeerEvent>({
                     connRef.current?.peers.add(conn.peer);
                     conn.send({ event: 'eter:join' });
                     if (cbRef.current.onConnect) cbRef.current.onConnect(conn);
-                    setSender(() => (s: T) => {
+                    /*setSender(() => (s: T) => {
                         conn.send(s);
-                    });
+                    });*/
+                    setReady(true);
                     setError((p) => {
                         const s = new Set(p);
                         s.delete('peer_failed');
@@ -169,8 +171,10 @@ export default function usePeer<T extends PeerEvent>({
                     connRef.current?.peers.delete(conn.peer); // TODO: Check no other connections from peer
 
                     if (cbRef.current.onClose) cbRef.current.onClose(conn);
+                    setReady(false);
                 });
             } else {
+                setReady(true);
                 setError((p) => {
                     const s = new Set(p);
                     s.delete('peer_failed');
@@ -319,7 +323,7 @@ export default function usePeer<T extends PeerEvent>({
 
     return {
         send: sender,
-        ready: !!sender,
+        ready,
         peer,
     };
 }

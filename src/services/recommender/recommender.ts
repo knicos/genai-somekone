@@ -19,7 +19,6 @@ function generateTasteBatch(profile: ProfileSummary, nodes: string[], count: num
         if (t.weight > 0) {
             const c = calculateCount(high, low, t.weight, count);
             const tresult = getRelated('content', getTopicId(t.label), c, factors);
-            console.log('Topic', t.label, c, tresult);
             tresult.forEach((tr) => nodes.push(tr.id));
         }
     });

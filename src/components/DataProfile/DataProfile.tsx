@@ -1,8 +1,6 @@
-import { useUserProfile } from '@genaism/services/profiler/hooks';
+import { useActionLog, useUserProfile } from '@genaism/services/profiler/hooks';
 import ImageCloud from '../ImageCloud/ImageCloud';
-import { useCallback, useEffect, useState } from 'react';
-import { LogEntry } from '@genaism/services/profiler/profilerTypes';
-import { getActionLog } from '@genaism/services/profiler/profiler';
+import { useCallback, useState } from 'react';
 import ActionLogTable from '../ActionLogTable/ActionLogTable';
 import style from './style.module.css';
 
@@ -12,13 +10,8 @@ interface Props {
 
 export default function Profile({ id }: Props) {
     const [wcSize, setWCSize] = useState(300);
-    const [log, setLog] = useState<LogEntry[]>([]);
     const profile = useUserProfile(id);
-
-    useEffect(() => {
-        const alog = getActionLog(id);
-        setLog(alog.filter((a) => !!a.id).reverse());
-    }, [profile, id]);
+    const log = useActionLog(id);
 
     const doResize = useCallback((size: number) => {
         setWCSize(size);

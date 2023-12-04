@@ -6,7 +6,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import ImageSearchIcon from '@mui/icons-material/ImageSearch';
 import CloseIcon from '@mui/icons-material/Close';
 import { useSetRecoilState } from 'recoil';
-import { menuShowData, menuShowProfile } from '@genaism/state/menuState';
+import { menuShowData, menuShowProfile, menuShowShareProfile } from '@genaism/state/menuState';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -14,6 +14,7 @@ export default function SpeedMenu() {
     const { t } = useTranslation();
     const setShowData = useSetRecoilState(menuShowData);
     const setShowProfile = useSetRecoilState(menuShowProfile);
+    const setShowShareProfile = useSetRecoilState(menuShowShareProfile);
     const [showMenu, setShowMenu] = useState(false);
 
     return (
@@ -31,6 +32,10 @@ export default function SpeedMenu() {
                 icon={<ShareIcon />}
                 tooltipTitle={'Share your profile'}
                 tooltipOpen
+                onClick={() => {
+                    setShowShareProfile(true);
+                    setShowMenu(false);
+                }}
             />
             <SpeedDialAction
                 icon={<QueryStatsIcon />}

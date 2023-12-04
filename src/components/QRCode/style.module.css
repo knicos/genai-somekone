@@ -1,0 +1,10 @@
+.link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    font-size: 1.8rem;
+    font-weight: bold;
+    text-decoration: inherit;
+    color: inherit;
+}

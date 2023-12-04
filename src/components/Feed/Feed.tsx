@@ -9,9 +9,10 @@ import { addLogEntry } from '@genaism/services/profiler/profiler';
 interface Props {
     content?: (string | ArrayBuffer)[];
     onProfile?: (profile: ProfileSummary) => void;
+    onLog?: () => void;
 }
 
-export default function Feed({ content, onProfile }: Props) {
+export default function Feed({ content, onProfile, onLog }: Props) {
     const [feedList, setFeedList] = useState<string[]>([]);
 
     const doMore = useCallback(() => {
@@ -20,9 +21,13 @@ export default function Feed({ content, onProfile }: Props) {
         if (onProfile) onProfile(profile);
     }, [setFeedList, onProfile]);
 
-    const doLog = useCallback((data: LogEntry) => {
-        addLogEntry(data);
-    }, []);
+    const doLog = useCallback(
+        (data: LogEntry) => {
+            addLogEntry(data);
+            if (onLog) onLog();
+        },
+        [onLog]
+    );
 
     useEffect(() => {
         if (content) {

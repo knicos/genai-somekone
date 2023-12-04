@@ -93,10 +93,17 @@
             "followPreference": "Following Preferences",
             "reactPreference": "Reaction Preferences",
             "yourData": "Your Data",
-            "yourProfile": "Your Profile"
+            "yourProfile": "Your Profile",
+            "shareProfile": "Share Profile"
         },
         "actions": {
-            "more": "More"
+            "more": "More",
+            "data": "Data",
+            "profile": "Profile",
+            "recommendations": "Recommendations"
+        },
+        "messages": {
+            "loading": "Finding profile data"
         }
     }
 }

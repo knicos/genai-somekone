@@ -23,10 +23,7 @@ const { mockProfile, mockLog } = vi.hoisted(() => ({
 
 vi.mock('@genaism/services/profiler/hooks', () => ({
     useUserProfile: mockProfile,
-}));
-
-vi.mock('@genaism/services/profiler/profiler', () => ({
-    getActionLog: mockLog,
+    useActionLog: mockLog,
 }));
 
 describe('DataProfile component', () => {

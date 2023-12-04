@@ -12,6 +12,6 @@ describe('QRCode component', () => {
         render(<QRCode url="http://testurl.fi" />);
 
         expect(screen.getByTestId('qr-code-canvas')).toBeVisible();
-        expect(qr.toCanvas).toHaveBeenCalledWith(expect.any(HTMLCanvasElement), 'http://testurl.fi');
+        expect(qr.toCanvas).toHaveBeenCalledWith(expect.any(HTMLCanvasElement), 'http://testurl.fi', { width: 164 });
     });
 });
