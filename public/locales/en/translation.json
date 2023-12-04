@@ -60,7 +60,8 @@
             "shrinkOffline": "Reduce size of offline users",
             "edgeScaling": "Change the distance between clusters",
             "similarPercent": "Similarity threshold for link display",
-            "nodeCharge": "Strength of separation force"
+            "nodeCharge": "Strength of separation force",
+            "hideFeedMenu": "Hide menu in feed view"
         },
         "messages": {
             "connection": "Go to <PageLink><Code>{{linkText}}</Code></PageLink> and enter the code <Code>{{codeText}}</Code>, or use the QR code.",

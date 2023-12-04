@@ -17,6 +17,8 @@ import PersonIcon from '@mui/icons-material/Person';
 import ImageSearchIcon from '@mui/icons-material/ImageSearch';
 import UserProfile from '@genaism/components/UserProfile/UserProfile';
 import style from './style.module.css';
+import { appConfiguration } from '@genaism/state/settingsState';
+import { SMConfig } from '../Genagram/smConfig';
 
 function slideDirection(my: number, current: number, previous: number): SlideProps['direction'] {
     if (my === current) {
@@ -37,6 +39,7 @@ export function Component() {
     const [hasData, setHasData] = useState(false);
     const [page, setPage] = useState(0);
     const prevPage = useRef(0);
+    const setConfig = useSetRecoilState<SMConfig>(appConfiguration);
 
     const onData = useCallback((data: EventProtocol) => {
         console.log('GOT DATA', data);
@@ -52,13 +55,13 @@ export function Component() {
         } else if (data.event === 'eter:action_log') {
             appendActionLog(data.log, data.id);
         } else if (data.event === 'eter:config') {
-            const configObj = data.configuration;
-            if (configObj.content) {
-                configObj.content.forEach((c, ix) => {
+            setConfig((old) => ({ ...old, ...data.configuration }));
+            if (data.content) {
+                data.content.forEach((c, ix) => {
                     getZipBlob(c)
                         .then(async (blob) => {
-                            if (configObj.content && blob.arrayBuffer) {
-                                configObj.content[ix] = await blob.arrayBuffer();
+                            if (data.content && blob.arrayBuffer) {
+                                data.content[ix] = await blob.arrayBuffer();
                             }
 
                             await loadFile(blob);

@@ -13,7 +13,7 @@ import DEFAULT_CONFIG from '../Genagram/defaultConfig.json';
 import MenuPanel from './MenuPanel';
 import { appendActionLog, setUserName, updateProfile } from '@genaism/services/profiler/profiler';
 import SocialGraph from '@genaism/components/SocialGraph/SocialGraph';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { menuShowShare } from '@genaism/state/menuState';
 import SaveDialog from '../dialogs/SaveDialog/SaveDialog';
 import SettingsDialog from '../dialogs/SettingsDialog/SettingsDialog';
@@ -21,10 +21,12 @@ import Loading from '@genaism/components/Loading/Loading';
 import ErrorDialog from '../dialogs/ErrorDialog/ErrorDialog';
 import { errorNotification } from '@genaism/state/errorState';
 import useRandom from '@genaism/hooks/random';
+import { appConfiguration } from '@genaism/state/settingsState';
 
 export function Component() {
     const [params] = useSearchParams();
-    const [config, setConfig] = useState<SMConfig | null>(null);
+    const [config, setConfig] = useRecoilState<SMConfig>(appConfiguration);
+    const [content, setContent] = useState<(ArrayBuffer | string)[]>();
     const [users, setUsers] = useState<UserInfo[]>([]);
     const setShowStartDialog = useSetRecoilState(menuShowShare);
     const [loaded, setLoaded] = useState(false);
@@ -35,7 +37,7 @@ export function Component() {
         (data: EventProtocol, conn: DataConnection) => {
             console.log('GOT DATA', data);
             if (data.event === 'eter:join') {
-                conn.send({ event: 'eter:config', configuration: config });
+                conn.send({ event: 'eter:config', configuration: config, content });
             } else if (data.event === 'eter:reguser') {
                 setUserName(data.id, data.username);
                 setUsers((old) => [...old, { id: data.id, username: data.username, connection: conn }]);
@@ -47,7 +49,7 @@ export function Component() {
                 appendActionLog(data.log, data.id);
             }
         },
-        [config]
+        [config, content]
     );
     const closeHandler = useCallback((conn?: DataConnection) => {
         if (conn) {
@@ -55,27 +57,39 @@ export function Component() {
         }
     }, []);
 
-    const { ready } = usePeer({ code: `sm-${MYCODE}`, onData: dataHandler, onClose: closeHandler });
+    const { ready, send } = usePeer({ code: `sm-${MYCODE}`, onData: dataHandler, onClose: closeHandler });
 
     useEffect(() => {
-        let configObj: SMConfig = DEFAULT_CONFIG;
-        const configParam = params.get('c');
+        if (send) send({ event: 'eter:config', configuration: config });
+    }, [config, send]);
+
+    useEffect(() => {
+        let configObj: SMConfig = DEFAULT_CONFIG.configuration;
+        let contentObj: (ArrayBuffer | string)[] = DEFAULT_CONFIG.content;
+        const configParam = params.get('cfg');
         if (configParam) {
             const component = decompressFromEncodedURIComponent(configParam);
             configObj = { ...configObj, ...(JSON.parse(component) as SMConfig) };
             // TODO: Validate the config
         }
 
-        if (configObj.content) {
-            configObj.content.forEach((c, ix) => {
+        const contentParam = params.get('content');
+        if (contentParam) {
+            const component = decompressFromEncodedURIComponent(contentParam);
+            contentObj = JSON.parse(component);
+        }
+
+        if (contentObj) {
+            contentObj.forEach((c, ix) => {
                 getZipBlob(c)
                     .then(async (blob) => {
-                        if (configObj.content && blob.arrayBuffer) {
-                            configObj.content[ix] = await blob.arrayBuffer();
+                        if (contentObj && blob.arrayBuffer) {
+                            contentObj[ix] = await blob.arrayBuffer();
                         }
 
                         await loadFile(blob);
                         setConfig(configObj);
+                        setContent(contentObj);
                     })
                     .catch((e) => {
                         console.error(e);
@@ -98,21 +112,17 @@ export function Component() {
     }, [users]);
 
     useEffect(() => {
-        if (ready && config) setLoaded(true);
-    }, [ready, config]);
+        if (ready && content) setLoaded(true);
+    }, [ready, content]);
 
-    const doOpenFile = useCallback(
-        (data: Blob) => {
-            data.arrayBuffer().then((content) => {
-                const configObj = { ...config, content: [...(config?.content || []), content] };
-                setConfig(configObj);
+    const doOpenFile = useCallback((data: Blob) => {
+        data.arrayBuffer().then((c) => {
+            setContent((old) => [...(old || []), c]);
 
-                // TODO: Allow an optional graph reset here.
-                loadFile(data);
-            });
-        },
-        [config]
-    );
+            // TODO: Allow an optional graph reset here.
+            loadFile(data);
+        });
+    }, []);
 
     return (
         <>

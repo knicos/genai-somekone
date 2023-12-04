@@ -1,3 +1,7 @@
 {
+    "configuration": {
+        "topicCandidates": true,
+        "similarUserCandidates": true
+    },
     "content": ["https://tmstore.blob.core.windows.net/projects/smTestContent1.zip"]
 }

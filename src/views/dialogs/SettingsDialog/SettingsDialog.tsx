@@ -6,6 +6,7 @@ import { useRecoilState } from 'recoil';
 import style from './style.module.css';
 import { Button } from '@genaism/components/Button/Button';
 import {
+    appConfiguration,
     settingDisplayLabel,
     settingDisplayLines,
     settingLinkDistanceScale,
@@ -25,6 +26,7 @@ export default function SettingsDialog() {
     const [edgeScale, setEdgeScale] = useRecoilState(settingLinkDistanceScale);
     const [similarPercent, setSimilarPercent] = useRecoilState(settingSimilarPercent);
     const [nodeCharge, setNodeCharge] = useRecoilState(settingNodeCharge);
+    const [config, setConfig] = useRecoilState(appConfiguration);
 
     const doClose = useCallback(() => setShowDialog(false), [setShowDialog]);
 
@@ -94,6 +96,15 @@ export default function SettingsDialog() {
                             />
                         }
                         label={t('dashboard.labels.shrinkOffline')}
+                    />
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={config.hideShareProfile || false}
+                                onChange={(_, checked) => setConfig((old) => ({ ...old, hideShareProfile: checked }))}
+                            />
+                        }
+                        label={t('dashboard.labels.hideFeedMenu')}
                     />
                     <div className={style.label}>{t('dashboard.labels.edgeScaling')}</div>
                     <Slider

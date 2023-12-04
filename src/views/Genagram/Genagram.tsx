@@ -14,16 +14,18 @@ import { useTranslation } from 'react-i18next';
 import SpeedMenu from './SpeedMenu';
 import DataPage from './DataPage';
 import ProfilePage from './ProfilePage';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { menuShowFeedActions } from '@genaism/state/menuState';
 import useRandom from '@genaism/hooks/random';
 import SharePage from './SharePage';
 import { DataConnection } from 'peerjs';
+import { appConfiguration } from '@genaism/state/settingsState';
 
 export function Component() {
     const { t } = useTranslation();
     const { code } = useParams();
-    const [config, setConfig] = useState<SMConfig>();
+    const [config, setConfig] = useRecoilState<SMConfig>(appConfiguration);
+    const [content, setContent] = useState<(string | ArrayBuffer)[]>();
     const [username, setUsername] = useState<string>();
     const logRef = useRef(0);
     const logTimer = useRef(-1);
@@ -35,18 +37,19 @@ export function Component() {
         (data: EventProtocol, conn: DataConnection) => {
             console.log('GOT DATA', data);
             if (data.event === 'eter:config' && data.configuration) {
-                setConfig(data.configuration);
+                setConfig((old) => ({ ...old, ...data.configuration }));
+                if (data.content) setContent(data.content);
                 // For direct profile viewing connections
             } else if (data.event === 'eter:join') {
                 const profile = getUserProfile();
                 const logs = getActionLogSince(Date.now() - 5 * 60 * 1000).filter((a) => a.timestamp <= logRef.current);
-                conn.send({ event: 'eter:config', configuration: config });
+                conn.send({ event: 'eter:config', configuration: config, content });
                 conn.send({ event: 'eter:reguser', username, id: getCurrentUser() });
                 conn.send({ event: 'eter:action_log', id: getCurrentUser(), log: logs });
                 conn.send({ event: 'eter:profile_data', profile, id: getCurrentUser() });
             }
         },
-        [config, username]
+        [config, username, content]
     );
 
     const { ready, send } = usePeer<EventProtocol>({ code: code && `sm-${MYCODE}`, server: `sm-${code}`, onData });
@@ -88,11 +91,11 @@ export function Component() {
                     {config && username && (
                         <>
                             <Feed
-                                content={config.content}
+                                content={content}
                                 onProfile={doProfile}
                                 onLog={doLog}
                             />
-                            {showFeedActions && (
+                            {showFeedActions && !config.hideShareProfile && (
                                 <div className={style.speedContainer}>
                                     <SpeedMenu />
                                 </div>

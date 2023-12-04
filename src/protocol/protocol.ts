@@ -5,6 +5,7 @@ import { LogEntry, ProfileSummary } from '@genaism/services/profiler/profilerTyp
 export interface ConfigurationEvent extends PeerEvent {
     event: 'eter:config';
     configuration: SMConfig;
+    content?: (string | ArrayBuffer)[];
 }
 
 export interface UserRegistrationEvent extends PeerEvent {

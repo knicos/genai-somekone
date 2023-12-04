@@ -1,3 +1,4 @@
+import { SMConfig } from '@genaism/views/Genagram/smConfig';
 import { atom } from 'recoil';
 
 export const settingDisplayLines = atom<boolean>({
@@ -40,4 +41,9 @@ type NodeDisplayMode = 'image' | 'word' | 'score';
 export const settingNodeMode = atom<NodeDisplayMode>({
     key: 'settingnodemode',
     default: 'image',
+});
+
+export const appConfiguration = atom<SMConfig>({
+    key: 'appconfig',
+    default: {},
 });
