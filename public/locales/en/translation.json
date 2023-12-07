@@ -106,5 +106,13 @@
         "messages": {
             "loading": "Finding profile data"
         }
+    },
+    "creator": {
+        "labels": {
+            "search": "Search"
+        },
+        "actions": {
+            "more": "More"
+        }
     }
 }

@@ -15,6 +15,14 @@
         {
             "route": "/start*",
             "rewrite": "index.html"
+        },
+        {
+            "route": "/profile*",
+            "rewrite": "index.html"
+        },
+        {
+            "route": "/creator*",
+            "rewrite": "index.html"
         }
     ]
 }

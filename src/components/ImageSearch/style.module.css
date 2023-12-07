@@ -1,0 +1,58 @@
+.container {
+    overflow-y: scroll;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.5rem;
+    gap: 1rem;
+}
+
+.grid {
+    display: flex;
+}
+
+.candidate {
+    padding: 0.3rem;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+}
+
+.disabledCandidate {
+    composes: candidate;
+    pointer-events: none;
+    filter: grayscale(80%);
+    opacity: 0.5;
+}
+
+.candidateImage {
+    width: 100%;
+}
+
+.candidate .addIcon {
+    display: flex;
+    position: absolute;
+    top: calc(50% - 40px);
+    left: calc(50% - 40px);
+    color: white;
+    opacity: 0.2;
+    transition: opacity 0.1s;
+    font-size: 80px;
+}
+
+.candidate:hover .addIcon {
+    opacity: 1;
+}
+
+.candidate:hover .candidateImage {
+    filter: brightness(0.5);
+}
+
+.reason {
+    color: white;
+}
+
+.controls {
+    align-self: stretch;
+}
