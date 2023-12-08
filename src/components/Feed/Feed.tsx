@@ -17,7 +17,7 @@ export default function Feed({ content, onProfile, onLog }: Props) {
 
     const doMore = useCallback(() => {
         const [f, profile] = generateFeed(5);
-        setFeedList((old) => [...old, ...f]);
+        setFeedList((old) => [...old, ...f.map((r) => r.contentId)]);
         if (onProfile) onProfile(profile);
     }, [setFeedList, onProfile]);
 
@@ -35,7 +35,7 @@ export default function Feed({ content, onProfile, onLog }: Props) {
                 getZipBlob(c).then(async (blob) => {
                     await loadFile(blob);
                     const [f, profile] = generateFeed(5);
-                    setFeedList((old) => [...old, ...f]);
+                    setFeedList((old) => [...old, ...f.map((r) => r.contentId)]);
                     if (onProfile) onProfile(profile);
                 });
             });

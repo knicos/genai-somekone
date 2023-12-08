@@ -9,7 +9,7 @@ const TEST_IMAGE =
 
 const { mockLoader, mockGenerate, mockBlob } = vi.hoisted(() => ({
     mockLoader: vi.fn(),
-    mockGenerate: vi.fn(() => [['xyz']]),
+    mockGenerate: vi.fn(() => [[{ contentId: 'xyz' }]]),
     mockBlob: vi.fn(async () => new Blob()),
 }));
 

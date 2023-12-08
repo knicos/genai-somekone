@@ -11,7 +11,7 @@ function identifyCandidateUsers(users: Set<string>, candidates: WeightedNode[]) 
     });
 }
 
-function cosinesim(A: number[], B: number[]): number {
+export function cosinesim(A: number[], B: number[]): number {
     let dotproduct = 0;
     let mA = 0;
     let mB = 0;
@@ -29,7 +29,7 @@ function cosinesim(A: number[], B: number[]): number {
     return similarity;
 }
 
-function calculateSimilarity(a: WeightedNode[], b: WeightedNode[]): number {
+export function calculateSimilarity(a: WeightedNode[], b: WeightedNode[]): number {
     const sumA = a.reduce((p, v) => p + v.weight, 0);
     const sumB = b.reduce((p, v) => p + v.weight, 0);
     const normA = a.map((v) => ({ id: v.id, weight: v.weight / sumA }));
