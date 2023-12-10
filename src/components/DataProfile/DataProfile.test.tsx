@@ -6,7 +6,7 @@ import { LogEntry, UserProfile } from '@genaism/services/profiler/profilerTypes'
 const { mockProfile, mockLog } = vi.hoisted(() => ({
     mockProfile: vi.fn<unknown[], UserProfile>(() => ({
         name: 'TestUser1',
-        id: 'xyz',
+        id: 'user:xyz',
         engagement: -1,
         engagedContent: [],
         commentedTopics: [],
@@ -30,7 +30,7 @@ describe('DataProfile component', () => {
     it('works with no content or log data', async ({ expect }) => {
         const profile: UserProfile = {
             name: 'TestUser1',
-            id: 'xyz',
+            id: 'user:xyz',
             engagement: -1,
             engagedContent: [],
             commentedTopics: [],
@@ -53,9 +53,9 @@ describe('DataProfile component', () => {
     it('works with content and log data', async ({ expect }) => {
         const profile: UserProfile = {
             name: 'TestUser1',
-            id: 'xyz',
+            id: 'user:xyz',
             engagement: -1,
-            engagedContent: [{ id: 'content1', weight: 1 }],
+            engagedContent: [{ id: 'content:content1', weight: 1 }],
             commentedTopics: [],
             reactedTopics: [],
             sharedTopics: [],
@@ -67,7 +67,7 @@ describe('DataProfile component', () => {
         };
 
         mockProfile.mockImplementation(() => profile);
-        mockLog.mockImplementation(() => [{ id: 'ggg', activity: 'like', timestamp: Date.now() } as LogEntry]);
+        mockLog.mockImplementation(() => [{ id: 'content:ggg', activity: 'like', timestamp: Date.now() } as LogEntry]);
         render(<DataProfile />);
 
         expect(await screen.findByTestId('cloud-image')).toBeInTheDocument();

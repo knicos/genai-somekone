@@ -1,11 +1,11 @@
 import { getRelated } from '@genaism/services/graph/graph';
 import { getTopicId } from '@genaism/services/concept/concept';
-import { WeightedNode } from '../graph/graphTypes';
+import { ContentNodeId, TopicNodeId, UserNodeId, WeightedNode } from '../graph/graphTypes';
 import { getUserProfile } from '../profiler/profiler';
 import { useMemo } from 'react';
 import { UserProfile } from '../profiler/profilerTypes';
 
-function identifyCandidateUsers(users: Set<string>, candidates: WeightedNode[]) {
+function identifyCandidateUsers(users: Set<UserNodeId>, candidates: WeightedNode<UserNodeId>[]) {
     candidates.forEach((c) => {
         users.add(c.id);
     });
@@ -29,7 +29,7 @@ export function cosinesim(A: number[], B: number[]): number {
     return similarity;
 }
 
-export function calculateSimilarity(a: WeightedNode[], b: WeightedNode[]): number {
+export function calculateSimilarity(a: WeightedNode<TopicNodeId>[], b: WeightedNode<TopicNodeId>[]): number {
     const sumA = a.reduce((p, v) => p + v.weight, 0);
     const sumB = b.reduce((p, v) => p + v.weight, 0);
     const normA = a.map((v) => ({ id: v.id, weight: v.weight / sumA }));
@@ -49,14 +49,17 @@ export function calculateSimilarity(a: WeightedNode[], b: WeightedNode[]): numbe
     return cosinesim(vec1, vec2);
 }
 
-function generateCandidates(engaged: WeightedNode[], taste: WeightedNode[]): Set<string> {
-    const users = new Set<string>();
+function generateCandidates(
+    engaged: WeightedNode<ContentNodeId>[],
+    taste: WeightedNode<TopicNodeId>[]
+): Set<UserNodeId> {
+    const users = new Set<UserNodeId>();
     identifyCandidateUsers(
         users,
         getRelated(
             'engaged',
             engaged.map((e) => e.id),
-            10
+            { count: 10 }
         )
     );
     identifyCandidateUsers(
@@ -64,13 +67,13 @@ function generateCandidates(engaged: WeightedNode[], taste: WeightedNode[]): Set
         getRelated(
             'topic',
             taste.map((e) => e.id),
-            10
+            { count: 10 }
         )
     );
     return users;
 }
 
-function calculateScores(taste: WeightedNode[], users: string[]): WeightedNode[] {
+function calculateScores(taste: WeightedNode<TopicNodeId>[], users: UserNodeId[]): WeightedNode<UserNodeId>[] {
     return users.map((user) => {
         const profile = getUserProfile(user);
         return {
@@ -83,7 +86,7 @@ function calculateScores(taste: WeightedNode[], users: string[]): WeightedNode[]
     });
 }
 
-export function findSimilarUsers(id: string): WeightedNode[] {
+export function findSimilarUsers(id: UserNodeId): WeightedNode<UserNodeId>[] {
     const ownProfile = getUserProfile(id);
     const engaged = ownProfile.engagedContent;
     const taste = ownProfile.taste.map((t) => ({ id: getTopicId(t.label), weight: t.weight }));

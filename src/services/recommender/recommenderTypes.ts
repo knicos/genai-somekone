@@ -1,14 +1,16 @@
+import { ContentNodeId, UserNodeId } from '../graph/graphTypes';
+
 type CandidateAlgorithm = 'topic_affinity' | 'similar_user_content' | 'similar_user_topic' | 'coengagement' | 'random';
 
 export interface Recommendation {
-    contentId: string;
+    contentId: ContentNodeId;
     candidateOrigin: CandidateAlgorithm;
     topicAffinity?: number;
-    similarUser?: string;
+    similarUser?: UserNodeId;
     coengagementScore?: number;
     engagedItemScore?: number;
     topic?: string;
-    engagedItem?: string;
+    engagedItem?: ContentNodeId;
     timestamp: number;
 }
 

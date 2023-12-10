@@ -2,8 +2,9 @@ import { useEffect, useMemo, useReducer } from 'react';
 import { LogEntry, UserProfile } from './profilerTypes';
 import { getActionLog, getCurrentUser, getUserProfile } from './profiler';
 import { addLogListener, addProfileListener, removeLogListener, removeProfileListener } from './events';
+import { UserNodeId } from '../graph/graphTypes';
 
-export function useUserProfile(id?: string): UserProfile {
+export function useUserProfile(id?: UserNodeId): UserProfile {
     const aid = id || getCurrentUser();
     const [count, trigger] = useReducer((a) => ++a, 0);
     useEffect(() => {
@@ -14,7 +15,7 @@ export function useUserProfile(id?: string): UserProfile {
     return useMemo(() => getUserProfile(aid), [aid, count]);
 }
 
-export function useActionLog(id?: string): LogEntry[] {
+export function useActionLog(id?: UserNodeId): LogEntry[] {
     const aid = id || getCurrentUser();
     const [count, trigger] = useReducer((a) => ++a, 0);
     useEffect(() => {

@@ -5,9 +5,10 @@ import topicSummary from './topicSummary';
 import { useCallback, useMemo, useState } from 'react';
 import TopicPie from '../TopicPie/TopicPie';
 import { useTranslation } from 'react-i18next';
+import { UserNodeId } from '@genaism/services/graph/graphTypes';
 
 interface Props {
-    id?: string;
+    id?: UserNodeId;
 }
 
 export default function Profile({ id }: Props) {

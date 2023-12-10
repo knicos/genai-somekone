@@ -3,10 +3,11 @@ import PieScore from '../PieScore/PieScore';
 import dayjs from 'dayjs';
 import relTime from 'dayjs/plugin/relativeTime';
 import style from './style.module.css';
+import { ContentNodeId } from '@genaism/services/graph/graphTypes';
 dayjs.extend(relTime);
 
 interface Props {
-    image?: string;
+    image?: ContentNodeId;
     icon?: JSX.Element;
     message?: string;
     score?: number;

@@ -1,4 +1,4 @@
-import { WeightedNode } from '@genaism/services/graph/graphTypes';
+import { ContentNodeId, UserNodeId, WeightedNode } from '@genaism/services/graph/graphTypes';
 import { WeightedLabel } from '../content/contentTypes';
 
 export type LogActivity =
@@ -24,14 +24,14 @@ export type LogActivity =
 
 export interface LogEntry {
     activity: LogActivity;
-    id?: string;
+    id?: ContentNodeId;
     timestamp: number;
     value?: number;
 }
 
 export interface ProfileSummary {
     taste: WeightedLabel[];
-    engagedContent: WeightedNode[];
+    engagedContent: WeightedNode<ContentNodeId>[];
     seenTopics: WeightedLabel[];
     commentedTopics: WeightedLabel[];
     sharedTopics: WeightedLabel[];
@@ -41,7 +41,7 @@ export interface ProfileSummary {
 }
 
 export interface UserProfile extends ProfileSummary {
-    id: string;
+    id: UserNodeId;
     name: string;
     engagement: number;
     attributes: Record<string, unknown>;

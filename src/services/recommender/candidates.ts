@@ -3,8 +3,6 @@ import { getTopicId } from '@genaism/services/concept/concept';
 import { ProfileSummary, UserProfile } from '@genaism/services/profiler/profilerTypes';
 import { Recommendation } from './recommenderTypes';
 
-const factors = new Map<string, number>();
-
 function calculateCount(high: number, low: number, value: number, max: number) {
     return ((value - low) / (high - low)) * (max - 1) + 1;
 }
@@ -18,7 +16,8 @@ function generateTasteBatch(profile: ProfileSummary, nodes: Recommendation[], co
     taste.forEach((t) => {
         if (t.weight > 0) {
             const c = calculateCount(high, low, t.weight, count);
-            const tresult = getRelated('content', getTopicId(t.label), c, factors);
+            // TODO: Consider using a popularity weighted edge here.
+            const tresult = getRelated('content', getTopicId(t.label), { count: c });
             tresult.forEach((tr) =>
                 nodes.push({
                     contentId: tr.id,

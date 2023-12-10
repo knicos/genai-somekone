@@ -75,7 +75,10 @@ describe('Dashboard view', () => {
 
         act(() => {
             if (propsObj.props.onData) {
-                propsObj.props.onData({ event: 'eter:reguser', username: 'dummy', id: 'xyz1' }, {} as DataConnection);
+                propsObj.props.onData(
+                    { event: 'eter:reguser', username: 'dummy', id: 'user:xyz1' },
+                    {} as DataConnection
+                );
             }
         });
 
@@ -107,8 +110,14 @@ describe('Dashboard view', () => {
 
         act(() => {
             if (propsObj.props.onData) {
-                propsObj.props.onData({ event: 'eter:reguser', username: 'dummy', id: 'xyz1' }, {} as DataConnection);
-                propsObj.props.onData({ event: 'eter:reguser', username: 'dumm2', id: 'xyz2' }, {} as DataConnection);
+                propsObj.props.onData(
+                    { event: 'eter:reguser', username: 'dummy', id: 'user:xyz1' },
+                    {} as DataConnection
+                );
+                propsObj.props.onData(
+                    { event: 'eter:reguser', username: 'dumm2', id: 'user:xyz2' },
+                    {} as DataConnection
+                );
             }
         });
 

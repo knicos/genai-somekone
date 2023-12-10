@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useUserProfile } from '@genaism/services/profiler/hooks';
 import { useSimilarUsers } from '@genaism/services/users/users';
 import { GraphLink } from '../Graph/Graph';
-import { WeightedNode } from '@genaism/services/graph/graphTypes';
+import { UserNodeId, WeightedNode } from '@genaism/services/graph/graphTypes';
 import { useRecoilValue } from 'recoil';
 import {
     settingDisplayLabel,
@@ -15,16 +15,16 @@ import WordCloud from '../WordCloud/WordCloud';
 import style from './style.module.css';
 
 interface Props {
-    id: string;
+    id: UserNodeId;
     live?: boolean;
     selected?: boolean;
-    onLinks: (id: string, links: GraphLink[]) => void;
+    onLinks: (id: string, links: GraphLink<UserNodeId, UserNodeId>[]) => void;
     onResize: (id: string, size: number) => void;
 }
 
 export default function ProfileNode({ id, onLinks, onResize, live, selected }: Props) {
     const [size, setSize] = useState(100);
-    const simRef = useRef<WeightedNode[]>();
+    const simRef = useRef<WeightedNode<UserNodeId>[]>();
     const showLabel = useRecoilValue(settingDisplayLabel);
     const shrinkOffline = useRecoilValue(settingShrinkOfflineUsers);
     const nodeMode = useRecoilValue(settingNodeMode);

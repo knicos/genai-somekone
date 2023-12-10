@@ -5,6 +5,7 @@ import { getZipBlob, loadFile } from '@genaism/services/loader/fileLoader';
 import { generateFeed } from '@genaism/services/recommender/recommender';
 import { LogEntry, ProfileSummary } from '@genaism/services/profiler/profilerTypes';
 import { addLogEntry } from '@genaism/services/profiler/profiler';
+import { ContentNodeId } from '@genaism/services/graph/graphTypes';
 
 interface Props {
     content?: (string | ArrayBuffer)[];
@@ -13,7 +14,7 @@ interface Props {
 }
 
 export default function Feed({ content, onProfile, onLog }: Props) {
-    const [feedList, setFeedList] = useState<string[]>([]);
+    const [feedList, setFeedList] = useState<ContentNodeId[]>([]);
 
     const doMore = useCallback(() => {
         const [f, profile] = generateFeed(5);

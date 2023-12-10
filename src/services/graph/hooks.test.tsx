@@ -7,7 +7,7 @@ import { resetGraph } from './state';
 import { addEdge } from './edges';
 
 function NodeComponent({ action }: { action: () => void }) {
-    useNode('xyz');
+    useNode('user:xyz');
     action();
     return null;
 }
@@ -19,7 +19,7 @@ function NodeTypeComponent({ action }: { action: () => void }) {
 }
 
 function RelatedComponent({ action }: { action: () => void }) {
-    const nodes = useRelatedNodes('xyz', 'engaged');
+    const nodes = useRelatedNodes('user:xyz', 'engaged');
     action();
     return nodes.map((n) => <span>{n.id}</span>);
 }
@@ -28,75 +28,75 @@ beforeEach(() => resetGraph());
 
 describe('Graph hooks.useNode', () => {
     it('triggers a rerender on event', async ({ expect }) => {
-        addNode('user', 'xyz');
+        addNode('user', 'user:xyz');
 
         const action = vi.fn();
 
         render(<NodeComponent action={action} />);
         expect(action).toHaveBeenCalledTimes(1);
 
-        act(() => emitNodeEvent('xyz'));
+        act(() => emitNodeEvent('user:xyz'));
         expect(action).toHaveBeenCalledTimes(2);
     });
 });
 
 describe('Graph hooks.useNodeType', () => {
     it('triggers a rerender on event', async ({ expect }) => {
-        addNode('user', 'xyz');
+        addNode('user', 'user:xyz');
 
         const action = vi.fn();
 
         render(<NodeTypeComponent action={action} />);
         expect(action).toHaveBeenCalledTimes(1);
 
-        act(() => addNode('user', 'zws'));
+        act(() => addNode('user', 'user:zws'));
         expect(action).toHaveBeenCalledTimes(2);
     });
 
     it('generates the correct node list', async ({ expect }) => {
-        addNode('user', 'xyz');
+        addNode('user', 'user:xyz');
 
         const action = vi.fn();
 
         render(<NodeTypeComponent action={action} />);
-        expect(screen.getByText('xyz')).toBeInTheDocument();
+        expect(screen.getByText('user:xyz')).toBeInTheDocument();
 
-        act(() => addNode('user', 'zws'));
-        expect(screen.getByText('xyz')).toBeInTheDocument();
-        expect(screen.getByText('zws')).toBeInTheDocument();
+        act(() => addNode('user', 'user:zws'));
+        expect(screen.getByText('user:xyz')).toBeInTheDocument();
+        expect(screen.getByText('user:zws')).toBeInTheDocument();
     });
 });
 
 describe('Graph hooks.useRelatedNodes', () => {
     it('triggers a rerender on event', async ({ expect }) => {
-        addNode('user', 'xyz');
-        addNode('content', 'hhh');
+        addNode('user', 'user:xyz');
+        addNode('content', 'content:hhh');
 
         const action = vi.fn();
 
         render(<RelatedComponent action={action} />);
         expect(action).toHaveBeenCalledTimes(1);
 
-        act(() => addEdge('engaged', 'xyz', 'hhh'));
+        act(() => addEdge('engaged', 'user:xyz', 'content:hhh'));
         expect(action).toHaveBeenCalledTimes(2);
     });
 
     it('generates the correct node list', async ({ expect }) => {
-        addNode('user', 'xyz');
-        addNode('content', 'hhh');
+        addNode('user', 'user:xyz');
+        addNode('content', 'content:hhh');
 
         const action = vi.fn();
 
         render(<RelatedComponent action={action} />);
-        act(() => addEdge('engaged', 'xyz', 'hhh'));
-        expect(screen.getByText('hhh')).toBeInTheDocument();
+        act(() => addEdge('engaged', 'user:xyz', 'content:hhh'));
+        expect(screen.getByText('content:hhh')).toBeInTheDocument();
     });
 
     it('only triggers once with multiple sync updates', async ({ expect }) => {
-        addNode('user', 'xyz');
-        addNode('content', 'hhh');
-        addNode('content', 'ggg');
-        addNode('content', 'fff');
+        addNode('user', 'user:xyz');
+        addNode('content', 'content:hhh');
+        addNode('content', 'content:ggg');
+        addNode('content', 'content:fff');
 
         const action = vi.fn();
 
@@ -104,9 +104,9 @@ describe('Graph hooks.useRelatedNodes', () => {
         expect(action).toHaveBeenCalledTimes(1);
 
         act(() => {
-            addEdge('engaged', 'xyz', 'hhh');
-            addEdge('engaged', 'xyz', 'ggg');
-            addEdge('engaged', 'xyz', 'fff');
+            addEdge('engaged', 'user:xyz', 'content:hhh');
+            addEdge('engaged', 'user:xyz', 'content:ggg');
+            addEdge('engaged', 'user:xyz', 'content:fff');
         });
         expect(action).toHaveBeenCalledTimes(2);
     });

@@ -2,6 +2,7 @@ import { describe, it, vi } from 'vitest';
 import { LogEntry, UserProfile } from '../profiler/profilerTypes';
 import { saveFile } from './fileSaver';
 import JSZip from 'jszip';
+import { UserNodeId } from '../graph/graphTypes';
 
 const { mockUsers, mockProfiles, mockSave, mockLog } = vi.hoisted(() => ({
     mockUsers: vi.fn(),
@@ -28,7 +29,7 @@ describe('saveFile()', () => {
         mockUsers.mockImplementation(() => ['xyz']);
         mockProfiles.mockImplementation(() => ({
             name: 'TestUser',
-            id: 'xyz',
+            id: 'user:xyz' as UserNodeId,
             engagement: -1,
             engagedContent: [],
             commentedTopics: [],

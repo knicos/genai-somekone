@@ -13,10 +13,10 @@ describe('Scoring.scoreCandidates()', () => {
     });
 
     it('calculates a taste score if no test available', async ({ expect }) => {
-        const profile = createUserProfile('xyz', 'TestUser');
+        const profile = createUserProfile('user:xyz', 'TestUser');
         const candidates: Recommendation[] = [
             {
-                contentId: 'xyz',
+                contentId: 'content:xyz',
                 candidateOrigin: 'topic_affinity',
                 timestamp: Date.now(),
             },
@@ -27,16 +27,16 @@ describe('Scoring.scoreCandidates()', () => {
     });
 
     it('calculates a taste score correctly', async ({ expect }) => {
-        const profile = createUserProfile('xyz', 'TestUser');
+        const profile = createUserProfile('user:xyz', 'TestUser');
         addTopic('topic1', 1);
         addTopic('topic2', 1);
-        addNode('content', 'xyz2');
-        addEdge('topic', 'xyz2', getTopicId('topic1'), 1.0);
-        addEdge('topic', 'xyz2', getTopicId('topic2'), 0.5);
+        addNode('content', 'content:xyz2');
+        addEdge('topic', 'content:xyz2', getTopicId('topic1'), 1.0);
+        addEdge('topic', 'content:xyz2', getTopicId('topic2'), 0.5);
         profile.taste = [{ label: 'topic1', weight: 0.5 }];
         const candidates: Recommendation[] = [
             {
-                contentId: 'xyz2',
+                contentId: 'content:xyz2',
                 candidateOrigin: 'topic_affinity',
                 timestamp: Date.now(),
             },

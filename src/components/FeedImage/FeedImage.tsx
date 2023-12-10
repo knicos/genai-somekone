@@ -12,18 +12,19 @@ import SharePanel, { ShareKind } from './SharePanel';
 import CommentPanel from './CommentPanel';
 import { getContentData, getContentMetadata } from '@genaism/services/content/content';
 import { useTranslation } from 'react-i18next';
+import { ContentNodeId } from '@genaism/services/graph/graphTypes';
 
 type ActionPanel = 'none' | 'like' | 'comment' | 'share' | 'discard' | 'author';
 
 interface Props {
-    id: string;
+    id: ContentNodeId;
     active?: boolean;
     visible?: boolean;
-    onClick?: (id: string) => void;
-    onLike?: (id: string, kind: LikeKind) => void;
-    onShare?: (id: string, kind: ShareKind) => void;
-    onComment?: (id: string, length: number) => void;
-    onFollow?: (id: string) => void;
+    onClick?: (id: ContentNodeId) => void;
+    onLike?: (id: ContentNodeId, kind: LikeKind) => void;
+    onShare?: (id: ContentNodeId, kind: ShareKind) => void;
+    onComment?: (id: ContentNodeId, length: number) => void;
+    onFollow?: (id: ContentNodeId) => void;
 }
 
 const SButton = styled(Button)({

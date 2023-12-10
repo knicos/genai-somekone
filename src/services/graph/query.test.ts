@@ -38,7 +38,7 @@ describe('graph.getRelated', () => {
         addEdge('liked', userIds[0], contentIds[2], 4.0);
         addEdge('engaged', userIds[1], contentIds[1], 1.0);
 
-        const related = getRelated('engaged', userIds[0], 2);
+        const related = getRelated('engaged', userIds[0], { count: 2 });
 
         expect(related).toHaveLength(2);
         expect(related[0].weight).toBe(3);
@@ -46,25 +46,42 @@ describe('graph.getRelated', () => {
         expect(related[0].id).toBe(contentIds[2]);
     });
 
-    it('modifies weights by factors', async ({ expect }) => {
+    it('limits by time', async ({ expect }) => {
         const userIds = [addNode('user'), addNode('user'), addNode('user')];
 
         const contentIds = [addNode('content'), addNode('content'), addNode('content')];
 
         addEdge('engaged', userIds[0], contentIds[1], 1.0);
         addEdge('engaged', userIds[0], contentIds[0], 2.0);
-        addEdge('engaged', userIds[0], contentIds[2], 3.0);
+        addEdge('engaged', userIds[0], contentIds[2], 3.0, 1000);
         addEdge('liked', userIds[0], contentIds[2], 4.0);
         addEdge('engaged', userIds[1], contentIds[1], 1.0);
 
-        const factors = new Map<string, number>();
-        factors.set(contentIds[2], 0.5);
-        const related = getRelated('engaged', userIds[0], 3, factors);
+        const related = getRelated('engaged', userIds[0], { count: 3, period: 5 * 60 * 1000 });
+
+        expect(related).toHaveLength(2);
+        expect(related[0].weight).toBe(2);
+        expect(related[1].weight).toBe(1);
+        expect(related[0].id).toBe(contentIds[0]);
+    });
+
+    it('weights by time', async ({ expect }) => {
+        const userIds = [addNode('user'), addNode('user'), addNode('user')];
+
+        const contentIds = [addNode('content'), addNode('content'), addNode('content')];
+
+        addEdge('engaged', userIds[0], contentIds[1], 1.0);
+        addEdge('engaged', userIds[0], contentIds[0], 2.0);
+        addEdge('engaged', userIds[0], contentIds[2], 3.0, Date.now() - 5 * 60 * 1000);
+
+        const related = getRelated('engaged', userIds[0], { count: 3, period: 10 * 60 * 1000, timeDecay: 0.5 });
 
         expect(related).toHaveLength(3);
-        expect(related[0].weight).toBe(2);
-        expect(related[1].weight).toBe(1.5);
-        expect(related[2].weight).toBe(1);
-        expect(related[0].id).toBe(contentIds[0]);
+        expect(related[0].id).toBe(contentIds[2]);
+        expect(related[1].id).toBe(contentIds[0]);
+        expect(related[2].id).toBe(contentIds[1]);
+        expect(related[0].weight).toBeGreaterThan(2.1);
+        expect(related[0].weight).toBeLessThan(2.5);
+        expect(related[1].weight).toBeGreaterThan(1.98);
     });
 });

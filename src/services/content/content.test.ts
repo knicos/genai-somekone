@@ -12,7 +12,7 @@ describe('content.addContent', () => {
             author: 'TestAuthor',
         });
 
-        expect(hasContent('xyz')).toBe(true);
+        expect(hasContent('content:xyz')).toBe(true);
     });
 
     it('adds new content with labels', async ({ expect }) => {
@@ -22,8 +22,8 @@ describe('content.addContent', () => {
             author: 'TestAuthor',
         });
 
-        expect(hasContent('xyz')).toBe(true);
-        expect(getEdgesOfType('topic', 'xyz')).toHaveLength(1);
+        expect(hasContent('content:xyz')).toBe(true);
+        expect(getEdgesOfType('topic', 'content:xyz')).toHaveLength(1);
     });
 });
 
@@ -37,10 +37,10 @@ describe('content.getContentData', () => {
             author: 'TestAuthor',
         });
 
-        expect(getContentData('xyz')).toBe('someurl');
+        expect(getContentData('content:xyz')).toBe('someurl');
     });
 
     it('returns undefined if there is no data', async ({ expect }) => {
-        expect(getContentData('xyz')).toBeUndefined();
+        expect(getContentData('content:xyz')).toBeUndefined();
     });
 });

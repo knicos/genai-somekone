@@ -19,20 +19,85 @@ export type EdgeType =
 
 export type NodeType = 'content' | 'topic' | 'user' | 'attribute';
 
-export interface GNode {
-    id: string;
-    type: NodeType;
+export type NodeID<T extends NodeType = NodeType> = `${T}:${string}`;
+export type ContentNodeId = NodeID<'content'>;
+export type TopicNodeId = NodeID<'topic'>;
+export type UserNodeId = NodeID<'user'>;
+
+export interface GNode<A extends NodeType> {
+    id: NodeID<A>;
+    type: A;
 }
 
-export interface Edge {
+export interface Edge<A extends NodeID<NodeType> = NodeID, B extends NodeID<NodeType> = NodeID> {
     type: EdgeType;
     weight: number;
-    source: string;
-    destination: string;
+    source: A;
+    destination: B;
     metadata: unknown;
+    timestamp: number;
 }
 
-export interface WeightedNode {
-    id: string;
+export interface WeightedNode<A extends NodeID<NodeType>> {
+    id: A;
     weight: number;
 }
+
+// All of the allowed edges
+type GenericEdge<A extends EdgeType, B extends NodeID<NodeType>, C extends NodeID<NodeType>> = [A, B, C];
+type ContentTopicEdge = GenericEdge<'topic', ContentNodeId, TopicNodeId>;
+type TopicContentEdge = GenericEdge<'content', TopicNodeId, ContentNodeId>;
+type ContentCommentedByUserEdge = GenericEdge<'comment', ContentNodeId, UserNodeId>;
+type UserEngagedContentEdge = GenericEdge<'engaged', UserNodeId, ContentNodeId>;
+type UserLikedContentEdge = GenericEdge<'liked', UserNodeId, ContentNodeId>;
+type UserCommentedContentEdge = GenericEdge<'comment', UserNodeId, ContentNodeId>;
+type ContentEngagedByUserEdge = GenericEdge<'engaged', ContentNodeId, UserNodeId>;
+type UserEngagedTopicEdge = GenericEdge<'engaged_topic', UserNodeId, TopicNodeId>;
+type TopicEngagedByUserEdge = GenericEdge<'engaged', TopicNodeId, UserNodeId>;
+type UserTopicEdge = GenericEdge<'topic', UserNodeId, TopicNodeId>;
+type TopicUserEdge = GenericEdge<'topic', TopicNodeId, UserNodeId>;
+type UserCommentTopicEdge = GenericEdge<'commented_topic', UserNodeId, TopicNodeId>;
+type UserSeenTopicEdge = GenericEdge<'seen_topic', UserNodeId, TopicNodeId>;
+type UserSharedTopicEdge = GenericEdge<'shared_topic', UserNodeId, TopicNodeId>;
+type UserFollowedTopicEdge = GenericEdge<'followed_topic', UserNodeId, TopicNodeId>;
+type UserViewedTopicEdge = GenericEdge<'viewed_topic', UserNodeId, TopicNodeId>;
+type UserReactedTopicEdge = GenericEdge<'reacted_topic', UserNodeId, TopicNodeId>;
+type TopicChildEdge = GenericEdge<'child', TopicNodeId, TopicNodeId>;
+type TopicParentEdge = GenericEdge<'parent', TopicNodeId, TopicNodeId>;
+
+export type EdgeTypes =
+    | ContentTopicEdge
+    | TopicContentEdge
+    | ContentCommentedByUserEdge
+    | UserEngagedContentEdge
+    | UserLikedContentEdge
+    | UserCommentedContentEdge
+    | ContentEngagedByUserEdge
+    | UserEngagedTopicEdge
+    | TopicEngagedByUserEdge
+    | UserTopicEdge
+    | TopicUserEdge
+    | UserCommentTopicEdge
+    | UserSeenTopicEdge
+    | UserSharedTopicEdge
+    | UserFollowedTopicEdge
+    | UserViewedTopicEdge
+    | UserReactedTopicEdge
+    | TopicParentEdge
+    | TopicChildEdge;
+export type BiEdgeTypes =
+    | UserEngagedContentEdge
+    | ContentEngagedByUserEdge
+    | UserEngagedTopicEdge
+    | TopicEngagedByUserEdge
+    | TopicUserEdge
+    | UserTopicEdge;
+
+export type SourceFor<K, T = EdgeTypes> = T extends EdgeTypes ? (K extends T[0] ? T[1] : never) : never;
+export type DestinationFor<K, S, T = EdgeTypes> = T extends EdgeTypes
+    ? K extends T[0]
+        ? S extends T[1]
+            ? T[2]
+            : never
+        : never
+    : never;

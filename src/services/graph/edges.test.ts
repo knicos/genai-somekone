@@ -7,7 +7,7 @@ describe('graph.addEdge', () => {
     beforeEach(() => resetGraph());
 
     it('updates the edges store', async ({ expect }) => {
-        const id1 = addNode('content');
+        const id1 = addNode('user');
         const id2 = addNode('content');
         const id = addEdge('liked', id1, id2, 3.0);
         expect(id).toBeTypeOf('string');
@@ -16,20 +16,20 @@ describe('graph.addEdge', () => {
 
     it('fails if source node does not exist', async ({ expect }) => {
         const id2 = addNode('content');
-        const id = addEdge('liked', 'randomnode', id2, 3.0);
+        const id = addEdge('liked', 'user:fake', id2, 3.0);
         expect(id).toBe(null);
     });
 
     it('fails if destination node does not exist', async ({ expect }) => {
-        const id2 = addNode('content');
-        const id = addEdge('liked', id2, 'randomnode', 3.0);
+        const id2 = addNode('user');
+        const id = addEdge('liked', id2, 'content:fake', 3.0);
         expect(id).toBe(null);
     });
 });
 
 describe('graph.getEdgeWeights', () => {
     it('returns a single weight for one edge', async ({ expect }) => {
-        const id1 = addNode('content');
+        const id1 = addNode('user');
         const id2 = addNode('content');
         const id3 = addNode('content');
         addEdge('liked', id1, id2, 3.0);
@@ -41,7 +41,7 @@ describe('graph.getEdgeWeights', () => {
     });
 
     it('returns a multiple weights', async ({ expect }) => {
-        const id1 = addNode('content');
+        const id1 = addNode('user');
         const id2 = addNode('content');
         const id3 = addNode('content');
         addEdge('liked', id1, id2, 3.0);
@@ -54,7 +54,7 @@ describe('graph.getEdgeWeights', () => {
     });
 
     it('returns specified weights', async ({ expect }) => {
-        const id1 = addNode('content');
+        const id1 = addNode('user');
         const id2 = addNode('content');
         const id3 = addNode('content');
         const id4 = addNode('content');
@@ -71,7 +71,7 @@ describe('graph.getEdgeWeights', () => {
 
 describe('graph.getEdges', () => {
     it('returns all edges for one node', async ({ expect }) => {
-        const id1 = addNode('content');
+        const id1 = addNode('user');
         const id2 = addNode('content');
         const id3 = addNode('content');
         addEdge('liked', id1, id2, 3.0);
@@ -82,19 +82,19 @@ describe('graph.getEdges', () => {
     });
 
     it('returns all edges for all nodes', async ({ expect }) => {
-        const id1 = addNode('content');
+        const id1 = addNode('user');
         const id2 = addNode('content');
         const id3 = addNode('content');
         addEdge('liked', id1, id2, 3.0);
         addEdge('engaged', id1, id3, 4.0);
-        addEdge('comment', id2, id3, 4.0);
+        addEdge('comment', id2, id1, 4.0);
 
         const edges = getEdges([id1, id2]);
         expect(edges).toHaveLength(3);
     });
 
     it('returns no edges for nodes without edges', async ({ expect }) => {
-        const id1 = addNode('content');
+        const id1 = addNode('user');
         const id2 = addNode('content');
         const id3 = addNode('content');
         addEdge('liked', id1, id2, 3.0);
@@ -107,7 +107,7 @@ describe('graph.getEdges', () => {
 
 describe('graph.getEdgesOfType', () => {
     it('gives all edges of one type for one node', async ({ expect }) => {
-        const id1 = addNode('content');
+        const id1 = addNode('user');
         const id2 = addNode('content');
         const id3 = addNode('content');
         const id4 = addNode('content');
@@ -121,44 +121,16 @@ describe('graph.getEdgesOfType', () => {
         expect(edges[1].destination).toBe(id4);
     });
 
-    it('gives all edges of specified types for one node', async ({ expect }) => {
-        const id1 = addNode('content');
-        const id2 = addNode('content');
-        const id3 = addNode('content');
-        const id4 = addNode('content');
-        addEdge('liked', id1, id2, 3.0);
-        addEdge('comment', id1, id4, 3.0);
-        addEdge('engaged', id1, id3, 4.0);
-
-        const edges = getEdgesOfType(['liked', 'comment'], id1);
-        expect(edges).toHaveLength(2);
-        expect(edges[0].destination).toBe(id2);
-        expect(edges[1].destination).toBe(id4);
-    });
-
-    it('gives all edges of specified types for specified nodes', async ({ expect }) => {
-        const id1 = addNode('content');
-        const id2 = addNode('content');
-        const id3 = addNode('content');
-        const id4 = addNode('content');
-        addEdge('liked', id1, id2, 3.0);
-        addEdge('comment', id1, id4, 3.0);
-        addEdge('liked', id2, id3, 4.0);
-        addEdge('liked', id3, id4, 4.0);
-
-        const edges = getEdgesOfType(['liked', 'comment'], [id1, id2]);
-        expect(edges).toHaveLength(3);
-    });
-
     it('gives all edges of one type for specified nodes', async ({ expect }) => {
-        const id1 = addNode('content');
-        const id2 = addNode('content');
+        const id1 = addNode('user');
+        const id2 = addNode('user');
         const id3 = addNode('content');
         const id4 = addNode('content');
-        addEdge('liked', id1, id2, 3.0);
+        const id5 = addNode('user');
+        addEdge('liked', id1, id3, 3.0);
         addEdge('comment', id1, id4, 3.0);
         addEdge('liked', id2, id3, 4.0);
-        addEdge('liked', id3, id4, 4.0);
+        addEdge('liked', id5, id4, 4.0);
 
         const edges = getEdgesOfType('liked', [id1, id2]);
         expect(edges).toHaveLength(2);
@@ -166,7 +138,7 @@ describe('graph.getEdgesOfType', () => {
 
     it('gives the updated edge weight', async ({ expect }) => {
         const id1 = addNode('content');
-        const id2 = addNode('content');
+        const id2 = addNode('user');
         addEdge('comment', id1, id2, 1.0);
 
         const edges = getEdgesOfType('comment', id1);

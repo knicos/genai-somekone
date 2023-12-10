@@ -1,15 +1,15 @@
 import { QTDataItem, addQuadTree, createQuadTree, testQuadTree } from './quadtree';
 
-export interface SizedItem {
+export interface SizedItem<T extends string> {
     width: number;
     height: number;
-    id: string;
+    id: T;
 }
 
-export interface LocationItem {
+export interface LocationItem<T extends string> {
     x: number;
     y: number;
-    item: SizedItem;
+    item: SizedItem<T>;
 }
 
 function archimedeanSpiral(size: [number, number]) {
@@ -27,8 +27,12 @@ function calculateDistance(minX: number, maxX: number, minY: number, maxY: numbe
     return Math.max(d1, d2, d3, d4);
 }
 
-export default function cloudLayout(content: SizedItem[], size: number, padding?: number): [LocationItem[], number] {
-    const results: LocationItem[] = [];
+export default function cloudLayout<T extends string>(
+    content: SizedItem<T>[],
+    size: number,
+    padding?: number
+): [LocationItem<T>[], number] {
+    const results: LocationItem<T>[] = [];
     //let maxDist = 0;
 
     if (content.length === 0) return [[], padding || 10];

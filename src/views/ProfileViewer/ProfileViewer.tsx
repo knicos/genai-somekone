@@ -19,6 +19,7 @@ import UserProfile from '@genaism/components/UserProfile/UserProfile';
 import style from './style.module.css';
 import { appConfiguration } from '@genaism/state/settingsState';
 import { SMConfig } from '../Genagram/smConfig';
+import { UserNodeId } from '@genaism/services/graph/graphTypes';
 
 function slideDirection(my: number, current: number, previous: number): SlideProps['direction'] {
     if (my === current) {
@@ -33,7 +34,7 @@ function slideDirection(my: number, current: number, previous: number): SlidePro
 export function Component() {
     const { t } = useTranslation();
     const { code } = useParams();
-    const [id, setID] = useState<string>();
+    const [id, setID] = useState<UserNodeId>();
     const MYCODE = useRandom(10);
     const setError = useSetRecoilState(errorNotification);
     const [hasData, setHasData] = useState(false);

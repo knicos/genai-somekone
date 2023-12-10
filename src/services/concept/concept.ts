@@ -1,10 +1,10 @@
-import { WeightedNode } from '../graph/graphTypes';
+import { TopicNodeId, WeightedNode } from '../graph/graphTypes';
 import { addEdge, addNode, getRelated } from '../graph/graph';
 
-const topicStore = new Map<string, string>();
-const topicLabelIndex = new Map<string, string>();
+const topicStore = new Map<TopicNodeId, string>();
+const topicLabelIndex = new Map<string, TopicNodeId>();
 
-export function addTopic(label: string, weight: number, parent?: string) {
+export function addTopic(label: string, weight: number, parent?: TopicNodeId): TopicNodeId {
     const id = addNode('topic');
     topicStore.set(id, label);
     topicLabelIndex.set(label, id);
@@ -17,7 +17,7 @@ export function addTopic(label: string, weight: number, parent?: string) {
     return id;
 }
 
-export function getTopicId(label: string): string {
+export function getTopicId(label: string): TopicNodeId {
     const t = topicLabelIndex.get(label);
     if (!t) {
         return addTopic(label, 0);
@@ -25,15 +25,15 @@ export function getTopicId(label: string): string {
     return t;
 }
 
-export function getTopicLabel(id: string): string {
+export function getTopicLabel(id: TopicNodeId): string {
     return topicStore.get(id) || id;
 }
 
-export function getTopicParent(id: string): WeightedNode | null {
+export function getTopicParent(id: TopicNodeId): WeightedNode<TopicNodeId> | null {
     const parents = getRelated('parent', id);
     return parents.length > 0 ? parents[0] : null;
 }
 
-export function getTopicChildren(id: string): WeightedNode[] {
+export function getTopicChildren(id: TopicNodeId): WeightedNode<TopicNodeId>[] {
     return getRelated('child', id);
 }

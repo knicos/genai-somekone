@@ -4,17 +4,20 @@ import ProfileNode from '../ProfileNode/ProfileNode';
 import Graph, { GraphLink, GraphNode } from '../Graph/Graph';
 import { useRecoilValue } from 'recoil';
 import { settingShowOfflineUsers } from '@genaism/state/settingsState';
+import { UserNodeId } from '@genaism/services/graph/graphTypes';
 // import FakeNode from '../FakeNode/FakeNode';
 
 interface Props {
-    liveUsers?: string[];
+    liveUsers?: UserNodeId[];
 }
 
 export default function SocialGraph({ liveUsers }: Props) {
-    const linksRef = useRef<Map<string, GraphLink[]>>(new Map<string, GraphLink[]>());
-    const [links, setLinks] = useState<GraphLink[]>([]);
+    const linksRef = useRef<Map<string, GraphLink<UserNodeId, UserNodeId>[]>>(
+        new Map<string, GraphLink<UserNodeId, UserNodeId>[]>()
+    );
+    const [links, setLinks] = useState<GraphLink<UserNodeId, UserNodeId>[]>([]);
     const sizesRef = useRef<Map<string, number>>(new Map<string, number>());
-    const [nodes, setNodes] = useState<GraphNode[]>([]);
+    const [nodes, setNodes] = useState<GraphNode<UserNodeId>[]>([]);
     const showOfflineUsers = useRecoilValue(settingShowOfflineUsers);
     const users = useNodeType('user');
     const liveSet = useMemo(() => {
@@ -28,10 +31,10 @@ export default function SocialGraph({ liveUsers }: Props) {
     const [zoom, setZoom] = useState(1);
     const [center, setCenter] = useState<[number, number] | undefined>();
 
-    const doUpdateLinks = useCallback((id: string, links: GraphLink[]) => {
+    const doUpdateLinks = useCallback((id: string, links: GraphLink<UserNodeId, UserNodeId>[]) => {
         console.log('UPDATE LINKS', id, links);
         linksRef.current.set(id, links);
-        const newLinks: GraphLink[] = [];
+        const newLinks: GraphLink<UserNodeId, UserNodeId>[] = [];
         linksRef.current.forEach((v) => {
             newLinks.push(...v);
         });
@@ -64,7 +67,7 @@ export default function SocialGraph({ liveUsers }: Props) {
         <Graph
             links={links}
             nodes={nodes}
-            onSelect={(n: Readonly<GraphNode>) => {
+            onSelect={(n: Readonly<GraphNode<UserNodeId>>) => {
                 if (!focusNode) setZoom(0.5);
                 setCenter([n.x || 0, n.y || 0]);
                 setFocusNode(n.id);

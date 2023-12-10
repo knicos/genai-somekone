@@ -3,9 +3,10 @@ import ImageCloud from '../ImageCloud/ImageCloud';
 import { useCallback, useState } from 'react';
 import ActionLogTable from '../ActionLogTable/ActionLogTable';
 import style from './style.module.css';
+import { UserNodeId } from '@genaism/services/graph/graphTypes';
 
 interface Props {
-    id?: string;
+    id?: UserNodeId;
 }
 
 export default function Profile({ id }: Props) {

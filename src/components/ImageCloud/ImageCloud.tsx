@@ -1,11 +1,11 @@
 import { memo, useEffect, useState } from 'react';
-import { WeightedNode } from '@genaism/services/graph/graphTypes';
+import { ContentNodeId, WeightedNode } from '@genaism/services/graph/graphTypes';
 import { getContentData } from '@genaism/services/content/content';
 import style from './style.module.css';
 import cloudLayout, { LocationItem, SizedItem } from './cloudLayout';
 
 interface Props {
-    content: WeightedNode[];
+    content: WeightedNode<ContentNodeId>[];
     padding?: number;
     size?: number;
     colour?: string;
@@ -16,11 +16,11 @@ interface Props {
 const BORDER_SIZE = 1.5;
 
 const ImageCloud = memo(function Cloud({ content, size, padding, colour, borderSize, onSize }: Props) {
-    const [locations, setLocations] = useState<LocationItem[]>([]);
+    const [locations, setLocations] = useState<LocationItem<ContentNodeId>[]>([]);
 
     useEffect(() => {
         const maxWeight = Math.max(0.01, content.length > 0 ? content[0].weight : 1);
-        const sizedContent: SizedItem[] = content.map((c) => {
+        const sizedContent: SizedItem<ContentNodeId>[] = content.map((c) => {
             const asize = Math.floor((c.weight / maxWeight) * (size || 500) * 0.3);
             return {
                 id: c.id,

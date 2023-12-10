@@ -20,7 +20,7 @@ describe('FeedImage component', () => {
     it('renders with a test image', async ({ expect }) => {
         render(
             <FeedImage
-                id="xyz"
+                id="content:xyz"
                 active
                 visible
             />
@@ -37,7 +37,7 @@ describe('FeedImage component', () => {
         const user = userEvent.setup();
         render(
             <FeedImage
-                id="xyz"
+                id="content:xyz"
                 active
                 visible
             />
@@ -53,7 +53,7 @@ describe('FeedImage component', () => {
         const likefn = vi.fn();
         render(
             <FeedImage
-                id="xyz"
+                id="content:xyz"
                 active
                 visible
                 onLike={likefn}
@@ -62,7 +62,7 @@ describe('FeedImage component', () => {
 
         await user.click(screen.getByTestId('feed-image-like-button'));
         await user.click(screen.getByTestId('like-button'));
-        expect(likefn).toHaveBeenCalledWith('xyz', 'like');
+        expect(likefn).toHaveBeenCalledWith('content:xyz', 'like');
     });
 
     it('calls like action on wow click', async ({ expect }) => {
@@ -70,7 +70,7 @@ describe('FeedImage component', () => {
         const likefn = vi.fn();
         render(
             <FeedImage
-                id="xyz"
+                id="content:xyz"
                 active
                 visible
                 onLike={likefn}
@@ -79,14 +79,14 @@ describe('FeedImage component', () => {
 
         await user.click(screen.getByTestId('feed-image-like-button'));
         await user.click(screen.getByTestId('wow-button'));
-        expect(likefn).toHaveBeenCalledWith('xyz', 'wow');
+        expect(likefn).toHaveBeenCalledWith('content:xyz', 'wow');
     });
 
     it('shows the comment panel', async ({ expect }) => {
         const user = userEvent.setup();
         render(
             <FeedImage
-                id="xyz"
+                id="content:xyz"
                 active
                 visible
             />
@@ -102,7 +102,7 @@ describe('FeedImage component', () => {
         const commentfn = vi.fn();
         render(
             <FeedImage
-                id="xyz"
+                id="content:xyz"
                 active
                 visible
                 onComment={commentfn}
@@ -112,14 +112,14 @@ describe('FeedImage component', () => {
         await user.click(screen.getByTestId('feed-image-comment-button'));
         await user.click(screen.getByTestId('comment-input'));
         await user.keyboard('helloworld[Enter]');
-        expect(commentfn).toHaveBeenCalledWith('xyz', 10);
+        expect(commentfn).toHaveBeenCalledWith('content:xyz', 10);
     });
 
     it('shows the share panel', async ({ expect }) => {
         const user = userEvent.setup();
         render(
             <FeedImage
-                id="xyz"
+                id="content:xyz"
                 active
                 visible
             />
@@ -135,7 +135,7 @@ describe('FeedImage component', () => {
         const sharefn = vi.fn();
         render(
             <FeedImage
-                id="xyz"
+                id="content:xyz"
                 active
                 visible
                 onShare={sharefn}
@@ -144,6 +144,6 @@ describe('FeedImage component', () => {
 
         await user.click(screen.getByTestId('feed-image-share-button'));
         await user.click(screen.getByTestId('share-friends-button'));
-        expect(sharefn).toHaveBeenCalledWith('xyz', 'friends');
+        expect(sharefn).toHaveBeenCalledWith('content:xyz', 'friends');
     });
 });

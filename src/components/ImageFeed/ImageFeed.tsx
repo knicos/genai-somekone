@@ -7,11 +7,12 @@ import { ShareKind } from '@genaism/components/FeedImage/SharePanel';
 import FeedSpacer from './FeedSpacer';
 import { useTabActive } from '@genaism/hooks/interaction';
 import { useTranslation } from 'react-i18next';
+import { ContentNodeId } from '@genaism/services/graph/graphTypes';
 
 const INTERACTION_TIMEOUT = 5000;
 
 interface Props {
-    images: string[];
+    images: ContentNodeId[];
     onView?: (index: number, time: number) => void;
     onMore?: () => void;
     onLog: (e: LogEntry) => void;
@@ -24,7 +25,7 @@ export default function ImageFeed({ images, onView, onMore, onLog }: Props) {
     const prevRef = useRef<number>(-1);
     const startRef = useRef<number>(0);
     const lastRef = useRef<number>(0);
-    const viewedRef = useRef<string>();
+    const viewedRef = useRef<ContentNodeId>();
     const canMoreRef = useRef(true);
     const durationRef = useRef<number>(0);
     const active = useTabActive();
@@ -42,8 +43,8 @@ export default function ImageFeed({ images, onView, onMore, onLog }: Props) {
             if (ref.current) {
                 ref.current.focus();
             }
-        } else {
-            onLog({ activity: 'end', timestamp: now, value: now - durationRef.current, id: viewedRef.current || '' });
+        } else if (viewedRef.current) {
+            onLog({ activity: 'end', timestamp: now, value: now - durationRef.current, id: viewedRef.current });
         }
     }, [active]);
 
@@ -124,7 +125,7 @@ export default function ImageFeed({ images, onView, onMore, onLog }: Props) {
     );
 
     const doLike = useCallback(
-        (id: string, kind: LikeKind) => {
+        (id: ContentNodeId, kind: LikeKind) => {
             if (kind !== 'none') {
                 onLog({ activity: kind, id, timestamp: Date.now() });
             }
@@ -133,7 +134,7 @@ export default function ImageFeed({ images, onView, onMore, onLog }: Props) {
     );
 
     const doShare = useCallback(
-        (id: string, kind: ShareKind) => {
+        (id: ContentNodeId, kind: ShareKind) => {
             let type: LogActivity = 'share_private';
             switch (kind) {
                 case 'friends':
@@ -154,14 +155,14 @@ export default function ImageFeed({ images, onView, onMore, onLog }: Props) {
     );
 
     const doFollow = useCallback(
-        (id: string) => {
+        (id: ContentNodeId) => {
             onLog({ activity: 'follow', id, timestamp: Date.now() });
         },
         [onLog]
     );
 
     const doComment = useCallback(
-        (id: string, l: number) => {
+        (id: ContentNodeId, l: number) => {
             onLog({ activity: 'comment', id, timestamp: Date.now(), value: l });
         },
         [onLog]

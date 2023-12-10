@@ -15,10 +15,10 @@ interface Props {
 
 const WordCloud = memo(function Cloud({ content, size, padding, onSize, className }: Props) {
     const gRef = useRef<SVGGElement>(null);
-    const [locations, setLocations] = useState(new Map<string, LocationItem>());
+    const [locations, setLocations] = useState(new Map<string, LocationItem<string>>());
 
     useEffect(() => {
-        const sizedContent: SizedItem[] = content.map((c, ix) => {
+        const sizedContent: SizedItem<string>[] = content.map((c, ix) => {
             const child = gRef.current?.children[ix];
             const childText = (child as SVGGElement)?.querySelector('text');
             const bbox =
@@ -48,7 +48,7 @@ const WordCloud = memo(function Cloud({ content, size, padding, onSize, classNam
 
         if (onSize) onSize(Math.floor(maxDist));
 
-        const newMap = new Map<string, LocationItem>();
+        const newMap = new Map<string, LocationItem<string>>();
         results.forEach((r) => newMap.set(r.item.id, r));
         setLocations(newMap);
     }, [content, padding, size, onSize]);

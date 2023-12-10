@@ -4,14 +4,14 @@ import ProfileNode from './ProfileNode';
 import { UserProfile } from '@genaism/services/profiler/profilerTypes';
 import TestWrapper from '@genaism/util/TestWrapper';
 import { settingDisplayLabel, settingShrinkOfflineUsers } from '@genaism/state/settingsState';
-import { WeightedNode } from '@genaism/services/graph/graphTypes';
+import { ContentNodeId, UserNodeId, WeightedNode } from '@genaism/services/graph/graphTypes';
 
 const { mockProfile, mockSimilar } = vi.hoisted(() => ({
     mockProfile: vi.fn<unknown[], UserProfile>(() => ({
         name: 'TestUser1',
-        id: 'xyz',
+        id: 'user:xyz',
         engagement: -1,
-        engagedContent: [{ id: 'content1', weight: 1 }],
+        engagedContent: [{ id: 'content:content1', weight: 1 }],
         commentedTopics: [],
         reactedTopics: [],
         sharedTopics: [],
@@ -21,7 +21,7 @@ const { mockProfile, mockSimilar } = vi.hoisted(() => ({
         taste: [{ label: 'taste1', weight: 0.5 }],
         attributes: {},
     })),
-    mockSimilar: vi.fn(() => [] as WeightedNode[]),
+    mockSimilar: vi.fn(() => [] as WeightedNode<UserNodeId>[]),
 }));
 
 vi.mock('@genaism/services/profiler/hooks', () => ({
@@ -38,7 +38,7 @@ describe('ProfileNode component', () => {
 
         mockProfile.mockImplementation(() => ({
             name: 'TestUser1',
-            id: 'xyz',
+            id: 'user:xyz' as UserNodeId,
             engagement: -1,
             engagedContent: [],
             commentedTopics: [],
@@ -60,7 +60,7 @@ describe('ProfileNode component', () => {
             >
                 <svg>
                     <ProfileNode
-                        id="xyz"
+                        id="user:xyz"
                         onLinks={linksFn}
                         onResize={resizeFn}
                         live={true}
@@ -79,7 +79,7 @@ describe('ProfileNode component', () => {
 
         mockProfile.mockImplementation(() => ({
             name: 'TestUser1',
-            id: 'xyz',
+            id: 'user:xyz' as UserNodeId,
             engagement: -1,
             engagedContent: [],
             commentedTopics: [],
@@ -101,7 +101,7 @@ describe('ProfileNode component', () => {
             >
                 <svg>
                     <ProfileNode
-                        id="xyz"
+                        id="user:xyz"
                         onLinks={linksFn}
                         onResize={resizeFn}
                         live={true}
@@ -120,9 +120,9 @@ describe('ProfileNode component', () => {
 
         mockProfile.mockImplementation(() => ({
             name: 'TestUser1',
-            id: 'xyz',
+            id: 'user:xyz' as UserNodeId,
             engagement: -1,
-            engagedContent: [{ id: 'content1', weight: 1 }],
+            engagedContent: [{ id: 'content:content1' as ContentNodeId, weight: 1 }],
             commentedTopics: [],
             reactedTopics: [],
             sharedTopics: [],
@@ -142,7 +142,7 @@ describe('ProfileNode component', () => {
             >
                 <svg>
                     <ProfileNode
-                        id="xyz"
+                        id="user:xyz"
                         onLinks={linksFn}
                         onResize={resizeFn}
                         live={true}
@@ -161,9 +161,9 @@ describe('ProfileNode component', () => {
 
         mockProfile.mockImplementation(() => ({
             name: 'TestUser1',
-            id: 'xyz',
+            id: 'user:xyz' as UserNodeId,
             engagement: -1,
-            engagedContent: [{ id: 'content1', weight: 1 }],
+            engagedContent: [{ id: 'content:content1' as ContentNodeId, weight: 1 }],
             commentedTopics: [],
             reactedTopics: [],
             sharedTopics: [],
@@ -175,8 +175,8 @@ describe('ProfileNode component', () => {
         }));
 
         mockSimilar.mockImplementation(() => [
-            { id: 'ddd', weight: 2 },
-            { id: 'sss', weight: 1.9 },
+            { id: 'user:ddd', weight: 2 },
+            { id: 'user:sss', weight: 1.9 },
         ]);
 
         render(
@@ -188,7 +188,7 @@ describe('ProfileNode component', () => {
             >
                 <svg>
                     <ProfileNode
-                        id="xyz"
+                        id="user:xyz"
                         onLinks={linksFn}
                         onResize={resizeFn}
                         live={true}
@@ -197,9 +197,9 @@ describe('ProfileNode component', () => {
             </TestWrapper>
         );
 
-        expect(linksFn).toHaveBeenCalledWith('xyz', [
-            { source: 'xyz', target: 'ddd', strength: 2 },
-            { source: 'xyz', target: 'sss', strength: 1.9 },
+        expect(linksFn).toHaveBeenCalledWith('user:xyz', [
+            { source: 'user:xyz', target: 'user:ddd', strength: 2 },
+            { source: 'user:xyz', target: 'user:sss', strength: 1.9 },
         ]);
     });
 });

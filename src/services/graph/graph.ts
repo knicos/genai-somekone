@@ -1,4 +1,4 @@
 export * from './nodes';
 export * from './edges';
 export * from './query';
-export { resetGraph } from './state';
+export { resetGraph, dump, dumpJSON } from './state';

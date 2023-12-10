@@ -4,10 +4,11 @@ import style from './style.module.css';
 import gsap from 'gsap';
 import { useRecoilValue } from 'recoil';
 import { settingDisplayLines, settingLinkDistanceScale, settingNodeCharge } from '@genaism/state/settingsState';
+import { NodeID } from '@genaism/services/graph/graphTypes';
 
-export interface GraphNode {
+export interface GraphNode<T extends NodeID> {
     size: number;
-    id: string;
+    id: T;
     x?: number;
     y?: number;
     index?: number;
@@ -15,15 +16,15 @@ export interface GraphNode {
     fy?: number;
 }
 
-export interface GraphLink {
-    source: string;
-    target: string;
+export interface GraphLink<A extends NodeID, B extends NodeID> {
+    source: A;
+    target: B;
     strength: number;
 }
 
-interface InternalGraphLink {
-    source: GraphNode;
-    target: GraphNode;
+interface InternalGraphLink<A extends NodeID, B extends NodeID> {
+    source: GraphNode<A>;
+    target: GraphNode<B>;
     strength: number;
 }
 
@@ -44,10 +45,10 @@ function calculateViewBox(extents: Extents, padding: number, zoom: number, cente
     return `${x} ${y} ${w} ${h}`;
 }
 
-interface Props extends PropsWithChildren {
-    nodes: GraphNode[];
-    links?: GraphLink[];
-    onSelect?: (node: Readonly<GraphNode>) => void;
+interface Props<T extends NodeID> extends PropsWithChildren {
+    nodes: GraphNode<T>[];
+    links?: GraphLink<T, T>[];
+    onSelect?: (node: Readonly<GraphNode<T>>) => void;
     onUnselect?: () => void;
     focusNode?: string;
     zoom?: number;
@@ -68,7 +69,7 @@ const DEFAULT_EXTENTS: Extents = {
     maxY: 500,
 };
 
-export default function Graph({
+export default function Graph<T extends NodeID>({
     nodes,
     links,
     onSelect,
@@ -78,13 +79,13 @@ export default function Graph({
     onZoom,
     children,
     center,
-}: Props) {
+}: Props<T>) {
     const svgRef = useRef<SVGSVGElement>(null);
     const [redraw, trigger] = useReducer((a) => ++a, 0);
-    const [nodeList, setNodeList] = useState<GraphNode[]>([]);
-    const [linkList, setLinkList] = useState<InternalGraphLink[]>([]);
-    const nodeRef = useRef<Map<string, GraphNode>>(new Map<string, GraphNode>());
-    const simRef = useRef<d3.Simulation<GraphNode, undefined>>();
+    const [nodeList, setNodeList] = useState<GraphNode<T>[]>([]);
+    const [linkList, setLinkList] = useState<InternalGraphLink<T, T>[]>([]);
+    const nodeRef = useRef<Map<string, GraphNode<T>>>(new Map<string, GraphNode<T>>());
+    const simRef = useRef<d3.Simulation<GraphNode<T>, undefined>>();
     const linkScale = useRecoilValue(settingLinkDistanceScale);
     const showLines = useRecoilValue(settingDisplayLines);
     const charge = useRecoilValue(settingNodeCharge);
@@ -108,7 +109,7 @@ export default function Graph({
     useEffect(() => {
         if (simRef.current) simRef.current.stop();
 
-        const newNodeRef = new Map<string, GraphNode>();
+        const newNodeRef = new Map<string, GraphNode<T>>();
 
         nodes.forEach((n, ix) => {
             const cur = nodeRef.current.get(n.id) || { ...n };
@@ -128,7 +129,7 @@ export default function Graph({
 
         const lnodes = Array.from(nodeRef.current).map((v) => v[1]);
 
-        const llinks: InternalGraphLink[] =
+        const llinks: InternalGraphLink<T, T>[] =
             nodes.length > 0 && links
                 ? links
                       .map((l) => {
@@ -145,13 +146,13 @@ export default function Graph({
 
         if (!simRef.current) {
             simRef.current = d3
-                .forceSimulation<GraphNode>()
+                .forceSimulation<GraphNode<T>>()
                 .force('center', d3.forceCenter())
                 .force('charge', d3.forceManyBody().strength(-10000 * charge))
                 .force(
                     'link',
                     d3
-                        .forceLink<GraphNode, InternalGraphLink>()
+                        .forceLink<GraphNode<T>, InternalGraphLink<T, T>>()
                         .strength((d) => d.strength * d.strength)
                         .distance((d) =>
                             Math.max(
@@ -163,7 +164,7 @@ export default function Graph({
                 )
                 .force(
                     'collide',
-                    d3.forceCollide<GraphNode>((n) => {
+                    d3.forceCollide<GraphNode<T>>((n) => {
                         return (n.size || 5) + 10;
                     })
                 );
@@ -172,7 +173,7 @@ export default function Graph({
         setNodeList(lnodes);
 
         simRef.current.nodes(lnodes);
-        simRef.current.force<d3.ForceLink<GraphNode, InternalGraphLink>>('link')?.links(llinks);
+        simRef.current.force<d3.ForceLink<GraphNode<T>, InternalGraphLink<T, T>>>('link')?.links(llinks);
         simRef.current
             .on('tick', () => {
                 setNodeList([...lnodes]);

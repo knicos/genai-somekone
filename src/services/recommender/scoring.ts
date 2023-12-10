@@ -1,5 +1,5 @@
 import { getTopicId } from '../concept/concept';
-import { WeightedNode } from '../graph/graphTypes';
+import { ContentNodeId, TopicNodeId, WeightedNode } from '../graph/graphTypes';
 import { getRelated } from '../graph/query';
 import { UserProfile } from '../profiler/profilerTypes';
 import { cosinesim } from '../users/users';
@@ -14,7 +14,7 @@ const WEIGHTS = {
     randomnessScore: 0.0,
 };
 
-export function calculateLimitedSimilarity(a: WeightedNode[], b: WeightedNode[]): number {
+export function calculateLimitedSimilarity(a: WeightedNode<TopicNodeId>[], b: WeightedNode<TopicNodeId>[]): number {
     const sumA = a.reduce((p, v) => p + v.weight, 0);
     const sumB = b.reduce((p, v) => p + v.weight, 0);
 
@@ -37,8 +37,8 @@ export function calculateLimitedSimilarity(a: WeightedNode[], b: WeightedNode[])
     return cosinesim(vec1, vec2);
 }
 
-function calculateTasteScore(profile: UserProfile, id: string): number {
-    const topics = getRelated('topic', id, 10);
+function calculateTasteScore(profile: UserProfile, id: ContentNodeId): number {
+    const topics = getRelated('topic', id, { count: 10 });
     return calculateLimitedSimilarity(
         profile.taste.map((t) => ({ id: getTopicId(t.label), weight: t.weight })),
         topics

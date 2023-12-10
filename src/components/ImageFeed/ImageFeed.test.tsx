@@ -21,7 +21,7 @@ describe('ImageFeed component', () => {
         const logfn = vi.fn();
         render(
             <ImageFeed
-                images={['xyz', 'xyz']}
+                images={['content:xyz', 'content:xyz']}
                 onLog={logfn}
             />
         );
@@ -34,7 +34,7 @@ describe('ImageFeed component', () => {
         const logfn = vi.fn();
         render(
             <ImageFeed
-                images={['xyz']}
+                images={['content:xyz']}
                 onLog={logfn}
             />
         );
@@ -42,7 +42,7 @@ describe('ImageFeed component', () => {
         await user.click(screen.getByTestId('feed-image-like-button'));
         await user.click(screen.getByTestId('like-button'));
 
-        expect(logfn).toHaveBeenCalledWith({ activity: 'like', id: 'xyz', timestamp: expect.any(Number) });
+        expect(logfn).toHaveBeenCalledWith({ activity: 'like', id: 'content:xyz', timestamp: expect.any(Number) });
     });
 
     it('generates a share log event', async ({ expect }) => {
@@ -50,7 +50,7 @@ describe('ImageFeed component', () => {
         const logfn = vi.fn();
         render(
             <ImageFeed
-                images={['xyz']}
+                images={['content:xyz']}
                 onLog={logfn}
             />
         );
@@ -58,7 +58,11 @@ describe('ImageFeed component', () => {
         await user.click(screen.getByTestId('feed-image-share-button'));
         await user.click(screen.getByTestId('share-friends-button'));
 
-        expect(logfn).toHaveBeenCalledWith({ activity: 'share_friends', id: 'xyz', timestamp: expect.any(Number) });
+        expect(logfn).toHaveBeenCalledWith({
+            activity: 'share_friends',
+            id: 'content:xyz',
+            timestamp: expect.any(Number),
+        });
     });
 
     it('generates a comment log event', async ({ expect }) => {
@@ -66,7 +70,7 @@ describe('ImageFeed component', () => {
         const logfn = vi.fn();
         render(
             <ImageFeed
-                images={['xyz']}
+                images={['content:xyz']}
                 onLog={logfn}
             />
         );
@@ -77,7 +81,7 @@ describe('ImageFeed component', () => {
 
         expect(logfn).toHaveBeenCalledWith({
             activity: 'comment',
-            id: 'xyz',
+            id: 'content:xyz',
             value: 10,
             timestamp: expect.any(Number),
         });
@@ -88,13 +92,13 @@ describe('ImageFeed component', () => {
         const logfn = vi.fn();
         render(
             <ImageFeed
-                images={['xyz']}
+                images={['content:xyz']}
                 onLog={logfn}
             />
         );
 
         await user.click(screen.getByTestId('feed-image-follow-button'));
-        expect(logfn).toHaveBeenCalledWith({ activity: 'follow', id: 'xyz', timestamp: expect.any(Number) });
+        expect(logfn).toHaveBeenCalledWith({ activity: 'follow', id: 'content:xyz', timestamp: expect.any(Number) });
     });
 
     it('generates a seen event', async ({ expect }) => {
@@ -102,11 +106,11 @@ describe('ImageFeed component', () => {
         const logfn = vi.fn();
         render(
             <ImageFeed
-                images={['xyz']}
+                images={['content:xyz']}
                 onLog={logfn}
             />
         );
 
-        expect(logfn).toHaveBeenCalledWith({ activity: 'seen', id: 'xyz', timestamp: expect.any(Number) });
+        expect(logfn).toHaveBeenCalledWith({ activity: 'seen', id: 'content:xyz', timestamp: expect.any(Number) });
     });
 });

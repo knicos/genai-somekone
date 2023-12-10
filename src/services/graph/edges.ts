@@ -1,8 +1,14 @@
 import { emitNodeEdgeTypeEvent } from './events';
-import { EdgeType, Edge } from './graphTypes';
+import { DestinationFor, Edge, EdgeType, NodeID, NodeType, SourceFor } from './graphTypes';
 import { edgeSrcIndex, edgeStore, edgeTypeSrcIndex, nodeStore } from './state';
 
-export function addEdge(type: EdgeType, src: string, dest: string, weight?: number): string | null {
+export function addEdge<T extends EdgeType, S extends SourceFor<T>, D extends DestinationFor<T, S>>(
+    type: T,
+    src: S,
+    dest: D,
+    weight?: number,
+    timestamp?: number
+): string | null {
     if (!nodeStore.has(src) || !nodeStore.has(dest)) return null;
 
     const id = `${dest}:${type}:${src}`;
@@ -10,11 +16,13 @@ export function addEdge(type: EdgeType, src: string, dest: string, weight?: numb
 
     if (oldEdge) {
         oldEdge.weight = weight || 0;
+        oldEdge.timestamp = timestamp || Date.now();
         emitNodeEdgeTypeEvent(src, type);
         return id;
     }
 
-    const edge = { type, source: src, destination: dest, weight: weight || 0, metadata: {} };
+    const edge = { type, source: src, destination: dest, weight: weight || 0, metadata: {}, timestamp: 0 };
+    edge.timestamp = timestamp || Date.now();
     edgeStore.set(id, edge);
 
     if (!edgeSrcIndex.has(src)) edgeSrcIndex.set(src, []);
@@ -28,15 +36,17 @@ export function addEdge(type: EdgeType, src: string, dest: string, weight?: numb
 
     return id;
 }
-export function addBiEdge(type: EdgeType, src: string, dest: string, weight?: number) {
-    addEdge(type, src, dest, weight);
-    addEdge(type, dest, src, weight);
-}
 
-export function addOrAccumulateEdge(type: EdgeType, src: string, dest: string, weight: number) {
+export function addOrAccumulateEdge<T extends EdgeType, S extends SourceFor<T>, D extends DestinationFor<T, S>>(
+    type: T,
+    src: S,
+    dest: D,
+    weight: number
+) {
     const id = `${dest}:${type}:${src}`;
     const oldEdge = edgeStore.get(id);
-    const edge = oldEdge || { type, source: src, destination: dest, weight: 0, metadata: {} };
+    const edge = oldEdge || { type, source: src, destination: dest, weight: 0, metadata: {}, timestamp: 0 };
+    edge.timestamp = Date.now();
     edge.weight += weight;
 
     if (!oldEdge) {
@@ -52,7 +62,11 @@ export function addOrAccumulateEdge(type: EdgeType, src: string, dest: string, w
     emitNodeEdgeTypeEvent(src, type);
 }
 
-export function getEdgeWeights(type: EdgeType, src: string, dest?: string | string[]): number[] {
+export function getEdgeWeights<T extends EdgeType, S extends SourceFor<T>, D extends DestinationFor<T, S>>(
+    type: T,
+    src: S,
+    dest?: D | D[]
+): number[] {
     if (!dest) {
         return getEdgesOfType(type, src).map((e) => e.weight);
     } else if (Array.isArray(dest)) {
@@ -68,27 +82,31 @@ export function getEdgeWeights(type: EdgeType, src: string, dest?: string | stri
     }
 }
 
-export function getEdges(node: string | string[], count?: number): Edge[] {
+export function getEdges<T extends NodeID<NodeType>>(node: T | T[], count?: number): Edge<T, NodeID<NodeType>>[] {
     if (Array.isArray(node)) {
-        const resultSet: Edge[] = [];
+        const resultSet: Edge<T, NodeID<NodeType>>[] = [];
         for (let i = 0; i < node.length; ++i) {
             const n = node[i];
             const candidates = edgeSrcIndex.get(n);
             if (candidates) {
-                resultSet.push(...candidates);
+                resultSet.push(...(candidates as Edge<T, NodeID<NodeType>>[]));
             }
             if (count && resultSet.length > count) break;
         }
         return count ? resultSet.slice(0, count) : resultSet;
     } else {
-        const results = edgeSrcIndex.get(node) || [];
+        const results = (edgeSrcIndex.get(node) || []) as Edge<T, NodeID<NodeType>>[];
         return count ? results.slice(0, count) : results;
     }
 }
 
-export function getEdgesOfType(type: EdgeType | EdgeType[], node: string | string[], count?: number): Edge[] {
+export function getEdgesOfType<T extends EdgeType, N extends SourceFor<T>, R = Edge<N, DestinationFor<T, N>>>(
+    type: T,
+    node: N | N[],
+    count?: number
+): R[] {
     if (Array.isArray(node)) {
-        const resultSet: Edge[] = [];
+        const resultSet: R[] = [];
         for (let i = 0; i < node.length; ++i) {
             const n = node[i];
 
@@ -97,14 +115,14 @@ export function getEdgesOfType(type: EdgeType | EdgeType[], node: string | strin
                     const t = type[j];
                     const candidates = edgeTypeSrcIndex.get(`${t}:${n}`);
                     if (candidates) {
-                        resultSet.push(...candidates);
+                        resultSet.push(...(candidates as R[]));
                     }
                     if (count && resultSet.length > count) break;
                 }
             } else {
                 const candidates = edgeTypeSrcIndex.get(`${type}:${n}`);
                 if (candidates) {
-                    resultSet.push(...candidates);
+                    resultSet.push(...(candidates as R[]));
                 }
             }
             if (count && resultSet.length > count) break;
@@ -112,18 +130,18 @@ export function getEdgesOfType(type: EdgeType | EdgeType[], node: string | strin
         return count ? resultSet.slice(0, count) : resultSet;
     } else {
         if (Array.isArray(type)) {
-            const resultSet: Edge[] = [];
+            const resultSet: R[] = [];
             for (let i = 0; i < type.length; ++i) {
                 const t = type[i];
                 const candidates = edgeTypeSrcIndex.get(`${t}:${node}`);
                 if (candidates) {
-                    resultSet.push(...candidates);
+                    resultSet.push(...(candidates as R[]));
                 }
                 if (count && resultSet.length > count) break;
             }
             return count ? resultSet.slice(0, count) : resultSet;
         } else {
-            const results = edgeTypeSrcIndex.get(`${type}:${node}`) || [];
+            const results = (edgeTypeSrcIndex.get(`${type}:${node}`) || []) as R[];
             return count ? results.slice(0, count) : results;
         }
     }

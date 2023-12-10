@@ -1,24 +1,40 @@
 import { getEdgesOfType } from './edges';
-import { EdgeType, WeightedNode } from './graphTypes';
+import { DestinationFor, Edge, EdgeType, SourceFor, WeightedNode } from './graphTypes';
 
-export type NodeFactors = Map<string, number>;
+interface QueryOptions {
+    count?: number;
+    period?: number;
+    startTimeOffset?: number;
+    timeDecay?: number;
+}
 
-export function getRelated(
-    type: EdgeType | EdgeType[],
-    node: string | string[],
-    count?: number,
-    factors?: NodeFactors
-): WeightedNode[] {
-    const edges = getEdgesOfType(type, node);
-    if (factors) {
-        edges.sort((a, b) => {
-            const fb = factors.get(b.destination) || 1;
-            const fa = factors.get(a.destination) || 1;
-            return fb * b.weight - fa * a.weight;
-        });
-    } else {
-        edges.sort((a, b) => b.weight - a.weight);
-    }
-    const results = edges.map((e) => ({ id: e.destination, weight: (factors?.get(e.destination) || 1) * e.weight }));
-    return count ? results.slice(0, count) : results;
+export function getRelated<T extends EdgeType, N extends SourceFor<T>, R extends DestinationFor<T, N>>(
+    type: T,
+    node: N | N[],
+    options?: QueryOptions
+): WeightedNode<R>[] {
+    const period = options?.period;
+    const startTime = options?.startTimeOffset || 0;
+    const count = options?.count;
+    const timeDecay = options?.timeDecay;
+
+    const edges = getEdgesOfType<T, N, Edge<N, R>>(type, node);
+
+    const firstTime = edges.reduce((f, e) => Math.max(f, e.timestamp), 0) - (startTime || 0);
+
+    const aPeriod = period === undefined ? Date.now() : period;
+
+    const filtered =
+        period === undefined
+            ? edges
+            : edges.filter((e) => e.timestamp <= firstTime && firstTime - e.timestamp <= aPeriod);
+    const weighted = filtered.map((e) => ({
+        id: e.destination,
+        weight:
+            timeDecay === undefined
+                ? e.weight
+                : e.weight * (1.0 - (1.0 - timeDecay) * ((firstTime - e.timestamp) / aPeriod)),
+    }));
+    weighted.sort((a, b) => b.weight - a.weight);
+    return count ? weighted.slice(0, count) : weighted;
 }

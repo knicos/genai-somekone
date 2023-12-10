@@ -25,7 +25,7 @@ describe('ImageCloud component', () => {
 
         render(
             <svg>
-                <ImageCloud content={[{ id: 'image1', weight: 1 }]} />
+                <ImageCloud content={[{ id: 'content:image1', weight: 1 }]} />
             </svg>
         );
 
@@ -43,9 +43,9 @@ describe('ImageCloud component', () => {
             <svg>
                 <ImageCloud
                     content={[
-                        { id: 'image1', weight: 1 },
-                        { id: 'image1', weight: 0.2 },
-                        { id: 'image1', weight: 0.5 },
+                        { id: 'content:image1', weight: 1 },
+                        { id: 'content:image1', weight: 0.2 },
+                        { id: 'content:image1', weight: 0.5 },
                     ]}
                 />
             </svg>

@@ -1,9 +1,10 @@
 import { ContentMetadata } from './contentTypes';
 import { addNode, addEdge, removeNode } from '@genaism/services/graph/graph';
 import { getTopicId } from '@genaism/services/concept/concept';
+import { ContentNodeId } from '../graph/graphTypes';
 
-const dataStore = new Map<string, string>();
-const metaStore = new Map<string, ContentMetadata>();
+const dataStore = new Map<ContentNodeId, string>();
+const metaStore = new Map<ContentNodeId, ContentMetadata>();
 
 export function resetContent() {
     for (const n of metaStore) {
@@ -13,28 +14,28 @@ export function resetContent() {
     metaStore.clear();
 }
 
-export function getContentData(id: string) {
+export function getContentData(id: ContentNodeId) {
     return dataStore.get(id);
 }
 
-export function getContentMetadata(id: string) {
+export function getContentMetadata(id: ContentNodeId) {
     return metaStore.get(id);
 }
 
-export function hasContent(id: string): boolean {
+export function hasContent(id: ContentNodeId): boolean {
     return metaStore.has(id);
 }
 
 export function addContent(data: string, meta: ContentMetadata) {
-    dataStore.set(meta.id, data);
-    metaStore.set(meta.id, meta);
+    dataStore.set(`content:${meta.id}`, data);
+    metaStore.set(`content:${meta.id}`, meta);
 
     try {
-        addNode('content', meta.id);
+        const cid = addNode('content', `content:${meta.id}`);
         meta.labels.forEach((l) => {
             const tid = getTopicId(l.label);
-            addEdge('topic', meta.id, tid, l.weight);
-            addEdge('content', tid, meta.id, l.weight);
+            addEdge('topic', cid, tid, l.weight);
+            addEdge('content', tid, cid, l.weight);
         });
     } catch (e) {
         console.warn(e);

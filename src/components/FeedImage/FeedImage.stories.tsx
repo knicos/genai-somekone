@@ -21,7 +21,7 @@ addContent(
 export const Primary: Story = {
     args: {
         active: true,
-        id: 'xyz',
+        id: 'content:xyz',
         visible: true,
     },
 };

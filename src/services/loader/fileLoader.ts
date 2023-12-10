@@ -4,6 +4,7 @@ import { ContentMetadata } from '@genaism/services/content/contentTypes';
 import { addContent } from '@genaism/services/content/content';
 import { LogEntry, UserProfile } from '@genaism/services/profiler/profilerTypes';
 import { addUserProfile, appendActionLog } from '@genaism/services/profiler/profiler';
+import { UserNodeId } from '../graph/graphTypes';
 
 export async function getZipBlob(content: string | ArrayBuffer): Promise<Blob> {
     if (typeof content === 'string') {
@@ -19,7 +20,7 @@ export async function getZipBlob(content: string | ArrayBuffer): Promise<Blob> {
 }
 
 interface LogItem {
-    id: string;
+    id: UserNodeId;
     log: LogEntry[];
 }
 

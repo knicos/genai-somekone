@@ -12,13 +12,13 @@ describe('graph.addNode', () => {
     });
 
     it('uses the same id if provided', async ({ expect }) => {
-        const id = addNode('content', 'mytestid');
-        expect(id).toBe('mytestid');
+        const id = addNode('content', 'content:mytestid');
+        expect(id).toBe('content:mytestid');
     });
 
     it('throws if the id already exists', async ({ expect }) => {
-        addNode('content', 'mytestid');
-        expect(() => addNode('content', 'mytestid')).toThrowError('id_exists');
+        addNode('content', 'content:mytestid');
+        expect(() => addNode('content', 'content:mytestid')).toThrowError('id_exists');
     });
 });
 
