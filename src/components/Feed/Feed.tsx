@@ -6,19 +6,22 @@ import { generateFeed } from '@genaism/services/recommender/recommender';
 import { LogEntry, ProfileSummary } from '@genaism/services/profiler/profilerTypes';
 import { addLogEntry } from '@genaism/services/profiler/profiler';
 import { ContentNodeId } from '@genaism/services/graph/graphTypes';
+import { ScoredRecommendation } from '@genaism/services/recommender/recommenderTypes';
 
 interface Props {
     content?: (string | ArrayBuffer)[];
     onProfile?: (profile: ProfileSummary) => void;
+    onRecommend?: (recommendations: ScoredRecommendation[]) => void;
     onLog?: () => void;
 }
 
-export default function Feed({ content, onProfile, onLog }: Props) {
+export default function Feed({ content, onProfile, onLog, onRecommend }: Props) {
     const [feedList, setFeedList] = useState<ContentNodeId[]>([]);
 
     const doMore = useCallback(() => {
         const [f, profile] = generateFeed(5);
         setFeedList((old) => [...old, ...f.map((r) => r.contentId)]);
+        if (onRecommend) onRecommend(f);
         if (onProfile) onProfile(profile);
     }, [setFeedList, onProfile]);
 
@@ -37,6 +40,7 @@ export default function Feed({ content, onProfile, onLog }: Props) {
                     await loadFile(blob);
                     const [f, profile] = generateFeed(5);
                     setFeedList((old) => [...old, ...f.map((r) => r.contentId)]);
+                    if (onRecommend) onRecommend(f);
                     if (onProfile) onProfile(profile);
                 });
             });

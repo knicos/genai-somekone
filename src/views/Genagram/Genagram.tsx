@@ -20,6 +20,7 @@ import useRandom from '@genaism/hooks/random';
 import SharePage from './SharePage';
 import { DataConnection } from 'peerjs';
 import { appConfiguration } from '@genaism/state/settingsState';
+import { ScoredRecommendation } from '@genaism/services/recommender/recommenderTypes';
 
 export function Component() {
     const { t } = useTranslation();
@@ -80,6 +81,15 @@ export function Component() {
         [send]
     );
 
+    const doRecommend = useCallback(
+        (recommendations: ScoredRecommendation[]) => {
+            if (send) {
+                send({ event: 'eter:recommendations', recommendations, id: getCurrentUser() });
+            }
+        },
+        [send]
+    );
+
     return (
         <>
             <Loading
@@ -93,6 +103,7 @@ export function Component() {
                             <Feed
                                 content={content}
                                 onProfile={doProfile}
+                                onRecommend={doRecommend}
                                 onLog={doLog}
                             />
                             {showFeedActions && !config.hideShareProfile && (
