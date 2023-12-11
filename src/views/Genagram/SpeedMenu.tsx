@@ -6,7 +6,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import ImageSearchIcon from '@mui/icons-material/ImageSearch';
 import CloseIcon from '@mui/icons-material/Close';
 import { useSetRecoilState } from 'recoil';
-import { menuShowData, menuShowProfile, menuShowShareProfile } from '@genaism/state/menuState';
+import { menuShowData, menuShowProfile, menuShowRecommendations, menuShowShareProfile } from '@genaism/state/menuState';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -15,6 +15,7 @@ export default function SpeedMenu() {
     const setShowData = useSetRecoilState(menuShowData);
     const setShowProfile = useSetRecoilState(menuShowProfile);
     const setShowShareProfile = useSetRecoilState(menuShowShareProfile);
+    const setShowRecommendations = useSetRecoilState(menuShowRecommendations);
     const [showMenu, setShowMenu] = useState(false);
 
     return (
@@ -59,6 +60,10 @@ export default function SpeedMenu() {
                 icon={<ImageSearchIcon />}
                 tooltipTitle={'Your recommendations'}
                 tooltipOpen
+                onClick={() => {
+                    setShowRecommendations(true);
+                    setShowMenu(false);
+                }}
             />
         </SpeedDial>
     );

@@ -25,6 +25,11 @@ export const menuShowProfile = atom<boolean>({
     default: false,
 });
 
+export const menuShowRecommendations = atom<boolean>({
+    key: 'menushowrecommendations',
+    default: false,
+});
+
 export const menuShowShareProfile = atom<boolean>({
     key: 'menushowshareprofile',
     default: false,

@@ -9,6 +9,7 @@ export type EdgeType =
     | 'common_attribute'
     | 'parent'
     | 'child'
+    | 'seen'
     | 'seen_topic'
     | 'engaged_topic'
     | 'commented_topic'
@@ -47,6 +48,7 @@ export interface WeightedNode<A extends NodeID<NodeType>> {
 type GenericEdge<A extends EdgeType, B extends NodeID<NodeType>, C extends NodeID<NodeType>> = [A, B, C];
 type ContentTopicEdge = GenericEdge<'topic', ContentNodeId, TopicNodeId>;
 type TopicContentEdge = GenericEdge<'content', TopicNodeId, ContentNodeId>;
+type SeenContentEdge = GenericEdge<'seen', UserNodeId, ContentNodeId>;
 type ContentCommentedByUserEdge = GenericEdge<'comment', ContentNodeId, UserNodeId>;
 type UserEngagedContentEdge = GenericEdge<'engaged', UserNodeId, ContentNodeId>;
 type UserLikedContentEdge = GenericEdge<'liked', UserNodeId, ContentNodeId>;
@@ -68,6 +70,7 @@ type TopicParentEdge = GenericEdge<'parent', TopicNodeId, TopicNodeId>;
 export type EdgeTypes =
     | ContentTopicEdge
     | TopicContentEdge
+    | SeenContentEdge
     | ContentCommentedByUserEdge
     | UserEngagedContentEdge
     | UserLikedContentEdge
@@ -101,3 +104,15 @@ export type DestinationFor<K, S, T = EdgeTypes> = T extends EdgeTypes
             : never
         : never
     : never;
+
+export function isContentID(id: string): id is ContentNodeId {
+    return id.startsWith('content:');
+}
+
+export function isUserID(id: string): id is UserNodeId {
+    return id.startsWith('user:');
+}
+
+export function isTopicID(id: string): id is TopicNodeId {
+    return id.startsWith('topic:');
+}

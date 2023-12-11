@@ -7,10 +7,11 @@ import { resetGraph } from '@genaism/services/graph/graph';
 const TEST_IMAGE =
     'https://images.pexels.com/photos/3030647/pexels-photo-3030647.jpeg?cs=srgb&dl=pexels-nextvoyage-3030647.jpg&fm=jpg';
 
-const { mockLoader, mockGenerate, mockBlob } = vi.hoisted(() => ({
+const { mockLoader, mockRecom, mockGenerate, mockBlob } = vi.hoisted(() => ({
     mockLoader: vi.fn(),
-    mockGenerate: vi.fn(() => [[{ contentId: 'content:xyz' }]]),
+    mockRecom: vi.fn(() => [{ contentId: 'content:xyz' }]),
     mockBlob: vi.fn(async () => new Blob()),
+    mockGenerate: vi.fn(async () => {}),
 }));
 
 vi.mock('@genaism/services/loader/fileLoader', () => ({
@@ -19,7 +20,8 @@ vi.mock('@genaism/services/loader/fileLoader', () => ({
 }));
 
 vi.mock('@genaism/services/recommender/recommender', () => ({
-    generateFeed: mockGenerate,
+    getRecommendations: mockRecom,
+    generateNewRecommendations: mockGenerate,
 }));
 
 describe('Feed component', () => {
@@ -38,7 +40,7 @@ describe('Feed component', () => {
         await vi.waitFor(() => {
             expect(mockBlob).toHaveBeenCalled();
             expect(mockLoader).toHaveBeenCalled();
-            expect(mockGenerate).toHaveBeenCalled();
+            expect(mockRecom).toHaveBeenCalled();
         });
     });
 });

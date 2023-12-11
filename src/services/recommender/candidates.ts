@@ -35,7 +35,7 @@ function fillWithRandom(nodes: Recommendation[], count: number) {
     const allNodes = getNodesByType('content');
     if (allNodes.length === 0) return;
 
-    while (nodes.length < count) {
+    for (let i = 0; i < count; ++i) {
         const ix = Math.floor(Math.random() * allNodes.length);
         nodes.push({
             contentId: allNodes[ix],

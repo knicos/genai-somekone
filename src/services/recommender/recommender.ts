@@ -1,26 +1,28 @@
-import { getUserProfile } from '@genaism/services/profiler/profiler';
-import { ProfileSummary } from '@genaism/services/profiler/profilerTypes';
 import { ScoredRecommendation } from './recommenderTypes';
 import { generateCandidates } from './candidates';
 import { scoreCandidates } from './scoring';
+import { UserNodeId } from '../graph/graphTypes';
+import { getUserProfile } from '../profiler/profiler';
+import { emitRecommendationEvent } from './events';
 
-export function generateFeed(count: number): [ScoredRecommendation[], ProfileSummary] {
-    // For each candidate strategy, generate a number of condidates based upon affinity
-    // Repeat until there are enough candidates
-    // Randomly select from the candidates
+const store = new Map<UserNodeId, ScoredRecommendation[]>();
 
-    const profile = getUserProfile();
-
+export async function generateNewRecommendations(id: UserNodeId, count: number) {
+    const profile = getUserProfile(id);
     const candidates = generateCandidates(profile, count);
     const scored = scoreCandidates(candidates, profile, count);
+    const old = store.get(profile.id) || [];
+    store.set(profile.id, [...scored, ...old]);
+    emitRecommendationEvent(id, scored);
+}
 
-    if (candidates.length < count) {
-        return [scored, profile];
-    }
+export function getRecommendations(id: UserNodeId, count: number): ScoredRecommendation[] {
+    const results = store.get(id);
+    return (results || []).slice(0, count);
+}
 
-    // TODO: Score the results by how much they match profile
-    // Or by how they match past engagements of each type.
-    // but each image would need a lot of labels for this to work directly
-
-    return [scored, profile];
+export function appendRecommendations(id: UserNodeId, recommendations: ScoredRecommendation[]) {
+    const old = store.get(id) || [];
+    store.set(id, [...recommendations, ...old]);
+    emitRecommendationEvent(id, recommendations);
 }

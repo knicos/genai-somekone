@@ -21,6 +21,7 @@ import SharePage from './SharePage';
 import { DataConnection } from 'peerjs';
 import { appConfiguration } from '@genaism/state/settingsState';
 import { ScoredRecommendation } from '@genaism/services/recommender/recommenderTypes';
+import RecommendationPage from './RecommendationPage';
 
 export function Component() {
     const { t } = useTranslation();
@@ -116,6 +117,7 @@ export function Component() {
                     <SharePage code={MYCODE} />
                     <DataPage />
                     <ProfilePage />
+                    <RecommendationPage />
                 </div>
             </Loading>
             <ErrorDialog />

@@ -12,7 +12,7 @@ import {
 import { getTopicId, getTopicLabel } from '@genaism/services/concept/concept';
 import { addEdgeTypeListener } from '../graph/events';
 import { emitLogEvent, emitProfileEvent } from '../profiler/events';
-import { ContentNodeId, UserNodeId } from '../graph/graphTypes';
+import { ContentNodeId, UserNodeId, isContentID } from '../graph/graphTypes';
 
 const MIN_DWELL_TIME = 2000;
 const MAX_DWELL_TIME = 10000;
@@ -80,8 +80,9 @@ export function addUserProfile(profile: UserProfile) {
     console.log('Adding user', profile.name);
     addNode('user', profile.id);
     profile.engagedContent.forEach((c) => {
-        addEdge('engaged', profile.id, c.id, c.weight);
-        addEdge('engaged', c.id, profile.id, c.weight);
+        const cid = isContentID(c.id) ? c.id : (`content:${c.id}` as ContentNodeId);
+        addEdge('engaged', profile.id, cid, c.weight);
+        addEdge('engaged', cid, profile.id, c.weight);
     });
     profile.taste.forEach((t) => {
         addEdge('topic', profile.id, getTopicId(t.label), t.weight);
@@ -295,6 +296,7 @@ export function addLogEntry(data: LogEntry) {
     switch (data.activity) {
         case 'seen':
             boostTopics('seen_topic', id);
+            addOrAccumulateEdge('seen', getCurrentUser(), id, 1);
             break;
         case 'like':
             affinityBoost(id, 0.1);

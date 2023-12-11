@@ -95,6 +95,7 @@
             "reactPreference": "Reaction Preferences",
             "yourData": "Your Data",
             "yourProfile": "Your Profile",
+            "yourRecommendations": "Your Recommendations",
             "shareProfile": "Share Profile"
         },
         "actions": {
@@ -105,6 +106,14 @@
         },
         "messages": {
             "loading": "Finding profile data"
+        }
+    },
+    "recommendations": {
+        "labels": {
+            "topicCandidate": "Candidate: you like \"{{topic}}\".",
+            "random": "Randomly selected.",
+            "tasteScore": "Ranking: taste similarity, {{score}}/10",
+            "randomScore": "Ranking: random"
         }
     },
     "creator": {

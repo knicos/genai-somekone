@@ -20,6 +20,8 @@ import style from './style.module.css';
 import { appConfiguration } from '@genaism/state/settingsState';
 import { SMConfig } from '../Genagram/smConfig';
 import { UserNodeId } from '@genaism/services/graph/graphTypes';
+import RecommendationsProfile from '@genaism/components/RecommendationsProfile/RecommendationsProfile';
+import { appendRecommendations } from '@genaism/services/recommender/recommender';
 
 function slideDirection(my: number, current: number, previous: number): SlideProps['direction'] {
     if (my === current) {
@@ -55,6 +57,8 @@ export function Component() {
             replaceProfile(data.id, data.profile);
         } else if (data.event === 'eter:action_log') {
             appendActionLog(data.log, data.id);
+        } else if (data.event === 'eter:recommendations') {
+            appendRecommendations(data.id, data.recommendations);
         } else if (data.event === 'eter:config') {
             setConfig((old) => ({ ...old, ...data.configuration }));
             if (data.content) {
@@ -116,7 +120,9 @@ export function Component() {
                         mountOnEnter
                         unmountOnExit
                     >
-                        <div></div>
+                        <div className={style.pageContainer}>
+                            <RecommendationsProfile id={id} />
+                        </div>
                     </Slide>
                     <BottomNavigation
                         showLabels
