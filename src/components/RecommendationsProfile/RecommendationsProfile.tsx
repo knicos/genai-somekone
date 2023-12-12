@@ -22,7 +22,7 @@ export default function RecommendationsProfile({ id }: Props) {
         weight: r.score || 0.01,
     }));
 
-    console.log('Recommendations', recommendations);
+    // console.log('Recommendations', recommendations);
 
     return (
         <div className={style.container}>

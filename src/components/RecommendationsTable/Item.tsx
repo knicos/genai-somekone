@@ -2,11 +2,10 @@ import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import TableItem from '../Table/TableItem';
 import { ScoredRecommendation } from '@genaism/services/recommender/recommenderTypes';
-import { WEIGHTS } from '@genaism/services/recommender/scoring';
+import { weightKeys } from '@genaism/services/profiler/profiler';
 
 function generateMessage(item: ScoredRecommendation, t: TFunction) {
     let part1: string;
-    let part2: string;
 
     switch (item.candidateOrigin) {
         case 'topic_affinity':
@@ -19,23 +18,9 @@ function generateMessage(item: ScoredRecommendation, t: TFunction) {
             part1 = '';
     }
 
-    const weightedComponents = [item.tasteSimilarityScore, item.randomnessScore];
-    const maxComponent = weightedComponents.reduce((cmax, v, ix) => (v > weightedComponents[cmax] ? ix : cmax), 0);
-
-    switch (maxComponent) {
-        case 0:
-            part2 = t('recommendations.labels.tasteScore', {
-                score: Math.round((item.tasteSimilarityScore / WEIGHTS.tasteSimilarity) * 10),
-            });
-            break;
-        case 1:
-            part2 = t('recommendations.labels.randomScore', {
-                score: Math.round((item.randomnessScore / WEIGHTS.randomness / 0.1) * 10),
-            });
-            break;
-        default:
-            part2 = '';
-    }
+    const maxComponent = item.scores.reduce((cmax, v, ix) => (v > item.scores[cmax] ? ix : cmax), 0);
+    const key = weightKeys[maxComponent];
+    const part2 = t(`recommendations.labels.${key}`);
 
     return part1 + ' ' + part2;
 }

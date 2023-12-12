@@ -1,0 +1,9 @@
+{
+    "tasteSimilarity": 1,
+    "sharingTopicLikelihood": 1,
+    "commentingTopicLikelihood": 1,
+    "followingTopicLikelihood": 1,
+    "reactingTopicLikelihood": 1,
+    "viewingTopicLikelihood": 1,
+    "randomness": 1
+}

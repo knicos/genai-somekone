@@ -17,6 +17,7 @@ const { mockProfile, mockSimilar } = vi.hoisted(() => ({
         sharedTopics: [],
         followedTopics: [],
         seenTopics: [],
+        featureWeights: [],
         viewedTopics: [],
         taste: [{ label: 'taste1', weight: 0.5 }],
         attributes: {},
@@ -46,6 +47,7 @@ describe('ProfileNode component', () => {
             sharedTopics: [],
             followedTopics: [],
             seenTopics: [],
+            featureWeights: [],
             viewedTopics: [],
             taste: [],
             attributes: {},
@@ -88,6 +90,7 @@ describe('ProfileNode component', () => {
             followedTopics: [],
             seenTopics: [],
             viewedTopics: [],
+            featureWeights: [],
             taste: [],
             attributes: {},
         }));
@@ -129,6 +132,7 @@ describe('ProfileNode component', () => {
             followedTopics: [],
             seenTopics: [],
             viewedTopics: [],
+            featureWeights: [],
             taste: [{ label: 'taste1', weight: 0.5 }],
             attributes: {},
         }));
@@ -170,6 +174,7 @@ describe('ProfileNode component', () => {
             followedTopics: [],
             seenTopics: [],
             viewedTopics: [],
+            featureWeights: [],
             taste: [{ label: 'taste1', weight: 0.5 }],
             attributes: {},
         }));

@@ -39,6 +39,7 @@ describe('saveFile()', () => {
             seenTopics: [],
             viewedTopics: [],
             taste: [],
+            featureWeights: [],
             attributes: {},
         }));
 

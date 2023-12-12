@@ -4,7 +4,6 @@ import ImageFeed from '@genaism/components/ImageFeed/ImageFeed';
 import { getZipBlob, loadFile } from '@genaism/services/loader/fileLoader';
 import { LogEntry, ProfileSummary } from '@genaism/services/profiler/profilerTypes';
 import { addLogEntry, getUserProfile } from '@genaism/services/profiler/profiler';
-import { ContentNodeId } from '@genaism/services/graph/graphTypes';
 import { ScoredRecommendation } from '@genaism/services/recommender/recommenderTypes';
 import { useRecommendations } from '@genaism/services/recommender/hooks';
 
@@ -16,11 +15,11 @@ interface Props {
 }
 
 export default function Feed({ content, onProfile, onLog, onRecommend }: Props) {
-    const [feedList, setFeedList] = useState<ContentNodeId[]>([]);
+    const [feedList, setFeedList] = useState<ScoredRecommendation[]>([]);
     const { recommendations, more } = useRecommendations(5);
 
     useEffect(() => {
-        setFeedList((old) => [...old, ...recommendations.map((r) => r.contentId)]);
+        setFeedList((old) => [...old, ...recommendations]);
         if (onRecommend) onRecommend(recommendations);
         if (onProfile) onProfile(getUserProfile());
     }, [recommendations, onProfile, onRecommend]);

@@ -8,11 +8,13 @@ import FeedSpacer from './FeedSpacer';
 import { useTabActive } from '@genaism/hooks/interaction';
 import { useTranslation } from 'react-i18next';
 import { ContentNodeId } from '@genaism/services/graph/graphTypes';
+import { ScoredRecommendation } from '@genaism/services/recommender/recommenderTypes';
+import { updateEngagement } from '@genaism/services/profiler/profiler';
 
 const INTERACTION_TIMEOUT = 5000;
 
 interface Props {
-    images: ContentNodeId[];
+    images: ScoredRecommendation[];
     onView?: (index: number, time: number) => void;
     onMore?: () => void;
     onLog: (e: LogEntry) => void;
@@ -25,7 +27,7 @@ export default function ImageFeed({ images, onView, onMore, onLog }: Props) {
     const prevRef = useRef<number>(-1);
     const startRef = useRef<number>(0);
     const lastRef = useRef<number>(0);
-    const viewedRef = useRef<ContentNodeId>();
+    const viewedRef = useRef<ScoredRecommendation>();
     const canMoreRef = useRef(true);
     const durationRef = useRef<number>(0);
     const active = useTabActive();
@@ -44,7 +46,12 @@ export default function ImageFeed({ images, onView, onMore, onLog }: Props) {
                 ref.current.focus();
             }
         } else if (viewedRef.current) {
-            onLog({ activity: 'end', timestamp: now, value: now - durationRef.current, id: viewedRef.current });
+            onLog({
+                activity: 'end',
+                timestamp: now,
+                value: now - durationRef.current,
+                id: viewedRef.current.contentId,
+            });
         }
     }, [active]);
 
@@ -54,14 +61,17 @@ export default function ImageFeed({ images, onView, onMore, onLog }: Props) {
 
     const doSeen = useCallback(
         (index: number) => {
-            onLog({ activity: 'seen', id: images[index], timestamp: Date.now() });
+            const img = images[index];
+            if (img) {
+                onLog({ activity: 'seen', id: img.contentId, timestamp: Date.now() });
+            }
         },
         [images]
     );
 
     const doDwell = useCallback(
         (v: number, index: number) => {
-            onLog({ activity: 'dwell', value: v, id: images[index], timestamp: Date.now() });
+            onLog({ activity: 'dwell', value: v, id: images[index].contentId, timestamp: Date.now() });
         },
         [images]
     );
@@ -72,6 +82,7 @@ export default function ImageFeed({ images, onView, onMore, onLog }: Props) {
         if (prevRef.current >= 0) {
             const delta = now - startRef.current;
             doDwell(delta, prevRef.current);
+            updateEngagement(images[prevRef.current]);
         }
         doSeen(viewed);
         startRef.current = now;
@@ -102,7 +113,7 @@ export default function ImageFeed({ images, onView, onMore, onLog }: Props) {
                 onLog({
                     activity: 'inactive',
                     value: now - lastRef.current,
-                    id: images[imgIndex],
+                    id: images[imgIndex].contentId,
                     timestamp: Date.now(),
                 });
                 startRef.current = now;
@@ -204,7 +215,7 @@ export default function ImageFeed({ images, onView, onMore, onLog }: Props) {
                 {images.map((img, ix) => (
                     <IImage
                         key={ix}
-                        id={img}
+                        id={img.contentId}
                         onLike={doLike}
                         onFollow={doFollow}
                         onShare={doShare}

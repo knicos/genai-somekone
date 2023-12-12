@@ -49,6 +49,7 @@ describe('User hooks.useUserProfile', () => {
             seenTopics: [],
             viewedTopics: [],
             taste: [],
+            featureWeights: [],
             engagement: -1,
             attributes: {},
         });
@@ -75,6 +76,7 @@ describe('User hooks.useUserProfile', () => {
             seenTopics: [],
             viewedTopics: [],
             taste: [],
+            featureWeights: [],
             engagement: -1,
             attributes: {},
         });

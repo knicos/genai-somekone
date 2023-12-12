@@ -13,6 +13,13 @@ import { getTopicId, getTopicLabel } from '@genaism/services/concept/concept';
 import { addEdgeTypeListener } from '../graph/events';
 import { emitLogEvent, emitProfileEvent } from '../profiler/events';
 import { ContentNodeId, UserNodeId, isContentID } from '../graph/graphTypes';
+import defaults from './defaultWeights.json';
+import { normalise } from '@genaism/util/vectors';
+import { ScoredRecommendation } from '../recommender/recommenderTypes';
+
+const defaultWeights = normalise(Array.from(Object.values(defaults)));
+const weightKeys = Array.from(Object.keys(defaults));
+export { defaultWeights, weightKeys };
 
 const MIN_DWELL_TIME = 2000;
 const MAX_DWELL_TIME = 10000;
@@ -70,6 +77,7 @@ export function setUserName(id: UserNodeId, name: string) {
         taste: [],
         attributes: {},
         engagement: -1,
+        featureWeights: [...defaultWeights],
     };
     users.set(id, { ...current, name });
 }
@@ -131,6 +139,7 @@ export function createUserProfile(id: UserNodeId, name: string): UserProfile {
         sharedTopics: [],
         viewedTopics: [],
         followedTopics: [],
+        featureWeights: [...defaultWeights],
     };
     addUserProfile(profile);
     return profile;
@@ -158,6 +167,7 @@ export function recreateUserProfile(id?: UserNodeId): UserProfile {
         id: aid,
         engagement: -1,
         attributes: {},
+        featureWeights: [...defaultWeights],
     };
 }
 
@@ -201,7 +211,7 @@ export function createProfileSummaryById(id: UserNodeId, count?: number): Profil
                 weight: r.weight,
             })
         ),
-        seenTopics: getRelated('seen_topic', id, { count, period: TIME_WINDOW, timeDecay: TIME_DECAY }).map((r) => ({
+        seenTopics: getRelated('seen_topic', id, { period: TIME_WINDOW, timeDecay: TIME_DECAY }).map((r) => ({
             label: getTopicLabel(r.id),
             weight: r.weight,
         })),
@@ -278,15 +288,21 @@ function normDwell(d: number): number {
     return Math.max(0, Math.min(10, (d - MIN_DWELL_TIME) / (MAX_DWELL_TIME - MIN_DWELL_TIME)));
 }
 
+export function updateEngagement(recommendation: ScoredRecommendation) {
+    const weight = getEdgeWeights('engaged', getCurrentUser(), recommendation.contentId)[0] || 0;
+    appendActionLog([{ activity: 'engagement', id: recommendation.contentId, value: weight, timestamp: Date.now() }]);
+    console.log('TRAIN', weight, recommendation);
+}
+
 export function addLogEntry(data: LogEntry) {
     const logArray: LogEntry[] = logs.get(getCurrentUser()) || [];
-    const changed = logArray.length > 0 ? logArray[logArray.length - 1].id !== data.id : false;
+    /*const changed = logArray.length > 0 ? logArray[logArray.length - 1].id !== data.id : false;
 
     if (changed) {
         const prev = logArray[logArray.length - 1];
         const weight = getEdgeWeights('engaged', getCurrentUser(), prev.id as ContentNodeId)[0] || 0;
         appendActionLog([{ activity: 'engagement', id: prev.id, value: weight, timestamp: Date.now() }]);
-    }
+    }*/
 
     logArray.push(data);
     logs.set(getCurrentUser(), logArray);

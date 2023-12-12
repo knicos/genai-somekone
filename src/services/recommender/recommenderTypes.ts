@@ -15,12 +15,19 @@ export interface Recommendation {
 }
 
 export interface ScoredRecommendation extends Recommendation {
-    tasteSimilarityScore: number; //< Distance of content labels from taste profile
+    features: number[];
+    scores: number[];
+    /*tasteSimilarityScore: number; //< Distance of content labels from taste profile
+    viewingPreferenceScore: number;
+    reactionPreferenceScore: number;
+    sharingPreferenceScore: number;
+    commentingPreferenceScore: number;
+    followingPreferenceScore: number;
     contentTrendingScore: number; //< Recent engagements with this content item
     topicTrendingScore: number; //< Recent engagements with the topics
     coengagementScore: number; //< Strength of co-engagement with recently engaged items
     userSimilarityScore: number; //< Similarity of users who engaged recently with this content.
-    randomnessScore: number; //< Depending on a heat setting, add a random component sometimes.
+    randomnessScore: number; //< Depending on a heat setting, add a random component sometimes.*/
     seenFactor: number; //< Reduce scores if content has been seen recently.
     score: number;
     rank: number;

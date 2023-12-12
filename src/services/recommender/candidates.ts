@@ -4,7 +4,7 @@ import { ProfileSummary, UserProfile } from '@genaism/services/profiler/profiler
 import { Recommendation } from './recommenderTypes';
 
 function calculateCount(high: number, low: number, value: number, max: number) {
-    return ((value - low) / (high - low)) * (max - 1) + 1;
+    return Math.floor(((value - low) / (high - low)) * (max - 1) + 1);
 }
 
 function generateTasteBatch(profile: ProfileSummary, nodes: Recommendation[], count: number) {
@@ -49,6 +49,8 @@ export function generateCandidates(profile: UserProfile, count: number): Recomme
     const nodes: Recommendation[] = [];
     generateTasteBatch(profile, nodes, count * 2);
     fillWithRandom(nodes, count);
+
+    console.log('PROFILE', profile);
 
     const selected = new Map<string, Recommendation>();
 

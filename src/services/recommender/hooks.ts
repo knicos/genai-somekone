@@ -3,7 +3,7 @@ import { UserNodeId } from '../graph/graphTypes';
 import { getCurrentUser } from '../profiler/profiler';
 import { ScoredRecommendation } from './recommenderTypes';
 import { addRecommendationListener, removeRecommendationListener } from './events';
-import { generateNewRecommendations, getRecommendations } from './recommender';
+import { generateNewRecommendations, getRecommendations } from '@genaism/services/recommender/recommender';
 
 interface RecReturn {
     more: () => void;

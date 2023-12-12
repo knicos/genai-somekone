@@ -112,8 +112,13 @@
         "labels": {
             "topicCandidate": "Candidate: you like \"{{topic}}\".",
             "random": "Randomly selected.",
-            "tasteScore": "Ranking: taste similarity, {{score}}/10",
-            "randomScore": "Ranking: random"
+            "tasteSimilarity": "Ranked high for taste similarity",
+            "sharingTopicLikelihood": "Ranked high for sharing probability",
+            "commentingTopicLikelihood": "Ranked high for commenting probability",
+            "followingTopicLikelihood": "Ranked high for follow probability",
+            "reactingTopicLikelihood": "Ranked high for reaction probability",
+            "viewingTopicLikelihood": "Ranked high for viewing time",
+            "randomness": "Randomly ranked"
         }
     },
     "creator": {

@@ -1,5 +1,8 @@
 import { ContentNodeId, UserNodeId, WeightedNode } from '@genaism/services/graph/graphTypes';
 import { WeightedLabel } from '../content/contentTypes';
+import defaults from './defaultWeights.json';
+
+export type Features = typeof defaults;
 
 export type LogActivity =
     | 'like'
@@ -45,4 +48,5 @@ export interface UserProfile extends ProfileSummary {
     name: string;
     engagement: number;
     attributes: Record<string, unknown>;
+    featureWeights: number[]; // For recommendation scoring.
 }

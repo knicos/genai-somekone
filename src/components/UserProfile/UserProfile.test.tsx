@@ -16,6 +16,7 @@ const { mockProfile } = vi.hoisted(() => ({
         followedTopics: [],
         seenTopics: [],
         viewedTopics: [],
+        featureWeights: [],
         taste: [{ label: 'taste1', weight: 0.5 }],
         attributes: {},
     })),
@@ -49,6 +50,7 @@ describe('UserProfile component', () => {
             followedTopics: [],
             seenTopics: [],
             viewedTopics: [],
+            featureWeights: [],
             taste: [{ label: 'taste1', weight: 0.5 }],
             attributes: {},
         }));

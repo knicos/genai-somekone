@@ -13,6 +13,7 @@ const { mockProfile, mockLog } = vi.hoisted(() => ({
         reactedTopics: [],
         sharedTopics: [],
         followedTopics: [],
+        featureWeights: [],
         seenTopics: [],
         viewedTopics: [],
         taste: [],
@@ -39,6 +40,7 @@ describe('DataProfile component', () => {
             followedTopics: [],
             seenTopics: [],
             viewedTopics: [],
+            featureWeights: [],
             taste: [],
             attributes: {},
         };
@@ -62,6 +64,7 @@ describe('DataProfile component', () => {
             followedTopics: [],
             seenTopics: [],
             viewedTopics: [],
+            featureWeights: [],
             taste: [],
             attributes: {},
         };

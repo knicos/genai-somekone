@@ -4,6 +4,21 @@ import ImageFeed from './ImageFeed';
 import { addContent } from '../../services/content/content';
 import { resetGraph } from '../../services/graph/graph';
 import userEvent from '@testing-library/user-event';
+import { ContentNodeId } from '@genaism/services/graph/graphTypes';
+import { ScoredRecommendation } from '@genaism/services/recommender/recommenderTypes';
+
+function makeRecommendation(id: ContentNodeId): ScoredRecommendation {
+    return {
+        contentId: id,
+        score: 0,
+        scores: [],
+        features: [],
+        rank: 0,
+        timestamp: 0,
+        candidateOrigin: 'random',
+        seenFactor: 0,
+    };
+}
 
 const TEST_IMAGE =
     'https://images.pexels.com/photos/3030647/pexels-photo-3030647.jpeg?cs=srgb&dl=pexels-nextvoyage-3030647.jpg&fm=jpg';
@@ -21,7 +36,7 @@ describe('ImageFeed component', () => {
         const logfn = vi.fn();
         render(
             <ImageFeed
-                images={['content:xyz', 'content:xyz']}
+                images={[makeRecommendation('content:xyz'), makeRecommendation('content:xyz')]}
                 onLog={logfn}
             />
         );
@@ -34,7 +49,7 @@ describe('ImageFeed component', () => {
         const logfn = vi.fn();
         render(
             <ImageFeed
-                images={['content:xyz']}
+                images={[makeRecommendation('content:xyz')]}
                 onLog={logfn}
             />
         );
@@ -50,7 +65,7 @@ describe('ImageFeed component', () => {
         const logfn = vi.fn();
         render(
             <ImageFeed
-                images={['content:xyz']}
+                images={[makeRecommendation('content:xyz')]}
                 onLog={logfn}
             />
         );
@@ -70,7 +85,7 @@ describe('ImageFeed component', () => {
         const logfn = vi.fn();
         render(
             <ImageFeed
-                images={['content:xyz']}
+                images={[makeRecommendation('content:xyz')]}
                 onLog={logfn}
             />
         );
@@ -92,7 +107,7 @@ describe('ImageFeed component', () => {
         const logfn = vi.fn();
         render(
             <ImageFeed
-                images={['content:xyz']}
+                images={[makeRecommendation('content:xyz')]}
                 onLog={logfn}
             />
         );
@@ -106,7 +121,7 @@ describe('ImageFeed component', () => {
         const logfn = vi.fn();
         render(
             <ImageFeed
-                images={['content:xyz']}
+                images={[makeRecommendation('content:xyz')]}
                 onLog={logfn}
             />
         );
