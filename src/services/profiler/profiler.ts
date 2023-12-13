@@ -196,6 +196,8 @@ export function recreateUserProfile(id?: UserNodeId): UserProfile {
     const summary = createProfileSummaryById(aid, 10);
     const state = users.get(aid);
 
+    // const seenItems = getRelated('seen', aid, { period: TIME_WINDOW });
+
     // Attempt to find data
     const data = getNodeData<UserData>(aid);
 
@@ -203,7 +205,7 @@ export function recreateUserProfile(id?: UserNodeId): UserProfile {
         ...summary,
         name: state?.name || data?.name || 'NoName',
         id: aid,
-        engagement: -1,
+        engagement: summary.engagedContent.reduce((s, v) => s + v.weight, 0),
         attributes: {},
         featureWeights: data?.featureWeights || [...defaultWeights],
     };

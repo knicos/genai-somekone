@@ -9,9 +9,10 @@ interface Props {
     color?: string;
     padding?: number;
     borderRadius?: number;
+    onResize?: (size: number) => void;
 }
 
-export default function Label({ label, x, y, fontSize, fill, color, padding, borderRadius }: Props) {
+export default function Label({ label, x, y, fontSize, fill, color, padding = 0, borderRadius, onResize }: Props) {
     const gRef = useRef<SVGGElement>(null);
     const [size, setSize] = useState<[number, number]>([50, 20]);
 
@@ -22,9 +23,10 @@ export default function Label({ label, x, y, fontSize, fill, color, padding, bor
 
             if (bbox) {
                 setSize([bbox.width + 30, bbox.height]);
+                if (onResize) onResize(Math.max((bbox.width + 30) / 2 + padding + 5, bbox.height / 2 + padding + 5));
             }
         }
-    }, [label]);
+    }, [label, fontSize, padding]);
 
     return (
         <g

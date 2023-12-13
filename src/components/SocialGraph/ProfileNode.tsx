@@ -99,6 +99,18 @@ export default function ProfileNode({ id, onLinks, onResize, live, selected }: P
                     onSize={doResize}
                 />
             )}
+            {!reduced && nodeMode === 'score' && (
+                <Label
+                    label={profile.engagement.toFixed()}
+                    x={0}
+                    y={5}
+                    fontSize={Math.floor(50 + profile.engagement * 10)}
+                    color="black"
+                    fill="white"
+                    padding={0}
+                    onResize={doResize}
+                />
+            )}
         </g>
     );
 }
