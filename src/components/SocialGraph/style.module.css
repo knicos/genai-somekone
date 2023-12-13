@@ -1,4 +1,4 @@
-@value secondary from "../../style/colours.module.css";
+@value secondary, bgColourful1, textDark, textLight from "../../style/colours.module.css";
 
 .group:hover > .outerCircle {
     fill: secondary;
@@ -32,4 +32,30 @@
     100% {
         transform: rotate(360deg);
     }
+}
+
+.cloudItem {
+    transition: transform 1s;
+}
+
+.cloudItem rect {
+    fill: bgColourful1;
+    opacity: 0.2;
+}
+
+.cloudItem text {
+    fill: textDark;
+}
+
+.cloudItemLight {
+    transition: transform 1s;
+}
+
+.cloudItemLight rect {
+    fill: white;
+    opacity: 0.2;
+}
+
+.cloudItemLight text {
+    fill: textLight;
 }

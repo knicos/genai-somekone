@@ -69,7 +69,8 @@
             "showSocialGraph": "Display social network",
             "showContentGraph": "Display content relationships",
             "showTopicGraph": "Display topic relationships",
-            "refreshGraph": "Refresh the graph display"
+            "refreshGraph": "Refresh the graph display",
+            "clusterColouring": "Colour users by their cluster"
         },
         "messages": {
             "connection": "Go to <PageLink><Code>{{linkText}}</Code></PageLink> and enter the code <Code>{{codeText}}</Code>, or use the QR code.",

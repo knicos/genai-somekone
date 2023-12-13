@@ -67,3 +67,8 @@ export const settingTopicNodeCharge = atom<number>({
     key: 'settingtopicnodecharge',
     default: 2,
 });
+
+export const settingClusterColouring = atom<boolean>({
+    key: 'settingclustercolouring',
+    default: false,
+});

@@ -7,7 +7,6 @@ interface Props {
     content: WeightedLabel[];
     padding?: number;
     size?: number;
-    colour?: string;
     borderSize?: number;
     onSize?: (size: number) => void;
     className?: string;

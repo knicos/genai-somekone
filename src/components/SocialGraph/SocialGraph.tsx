@@ -4,6 +4,7 @@ import ProfileNode from './ProfileNode';
 import Graph, { GraphLink, GraphNode } from '../Graph/Graph';
 import { useRecoilValue } from 'recoil';
 import {
+    settingClusterColouring,
     settingDisplayLines,
     settingLinkDistanceScale,
     settingNodeCharge,
@@ -22,11 +23,13 @@ export default function SocialGraph({ liveUsers }: Props) {
     );
     const [links, setLinks] = useState<GraphLink<UserNodeId, UserNodeId>[]>([]);
     const sizesRef = useRef<Map<string, number>>(new Map<string, number>());
+    const coloursRef = useRef(new Map<string, string>());
     const [nodes, setNodes] = useState<GraphNode<UserNodeId>[]>([]);
     const linkScale = useRecoilValue(settingLinkDistanceScale);
     const showLines = useRecoilValue(settingDisplayLines);
     const charge = useRecoilValue(settingNodeCharge);
     const showOfflineUsers = useRecoilValue(settingShowOfflineUsers);
+    const clusterColouring = useRecoilValue(settingClusterColouring);
     const users = useNodeType('user');
     const liveSet = useMemo(() => {
         const set = new Set<string>();
@@ -101,6 +104,7 @@ export default function SocialGraph({ liveUsers }: Props) {
                     key={n.id}
                     live={liveSet.has(n.id)}
                     selected={n.id === focusNode}
+                    colourMapping={clusterColouring ? coloursRef.current : undefined}
                 />
             ))}
         </Graph>

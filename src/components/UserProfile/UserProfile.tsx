@@ -35,7 +35,6 @@ export default function Profile({ id }: Props) {
                     <WordCloud
                         content={profile.taste}
                         size={300}
-                        colour="#d9e3cf"
                         className={style.word}
                         onSize={doResize}
                     />

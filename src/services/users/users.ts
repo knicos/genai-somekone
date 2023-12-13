@@ -104,8 +104,6 @@ export function findSimilarUsers(id: UserNodeId): WeightedNode<UserNodeId>[] {
     // Step 3: Sort and limit the result
     scores.sort((a, b) => b.weight - a.weight);
 
-    console.log('Simialr', scores);
-
     return scores.slice(0, 10);
 }
 

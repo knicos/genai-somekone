@@ -5,6 +5,7 @@ import { useRecoilState } from 'recoil';
 import style from './style.module.css';
 import {
     NodeDisplayMode,
+    settingClusterColouring,
     settingDisplayLabel,
     settingDisplayLines,
     settingLinkDistanceScale,
@@ -25,6 +26,7 @@ export default function SocialGraphSettings() {
     const [similarPercent, setSimilarPercent] = useRecoilState(settingSimilarPercent);
     const [nodeCharge, setNodeCharge] = useRecoilState(settingNodeCharge);
     const [nodeMode, setNodeMode] = useRecoilState(settingNodeMode);
+    const [clusterColouring, setClusterColouring] = useRecoilState(settingClusterColouring);
 
     const doShowLines = useCallback((e: ChangeEvent<HTMLInputElement>) => setShowLines(e.currentTarget.checked), []);
     const doShowLabels = useCallback((e: ChangeEvent<HTMLInputElement>) => setShowLabels(e.currentTarget.checked), []);
@@ -86,6 +88,15 @@ export default function SocialGraphSettings() {
                     />
                 }
                 label={t('dashboard.labels.shrinkOffline')}
+            />
+            <FormControlLabel
+                control={
+                    <Checkbox
+                        checked={clusterColouring}
+                        onChange={(_, checked) => setClusterColouring(checked)}
+                    />
+                }
+                label={t('dashboard.labels.clusterColouring')}
             />
             <FormControl sx={{ marginTop: '1rem' }}>
                 <FormLabel id="demo-radio-buttons-group-label">{t('dashboard.labels.nodeContents')}</FormLabel>
