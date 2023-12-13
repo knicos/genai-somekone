@@ -65,7 +65,11 @@
             "nodeCharge": "Strength of separation force",
             "hideFeedMenu": "Hide menu in feed view",
             "nodeContents": "Node Contents",
-            "engagementScore": "Show engagement score"
+            "engagementScore": "Show engagement score",
+            "showSocialGraph": "Display social network",
+            "showContentGraph": "Display content relationships",
+            "showTopicGraph": "Display topic relationships",
+            "refreshGraph": "Refresh the graph display"
         },
         "messages": {
             "connection": "Go to <PageLink><Code>{{linkText}}</Code></PageLink> and enter the code <Code>{{codeText}}</Code>, or use the QR code.",

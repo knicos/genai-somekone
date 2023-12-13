@@ -8,11 +8,13 @@ import {
     addOrAccumulateEdge,
     getEdgeWeights,
     addEdge,
+    hasNode,
+    getNodeData,
 } from '@genaism/services/graph/graph';
 import { getTopicId, getTopicLabel } from '@genaism/services/concept/concept';
-import { addEdgeTypeListener } from '../graph/events';
+import { addEdgeTypeListener, addNodeTypeListener } from '../graph/events';
 import { emitLogEvent, emitProfileEvent } from '../profiler/events';
-import { ContentNodeId, UserNodeId, isContentID } from '../graph/graphTypes';
+import { ContentNodeId, UserNodeId, isContentID, isUserID } from '../graph/graphTypes';
 import defaults from './defaultWeights.json';
 import { normalise } from '@genaism/util/vectors';
 import { ScoredRecommendation } from '../recommender/recommenderTypes';
@@ -57,6 +59,35 @@ addEdgeTypeListener('topic', (id: UserNodeId) => {
     }
 });
 
+interface UserData {
+    name: string;
+    featureWeights: number[];
+}
+
+addNodeTypeListener('user', (id: UserNodeId) => {
+    const data = getNodeData<UserData>(id);
+    if (data) {
+        const profile: UserProfile = {
+            id: id,
+            name: data.name,
+            engagement: -1,
+            attributes: {},
+            taste: [],
+            engagedContent: [],
+            reactedTopics: [],
+            commentedTopics: [],
+            seenTopics: [],
+            sharedTopics: [],
+            viewedTopics: [],
+            followedTopics: [],
+            featureWeights: data.featureWeights,
+        };
+        users.set(id, profile);
+        outOfDate.add(id);
+        emitProfileEvent(id);
+    }
+});
+
 export function getCurrentUser(): UserNodeId {
     if (!userID) userID = addNode('user');
     return userID;
@@ -83,22 +114,25 @@ export function setUserName(id: UserNodeId, name: string) {
 }
 
 export function addUserProfile(profile: UserProfile) {
-    outOfDate.add(profile.id);
+    const uid = isUserID(profile.id) ? profile.id : (`user:${profile.id}` as UserNodeId);
+    const hadNode = hasNode(uid);
 
-    console.log('Adding user', profile.name);
-    addNode('user', profile.id);
-    profile.engagedContent.forEach((c) => {
-        const cid = isContentID(c.id) ? c.id : (`content:${c.id}` as ContentNodeId);
-        addEdge('engaged', profile.id, cid, c.weight);
-        addEdge('engaged', cid, profile.id, c.weight);
-    });
-    profile.taste.forEach((t) => {
-        addEdge('topic', profile.id, getTopicId(t.label), t.weight);
-        addEdge('topic', getTopicId(t.label), profile.id, t.weight);
+    if (!hadNode) {
+        users.delete(uid);
+    } else {
+        if (users.has(uid)) {
+            throw new Error('user_exists');
+        }
+    }
+
+    addNodeIfNotExists('user', uid, {
+        name: profile.name,
+        featureWeights: profile.featureWeights || [...defaultWeights],
     });
 
-    users.set(profile.id, profile);
-    emitProfileEvent(profile.id);
+    if (!hadNode) {
+        updateProfile(uid, profile);
+    }
 }
 
 export function updateProfile(id: UserNodeId, profile: ProfileSummary) {
@@ -106,12 +140,12 @@ export function updateProfile(id: UserNodeId, profile: ProfileSummary) {
 
     addNodeIfNotExists('user', id);
     profile.engagedContent.forEach((c) => {
-        addEdge('engaged', id, c.id, c.weight);
-        addEdge('engaged', c.id, id, c.weight);
+        const cid = isContentID(c.id) ? c.id : (`content:${c.id}` as ContentNodeId);
+        addEdge('engaged', id, cid, c.weight);
+        addEdge('engaged', cid, id, c.weight);
     });
     profile.taste.forEach((t) => {
-        console.log('Add topic edges', id, getTopicId(t.label));
-        console.log('Add edge', addEdge('topic', id, getTopicId(t.label), t.weight));
+        addEdge('topic', id, getTopicId(t.label), t.weight);
         addEdge('topic', getTopicId(t.label), id, t.weight);
     });
 
@@ -161,13 +195,17 @@ export function recreateUserProfile(id?: UserNodeId): UserProfile {
     const aid = id || getCurrentUser();
     const summary = createProfileSummaryById(aid, 10);
     const state = users.get(aid);
+
+    // Attempt to find data
+    const data = getNodeData<UserData>(aid);
+
     return {
         ...summary,
-        name: state?.name || 'NoName',
+        name: state?.name || data?.name || 'NoName',
         id: aid,
         engagement: -1,
         attributes: {},
-        featureWeights: [...defaultWeights],
+        featureWeights: data?.featureWeights || [...defaultWeights],
     };
 }
 

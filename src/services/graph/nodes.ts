@@ -1,5 +1,5 @@
 import { emitNodeTypeEvent } from './events';
-import { NodeID, NodeType } from './graphTypes';
+import { GNode, NodeID, NodeType } from './graphTypes';
 import { edgeSrcIndex, edgeStore, edgeTypeSrcIndex, nodeStore, nodeTypeIndex } from './state';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -29,10 +29,10 @@ export function removeNode<T extends NodeType>(id: NodeID<T>) {
     }
 }
 
-export function addNode<T extends NodeType>(type: T, id?: NodeID<T>): NodeID<T> {
+export function addNode<T extends NodeType>(type: T, id?: NodeID<T>, data?: unknown): NodeID<T> {
     const nid = id ? id : (`${type}:${uuidv4()}` as NodeID<T>);
     if (nodeStore.has(nid)) throw new Error('id_exists');
-    const node = { type, id: nid };
+    const node = { type, id: nid, data };
     nodeStore.set(nid, node);
     if (!nodeTypeIndex.has(type)) {
         nodeTypeIndex.set(type, []);
@@ -45,10 +45,10 @@ export function addNode<T extends NodeType>(type: T, id?: NodeID<T>): NodeID<T> 
     return nid;
 }
 
-export function addNodeIfNotExists<T extends NodeType>(type: T, id: NodeID<T>): NodeID<T> | undefined {
+export function addNodeIfNotExists<T extends NodeType>(type: T, id: NodeID<T>, data?: unknown): NodeID<T> | undefined {
     const nid = id;
     if (nodeStore.has(nid)) return;
-    const node = { type, id: nid };
+    const node = { type, id: nid, data };
     nodeStore.set(nid, node);
     if (!nodeTypeIndex.has(type)) {
         nodeTypeIndex.set(type, []);
@@ -59,11 +59,26 @@ export function addNodeIfNotExists<T extends NodeType>(type: T, id: NodeID<T>): 
     emitNodeTypeEvent(type, nid);
 
     return nid;
+}
+
+export function addNodes(nodes: GNode<NodeType>[]) {
+    nodes.forEach((node) => {
+        addNodeIfNotExists(node.type, node.id, node.data);
+    });
 }
 
 export function getNodeType(id: string): NodeType | null {
     const n = nodeStore.get(id);
     return n ? n.type : null;
+}
+
+export function hasNode(id: NodeID) {
+    return nodeStore.has(id);
+}
+
+export function getNodeData<T = unknown>(id: NodeID): T | undefined {
+    const n = nodeStore.get(id);
+    return n?.data as T;
 }
 
 export function getNodesByType<T extends NodeType>(type: T): NodeID<T>[] {

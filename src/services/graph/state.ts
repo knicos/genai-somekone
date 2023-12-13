@@ -26,6 +26,8 @@ export function dumpJSON() {
     return JSON.stringify(dump(), undefined, 4);
 }
 
+export type GraphExport = ReturnType<typeof dump>;
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const _global = (window /* browser */ || global) /* node */ as any;
 _global.dumpGraph = dumpJSON;

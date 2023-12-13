@@ -37,6 +37,29 @@ export function addEdge<T extends EdgeType, S extends SourceFor<T>, D extends De
     return id;
 }
 
+export function addEdges(edges: Edge<NodeID>[]) {
+    edges.forEach((edge) => {
+        const id = `${edge.destination}:${edge.type}:${edge.source}`;
+        edgeStore.set(id, edge);
+        const oldSrcIndex = edgeSrcIndex.get(edge.source);
+        if (oldSrcIndex) {
+            oldSrcIndex.push(edge);
+        } else {
+            edgeSrcIndex.set(edge.source, [edge]);
+        }
+
+        const typesrckey = `${edge.type}:${edge.source}`;
+        const oldTypeIndex = edgeTypeSrcIndex.get(typesrckey);
+        if (oldTypeIndex) {
+            oldTypeIndex.push(edge);
+        } else {
+            edgeTypeSrcIndex.set(typesrckey, [edge]);
+        }
+
+        emitNodeEdgeTypeEvent(edge.source, edge.type);
+    });
+}
+
 export function addOrAccumulateEdge<T extends EdgeType, S extends SourceFor<T>, D extends DestinationFor<T, S>>(
     type: T,
     src: S,

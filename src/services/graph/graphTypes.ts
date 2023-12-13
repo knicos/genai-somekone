@@ -28,6 +28,7 @@ export type UserNodeId = NodeID<'user'>;
 export interface GNode<A extends NodeType> {
     id: NodeID<A>;
     type: A;
+    data?: unknown;
 }
 
 export interface Edge<A extends NodeID<NodeType> = NodeID, B extends NodeID<NodeType> = NodeID> {

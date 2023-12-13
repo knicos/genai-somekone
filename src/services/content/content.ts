@@ -31,11 +31,16 @@ export function addContent(data: string, meta: ContentMetadata) {
     metaStore.set(`content:${meta.id}`, meta);
 
     try {
-        const cid = addNode('content', `content:${meta.id}`);
+        const cid = addNode('content', `content:${meta.id}`, {
+            author: meta.author,
+            caption: meta.caption,
+        });
         meta.labels.forEach((l) => {
-            const tid = getTopicId(l.label);
-            addEdge('topic', cid, tid, l.weight);
-            addEdge('content', tid, cid, l.weight);
+            if (l.weight > 0) {
+                const tid = getTopicId(l.label);
+                addEdge('topic', cid, tid, l.weight);
+                addEdge('content', tid, cid, l.weight);
+            }
         });
     } catch (e) {
         console.warn(e);

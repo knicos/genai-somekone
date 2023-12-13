@@ -5,6 +5,9 @@ import { addContent } from '@genaism/services/content/content';
 import { LogEntry, UserProfile } from '@genaism/services/profiler/profilerTypes';
 import { addUserProfile, appendActionLog } from '@genaism/services/profiler/profiler';
 import { UserNodeId } from '../graph/graphTypes';
+import { GraphExport } from '../graph/state';
+import { addNodes } from '../graph/nodes';
+import { addEdges } from '../graph/edges';
 
 export async function getZipBlob(content: string | ArrayBuffer): Promise<Blob> {
     if (typeof content === 'string') {
@@ -30,7 +33,11 @@ export async function loadFile(file: File | Blob): Promise<void> {
     console.log('Loading file');
 
     const images = new Map<string, string>();
-    const store: { meta: ContentMetadata[]; users: UserProfile[]; logs: LogItem[] } = { meta: [], users: [], logs: [] };
+    const store: { meta: ContentMetadata[]; users: UserProfile[]; logs: LogItem[]; graph?: GraphExport } = {
+        meta: [],
+        users: [],
+        logs: [],
+    };
 
     const promises: Promise<void>[] = [];
 
@@ -53,6 +60,12 @@ export async function loadFile(file: File | Blob): Promise<void> {
                     store.logs = JSON.parse(r);
                 })
             );
+        } else if (data.name === 'graph.json') {
+            promises.push(
+                data.async('string').then((r) => {
+                    store.graph = JSON.parse(r);
+                })
+            );
         } else {
             const parts = data.name.split('/');
             if (parts.length === 2 && !!parts[1] && parts[0] === 'images') {
@@ -69,6 +82,12 @@ export async function loadFile(file: File | Blob): Promise<void> {
     });
 
     await Promise.all(promises);
+
+    if (store.graph) {
+        addNodes(store.graph.nodes);
+        addEdges(store.graph.edges);
+        console.log('Graph loaded');
+    }
 
     store.meta.forEach((v) => {
         addContent(images.get(v.id) || '', v);
