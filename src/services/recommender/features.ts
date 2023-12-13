@@ -1,4 +1,3 @@
-import { normalise } from '@genaism/util/vectors';
 import { getTopicId } from '../concept/concept';
 import { ContentNodeId, TopicNodeId, WeightedNode } from '../graph/graphTypes';
 import { getRelated } from '../graph/query';
@@ -111,7 +110,7 @@ export function makeFeatureVectors(candidates: Recommendation[], profile: UserPr
         // lastSeenTime (negative)
         // priorEngagements
 
-        return normalise([
+        return [
             tasteSimilarityScore,
             sharingPreferenceScore,
             commentingPreferenceScore,
@@ -119,6 +118,6 @@ export function makeFeatureVectors(candidates: Recommendation[], profile: UserPr
             reactionPreferenceScore,
             viewingPreferenceScore,
             randomnessScore,
-        ]);
+        ];
     });
 }

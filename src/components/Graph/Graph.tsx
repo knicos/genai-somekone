@@ -2,8 +2,6 @@ import { useRef, useEffect, useState, useReducer, MouseEvent, WheelEvent, PropsW
 import * as d3 from 'd3';
 import style from './style.module.css';
 import gsap from 'gsap';
-import { useRecoilValue } from 'recoil';
-import { settingDisplayLines, settingLinkDistanceScale, settingNodeCharge } from '@genaism/state/settingsState';
 import { NodeID } from '@genaism/services/graph/graphTypes';
 
 export interface GraphNode<T extends NodeID> {
@@ -54,6 +52,9 @@ interface Props<T extends NodeID> extends PropsWithChildren {
     zoom?: number;
     center?: [number, number];
     onZoom?: (z: number) => void;
+    linkScale?: number;
+    showLines?: boolean;
+    charge?: number;
 }
 
 interface InternalState {
@@ -75,10 +76,13 @@ export default function Graph<T extends NodeID>({
     onSelect,
     onUnselect,
     focusNode,
-    zoom,
+    zoom = 1,
     onZoom,
     children,
     center,
+    linkScale = 6,
+    showLines = true,
+    charge = 2,
 }: Props<T>) {
     const svgRef = useRef<SVGSVGElement>(null);
     const [redraw, trigger] = useReducer((a) => ++a, 0);
@@ -86,9 +90,6 @@ export default function Graph<T extends NodeID>({
     const [linkList, setLinkList] = useState<InternalGraphLink<T, T>[]>([]);
     const nodeRef = useRef<Map<string, GraphNode<T>>>(new Map<string, GraphNode<T>>());
     const simRef = useRef<d3.Simulation<GraphNode<T>, undefined>>();
-    const linkScale = useRecoilValue(settingLinkDistanceScale);
-    const showLines = useRecoilValue(settingDisplayLines);
-    const charge = useRecoilValue(settingNodeCharge);
     const internalState = useRef<InternalState>(DEFAULT_STATE);
     const [extents, setExtents] = useState<Extents>(DEFAULT_EXTENTS);
     const [actualCenter, setActualCenter] = useState<[number, number]>([0, 0]);
@@ -204,7 +205,7 @@ export default function Graph<T extends NodeID>({
     useEffect(() => {
         gsap.to(svgRef.current, {
             attr: {
-                viewBox: calculateViewBox(extents, 50, zoom || 1, actualCenter),
+                viewBox: calculateViewBox(extents, 50, zoom, actualCenter),
             },
             duration: 0.3,
             //ease: 'none',
@@ -220,7 +221,7 @@ export default function Graph<T extends NodeID>({
             viewBox="-500 -500 1000 1000"
             data-testid="graph-svg"
             onClick={() => onUnselect && onUnselect()}
-            onWheel={(e: WheelEvent<SVGSVGElement>) => onZoom && onZoom(Math.max(0.1, (zoom || 1) + e.deltaY * 0.002))}
+            onWheel={(e: WheelEvent<SVGSVGElement>) => onZoom && onZoom(Math.max(0.1, zoom + e.deltaY * 0.002))}
         >
             <g>
                 {showLines && (

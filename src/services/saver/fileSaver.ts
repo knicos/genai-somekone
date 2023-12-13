@@ -2,6 +2,7 @@ import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 import { getNodesByType } from '@genaism/services/graph/nodes';
 import { getActionLog, getUserProfile } from '@genaism/services/profiler/profiler';
+import { dumpJSON } from '../graph/state';
 
 /*function transformConcepts(concepts: ConceptNode[]): ConceptEntry[] {
     const mapping = new Map<number, ConceptEntry>();
@@ -32,7 +33,7 @@ import { getActionLog, getUserProfile } from '@genaism/services/profiler/profile
     return roots;
 }*/
 
-async function generateBlob(incContent: boolean, incProfiles: boolean, incLogs: boolean) {
+async function generateBlob(incContent: boolean, incProfiles: boolean, incLogs: boolean, incGraph: boolean) {
     const zip = new JSZip();
 
     if (incContent) {
@@ -62,12 +63,16 @@ async function generateBlob(incContent: boolean, incProfiles: boolean, incLogs: 
         zip.file('logs.json', JSON.stringify(logs, undefined, 4));
     }
 
+    if (incGraph) {
+        zip.file('graph.json', dumpJSON());
+    }
+
     const blob = await zip.generateAsync({ type: 'blob' });
     return blob;
 }
 
-export async function saveFile(includeContent: boolean, includeProfiles: boolean, incLogs: boolean) {
-    const blob = await generateBlob(includeContent, includeProfiles, incLogs);
+export async function saveFile(includeContent: boolean, includeProfiles: boolean, incLogs: boolean, incGraph: boolean) {
+    const blob = await generateBlob(includeContent, includeProfiles, incLogs, incGraph);
     saveAs(blob, 'genagram.zip');
     return blob;
 }

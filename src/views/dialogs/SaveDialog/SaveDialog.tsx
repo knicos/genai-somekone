@@ -1,6 +1,6 @@
 import { menuShowSave } from '@genaism/state/menuState';
 import { Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel } from '@mui/material';
-import { ChangeEvent, useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useRecoilState } from 'recoil';
 import style from './style.module.css';
@@ -14,24 +14,14 @@ export default function SaveDialog() {
     const [saveContent, setSaveContent] = useState(false);
     const [saveProfiles, setSaveProfiles] = useState(true);
     const [saveLogs, setSaveLogs] = useState(true);
+    const [saveGraph, setSaveGraph] = useState(false);
 
     const doClose = useCallback(() => setShowDialog(false), [setShowDialog]);
 
-    const doSaveContent = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-        setSaveContent(e.currentTarget.checked);
-    }, []);
-
-    const doSaveProfiles = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-        setSaveProfiles(e.currentTarget.checked);
-    }, []);
-
-    const doSaveLogs = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-        setSaveLogs(e.currentTarget.checked);
-    }, []);
     const doSave = useCallback(() => {
-        saveFile(saveContent, saveProfiles, saveLogs);
+        saveFile(saveContent, saveProfiles, saveLogs, saveGraph);
         setShowDialog(false);
-    }, [setShowDialog, saveContent, saveProfiles]);
+    }, [setShowDialog, saveContent, saveProfiles, saveLogs, saveGraph]);
 
     return (
         <Dialog
@@ -46,7 +36,7 @@ export default function SaveDialog() {
                             <Checkbox
                                 disabled={true}
                                 checked={saveContent}
-                                onChange={doSaveContent}
+                                onChange={(_, checked) => setSaveContent(checked)}
                             />
                         }
                         label={t('dashboard.labels.saveContent')}
@@ -55,7 +45,7 @@ export default function SaveDialog() {
                         control={
                             <Checkbox
                                 checked={saveProfiles}
-                                onChange={doSaveProfiles}
+                                onChange={(_, checked) => setSaveProfiles(checked)}
                             />
                         }
                         label={t('dashboard.labels.saveProfiles')}
@@ -64,10 +54,19 @@ export default function SaveDialog() {
                         control={
                             <Checkbox
                                 checked={saveLogs}
-                                onChange={doSaveLogs}
+                                onChange={(_, checked) => setSaveLogs(checked)}
                             />
                         }
-                        label={t('dashboard.labels.saveProfiles')}
+                        label={t('dashboard.labels.saveActions')}
+                    />
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={saveGraph}
+                                onChange={(_, checked) => setSaveGraph(checked)}
+                            />
+                        }
+                        label={t('dashboard.labels.saveGraph')}
                     />
                 </div>
             </DialogContent>

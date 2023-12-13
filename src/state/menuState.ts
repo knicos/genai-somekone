@@ -39,3 +39,9 @@ export const menuShowFeedActions = atom<boolean>({
     key: 'menushowfeedactions',
     default: true,
 });
+
+type GraphTypes = 'social' | 'topic' | 'content' | 'ego';
+export const menuGraphType = atom<GraphTypes>({
+    key: 'menugraphtype',
+    default: 'social',
+});

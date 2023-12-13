@@ -49,11 +49,13 @@
         "labels": {
             "saveContent": "Save the image content",
             "saveProfiles": "Save user profiles",
+            "saveActions": "Save actions logs",
+            "saveGraph": "Save entire graph",
             "shareTip": "Show the share code",
             "openTip": "Upload existing saved data",
             "saveTip": "Download profiles and content",
-            "showImagesTip": "Show engaged image",
-            "showWordsTip": "Show topic names",
+            "engagedImages": "Show engaged images",
+            "topicCloud": "Show topic cloud",
             "showLines": "Show the similar user lines",
             "showLabels": "Show user name labels",
             "showOffline": "Show offline or fake users",
@@ -61,7 +63,9 @@
             "edgeScaling": "Change the distance between clusters",
             "similarPercent": "Similarity threshold for link display",
             "nodeCharge": "Strength of separation force",
-            "hideFeedMenu": "Hide menu in feed view"
+            "hideFeedMenu": "Hide menu in feed view",
+            "nodeContents": "Node Contents",
+            "engagementScore": "Show engagement score"
         },
         "messages": {
             "connection": "Go to <PageLink><Code>{{linkText}}</Code></PageLink> and enter the code <Code>{{codeText}}</Code>, or use the QR code.",

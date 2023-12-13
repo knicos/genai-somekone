@@ -70,3 +70,10 @@ export function getNodesByType<T extends NodeType>(type: T): NodeID<T>[] {
     const nt = nodeTypeIndex.get(type);
     return (nt ? nt.map((n) => n.id) : []) as NodeID<T>[];
 }
+
+const globalNode: NodeID<'special'> = 'special:root';
+addNodeIfNotExists('special', 'special:root');
+
+export function getRootNode() {
+    return globalNode;
+}

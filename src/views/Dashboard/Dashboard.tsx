@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useReducer } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { SMConfig } from '../Genagram/smConfig';
 import { decompressFromEncodedURIComponent } from 'lz-string';
@@ -13,8 +13,8 @@ import DEFAULT_CONFIG from '../Genagram/defaultConfig.json';
 import MenuPanel from './MenuPanel';
 import { appendActionLog, setUserName, updateProfile } from '@genaism/services/profiler/profiler';
 import SocialGraph from '@genaism/components/SocialGraph/SocialGraph';
-import { useRecoilState, useSetRecoilState } from 'recoil';
-import { menuShowShare } from '@genaism/state/menuState';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { menuGraphType, menuShowShare } from '@genaism/state/menuState';
 import SaveDialog from '../dialogs/SaveDialog/SaveDialog';
 import SettingsDialog from '../dialogs/SettingsDialog/SettingsDialog';
 import Loading from '@genaism/components/Loading/Loading';
@@ -22,6 +22,7 @@ import ErrorDialog from '../dialogs/ErrorDialog/ErrorDialog';
 import { errorNotification } from '@genaism/state/errorState';
 import useRandom from '@genaism/hooks/random';
 import { appConfiguration } from '@genaism/state/settingsState';
+import TopicGraph from '@genaism/components/TopicGraph/TopicGraph';
 
 export function Component() {
     const [params] = useSearchParams();
@@ -32,6 +33,8 @@ export function Component() {
     const [loaded, setLoaded] = useState(false);
     const setError = useSetRecoilState(errorNotification);
     const MYCODE = useRandom(5);
+    const graphMode = useRecoilValue(menuGraphType);
+    const [count, refresh] = useReducer((a) => ++a, 0);
 
     const dataHandler = useCallback(
         (data: EventProtocol, conn: DataConnection) => {
@@ -129,14 +132,23 @@ export function Component() {
             <Loading loading={!loaded}>
                 <main className={style.dashboard}>
                     <section className={style.workspace}>
-                        <SocialGraph liveUsers={users.map((u) => u.id)} />
+                        {graphMode === 'social' && (
+                            <SocialGraph
+                                key={`sg-${count}`}
+                                liveUsers={users.map((u) => u.id)}
+                            />
+                        )}
+                        {graphMode === 'topic' && <TopicGraph key={`tg-${count}`} />}
 
                         <StartDialog
                             users={users}
                             code={MYCODE}
                         />
                     </section>
-                    <MenuPanel onOpen={doOpenFile} />
+                    <MenuPanel
+                        onOpen={doOpenFile}
+                        onRefresh={refresh}
+                    />
                     <SaveDialog />
                     <SettingsDialog />
                 </main>

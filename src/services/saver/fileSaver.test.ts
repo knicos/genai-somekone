@@ -43,7 +43,7 @@ describe('saveFile()', () => {
             attributes: {},
         }));
 
-        const blob = await saveFile(false, true, false);
+        const blob = await saveFile(false, true, false, false);
 
         expect(mockUsers).toHaveBeenCalledTimes(1);
         expect(mockProfiles).toHaveBeenCalledWith('xyz');
@@ -62,7 +62,7 @@ describe('saveFile()', () => {
         mockUsers.mockImplementation(() => ['xyz']);
         mockLog.mockImplementation(() => [{ activity: 'like', timestamp: 1 }] as LogEntry[]);
 
-        const blob = await saveFile(false, false, true);
+        const blob = await saveFile(false, false, true, false);
 
         expect(mockUsers).toHaveBeenCalledTimes(1);
         expect(mockLog).toHaveBeenCalledWith('xyz');

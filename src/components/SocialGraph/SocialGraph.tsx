@@ -1,9 +1,14 @@
 import { useNodeType } from '@genaism/services/graph/hooks';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import ProfileNode from '../ProfileNode/ProfileNode';
+import ProfileNode from './ProfileNode';
 import Graph, { GraphLink, GraphNode } from '../Graph/Graph';
 import { useRecoilValue } from 'recoil';
-import { settingShowOfflineUsers } from '@genaism/state/settingsState';
+import {
+    settingDisplayLines,
+    settingLinkDistanceScale,
+    settingNodeCharge,
+    settingShowOfflineUsers,
+} from '@genaism/state/settingsState';
 import { UserNodeId } from '@genaism/services/graph/graphTypes';
 // import FakeNode from '../FakeNode/FakeNode';
 
@@ -18,6 +23,9 @@ export default function SocialGraph({ liveUsers }: Props) {
     const [links, setLinks] = useState<GraphLink<UserNodeId, UserNodeId>[]>([]);
     const sizesRef = useRef<Map<string, number>>(new Map<string, number>());
     const [nodes, setNodes] = useState<GraphNode<UserNodeId>[]>([]);
+    const linkScale = useRecoilValue(settingLinkDistanceScale);
+    const showLines = useRecoilValue(settingDisplayLines);
+    const charge = useRecoilValue(settingNodeCharge);
     const showOfflineUsers = useRecoilValue(settingShowOfflineUsers);
     const users = useNodeType('user');
     const liveSet = useMemo(() => {
@@ -67,6 +75,9 @@ export default function SocialGraph({ liveUsers }: Props) {
         <Graph
             links={links}
             nodes={nodes}
+            linkScale={linkScale}
+            charge={charge}
+            showLines={showLines}
             onSelect={(n: Readonly<GraphNode<UserNodeId>>) => {
                 if (!focusNode) setZoom(0.5);
                 setCenter([n.x || 0, n.y || 0]);

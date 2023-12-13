@@ -13,6 +13,7 @@ import {
 } from '@genaism/state/settingsState';
 import WordCloud from '../WordCloud/WordCloud';
 import style from './style.module.css';
+import Label from './Label';
 
 interface Props {
     id: UserNodeId;
@@ -64,6 +65,16 @@ export default function ProfileNode({ id, onLinks, onResize, live, selected }: P
                 data-testid="profile-selected"
                 r={selected ? asize + 20 : asize}
             />
+            {showLabel && (
+                <Label
+                    label={profile.name}
+                    x={0}
+                    y={-asize - 20}
+                    fill={live ? '#0A869A' : '#707070'}
+                    color="white"
+                    padding={5}
+                />
+            )}
             <circle
                 data-testid="profile-circle"
                 r={asize}
@@ -87,14 +98,6 @@ export default function ProfileNode({ id, onLinks, onResize, live, selected }: P
                     colour={live ? '#0A869A' : '#707070'}
                     onSize={doResize}
                 />
-            )}
-            {showLabel && (
-                <text
-                    y={-asize - 5}
-                    textAnchor="middle"
-                >
-                    {profile.name}
-                </text>
             )}
         </g>
     );

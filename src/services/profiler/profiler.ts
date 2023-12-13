@@ -263,6 +263,7 @@ function affinityBoost(content: ContentNodeId, weight: number) {
         const seenScore = getEdgeWeights('seen_topic', getCurrentUser(), t.id)[0] || 1;
 
         addEdge('topic', getCurrentUser(), t.id, engageScore / seenScore);
+        addEdge('topic', t.id, getCurrentUser(), engageScore / seenScore);
     });
 
     addOrAccumulateEdge('engaged', getCurrentUser(), content, weight);

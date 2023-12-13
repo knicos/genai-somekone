@@ -6,27 +6,27 @@ import CollectionsIcon from '@mui/icons-material/Collections';
 import TextFieldsIcon from '@mui/icons-material/TextFields';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import ShareIcon from '@mui/icons-material/Share';
+import PeopleIcon from '@mui/icons-material/People';
+import RefreshIcon from '@mui/icons-material/Refresh';
 import { useCallback } from 'react';
 import { useRecoilState } from 'recoil';
-import { menuShowSave, menuShowSettings, menuShowShare } from '@genaism/state/menuState';
-import { settingNodeMode } from '@genaism/state/settingsState';
+import { menuGraphType, menuShowSave, menuShowSettings, menuShowShare } from '@genaism/state/menuState';
 import { useTranslation } from 'react-i18next';
 
 interface Props {
     onOpen?: (data: Blob) => void;
+    onRefresh?: () => void;
 }
 
-export default function MenuPanel({ onOpen }: Props) {
+export default function MenuPanel({ onOpen, onRefresh }: Props) {
     const { t } = useTranslation();
     const [showShare, setShowShare] = useRecoilState(menuShowShare);
     const [showSettings, setShowSettings] = useRecoilState(menuShowSettings);
     const [showSave, setShowSave] = useRecoilState(menuShowSave);
-    const [displayMode, setDisplayMode] = useRecoilState(settingNodeMode);
+    const [graphMode, setGraphMode] = useRecoilState(menuGraphType);
 
     const doShowShare = useCallback(() => setShowShare((s) => !s), [setShowShare]);
     const doShowSettings = useCallback(() => setShowSettings((s) => !s), [setShowSettings]);
-    const doShowImages = useCallback(() => setDisplayMode('image'), [setDisplayMode]);
-    const doShowWords = useCallback(() => setDisplayMode('word'), [setDisplayMode]);
     const doShowSave = useCallback(() => setShowSave((s) => !s), [setShowSave]);
 
     const doOpenFile = useCallback(
@@ -91,30 +91,54 @@ export default function MenuPanel({ onOpen }: Props) {
                 </Tooltip>
                 <div className={style.menuSpacer} />
                 <Tooltip
-                    title={t('dashboard.labels.showImagesTip')}
+                    title={t('dashboard.labels.showSocialGraph')}
                     arrow
                     placement="right"
                 >
                     <IconButton
-                        color={displayMode === 'image' ? 'secondary' : 'inherit'}
-                        onClick={doShowImages}
+                        color={graphMode === 'social' ? 'secondary' : 'inherit'}
+                        onClick={() => setGraphMode('social')}
+                    >
+                        <PeopleIcon />
+                    </IconButton>
+                </Tooltip>
+                <Tooltip
+                    title={t('dashboard.labels.showContentGraph')}
+                    arrow
+                    placement="right"
+                >
+                    <IconButton
+                        color={graphMode === 'content' ? 'secondary' : 'inherit'}
+                        onClick={() => setGraphMode('content')}
                     >
                         <CollectionsIcon />
                     </IconButton>
                 </Tooltip>
                 <Tooltip
-                    title={t('dashboard.labels.showWordsTip')}
+                    title={t('dashboard.labels.showTopicGraph')}
                     arrow
                     placement="right"
                 >
                     <IconButton
-                        color={displayMode === 'word' ? 'secondary' : 'inherit'}
-                        onClick={doShowWords}
+                        color={graphMode === 'topic' ? 'secondary' : 'inherit'}
+                        onClick={() => setGraphMode('topic')}
                     >
                         <TextFieldsIcon />
                     </IconButton>
                 </Tooltip>
                 <div className={style.menuSpacer} />
+                <Tooltip
+                    title={t('dashboard.labels.refreshGraph')}
+                    arrow
+                    placement="right"
+                >
+                    <IconButton
+                        color={'inherit'}
+                        onClick={onRefresh}
+                    >
+                        <RefreshIcon />
+                    </IconButton>
+                </Tooltip>
                 <IconButton
                     color={showSettings ? 'secondary' : 'inherit'}
                     onClick={doShowSettings}

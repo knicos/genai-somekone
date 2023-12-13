@@ -8,7 +8,7 @@ export const settingDisplayLines = atom<boolean>({
 
 export const settingDisplayLabel = atom<boolean>({
     key: 'settingdisplaylabel',
-    default: false,
+    default: true,
 });
 
 export const settingLinkDistanceScale = atom<number>({
@@ -36,7 +36,7 @@ export const settingShowOfflineUsers = atom<boolean>({
     default: true,
 });
 
-type NodeDisplayMode = 'image' | 'word' | 'score';
+export type NodeDisplayMode = 'image' | 'word' | 'score';
 
 export const settingNodeMode = atom<NodeDisplayMode>({
     key: 'settingnodemode',
@@ -46,4 +46,24 @@ export const settingNodeMode = atom<NodeDisplayMode>({
 export const appConfiguration = atom<SMConfig>({
     key: 'appconfig',
     default: {},
+});
+
+export const settingTopicDisplayLines = atom<boolean>({
+    key: 'settingtopicdisplaylines',
+    default: true,
+});
+
+export const settingTopicLinkDistanceScale = atom<number>({
+    key: 'settingtopiclinkdistscale',
+    default: 6,
+});
+
+export const settingTopicSimilarPercent = atom<number>({
+    key: 'settingtopicsimilarpercent',
+    default: 0.2,
+});
+
+export const settingTopicNodeCharge = atom<number>({
+    key: 'settingtopicnodecharge',
+    default: 2,
 });

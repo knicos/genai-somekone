@@ -18,7 +18,7 @@ export type EdgeType =
     | 'followed_topic'
     | 'viewed_topic';
 
-export type NodeType = 'content' | 'topic' | 'user' | 'attribute';
+export type NodeType = 'content' | 'topic' | 'user' | 'attribute' | 'special';
 
 export type NodeID<T extends NodeType = NodeType> = `${T}:${string}`;
 export type ContentNodeId = NodeID<'content'>;
