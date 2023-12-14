@@ -67,6 +67,7 @@ export function Component() {
     }, [config, send]);
 
     useEffect(() => {
+        if (!ready) return;
         let configObj: SMConfig = DEFAULT_CONFIG.configuration;
         let contentObj: (ArrayBuffer | string)[] = DEFAULT_CONFIG.content;
         const configParam = params.get('cfg');
@@ -106,7 +107,7 @@ export function Component() {
         } else {
             // Show the file open dialog
         }
-    }, [params]);
+    }, [params, ready]);
 
     useEffect(() => {
         if (users.length === 0) {

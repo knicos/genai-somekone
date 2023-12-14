@@ -20,7 +20,7 @@ export interface GraphLink<A extends NodeID, B extends NodeID> {
     strength: number;
 }
 
-interface InternalGraphLink<A extends NodeID, B extends NodeID> {
+export interface InternalGraphLink<A extends NodeID, B extends NodeID> {
     source: GraphNode<A>;
     target: GraphNode<B>;
     strength: number;
@@ -43,10 +43,20 @@ function calculateViewBox(extents: Extents, padding: number, zoom: number, cente
     return `${x} ${y} ${w} ${h}`;
 }
 
+type StyleMappingFn<T extends NodeID, R> = (l: InternalGraphLink<T, T>) => R;
+type StyleMapping<T extends NodeID, R> = R | StyleMappingFn<T, R>;
+
+export interface LinkStyle<T extends NodeID> {
+    className?: StyleMapping<T, string>;
+    opacity?: StyleMapping<T, number>;
+    width?: StyleMapping<T, number>;
+    colour?: StyleMapping<T, string>;
+}
+
 interface Props<T extends NodeID> extends PropsWithChildren {
     nodes: GraphNode<T>[];
     links?: GraphLink<T, T>[];
-    onSelect?: (node: Readonly<GraphNode<T>>) => void;
+    onSelect?: (node: Readonly<GraphNode<T>>, links: InternalGraphLink<T, T>[]) => void;
     onUnselect?: () => void;
     focusNode?: string;
     zoom?: number;
@@ -55,6 +65,8 @@ interface Props<T extends NodeID> extends PropsWithChildren {
     linkScale?: number;
     showLines?: boolean;
     charge?: number;
+    linkStyles?: Map<T, LinkStyle<T>>;
+    defaultLinkStyle?: LinkStyle<T>;
 }
 
 interface InternalState {
@@ -70,6 +82,10 @@ const DEFAULT_EXTENTS: Extents = {
     maxY: 500,
 };
 
+const DEFAULT_LINK_STYLE = {
+    className: style.link,
+};
+
 export default function Graph<T extends NodeID>({
     nodes,
     links,
@@ -83,6 +99,8 @@ export default function Graph<T extends NodeID>({
     linkScale = 6,
     showLines = true,
     charge = 2,
+    linkStyles,
+    defaultLinkStyle = DEFAULT_LINK_STYLE,
 }: Props<T>) {
     const svgRef = useRef<SVGSVGElement>(null);
     const [redraw, trigger] = useReducer((a) => ++a, 0);
@@ -137,8 +155,12 @@ export default function Graph<T extends NodeID>({
                           const s = nodeRef.current.get(l.source);
                           const t = nodeRef.current.get(l.target);
                           return s && t
-                              ? { source: s, target: t, strength: l.strength }
-                              : { source: lnodes[0], target: lnodes[0], strength: -1 };
+                              ? {
+                                    source: s,
+                                    target: t,
+                                    strength: l.strength,
+                                }
+                              : { source: lnodes[0], target: lnodes[0], strength: 0 };
                       })
                       .filter((l) => l.strength > 0)
                 : [];
@@ -226,19 +248,29 @@ export default function Graph<T extends NodeID>({
             <g>
                 {showLines && (
                     <g>
-                        {linkList.map((l, ix) => (
-                            <line
-                                key={ix}
-                                x1={l.source.x}
-                                y1={l.source.y}
-                                x2={l.target.x}
-                                y2={l.target.y}
-                                stroke="#0A869A"
-                                opacity={l.strength * l.strength * 0.9}
-                                strokeWidth={1 + Math.floor(l.strength * l.strength * 30)}
-                                data-testid={`graph-link-${ix}`}
-                            />
-                        ))}
+                        {linkList.map((l, ix) => {
+                            const styles =
+                                linkStyles?.get(l.source.id) || linkStyles?.get(l.target.id) || defaultLinkStyle;
+                            return (
+                                <line
+                                    className={
+                                        typeof styles?.className === 'function'
+                                            ? styles.className(l)
+                                            : styles?.className || style.link
+                                    }
+                                    key={ix}
+                                    x1={l.source.x}
+                                    y1={l.source.y}
+                                    x2={l.target.x}
+                                    y2={l.target.y}
+                                    opacity={
+                                        typeof styles?.opacity === 'function' ? styles.opacity(l) : styles?.opacity
+                                    }
+                                    strokeWidth={typeof styles?.width === 'function' ? styles.width(l) : styles?.width}
+                                    data-testid={`graph-link-${ix}`}
+                                />
+                            );
+                        })}
                     </g>
                 )}
                 <g>
@@ -247,7 +279,11 @@ export default function Graph<T extends NodeID>({
                             key={ix}
                             transform={`translate(${Math.floor(n.x || 0)},${Math.floor(n.y || 0)})`}
                             onClick={(e: MouseEvent<SVGGElement>) => {
-                                if (onSelect) onSelect(n);
+                                if (onSelect)
+                                    onSelect(
+                                        n,
+                                        linkList.filter((l) => l.source.id === n.id || l.target.id === n.id)
+                                    );
                                 e.stopPropagation();
                             }}
                             className={style.node}

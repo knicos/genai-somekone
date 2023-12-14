@@ -1,3 +1,5 @@
+@value primary from "../../style/colours.module.css";
+
 .svg {
     position: absolute;
     top: 0;
@@ -7,4 +9,8 @@
 
 .node {
     cursor: pointer;
+}
+
+.link {
+    stroke: primary;
 }

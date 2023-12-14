@@ -90,18 +90,18 @@ function App() {
     return (
         <StyledEngineProvider injectFirst>
             <ThemeProvider theme={theme}>
-                <React.Suspense
-                    fallback={
-                        <Loading
-                            loading={true}
-                            message="..."
-                        />
-                    }
-                >
-                    <RecoilRoot>
+                <RecoilRoot>
+                    <React.Suspense
+                        fallback={
+                            <Loading
+                                loading={true}
+                                message="..."
+                            />
+                        }
+                    >
                         <RouterProvider router={router} />
-                    </RecoilRoot>
-                </React.Suspense>
+                    </React.Suspense>
+                </RecoilRoot>
             </ThemeProvider>
         </StyledEngineProvider>
     );

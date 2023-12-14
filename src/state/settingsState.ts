@@ -72,3 +72,8 @@ export const settingClusterColouring = atom<boolean>({
     key: 'settingclustercolouring',
     default: false,
 });
+
+export const settingEgoOnSelect = atom<boolean>({
+    key: 'settingegoonselect',
+    default: true,
+});

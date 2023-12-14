@@ -38,6 +38,7 @@ interface Props {
     id: UserNodeId;
     live?: boolean;
     selected?: boolean;
+    disabled?: boolean;
     colourMapping?: Map<string, string>;
     onLinks: (id: string, links: GraphLink<UserNodeId, UserNodeId>[]) => void;
     onResize: (id: string, size: number) => void;
@@ -58,7 +59,7 @@ const colours = [
     '#ff9499',
 ];
 
-export default function ProfileNode({ id, onLinks, onResize, live, selected, colourMapping }: Props) {
+export default function ProfileNode({ id, onLinks, onResize, live, selected, colourMapping, disabled }: Props) {
     const [size, setSize] = useState(100);
     const [colour, setColour] = useState('white');
     const simRef = useRef<WeightedNode<UserNodeId>[]>();
@@ -123,7 +124,11 @@ export default function ProfileNode({ id, onLinks, onResize, live, selected, col
             id,
             similar
                 .filter((s) => s.weight >= maxWeight * (1 - similarPercent))
-                .map((s) => ({ source: id, target: s.id, strength: s.weight }))
+                .map((s) => ({
+                    source: id,
+                    target: s.id,
+                    strength: s.weight,
+                }))
         );
         //}
     }, [similar, onLinks, similarPercent]);
@@ -132,7 +137,7 @@ export default function ProfileNode({ id, onLinks, onResize, live, selected, col
     const asize = reduced ? size * 0.4 : size;
 
     return (
-        <g className={style.group}>
+        <g className={disabled ? style.disabledGroup : style.group}>
             <circle
                 className={selected ? style.selectedCircle : style.outerCircle}
                 data-testid="profile-selected"
@@ -161,6 +166,7 @@ export default function ProfileNode({ id, onLinks, onResize, live, selected, col
                     size={300}
                     padding={3}
                     onSize={doResize}
+                    className={disabled ? style.disabledImageCloud : undefined}
                 />
             )}
             {!reduced && nodeMode === 'word' && (

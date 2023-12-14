@@ -1,9 +1,14 @@
-@value secondary, bgColourful1, textDark, textLight from "../../style/colours.module.css";
+@value primary, secondary, bgColourful1, textDark, textLight from "../../style/colours.module.css";
 
 .group:hover > .outerCircle {
     fill: secondary;
     opacity: 0.6;
     transform: scale(1.2);
+}
+
+.disabledGroup {
+    composes: group;
+    opacity: 0.2;
 }
 
 .outerCircle {
@@ -58,4 +63,20 @@
 
 .cloudItemLight text {
     fill: textLight;
+}
+
+.selectedLink {
+    stroke: secondary;
+    opacity: 1 !important;
+}
+
+.dashedLink {
+    stroke: secondary;
+    opacity: 0.5 !important;
+    stroke-dasharray: 20;
+}
+
+.weakLinks {
+    stroke: primary;
+    opacity: 0.1 !important;
 }

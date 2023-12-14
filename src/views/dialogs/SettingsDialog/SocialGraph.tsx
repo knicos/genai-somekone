@@ -8,6 +8,7 @@ import {
     settingClusterColouring,
     settingDisplayLabel,
     settingDisplayLines,
+    settingEgoOnSelect,
     settingLinkDistanceScale,
     settingNodeCharge,
     settingNodeMode,
@@ -27,6 +28,7 @@ export default function SocialGraphSettings() {
     const [nodeCharge, setNodeCharge] = useRecoilState(settingNodeCharge);
     const [nodeMode, setNodeMode] = useRecoilState(settingNodeMode);
     const [clusterColouring, setClusterColouring] = useRecoilState(settingClusterColouring);
+    const [egoSelect, setEgoSelect] = useRecoilState(settingEgoOnSelect);
 
     const doShowLines = useCallback((e: ChangeEvent<HTMLInputElement>) => setShowLines(e.currentTarget.checked), []);
     const doShowLabels = useCallback((e: ChangeEvent<HTMLInputElement>) => setShowLabels(e.currentTarget.checked), []);
@@ -97,6 +99,15 @@ export default function SocialGraphSettings() {
                     />
                 }
                 label={t('dashboard.labels.clusterColouring')}
+            />
+            <FormControlLabel
+                control={
+                    <Checkbox
+                        checked={egoSelect}
+                        onChange={(_, checked) => setEgoSelect(checked)}
+                    />
+                }
+                label={t('dashboard.labels.egoSelect')}
             />
             <FormControl sx={{ marginTop: '1rem' }}>
                 <FormLabel id="demo-radio-buttons-group-label">{t('dashboard.labels.nodeContents')}</FormLabel>

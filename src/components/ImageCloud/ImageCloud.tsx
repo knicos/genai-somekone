@@ -10,12 +10,13 @@ interface Props {
     size?: number;
     colour?: string;
     borderSize?: number;
+    className?: string;
     onSize?: (size: number) => void;
 }
 
 const BORDER_SIZE = 1.5;
 
-const ImageCloud = memo(function Cloud({ content, size, padding, colour, borderSize, onSize }: Props) {
+const ImageCloud = memo(function Cloud({ content, size, padding, colour, borderSize, onSize, className }: Props) {
     const [locations, setLocations] = useState<LocationItem<ContentNodeId>[]>([]);
 
     useEffect(() => {
@@ -44,7 +45,7 @@ const ImageCloud = memo(function Cloud({ content, size, padding, colour, borderS
             {locations.map((l, ix) => (
                 <g
                     key={ix}
-                    className={style.cloudItem}
+                    className={className || style.cloudItem}
                     transform={`translate(${l.x}, ${l.y})`}
                 >
                     {colour && (
