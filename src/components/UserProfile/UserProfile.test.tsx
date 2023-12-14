@@ -2,23 +2,14 @@ import { describe, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import UserProfileComp from './UserProfile';
 import { UserProfile } from '@genaism/services/profiler/profilerTypes';
-import { ContentNodeId, UserNodeId } from '@genaism/services/graph/graphTypes';
+import { ContentNodeId } from '@genaism/services/graph/graphTypes';
+import { createEmptyProfile } from '@genaism/services/profiler/profiler';
 
 const { mockProfile } = vi.hoisted(() => ({
     mockProfile: vi.fn<unknown[], UserProfile>(() => ({
-        name: 'TestUser1',
-        id: 'user:xyz',
-        engagement: -1,
+        ...createEmptyProfile('user:xyz', 'TestUser'),
         engagedContent: [{ id: 'content:content1', weight: 1 }],
-        commentedTopics: [],
-        reactedTopics: [],
-        sharedTopics: [],
-        followedTopics: [],
-        seenTopics: [],
-        viewedTopics: [],
-        featureWeights: [],
         taste: [{ label: 'taste1', weight: 0.5 }],
-        attributes: {},
     })),
 }));
 
@@ -36,23 +27,14 @@ describe('UserProfile component', () => {
 
     it('shows topic pie charts', async ({ expect }) => {
         mockProfile.mockImplementation(() => ({
-            name: 'TestUser1',
-            id: 'user:xyz' as UserNodeId,
-            engagement: -1,
+            ...createEmptyProfile('user:xyz', 'TestUser2'),
             engagedContent: [{ id: 'content:content1' as ContentNodeId, weight: 1 }],
             commentedTopics: [
                 { label: 'topic1', weight: 0.2 },
                 { label: 'topic2', weight: 0.3 },
                 { label: 'topic3', weight: 0.3 },
             ],
-            reactedTopics: [],
-            sharedTopics: [],
-            followedTopics: [],
-            seenTopics: [],
-            viewedTopics: [],
-            featureWeights: [],
             taste: [{ label: 'taste1', weight: 0.5 }],
-            attributes: {},
         }));
         render(<UserProfileComp id="user:xyz" />);
         expect(await screen.findByText('topic1')).toBeInTheDocument();

@@ -94,7 +94,6 @@ export function makeFeatureVectors(candidates: Recommendation[], profile: UserPr
 
     return candidates.map((c) => {
         const tasteSimilarityScore = calculateTasteScore(profile, c.contentId);
-        const randomnessScore = Math.random() * 0.1;
         const {
             viewingPreferenceScore,
             commentingPreferenceScore,
@@ -117,7 +116,7 @@ export function makeFeatureVectors(candidates: Recommendation[], profile: UserPr
             followingPreferenceScore,
             reactionPreferenceScore,
             viewingPreferenceScore,
-            randomnessScore,
+            0,
         ];
     });
 }

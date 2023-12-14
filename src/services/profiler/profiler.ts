@@ -10,6 +10,7 @@ import {
     addEdge,
     hasNode,
     getNodeData,
+    updateNode,
 } from '@genaism/services/graph/graph';
 import { getTopicId, getTopicLabel } from '@genaism/services/concept/concept';
 import { addEdgeTypeListener, addNodeTypeListener } from '../graph/events';
@@ -18,6 +19,7 @@ import { ContentNodeId, UserNodeId, isContentID, isUserID } from '../graph/graph
 import defaults from './defaultWeights.json';
 import { normalise } from '@genaism/util/vectors';
 import { ScoredRecommendation } from '../recommender/recommenderTypes';
+import { trainProfile } from './training';
 
 const defaultWeights = normalise(Array.from(Object.values(defaults)));
 const weightKeys = Array.from(Object.keys(defaults));
@@ -81,6 +83,10 @@ addNodeTypeListener('user', (id: UserNodeId) => {
             viewedTopics: [],
             followedTopics: [],
             featureWeights: data.featureWeights,
+            seenItems: 0,
+            engagementTotal: 0,
+            positiveRecommendations: 0,
+            negativeRecommendations: 0,
         };
         users.set(id, profile);
         outOfDate.add(id);
@@ -94,23 +100,17 @@ export function getCurrentUser(): UserNodeId {
 }
 
 export function setUserName(id: UserNodeId, name: string) {
-    const current = users.get(id) || {
-        id,
-        name,
-        engagedContent: [],
-        similarUsers: [],
-        seenTopics: [],
-        reactedTopics: [],
-        followedTopics: [],
-        commentedTopics: [],
-        sharedTopics: [],
-        viewedTopics: [],
-        taste: [],
-        attributes: {},
-        engagement: -1,
-        featureWeights: [...defaultWeights],
-    };
-    users.set(id, { ...current, name });
+    if (!hasNode(id)) {
+        addNode('user', id, {
+            name: name,
+            featureWeights: [...defaultWeights],
+        });
+    } else {
+        updateNode(id, {
+            name,
+            featureWeights: [...defaultWeights],
+        });
+    }
 }
 
 export function addUserProfile(profile: UserProfile) {
@@ -159,8 +159,8 @@ export function replaceProfile(id: UserNodeId, profile: ProfileSummary) {
     emitProfileEvent(id);
 }
 
-export function createUserProfile(id: UserNodeId, name: string): UserProfile {
-    const profile: UserProfile = {
+export function createEmptyProfile(id: UserNodeId, name: string): UserProfile {
+    return {
         id: id,
         name: name,
         engagement: -1,
@@ -174,7 +174,15 @@ export function createUserProfile(id: UserNodeId, name: string): UserProfile {
         viewedTopics: [],
         followedTopics: [],
         featureWeights: [...defaultWeights],
+        seenItems: 0,
+        engagementTotal: 0,
+        positiveRecommendations: 0,
+        negativeRecommendations: 0,
     };
+}
+
+export function createUserProfile(id: UserNodeId, name: string): UserProfile {
+    const profile: UserProfile = createEmptyProfile(id, name);
     addUserProfile(profile);
     return profile;
 }
@@ -208,6 +216,10 @@ export function recreateUserProfile(id?: UserNodeId): UserProfile {
         engagement: summary.engagedContent.reduce((s, v) => s + v.weight, 0),
         attributes: {},
         featureWeights: data?.featureWeights || [...defaultWeights],
+        seenItems: state?.seenItems || 0,
+        engagementTotal: state?.engagementTotal || 0,
+        positiveRecommendations: state?.positiveRecommendations || 0,
+        negativeRecommendations: state?.negativeRecommendations || 0,
     };
 }
 
@@ -307,6 +319,7 @@ function affinityBoost(content: ContentNodeId, weight: number) {
     });
 
     addOrAccumulateEdge('engaged', getCurrentUser(), content, weight);
+    addOrAccumulateEdge('last_engaged', getCurrentUser(), content, weight);
 }
 
 type TopicEdgeTypes =
@@ -330,20 +343,17 @@ function normDwell(d: number): number {
 }
 
 export function updateEngagement(recommendation: ScoredRecommendation) {
-    const weight = getEdgeWeights('engaged', getCurrentUser(), recommendation.contentId)[0] || 0;
+    const weight = getEdgeWeights('last_engaged', getCurrentUser(), recommendation.contentId)[0] || 0;
     appendActionLog([{ activity: 'engagement', id: recommendation.contentId, value: weight, timestamp: Date.now() }]);
-    console.log('TRAIN', weight, recommendation);
+
+    const profile = users.get(getCurrentUser());
+    if (profile) {
+        trainProfile(recommendation, profile, weight);
+    }
 }
 
 export function addLogEntry(data: LogEntry) {
     const logArray: LogEntry[] = logs.get(getCurrentUser()) || [];
-    /*const changed = logArray.length > 0 ? logArray[logArray.length - 1].id !== data.id : false;
-
-    if (changed) {
-        const prev = logArray[logArray.length - 1];
-        const weight = getEdgeWeights('engaged', getCurrentUser(), prev.id as ContentNodeId)[0] || 0;
-        appendActionLog([{ activity: 'engagement', id: prev.id, value: weight, timestamp: Date.now() }]);
-    }*/
 
     logArray.push(data);
     logs.set(getCurrentUser(), logArray);
@@ -352,6 +362,7 @@ export function addLogEntry(data: LogEntry) {
 
     switch (data.activity) {
         case 'seen':
+            addEdge('last_engaged', getCurrentUser(), id, 0);
             boostTopics('seen_topic', id);
             addOrAccumulateEdge('seen', getCurrentUser(), id, 1);
             break;

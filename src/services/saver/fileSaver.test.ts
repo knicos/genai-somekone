@@ -2,7 +2,7 @@ import { describe, it, vi } from 'vitest';
 import { LogEntry, UserProfile } from '../profiler/profilerTypes';
 import { saveFile } from './fileSaver';
 import JSZip from 'jszip';
-import { UserNodeId } from '../graph/graphTypes';
+import { createEmptyProfile } from '@genaism/services/profiler/profiler';
 
 const { mockUsers, mockProfiles, mockSave, mockLog } = vi.hoisted(() => ({
     mockUsers: vi.fn(),
@@ -15,10 +15,16 @@ vi.mock('@genaism/services/graph/nodes', () => ({
     getNodesByType: mockUsers,
 }));
 
-vi.mock('@genaism/services/profiler/profiler', () => ({
-    getUserProfile: mockProfiles,
-    getActionLog: mockLog,
-}));
+vi.mock('@genaism/services/profiler/profiler', async () => {
+    const mod = await vi.importActual<typeof import('@genaism/services/profiler/profiler')>(
+        '@genaism/services/profiler/profiler'
+    );
+    return {
+        ...mod,
+        getUserProfile: mockProfiles,
+        getActionLog: mockLog,
+    };
+});
 
 vi.mock('file-saver', () => ({
     saveAs: mockSave,
@@ -27,21 +33,7 @@ vi.mock('file-saver', () => ({
 describe('saveFile()', () => {
     it('generates a zip containing user profiles', async ({ expect }) => {
         mockUsers.mockImplementation(() => ['xyz']);
-        mockProfiles.mockImplementation(() => ({
-            name: 'TestUser',
-            id: 'user:xyz' as UserNodeId,
-            engagement: -1,
-            engagedContent: [],
-            commentedTopics: [],
-            reactedTopics: [],
-            sharedTopics: [],
-            followedTopics: [],
-            seenTopics: [],
-            viewedTopics: [],
-            taste: [],
-            featureWeights: [],
-            attributes: {},
-        }));
+        mockProfiles.mockImplementation(() => createEmptyProfile('user:xyz', 'TestUser'));
 
         const blob = await saveFile(false, true, false, false);
 

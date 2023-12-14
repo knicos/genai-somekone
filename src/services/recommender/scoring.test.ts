@@ -21,7 +21,7 @@ describe('Scoring.scoreCandidates()', () => {
                 timestamp: Date.now(),
             },
         ];
-        const scored = scoreCandidates(candidates, profile, 10);
+        const scored = scoreCandidates(candidates, profile);
         expect(scored).toHaveLength(1);
         expect(scored[0].score).toBeLessThanOrEqual(0.15);
     });
@@ -41,7 +41,7 @@ describe('Scoring.scoreCandidates()', () => {
                 timestamp: Date.now(),
             },
         ];
-        const scored = scoreCandidates(candidates, profile, 10);
+        const scored = scoreCandidates(candidates, profile);
         expect(scored).toHaveLength(1);
         expect(scored[0].score).toBeGreaterThan(0.0);
     });

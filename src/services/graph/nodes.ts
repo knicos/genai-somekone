@@ -29,6 +29,14 @@ export function removeNode<T extends NodeType>(id: NodeID<T>) {
     }
 }
 
+export function updateNode(id: NodeID, data: unknown) {
+    const existing = nodeStore.get(id);
+    if (existing) {
+        existing.data = data;
+        emitNodeTypeEvent(existing.type, id);
+    }
+}
+
 export function addNode<T extends NodeType>(type: T, id?: NodeID<T>, data?: unknown): NodeID<T> {
     const nid = id ? id : (`${type}:${uuidv4()}` as NodeID<T>);
     if (nodeStore.has(nid)) throw new Error('id_exists');

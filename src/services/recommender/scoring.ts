@@ -6,11 +6,7 @@ import { Recommendation, ScoredRecommendation } from './recommenderTypes';
 
 const MIN5 = 5 * 60 * 1000;
 
-export function scoreCandidates(
-    candidates: Recommendation[],
-    profile: UserProfile,
-    count: number
-): ScoredRecommendation[] {
+export function scoreCandidates(candidates: Recommendation[], profile: UserProfile): ScoredRecommendation[] {
     const now = Date.now();
     const seenImages = getRelated('seen', profile.id, {
         period: MIN5,
@@ -34,5 +30,5 @@ export function scoreCandidates(
     }));
 
     results.sort((a, b) => b.score - a.score);
-    return results.slice(0, count);
+    return results;
 }

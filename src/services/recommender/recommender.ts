@@ -4,16 +4,20 @@ import { scoreCandidates } from './scoring';
 import { UserNodeId } from '../graph/graphTypes';
 import { getUserProfile } from '../profiler/profiler';
 import { emitRecommendationEvent } from './events';
+import { biasedUniqueSubset } from '@genaism/util/subsets';
 
 const store = new Map<UserNodeId, ScoredRecommendation[]>();
 
 export async function generateNewRecommendations(id: UserNodeId, count: number) {
     const profile = getUserProfile(id);
     const candidates = generateCandidates(profile, count);
-    const scored = scoreCandidates(candidates, profile, count);
+    const scored = scoreCandidates(candidates, profile);
+
     const old = store.get(profile.id) || [];
-    store.set(profile.id, [...scored, ...old]);
-    emitRecommendationEvent(id, scored);
+    const subset = biasedUniqueSubset(scored, count, (v) => v.contentId);
+
+    store.set(profile.id, [...subset, ...old]);
+    emitRecommendationEvent(id, subset);
 }
 
 export function getRecommendations(id: UserNodeId, count: number): ScoredRecommendation[] {

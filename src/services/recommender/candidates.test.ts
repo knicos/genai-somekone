@@ -32,8 +32,8 @@ describe('Candidates.generateCandidates()', () => {
         addEdge('content', topicID, 'content:ggg', 1.0);
         const profile = createUserProfile('user:xyz', 'TestUser');
         profile.taste = [{ label: 'topic1', weight: 0.5 }];
-        const candidates = generateCandidates(profile, 10);
-        console.log('Candidates', candidates);
+        const candidates = generateCandidates(profile, 10, { noRandom: true });
+
         expect(candidates).toHaveLength(1);
         expect(candidates[0].candidateOrigin).toBe('topic_affinity');
         expect(candidates[0].contentId).toBe('content:ggg');

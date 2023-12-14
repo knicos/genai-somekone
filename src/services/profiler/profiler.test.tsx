@@ -4,6 +4,7 @@ import {
     addLogEntry,
     addUserProfile,
     appendActionLog,
+    createEmptyProfile,
     createUserProfile,
     getActionLogSince,
     getCurrentUser,
@@ -38,21 +39,7 @@ beforeEach(() => {
 describe('User hooks.useUserProfile', () => {
     it('triggers a rerender on event', async ({ expect }) => {
         addNode('content', 'content:hhh');
-        addUserProfile({
-            name: 'TestUser1',
-            id: 'user:xyz',
-            engagedContent: [],
-            commentedTopics: [],
-            reactedTopics: [],
-            sharedTopics: [],
-            followedTopics: [],
-            seenTopics: [],
-            viewedTopics: [],
-            taste: [],
-            featureWeights: [],
-            engagement: -1,
-            attributes: {},
-        });
+        addUserProfile(createEmptyProfile('user:xyz', 'TestUser1'));
 
         const action = vi.fn();
 
@@ -65,21 +52,7 @@ describe('User hooks.useUserProfile', () => {
     });
 
     it('displays the user name', async ({ expect }) => {
-        addUserProfile({
-            name: 'TestUser2',
-            id: 'user:xyz',
-            engagedContent: [],
-            commentedTopics: [],
-            reactedTopics: [],
-            sharedTopics: [],
-            followedTopics: [],
-            seenTopics: [],
-            viewedTopics: [],
-            taste: [],
-            featureWeights: [],
-            engagement: -1,
-            attributes: {},
-        });
+        addUserProfile(createEmptyProfile('user:xyz', 'TestUser2'));
 
         const action = vi.fn();
 

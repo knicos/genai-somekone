@@ -2,9 +2,12 @@ import { getNodesByType, getRelated } from '@genaism/services/graph/graph';
 import { getTopicId } from '@genaism/services/concept/concept';
 import { ProfileSummary, UserProfile } from '@genaism/services/profiler/profilerTypes';
 import { Recommendation } from './recommenderTypes';
+import { uniformUniqueSubset } from '@genaism/util/subsets';
 
 function calculateCount(high: number, low: number, value: number, max: number) {
-    return Math.floor(((value - low) / (high - low)) * (max - 1) + 1);
+    const range = high - low;
+    if (range === 0) return 1;
+    return Math.floor(((value - low) / range) * (max - 1) + 1);
 }
 
 function generateTasteBatch(profile: ProfileSummary, nodes: Recommendation[], count: number) {
@@ -17,7 +20,9 @@ function generateTasteBatch(profile: ProfileSummary, nodes: Recommendation[], co
         if (t.weight > 0) {
             const c = calculateCount(high, low, t.weight, count);
             // TODO: Consider using a popularity weighted edge here.
-            const tresult = getRelated('content', getTopicId(t.label), { count: c });
+            const related = getRelated('content', getTopicId(t.label));
+            const tresult = uniformUniqueSubset(related, c, (v) => v.id);
+
             tresult.forEach((tr) =>
                 nodes.push({
                     contentId: tr.id,
@@ -35,20 +40,28 @@ function fillWithRandom(nodes: Recommendation[], count: number) {
     const allNodes = getNodesByType('content');
     if (allNodes.length === 0) return;
 
-    for (let i = 0; i < count; ++i) {
-        const ix = Math.floor(Math.random() * allNodes.length);
+    const now = Date.now();
+    const randomNodes = uniformUniqueSubset(allNodes, count, (v) => v);
+    randomNodes.forEach((node) => {
         nodes.push({
-            contentId: allNodes[ix],
+            contentId: node,
             candidateOrigin: 'random',
-            timestamp: Date.now(),
+            timestamp: now,
         });
-    }
+    });
 }
 
-export function generateCandidates(profile: UserProfile, count: number): Recommendation[] {
+export interface CandidateOptions {
+    noTaste?: boolean;
+    noRandom?: boolean;
+    allowDuplicates?: boolean;
+}
+
+export function generateCandidates(profile: UserProfile, count: number, options?: CandidateOptions): Recommendation[] {
     const nodes: Recommendation[] = [];
-    generateTasteBatch(profile, nodes, count * 2);
-    fillWithRandom(nodes, count);
+
+    if (!options?.noTaste) generateTasteBatch(profile, nodes, count * 2);
+    if (!options?.noRandom) fillWithRandom(nodes, count);
 
     console.log('PROFILE', profile);
 

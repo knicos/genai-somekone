@@ -49,4 +49,8 @@ export interface UserProfile extends ProfileSummary {
     engagement: number;
     attributes: Record<string, unknown>;
     featureWeights: number[]; // For recommendation scoring.
+    seenItems: number;
+    engagementTotal: number;
+    positiveRecommendations: number;
+    negativeRecommendations: number;
 }

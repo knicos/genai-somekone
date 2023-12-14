@@ -2,22 +2,11 @@ import { describe, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import DataProfile from './DataProfile';
 import { LogEntry, UserProfile } from '@genaism/services/profiler/profilerTypes';
+import { createEmptyProfile } from '@genaism/services/profiler/profiler';
 
 const { mockProfile, mockLog } = vi.hoisted(() => ({
     mockProfile: vi.fn<unknown[], UserProfile>(() => ({
-        name: 'TestUser1',
-        id: 'user:xyz',
-        engagement: -1,
-        engagedContent: [],
-        commentedTopics: [],
-        reactedTopics: [],
-        sharedTopics: [],
-        followedTopics: [],
-        featureWeights: [],
-        seenTopics: [],
-        viewedTopics: [],
-        taste: [],
-        attributes: {},
+        ...createEmptyProfile('user:xyz', 'TestUser1'),
     })),
     mockLog: vi.fn<unknown[], LogEntry[]>(() => []),
 }));
@@ -30,19 +19,7 @@ vi.mock('@genaism/services/profiler/hooks', () => ({
 describe('DataProfile component', () => {
     it('works with no content or log data', async ({ expect }) => {
         const profile: UserProfile = {
-            name: 'TestUser1',
-            id: 'user:xyz',
-            engagement: -1,
-            engagedContent: [],
-            commentedTopics: [],
-            reactedTopics: [],
-            sharedTopics: [],
-            followedTopics: [],
-            seenTopics: [],
-            viewedTopics: [],
-            featureWeights: [],
-            taste: [],
-            attributes: {},
+            ...createEmptyProfile('user:xyz', 'TestUser1'),
         };
 
         mockProfile.mockImplementation(() => profile);
@@ -54,19 +31,8 @@ describe('DataProfile component', () => {
 
     it('works with content and log data', async ({ expect }) => {
         const profile: UserProfile = {
-            name: 'TestUser1',
-            id: 'user:xyz',
-            engagement: -1,
+            ...createEmptyProfile('user:xyz', 'TestUser1'),
             engagedContent: [{ id: 'content:content1', weight: 1 }],
-            commentedTopics: [],
-            reactedTopics: [],
-            sharedTopics: [],
-            followedTopics: [],
-            seenTopics: [],
-            viewedTopics: [],
-            featureWeights: [],
-            taste: [],
-            attributes: {},
         };
 
         mockProfile.mockImplementation(() => profile);

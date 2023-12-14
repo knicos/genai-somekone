@@ -7,7 +7,7 @@ import { SMConfig } from './smConfig';
 import EnterUsername from './EnterUsername';
 import { EventProtocol } from '../../protocol/protocol';
 import { ProfileSummary } from '@genaism/services/profiler/profilerTypes';
-import { getActionLogSince, getCurrentUser, getUserProfile } from '@genaism/services/profiler/profiler';
+import { getActionLogSince, getCurrentUser, getUserProfile, setUserName } from '@genaism/services/profiler/profiler';
 import ErrorDialog from '../dialogs/ErrorDialog/ErrorDialog';
 import Loading from '@genaism/components/Loading/Loading';
 import { useTranslation } from 'react-i18next';
@@ -58,6 +58,7 @@ export function Component() {
 
     useEffect(() => {
         if (username && send) {
+            setUserName(getCurrentUser(), username);
             send({ event: 'eter:reguser', username, id: getCurrentUser() });
         }
     }, [username, send]);

@@ -5,22 +5,13 @@ import { UserProfile } from '@genaism/services/profiler/profilerTypes';
 import TestWrapper from '@genaism/util/TestWrapper';
 import { settingDisplayLabel, settingShrinkOfflineUsers } from '@genaism/state/settingsState';
 import { ContentNodeId, UserNodeId, WeightedNode } from '@genaism/services/graph/graphTypes';
+import { createEmptyProfile } from '@genaism/services/profiler/profiler';
 
 const { mockProfile, mockSimilar } = vi.hoisted(() => ({
     mockProfile: vi.fn<unknown[], UserProfile>(() => ({
-        name: 'TestUser1',
-        id: 'user:xyz',
-        engagement: -1,
+        ...createEmptyProfile('user:xyz', 'TestUser1'),
         engagedContent: [{ id: 'content:content1', weight: 1 }],
-        commentedTopics: [],
-        reactedTopics: [],
-        sharedTopics: [],
-        followedTopics: [],
-        seenTopics: [],
-        featureWeights: [],
-        viewedTopics: [],
         taste: [{ label: 'taste1', weight: 0.5 }],
-        attributes: {},
     })),
     mockSimilar: vi.fn(() => [] as WeightedNode<UserNodeId>[]),
 }));
@@ -38,19 +29,7 @@ describe('ProfileNode component', () => {
         const resizeFn = vi.fn();
 
         mockProfile.mockImplementation(() => ({
-            name: 'TestUser1',
-            id: 'user:xyz' as UserNodeId,
-            engagement: -1,
-            engagedContent: [],
-            commentedTopics: [],
-            reactedTopics: [],
-            sharedTopics: [],
-            followedTopics: [],
-            seenTopics: [],
-            featureWeights: [],
-            viewedTopics: [],
-            taste: [],
-            attributes: {},
+            ...createEmptyProfile('user:xyz', 'TestUser1'),
         }));
 
         render(
@@ -80,19 +59,7 @@ describe('ProfileNode component', () => {
         const resizeFn = vi.fn();
 
         mockProfile.mockImplementation(() => ({
-            name: 'TestUser1',
-            id: 'user:xyz' as UserNodeId,
-            engagement: -1,
-            engagedContent: [],
-            commentedTopics: [],
-            reactedTopics: [],
-            sharedTopics: [],
-            followedTopics: [],
-            seenTopics: [],
-            viewedTopics: [],
-            featureWeights: [],
-            taste: [],
-            attributes: {},
+            ...createEmptyProfile('user:xyz', 'TestUser1'),
         }));
 
         render(
@@ -122,19 +89,9 @@ describe('ProfileNode component', () => {
         const resizeFn = vi.fn();
 
         mockProfile.mockImplementation(() => ({
-            name: 'TestUser1',
-            id: 'user:xyz' as UserNodeId,
-            engagement: -1,
+            ...createEmptyProfile('user:xyz', 'TestUser1'),
             engagedContent: [{ id: 'content:content1' as ContentNodeId, weight: 1 }],
-            commentedTopics: [],
-            reactedTopics: [],
-            sharedTopics: [],
-            followedTopics: [],
-            seenTopics: [],
-            viewedTopics: [],
-            featureWeights: [],
             taste: [{ label: 'taste1', weight: 0.5 }],
-            attributes: {},
         }));
 
         render(
@@ -164,19 +121,9 @@ describe('ProfileNode component', () => {
         const resizeFn = vi.fn();
 
         mockProfile.mockImplementation(() => ({
-            name: 'TestUser1',
-            id: 'user:xyz' as UserNodeId,
-            engagement: -1,
+            ...createEmptyProfile('user:xyz', 'TestUser1'),
             engagedContent: [{ id: 'content:content1' as ContentNodeId, weight: 1 }],
-            commentedTopics: [],
-            reactedTopics: [],
-            sharedTopics: [],
-            followedTopics: [],
-            seenTopics: [],
-            viewedTopics: [],
-            featureWeights: [],
             taste: [{ label: 'taste1', weight: 0.5 }],
-            attributes: {},
         }));
 
         mockSimilar.mockImplementation(() => [
