@@ -1,0 +1,45 @@
+@value secondary from "../../style/colours.module.css";
+
+.group:hover > .outerCircle {
+    fill: secondary;
+    opacity: 0.6;
+    transform: scale(1.1);
+}
+
+.disabledGroup {
+    composes: group;
+    opacity: 0.2;
+}
+
+.outerCircle {
+    fill: none;
+    stroke: none;
+    transition: transform 0.2s;
+}
+
+.selectedCircle {
+    fill: none;
+    stroke-dasharray: 20 10;
+    stroke: secondary;
+    animation: pulse 20s infinite linear;
+    stroke-width: 5;
+}
+
+@keyframes pulse {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    50% {
+        transform: rotate(180deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.selectedLink {
+    stroke: secondary;
+    opacity: 1 !important;
+}

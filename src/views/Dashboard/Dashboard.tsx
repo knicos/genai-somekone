@@ -23,6 +23,7 @@ import { errorNotification } from '@genaism/state/errorState';
 import useRandom from '@genaism/hooks/random';
 import { appConfiguration } from '@genaism/state/settingsState';
 import TopicGraph from '@genaism/components/TopicGraph/TopicGraph';
+import ContentGraph from '@genaism/components/ContentGraph/ContentGraph';
 
 export function Component() {
     const [params] = useSearchParams();
@@ -133,6 +134,14 @@ export function Component() {
             <Loading loading={!loaded}>
                 <main className={style.dashboard}>
                     <section className={style.workspace}>
+                        <div className={style.backgroundLogo}>
+                            <img
+                                src="/logo64_bw.png"
+                                width={64}
+                                height={64}
+                            />
+                            <h1>Somekone</h1>
+                        </div>
                         {graphMode === 'social' && (
                             <SocialGraph
                                 key={`sg-${count}`}
@@ -140,6 +149,7 @@ export function Component() {
                             />
                         )}
                         {graphMode === 'topic' && <TopicGraph key={`tg-${count}`} />}
+                        {graphMode === 'content' && <ContentGraph key={`cg-${count}`} />}
 
                         <StartDialog
                             users={users}

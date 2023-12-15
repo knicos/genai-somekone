@@ -1,6 +1,6 @@
 import { useNodeType } from '@genaism/services/graph/hooks';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import Graph, { GraphLink, GraphNode } from '../Graph/Graph';
+import Graph, { GraphLink, GraphNode, InternalGraphLink } from '../Graph/Graph';
 import { TopicNodeId, WeightedNode } from '@genaism/services/graph/graphTypes';
 import TopicNode from './TopicNode';
 import { topicUserSimilarity } from './similarity';
@@ -98,6 +98,10 @@ export default function TopicGraph() {
             zoom={zoom}
             onZoom={setZoom}
             center={center}
+            defaultLinkStyle={{
+                opacity: (l: InternalGraphLink<TopicNodeId, TopicNodeId>) => l.strength * 0.9,
+                width: (l: InternalGraphLink<TopicNodeId, TopicNodeId>) => 1 + Math.floor(l.strength * 60),
+            }}
         >
             {nodes.map((n) => (
                 <TopicNode

@@ -58,3 +58,14 @@
     background: workspaceBg;
     width: 100%;
 }
+
+.backgroundLogo {
+    position: absolute;
+    top: 10px;
+    left: 20px;
+    display: flex;
+    background: none;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0.4;
+}

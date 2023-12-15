@@ -105,6 +105,7 @@ export default function SocialGraph({ liveUsers }: Props) {
                 });
 
                 const conn = new Set<UserNodeId>();
+                conn.add(n.id);
                 l.forEach((link) => {
                     conn.add(link.source.id);
                     conn.add(link.target.id);

@@ -6,6 +6,7 @@ export type EdgeType =
     | 'shared'
     | 'comment'
     | 'engaged'
+    | 'coengaged'
     | 'last_engaged'
     | 'common_attribute'
     | 'parent'
@@ -51,6 +52,7 @@ type GenericEdge<A extends EdgeType, B extends NodeID<NodeType>, C extends NodeI
 type ContentTopicEdge = GenericEdge<'topic', ContentNodeId, TopicNodeId>;
 type TopicContentEdge = GenericEdge<'content', TopicNodeId, ContentNodeId>;
 type SeenContentEdge = GenericEdge<'seen', UserNodeId, ContentNodeId>;
+type CoengagedContentEdge = GenericEdge<'coengaged', ContentNodeId, ContentNodeId>;
 type ContentCommentedByUserEdge = GenericEdge<'comment', ContentNodeId, UserNodeId>;
 type UserEngagedContentEdge = GenericEdge<'engaged', UserNodeId, ContentNodeId>;
 type UserLastEngagedContentEdge = GenericEdge<'last_engaged', UserNodeId, ContentNodeId>;
@@ -74,6 +76,7 @@ export type EdgeTypes =
     | ContentTopicEdge
     | TopicContentEdge
     | SeenContentEdge
+    | CoengagedContentEdge
     | ContentCommentedByUserEdge
     | UserEngagedContentEdge
     | UserLastEngagedContentEdge

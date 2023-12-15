@@ -73,6 +73,6 @@ async function generateBlob(incContent: boolean, incProfiles: boolean, incLogs: 
 
 export async function saveFile(includeContent: boolean, includeProfiles: boolean, incLogs: boolean, incGraph: boolean) {
     const blob = await generateBlob(includeContent, includeProfiles, incLogs, incGraph);
-    saveAs(blob, 'genagram.zip');
+    saveAs(blob, 'somekone.zip');
     return blob;
 }

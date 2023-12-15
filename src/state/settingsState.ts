@@ -1,6 +1,15 @@
 import { SMConfig } from '@genaism/views/Genagram/smConfig';
 import { atom } from 'recoil';
 
+/* === General === */
+
+export const appConfiguration = atom<SMConfig>({
+    key: 'appconfig',
+    default: {},
+});
+
+/* === Social Graph === */
+
 export const settingDisplayLines = atom<boolean>({
     key: 'settingdisplaylines',
     default: true,
@@ -43,10 +52,17 @@ export const settingNodeMode = atom<NodeDisplayMode>({
     default: 'image',
 });
 
-export const appConfiguration = atom<SMConfig>({
-    key: 'appconfig',
-    default: {},
+export const settingClusterColouring = atom<boolean>({
+    key: 'settingclustercolouring',
+    default: false,
 });
+
+export const settingEgoOnSelect = atom<boolean>({
+    key: 'settingegoonselect',
+    default: true,
+});
+
+/* === Topic Graph === */
 
 export const settingTopicDisplayLines = atom<boolean>({
     key: 'settingtopicdisplaylines',
@@ -68,12 +84,24 @@ export const settingTopicNodeCharge = atom<number>({
     default: 2,
 });
 
-export const settingClusterColouring = atom<boolean>({
-    key: 'settingclustercolouring',
-    default: false,
+/* === Content Grap === */
+
+export const settingContentDisplayLines = atom<boolean>({
+    key: 'settingcontentdisplaylines',
+    default: true,
 });
 
-export const settingEgoOnSelect = atom<boolean>({
-    key: 'settingegoonselect',
-    default: true,
+export const settingContentLinkDistanceScale = atom<number>({
+    key: 'settingcontentlinkdistscale',
+    default: 6,
+});
+
+export const settingContentSimilarPercent = atom<number>({
+    key: 'settingcontentsimilarpercent',
+    default: 0.2,
+});
+
+export const settingContentNodeCharge = atom<number>({
+    key: 'settingcontentnodecharge',
+    default: 2,
 });

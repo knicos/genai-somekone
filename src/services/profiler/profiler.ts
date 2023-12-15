@@ -1,11 +1,9 @@
-import { LogEntry } from './profilerTypes';
 import { ProfileSummary, UserProfile } from '../profiler/profilerTypes';
 import {
     addNode,
     addNodeIfNotExists,
     getNodesByType,
     getRelated,
-    addOrAccumulateEdge,
     getEdgeWeights,
     addEdge,
     hasNode,
@@ -14,35 +12,23 @@ import {
 } from '@genaism/services/graph/graph';
 import { getTopicId, getTopicLabel } from '@genaism/services/concept/concept';
 import { addEdgeTypeListener, addNodeTypeListener } from '../graph/events';
-import { emitLogEvent, emitProfileEvent } from '../profiler/events';
+import { emitProfileEvent } from '../profiler/events';
 import { ContentNodeId, UserNodeId, isContentID, isUserID } from '../graph/graphTypes';
 import defaults from './defaultWeights.json';
 import { normalise } from '@genaism/util/vectors';
 import { ScoredRecommendation } from '../recommender/recommenderTypes';
 import { trainProfile } from './training';
+import { getCurrentUser, outOfDate, users, resetProfiles } from './state';
+import { appendActionLog, addLogEntry, getActionLog, getActionLogSince } from './logs';
+
+export { appendActionLog, addLogEntry, getCurrentUser, resetProfiles, getActionLog, getActionLogSince };
 
 const defaultWeights = normalise(Array.from(Object.values(defaults)));
 const weightKeys = Array.from(Object.keys(defaults));
 export { defaultWeights, weightKeys };
 
-const MIN_DWELL_TIME = 2000;
-const MAX_DWELL_TIME = 10000;
 const TIME_WINDOW = 20 * 60 * 1000;
 const TIME_DECAY = 0.5;
-
-let userID: UserNodeId | undefined;
-
-const users = new Map<UserNodeId, UserProfile>();
-const logs = new Map<UserNodeId, LogEntry[]>();
-
-const outOfDate = new Set<string>();
-
-export function resetProfiles() {
-    users.clear();
-    logs.clear();
-    outOfDate.clear();
-    userID = undefined;
-}
 
 function triggerProfileEvent(id: UserNodeId) {
     const wasOOD = outOfDate.has(id);
@@ -93,11 +79,6 @@ addNodeTypeListener('user', (id: UserNodeId) => {
         emitProfileEvent(id);
     }
 });
-
-export function getCurrentUser(): UserNodeId {
-    if (!userID) userID = addNode('user');
-    return userID;
-}
 
 export function setUserName(id: UserNodeId, name: string) {
     if (!hasNode(id)) {
@@ -294,54 +275,6 @@ export function createProfileSummaryById(id: UserNodeId, count?: number): Profil
     };
 }
 
-export function prettyProfile() {
-    if (!userID) newUser();
-
-    const topics = getRelated('topic', getCurrentUser(), { count: 10 });
-    const names = topics.map((t) => `${getTopicLabel(t.id)} (${t.weight.toFixed(1)})`);
-    console.log(names);
-}
-
-export function newUser() {
-    userID = addNode('user');
-}
-
-function affinityBoost(content: ContentNodeId, weight: number) {
-    const topics = getRelated('topic', content);
-    topics.forEach((t) => {
-        const engageScore = (getEdgeWeights('engaged_topic', getCurrentUser(), t.id)[0] || 0) + t.weight * weight;
-        addEdge('engaged_topic', getCurrentUser(), t.id, engageScore);
-
-        const seenScore = getEdgeWeights('seen_topic', getCurrentUser(), t.id)[0] || 1;
-
-        addEdge('topic', getCurrentUser(), t.id, engageScore / seenScore);
-        addEdge('topic', t.id, getCurrentUser(), engageScore / seenScore);
-    });
-
-    addOrAccumulateEdge('engaged', getCurrentUser(), content, weight);
-    addOrAccumulateEdge('last_engaged', getCurrentUser(), content, weight);
-}
-
-type TopicEdgeTypes =
-    | 'reacted_topic'
-    | 'shared_topic'
-    | 'followed_topic'
-    | 'seen_topic'
-    | 'viewed_topic'
-    | 'commented_topic';
-
-function boostTopics(type: TopicEdgeTypes, content: ContentNodeId) {
-    const topics = getRelated('topic', content);
-    topics.forEach((t) => {
-        if (t.weight === 0) return;
-        addOrAccumulateEdge(type, getCurrentUser(), t.id, 1.0);
-    });
-}
-
-function normDwell(d: number): number {
-    return Math.max(0, Math.min(10, (d - MIN_DWELL_TIME) / (MAX_DWELL_TIME - MIN_DWELL_TIME)));
-}
-
 export function updateEngagement(recommendation: ScoredRecommendation) {
     const weight = getEdgeWeights('last_engaged', getCurrentUser(), recommendation.contentId)[0] || 0;
     appendActionLog([{ activity: 'engagement', id: recommendation.contentId, value: weight, timestamp: Date.now() }]);
@@ -350,86 +283,4 @@ export function updateEngagement(recommendation: ScoredRecommendation) {
     if (profile) {
         trainProfile(recommendation, profile, weight);
     }
-}
-
-export function addLogEntry(data: LogEntry) {
-    const logArray: LogEntry[] = logs.get(getCurrentUser()) || [];
-
-    logArray.push(data);
-    logs.set(getCurrentUser(), logArray);
-
-    const id = (data.id || '') as ContentNodeId;
-
-    switch (data.activity) {
-        case 'seen':
-            addEdge('last_engaged', getCurrentUser(), id, 0);
-            boostTopics('seen_topic', id);
-            addOrAccumulateEdge('seen', getCurrentUser(), id, 1);
-            break;
-        case 'like':
-            affinityBoost(id, 0.1);
-            boostTopics('reacted_topic', id);
-            break;
-        case 'laugh':
-        case 'anger':
-        case 'sad':
-        case 'wow':
-        case 'love':
-            affinityBoost(id, 0.2);
-            boostTopics('reacted_topic', id);
-            break;
-        case 'share_public':
-            affinityBoost(id, 0.5);
-            boostTopics('shared_topic', id);
-            break;
-        case 'share_private':
-            affinityBoost(id, 0.1);
-            boostTopics('shared_topic', id);
-            break;
-        case 'share_friends':
-            affinityBoost(id, 0.3);
-            boostTopics('shared_topic', id);
-            break;
-        case 'dwell':
-            affinityBoost(id, normDwell(data.value || 0) * 0.3);
-            if (data.value && data.value > 2000) boostTopics('viewed_topic', id);
-            break;
-        case 'follow':
-            affinityBoost(id, 0.5);
-            boostTopics('followed_topic', id);
-            break;
-        case 'comment':
-            affinityBoost(id, Math.min(1, (data.value || 0) / 80) * 0.6);
-            boostTopics('commented_topic', id);
-            break;
-    }
-
-    emitLogEvent(getCurrentUser());
-}
-
-export function appendActionLog(data: LogEntry[], id?: UserNodeId) {
-    const aid = id || getCurrentUser();
-    const logArray: LogEntry[] = logs.get(aid) || [];
-    logArray.push(...data);
-    logs.set(aid, logArray);
-    emitLogEvent(aid);
-}
-
-export function getActionLog(id?: UserNodeId): LogEntry[] {
-    const aid = id || getCurrentUser();
-    return logs.get(aid) || [];
-}
-
-export function getActionLogSince(timestamp: number, id?: UserNodeId): LogEntry[] {
-    const result: LogEntry[] = [];
-    const log = getActionLog(id);
-
-    for (let i = log.length - 1; i >= 0; --i) {
-        if (log[i].timestamp > timestamp) {
-            result.push(log[i]);
-        } else {
-            break;
-        }
-    }
-    return result.reverse();
 }
