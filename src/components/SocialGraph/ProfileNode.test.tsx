@@ -25,7 +25,6 @@ vi.mock('@genaism/services/users/users', () => ({
 
 describe('ProfileNode component', () => {
     it('shows a circle and label on an empty profile', async ({ expect }) => {
-        const linksFn = vi.fn();
         const resizeFn = vi.fn();
 
         mockProfile.mockImplementation(() => ({
@@ -42,9 +41,9 @@ describe('ProfileNode component', () => {
                 <svg>
                     <ProfileNode
                         id="user:xyz"
-                        onLinks={linksFn}
                         onResize={resizeFn}
                         live={true}
+                        similarUsers={[]}
                     />
                 </svg>
             </TestWrapper>
@@ -55,7 +54,6 @@ describe('ProfileNode component', () => {
     });
 
     it('does not show the label if setting is false', async ({ expect }) => {
-        const linksFn = vi.fn();
         const resizeFn = vi.fn();
 
         mockProfile.mockImplementation(() => ({
@@ -72,7 +70,7 @@ describe('ProfileNode component', () => {
                 <svg>
                     <ProfileNode
                         id="user:xyz"
-                        onLinks={linksFn}
+                        similarUsers={[]}
                         onResize={resizeFn}
                         live={true}
                     />
@@ -85,7 +83,6 @@ describe('ProfileNode component', () => {
     });
 
     it('shows a single content item', async ({ expect }) => {
-        const linksFn = vi.fn();
         const resizeFn = vi.fn();
 
         mockProfile.mockImplementation(() => ({
@@ -104,7 +101,7 @@ describe('ProfileNode component', () => {
                 <svg>
                     <ProfileNode
                         id="user:xyz"
-                        onLinks={linksFn}
+                        similarUsers={[]}
                         onResize={resizeFn}
                         live={true}
                     />
@@ -114,44 +111,5 @@ describe('ProfileNode component', () => {
 
         expect(screen.getByTestId('cloud-image')).toBeInTheDocument();
         expect(resizeFn).toHaveBeenCalled();
-    });
-
-    it('generates similar user links', async ({ expect }) => {
-        const linksFn = vi.fn();
-        const resizeFn = vi.fn();
-
-        mockProfile.mockImplementation(() => ({
-            ...createEmptyProfile('user:xyz', 'TestUser1'),
-            engagedContent: [{ id: 'content:content1' as ContentNodeId, weight: 1 }],
-            taste: [{ label: 'taste1', weight: 0.5 }],
-        }));
-
-        mockSimilar.mockImplementation(() => [
-            { id: 'user:ddd', weight: 2 },
-            { id: 'user:sss', weight: 1.9 },
-        ]);
-
-        render(
-            <TestWrapper
-                initializeState={({ set }) => {
-                    set(settingDisplayLabel, true);
-                    set(settingShrinkOfflineUsers, false);
-                }}
-            >
-                <svg>
-                    <ProfileNode
-                        id="user:xyz"
-                        onLinks={linksFn}
-                        onResize={resizeFn}
-                        live={true}
-                    />
-                </svg>
-            </TestWrapper>
-        );
-
-        expect(linksFn).toHaveBeenCalledWith('user:xyz', [
-            { source: 'user:xyz', target: 'user:ddd', strength: 2 },
-            { source: 'user:xyz', target: 'user:sss', strength: 1.9 },
-        ]);
     });
 });

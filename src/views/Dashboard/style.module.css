@@ -33,7 +33,7 @@
 }
 
 .logo {
-    padding: 0.5rem;
+    padding: 0.2rem;
     padding-top: 1rem;
     margin-bottom: 1rem;
     background: bgColourful1;
@@ -61,11 +61,11 @@
 
 .backgroundLogo {
     position: absolute;
-    top: 10px;
-    left: 20px;
+    bottom: 10px;
+    right: 20px;
     display: flex;
     background: none;
     align-items: center;
     gap: 0.5rem;
-    opacity: 0.4;
+    opacity: 0.2;
 }

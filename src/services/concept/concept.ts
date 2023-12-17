@@ -18,7 +18,7 @@ addNodeTypeListener('topic', (id: TopicNodeId) => {
 });
 
 export function addTopic(label: string, weight: number, parent?: TopicNodeId): TopicNodeId {
-    const id = addNode('topic', undefined, { label });
+    const id = addNode('topic', `topic:${label}`, { label });
     //topicStore.set(id, label);
     //topicLabelIndex.set(label, id);
 

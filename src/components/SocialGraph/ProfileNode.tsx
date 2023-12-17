@@ -1,8 +1,6 @@
 import ImageCloud from '../ImageCloud/ImageCloud';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useUserProfile } from '@genaism/services/profiler/hooks';
-import { useSimilarUsers } from '@genaism/services/users/users';
-import { GraphLink } from '../Graph/Graph';
 import { UserNodeId, WeightedNode } from '@genaism/services/graph/graphTypes';
 import { useRecoilValue } from 'recoil';
 import {
@@ -40,7 +38,7 @@ interface Props {
     selected?: boolean;
     disabled?: boolean;
     colourMapping?: Map<string, string>;
-    onLinks: (id: string, links: GraphLink<UserNodeId, UserNodeId>[]) => void;
+    similarUsers: WeightedNode<UserNodeId>[];
     onResize: (id: string, size: number) => void;
 }
 
@@ -59,28 +57,26 @@ const colours = [
     '#ff9499',
 ];
 
-export default function ProfileNode({ id, onLinks, onResize, live, selected, colourMapping, disabled }: Props) {
+export default function ProfileNode({ id, onResize, live, selected, colourMapping, disabled, similarUsers }: Props) {
     const [size, setSize] = useState(100);
-    const [colour, setColour] = useState('white');
-    const simRef = useRef<WeightedNode<UserNodeId>[]>();
+    const [colour, setColour] = useState<string>();
     const showLabel = useRecoilValue(settingDisplayLabel);
     const shrinkOffline = useRecoilValue(settingShrinkOfflineUsers);
     const nodeMode = useRecoilValue(settingNodeMode);
     const similarPercent = useRecoilValue(settingSimilarPercent);
 
     const profile = useUserProfile(id);
-    const similar = useSimilarUsers(profile);
 
     useEffect(() => {
         if (colourMapping) {
             let bestTopic = 'NOTOPIC';
             let bestTopicScore = 0;
-            const maxWeight = similar[0]?.weight || 0;
+            const maxWeight = similarUsers[0]?.weight || 0;
 
             profile.taste.forEach((topic) => {
                 let topicScore = 0;
                 let userCount = 0;
-                similar.forEach((user) => {
+                similarUsers.forEach((user) => {
                     if (user.weight >= maxWeight * (1 - similarPercent)) {
                         const userProfile = getUserProfile(user.id);
                         const match = userProfile.taste.find((v) => v.label === topic.label);
@@ -102,11 +98,11 @@ export default function ProfileNode({ id, onLinks, onResize, live, selected, col
             if (!colourMapping.has(bestTopic)) {
                 colourMapping.set(bestTopic, colours[colourMapping.size % colours.length]);
             }
-            setColour(colourMapping.get(bestTopic) || 'white');
+            setColour(colourMapping.get(bestTopic));
         } else {
-            setColour('white');
+            setColour(undefined);
         }
-    }, [profile, colourMapping, similar, similarPercent]);
+    }, [profile, colourMapping, similarUsers, similarPercent]);
 
     const doResize = useCallback(
         (s: number) => {
@@ -115,23 +111,6 @@ export default function ProfileNode({ id, onLinks, onResize, live, selected, col
         },
         [onResize, id]
     );
-
-    useEffect(() => {
-        //if (simRef.current !== similar) {
-        simRef.current = similar;
-        const maxWeight = similar[0]?.weight || 0;
-        onLinks(
-            id,
-            similar
-                .filter((s) => s.weight >= maxWeight * (1 - similarPercent))
-                .map((s) => ({
-                    source: id,
-                    target: s.id,
-                    strength: s.weight,
-                }))
-        );
-        //}
-    }, [similar, onLinks, similarPercent]);
 
     const reduced = shrinkOffline && !live;
     const asize = reduced ? size * 0.4 : size;
@@ -148,16 +127,16 @@ export default function ProfileNode({ id, onLinks, onResize, live, selected, col
                     label={profile.name}
                     x={0}
                     y={-asize - 20}
-                    fill={live ? '#0A869A' : '#707070'}
-                    color="white"
+                    fill={colour || '#707070'}
+                    color={isLight(colour || '#707070') ? 'black' : 'white'}
                     padding={5}
                 />
             )}
             <circle
                 data-testid="profile-circle"
                 r={asize}
-                fill={colour}
-                stroke={live ? '#0A869A' : '#707070'}
+                fill={'white'}
+                stroke={colour || '#707070'}
                 strokeWidth={reduced ? 5 : 10}
             />
             {!reduced && nodeMode === 'image' && profile.engagedContent.length > 0 && (
@@ -174,7 +153,7 @@ export default function ProfileNode({ id, onLinks, onResize, live, selected, col
                     content={profile.taste}
                     size={500}
                     padding={3}
-                    className={!isLight(colour) ? style.cloudItemLight : style.cloudItem}
+                    className={style.cloudItem}
                     onSize={doResize}
                 />
             )}
@@ -184,8 +163,8 @@ export default function ProfileNode({ id, onLinks, onResize, live, selected, col
                     x={0}
                     y={5}
                     fontSize={Math.floor(50 + profile.engagement * 10)}
-                    color={isLight(colour) ? 'black' : 'white'}
-                    fill={colour}
+                    color={'#707070'}
+                    fill={'white'}
                     padding={0}
                     onResize={doResize}
                 />

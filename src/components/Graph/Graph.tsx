@@ -6,6 +6,7 @@ import { NodeID } from '@genaism/services/graph/graphTypes';
 
 export interface GraphNode<T extends NodeID> {
     size: number;
+    strength?: number;
     id: T;
     x?: number;
     y?: number;
@@ -86,6 +87,12 @@ const DEFAULT_LINK_STYLE = {
     className: style.link,
 };
 
+function defaultNodePosition() {
+    const a = Math.random() * 2 * Math.PI;
+    const r = Math.random() * 500 + 2000;
+    return { x: r * Math.cos(a), y: r * Math.sin(a) };
+}
+
 export default function Graph<T extends NodeID>({
     nodes,
     links,
@@ -131,10 +138,13 @@ export default function Graph<T extends NodeID>({
         const newNodeRef = new Map<string, GraphNode<T>>();
 
         nodes.forEach((n, ix) => {
-            const cur = nodeRef.current.get(n.id) || { ...n };
+            const cur = nodeRef.current.get(n.id) || {
+                ...n,
+                ...defaultNodePosition(),
+            };
             cur.size = n.size;
             cur.index = ix;
-            if (internalState.current.focusNode === n.id) {
+            if (cur.strength === 0 || internalState.current.focusNode === n.id) {
                 cur.fx = cur.x;
                 cur.fy = cur.y;
             } else {
@@ -171,12 +181,26 @@ export default function Graph<T extends NodeID>({
             simRef.current = d3
                 .forceSimulation<GraphNode<T>>()
                 .force('center', d3.forceCenter())
-                .force('charge', d3.forceManyBody().strength(-10000 * charge))
+                .force(
+                    'collide',
+                    d3.forceCollide<GraphNode<T>>((n) => {
+                        return (n.size || 5) + 10;
+                    })
+                )
+                .force(
+                    'charge',
+                    d3
+                        .forceManyBody<GraphNode<T>>()
+                        .strength(-10000 * charge)
+                        //.strength((d) => (1 - (d.strength || 0)) * -10000 * charge) // -10000 * charge)
+                        .distanceMin(50)
+                        .distanceMax(10000)
+                )
                 .force(
                     'link',
                     d3
                         .forceLink<GraphNode<T>, InternalGraphLink<T, T>>()
-                        .strength((d) => d.strength * d.strength)
+                        .strength((d) => d.strength * 0.9 + 0.1)
                         .distance((d) =>
                             Math.max(
                                 10,
@@ -184,13 +208,9 @@ export default function Graph<T extends NodeID>({
                                     (d.source.size + d.target.size)
                             )
                         )
-                )
-                .force(
-                    'collide',
-                    d3.forceCollide<GraphNode<T>>((n) => {
-                        return (n.size || 5) + 10;
-                    })
                 );
+            //.stop();
+            //.force('attract', d3.forceManyBody().strength(20000).distanceMin(2000))
         }
 
         setNodeList(lnodes);
@@ -202,7 +222,7 @@ export default function Graph<T extends NodeID>({
                 setNodeList([...lnodes]);
             })
             .on('end', () => {});
-        simRef.current.alpha(0.2).restart();
+        simRef.current.alpha(0.3).restart();
 
         setLinkList(llinks);
     }, [nodes, links, redraw]);
@@ -249,6 +269,7 @@ export default function Graph<T extends NodeID>({
                 {showLines && (
                     <g>
                         {linkList.map((l, ix) => {
+                            if (l.target.id === ('dummy' as T)) return null;
                             const styles =
                                 linkStyles?.get(l.source.id) || linkStyles?.get(l.target.id) || defaultLinkStyle;
                             return (

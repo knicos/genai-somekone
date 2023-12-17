@@ -13,6 +13,19 @@ export function removeProfileListener(id: UserNodeId, handler: () => void) {
 
 export function emitProfileEvent(id: UserNodeId) {
     ee.emit(`profile-${id}`);
+    emitAnyProfileEvent(id);
+}
+
+export function addAnyProfileListener(handler: (id: UserNodeId) => void) {
+    ee.on(`profile`, handler);
+}
+
+export function removeAnyProfileListener(handler: (id: UserNodeId) => void) {
+    ee.off(`profile`, handler);
+}
+
+export function emitAnyProfileEvent(id: UserNodeId) {
+    ee.emit(`profile`, id);
 }
 
 export function addLogListener(id: UserNodeId, handler: () => void) {

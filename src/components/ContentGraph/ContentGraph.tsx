@@ -36,37 +36,36 @@ export default function ContentGraph() {
     const doRedrawNodes = useCallback(() => {
         const filteredTopics = content.filter((t) => {
             const s = similar.similar.get(t);
-            return s?.length && s[0].weight > MIN_WEIGHT;
+            return (s?.maxSimilarity || 0) > MIN_WEIGHT;
         });
 
-        setNodes(
-            filteredTopics.map((u) => ({
-                id: u,
-                size: sizesRef.current.get(u) || 20,
-            }))
-        );
+        const newNodes = filteredTopics.map((u) => ({
+            id: u,
+            size: sizesRef.current.get(u) || 20,
+        }));
+
+        setNodes(newNodes);
         // Create some links
         const links: GraphLink<ContentNodeId, ContentNodeId>[] = [];
-
-        let maxLink = 0;
 
         filteredTopics.forEach((source) => {
             const similarNodes = similar.similar.get(source);
             if (similarNodes) {
-                const maxWeight = similarNodes[0]?.weight || 0;
+                const maxWeight = similarNodes.maxSimilarity;
                 if (maxWeight <= MIN_WEIGHT) return;
 
-                similarNodes.forEach((target) => {
+                const maxNeighbours = similarNodes.nodes.reduce(
+                    (m, n) => Math.max(m, similar.similar.get(n.id)?.maxSimilarity || 0),
+                    0
+                );
+                const maxmax = Math.max(maxNeighbours, maxWeight);
+
+                similarNodes.nodes.forEach((target) => {
                     if (target.weight > (1 - simPercent) * maxWeight && source !== target.id) {
-                        links.push({ source, target: target.id, strength: target.weight });
-                        maxLink = Math.max(maxLink, target.weight);
+                        links.push({ source, target: target.id, strength: target.weight / maxmax });
                     }
                 });
             }
-        });
-
-        links.forEach((l) => {
-            l.strength /= maxLink;
         });
 
         setLinks(links);

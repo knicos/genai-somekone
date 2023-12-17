@@ -22,7 +22,7 @@ export const settingDisplayLabel = atom<boolean>({
 
 export const settingLinkDistanceScale = atom<number>({
     key: 'settinglinkdistscale',
-    default: 6,
+    default: 3,
 });
 
 export const settingSimilarPercent = atom<number>({
@@ -32,7 +32,7 @@ export const settingSimilarPercent = atom<number>({
 
 export const settingNodeCharge = atom<number>({
     key: 'settingnodecharge',
-    default: 2,
+    default: 4,
 });
 
 export const settingShrinkOfflineUsers = atom<boolean>({
@@ -71,7 +71,7 @@ export const settingTopicDisplayLines = atom<boolean>({
 
 export const settingTopicLinkDistanceScale = atom<number>({
     key: 'settingtopiclinkdistscale',
-    default: 6,
+    default: 3,
 });
 
 export const settingTopicSimilarPercent = atom<number>({
@@ -81,7 +81,7 @@ export const settingTopicSimilarPercent = atom<number>({
 
 export const settingTopicNodeCharge = atom<number>({
     key: 'settingtopicnodecharge',
-    default: 2,
+    default: 5,
 });
 
 /* === Content Grap === */
@@ -93,7 +93,7 @@ export const settingContentDisplayLines = atom<boolean>({
 
 export const settingContentLinkDistanceScale = atom<number>({
     key: 'settingcontentlinkdistscale',
-    default: 6,
+    default: 1,
 });
 
 export const settingContentSimilarPercent = atom<number>({

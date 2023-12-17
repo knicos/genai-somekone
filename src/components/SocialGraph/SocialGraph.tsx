@@ -10,19 +10,18 @@ import {
     settingLinkDistanceScale,
     settingNodeCharge,
     settingShowOfflineUsers,
+    settingSimilarPercent,
 } from '@genaism/state/settingsState';
 import { UserNodeId } from '@genaism/services/graph/graphTypes';
 // import FakeNode from '../FakeNode/FakeNode';
 import style from './style.module.css';
+import { useAllSimilarUsers } from './similarity';
 
 interface Props {
     liveUsers?: UserNodeId[];
 }
 
 export default function SocialGraph({ liveUsers }: Props) {
-    const linksRef = useRef<Map<string, GraphLink<UserNodeId, UserNodeId>[]>>(
-        new Map<string, GraphLink<UserNodeId, UserNodeId>[]>()
-    );
     const [links, setLinks] = useState<GraphLink<UserNodeId, UserNodeId>[]>([]);
     const sizesRef = useRef<Map<string, number>>(new Map<string, number>());
     const coloursRef = useRef(new Map<string, string>());
@@ -46,26 +45,39 @@ export default function SocialGraph({ liveUsers }: Props) {
     const [center, setCenter] = useState<[number, number] | undefined>();
     const [linkStyles, setLinkStyles] = useState<Map<UserNodeId, LinkStyle<UserNodeId>>>();
     const [connected, setConnected] = useState<Set<UserNodeId>>();
+    const similar = useAllSimilarUsers(users);
+    const similarPercent = useRecoilValue(settingSimilarPercent);
 
-    const doUpdateLinks = useCallback((id: string, links: GraphLink<UserNodeId, UserNodeId>[]) => {
-        console.log('UPDATE LINKS', id, links);
-        linksRef.current.set(id, links);
+    useEffect(() => {
         const newLinks: GraphLink<UserNodeId, UserNodeId>[] = [];
-        linksRef.current.forEach((v) => {
-            newLinks.push(...v);
+        similar.similar.forEach((s, id) => {
+            const maxWeight = s.nodes[0]?.weight || 0;
+            s.nodes.forEach((node) => {
+                if (node.weight >= maxWeight * (1 - similarPercent)) {
+                    newLinks.push({
+                        source: id,
+                        target: node.id,
+                        strength: node.weight,
+                    });
+                }
+            });
         });
         setLinks(newLinks);
-    }, []);
+    }, [similar, similarPercent]);
 
     const doRedrawNodes = useCallback(() => {
         const filteredUsers = showOfflineUsers ? users : users.filter((u) => liveSet.has(u));
-        setNodes(
-            filteredUsers.map((u) => ({
-                id: u,
-                size: sizesRef.current.get(u) || 20,
-            }))
-        );
-    }, [users, liveSet, showOfflineUsers]);
+
+        // For all nodes not previously seen, and therefore without a position
+        // Recursively search for their master node, or become a master node.
+        const newNodes = filteredUsers.map((u) => ({
+            id: u,
+            size: sizesRef.current.get(u) || 100,
+            strength: similar.similar.get(u)?.nodes.length || 0,
+        }));
+
+        setNodes(newNodes);
+    }, [users, liveSet, showOfflineUsers, similar]);
 
     const doResize = useCallback(
         (id: string, size: number) => {
@@ -130,10 +142,10 @@ export default function SocialGraph({ liveUsers }: Props) {
             {nodes.map((n) => (
                 <ProfileNode
                     id={n.id}
-                    onLinks={doUpdateLinks}
                     onResize={doResize}
                     key={n.id}
                     live={liveSet.has(n.id)}
+                    similarUsers={similar.similar.get(n.id)?.nodes || []}
                     selected={n.id === focusNode}
                     disabled={egoSelect && connected ? !connected.has(n.id) : false}
                     colourMapping={clusterColouring ? coloursRef.current : undefined}
