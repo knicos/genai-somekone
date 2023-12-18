@@ -1,7 +1,8 @@
 import { useNodeType } from '@genaism/services/graph/hooks';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import ProfileNode from './ProfileNode';
-import Graph, { GraphLink, GraphNode, InternalGraphLink, LinkStyle } from '../Graph/Graph';
+import Graph from '../Graph/Graph';
+import { GraphLink, GraphNode, InternalGraphLink, LinkStyle } from '../Graph/types';
 import { useRecoilValue } from 'recoil';
 import {
     settingClusterColouring,
@@ -41,7 +42,7 @@ export default function SocialGraph({ liveUsers }: Props) {
         return set;
     }, [liveUsers]);
     const [focusNode, setFocusNode] = useState<string | undefined>();
-    const [zoom, setZoom] = useState(1);
+    const [zoom, setZoom] = useState(5);
     const [center, setCenter] = useState<[number, number] | undefined>();
     const [linkStyles, setLinkStyles] = useState<Map<UserNodeId, LinkStyle<UserNodeId>>>();
     const [connected, setConnected] = useState<Set<UserNodeId>>();
@@ -106,7 +107,7 @@ export default function SocialGraph({ liveUsers }: Props) {
             charge={charge}
             showLines={showLines}
             onSelect={(n: Readonly<GraphNode<UserNodeId>>, l: InternalGraphLink<UserNodeId, UserNodeId>[]) => {
-                if (!focusNode) setZoom(0.5);
+                if (!focusNode) setZoom(3);
                 setCenter([n.x || 0, n.y || 0]);
 
                 const newStyles = new Map<UserNodeId, LinkStyle<UserNodeId>>();
@@ -131,8 +132,8 @@ export default function SocialGraph({ liveUsers }: Props) {
                 setFocusNode(undefined);
                 setConnected(undefined);
                 setLinkStyles(undefined);
-                setZoom(1);
-                setCenter([0, 0]);
+                //setZoom(8);
+                //setCenter([0, 0]);
             }}
             focusNode={focusNode}
             zoom={zoom}

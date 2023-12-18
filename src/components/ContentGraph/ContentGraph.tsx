@@ -1,6 +1,7 @@
 import { useNodeType } from '@genaism/services/graph/hooks';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import Graph, { GraphLink, GraphNode, InternalGraphLink, LinkStyle } from '../Graph/Graph';
+import Graph from '../Graph/Graph';
+import { GraphLink, GraphNode, InternalGraphLink, LinkStyle } from '../Graph/types';
 import { ContentNodeId } from '@genaism/services/graph/graphTypes';
 import ContentNode from './ContentNode';
 import { useAllCoengagements } from './similarity';

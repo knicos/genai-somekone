@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import Graph, { GraphNode } from './Graph';
+import Graph from './Graph';
+import { GraphNode } from './types';
 import { UserNodeId } from '@genaism/services/graph/graphTypes';
 
 const meta: Meta<typeof Graph> = {

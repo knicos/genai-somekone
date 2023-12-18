@@ -1,31 +1,23 @@
-import { useRef, useEffect, useState, useReducer, MouseEvent, WheelEvent, PropsWithChildren } from 'react';
+import {
+    useRef,
+    useEffect,
+    useState,
+    useReducer,
+    WheelEvent,
+    PropsWithChildren,
+    PointerEvent,
+    MouseEvent,
+} from 'react';
 import * as d3 from 'd3';
 import style from './style.module.css';
 import gsap from 'gsap';
 import { NodeID } from '@genaism/services/graph/graphTypes';
-
-export interface GraphNode<T extends NodeID> {
-    size: number;
-    strength?: number;
-    id: T;
-    x?: number;
-    y?: number;
-    index?: number;
-    fx?: number;
-    fy?: number;
-}
-
-export interface GraphLink<A extends NodeID, B extends NodeID> {
-    source: A;
-    target: B;
-    strength: number;
-}
-
-export interface InternalGraphLink<A extends NodeID, B extends NodeID> {
-    source: GraphNode<A>;
-    target: GraphNode<B>;
-    strength: number;
-}
+import { GraphLink, GraphNode, InternalGraphLink, LinkStyle } from './types';
+import Nodes from './Nodes';
+import Lines from './Lines';
+import { createSimulation } from './simulation';
+import { makeLinks, makeNodes } from './utilities';
+import { ZoomState, pointerMove, wheelZoom } from './controls';
 
 interface Extents {
     minX: number;
@@ -34,24 +26,14 @@ interface Extents {
     maxY: number;
 }
 
-function calculateViewBox(extents: Extents, padding: number, zoom: number, center: [number, number]): string {
+function calculateViewBox(extents: Extents, zoom: ZoomState): [number, number, number, number] {
     const pw = Math.max(500, extents.maxX - extents.minX);
     const ph = Math.max(500, extents.maxY - extents.minY);
-    const w = Math.floor(pw * zoom + 2 * padding);
-    const h = Math.floor(ph * zoom + 2 * padding);
-    const x = Math.floor(center[0] - w / 2);
-    const y = Math.floor(center[1] - h / 2);
-    return `${x} ${y} ${w} ${h}`;
-}
-
-type StyleMappingFn<T extends NodeID, R> = (l: InternalGraphLink<T, T>) => R;
-type StyleMapping<T extends NodeID, R> = R | StyleMappingFn<T, R>;
-
-export interface LinkStyle<T extends NodeID> {
-    className?: StyleMapping<T, string>;
-    opacity?: StyleMapping<T, number>;
-    width?: StyleMapping<T, number>;
-    colour?: StyleMapping<T, string>;
+    const w = pw * zoom.zoom;
+    const h = ph * zoom.zoom;
+    const x = zoom.cx - zoom.offsetX * w;
+    const y = zoom.cy - zoom.offsetY * h;
+    return [x, y, w, h]; //`${x} ${y} ${w} ${h}`;
 }
 
 interface Props<T extends NodeID> extends PropsWithChildren {
@@ -87,11 +69,8 @@ const DEFAULT_LINK_STYLE = {
     className: style.link,
 };
 
-function defaultNodePosition() {
-    const a = Math.random() * 2 * Math.PI;
-    const r = Math.random() * 500 + 2000;
-    return { x: r * Math.cos(a), y: r * Math.sin(a) };
-}
+const MOVE_THRESHOLD = 10;
+const CAMERA_DURATION = 0.3;
 
 export default function Graph<T extends NodeID>({
     nodes,
@@ -99,8 +78,8 @@ export default function Graph<T extends NodeID>({
     onSelect,
     onUnselect,
     focusNode,
-    zoom = 1,
-    onZoom,
+    zoom = 5,
+    //onZoom,
     children,
     center,
     linkScale = 6,
@@ -116,17 +95,38 @@ export default function Graph<T extends NodeID>({
     const nodeRef = useRef<Map<string, GraphNode<T>>>(new Map<string, GraphNode<T>>());
     const simRef = useRef<d3.Simulation<GraphNode<T>, undefined>>();
     const internalState = useRef<InternalState>(DEFAULT_STATE);
-    const [extents, setExtents] = useState<Extents>(DEFAULT_EXTENTS);
-    const [actualCenter, setActualCenter] = useState<[number, number]>([0, 0]);
+    const [actualZoom, setActualZoom] = useState<ZoomState>({
+        zoom: 5,
+        offsetX: 0.5,
+        offsetY: 0.5,
+        cx: 0,
+        cy: 0,
+        duration: CAMERA_DURATION,
+    });
+    const extents = useRef<[number, number, number, number]>([0, 0, 0, 0]);
+    const movement = useRef<[number, number]>([0, 0]);
+    const pointerCache = useRef(new Map<number, PointerEvent<SVGSVGElement>>());
 
     internalState.current.focusNode = focusNode;
 
     useEffect(() => {
         if (center) {
-            setActualCenter(center);
+            setActualZoom((old) => ({
+                ...old,
+                offsetX: 0.5,
+                offsetY: 0.5,
+                cx: center[0],
+                cy: center[1],
+                duration: CAMERA_DURATION,
+            }));
         }
     }, [center]);
 
+    useEffect(() => {
+        setActualZoom((old) => ({ ...old, zoom, offsetX: 0.5, offsetY: 0.5, duration: CAMERA_DURATION }));
+    }, [zoom]);
+
+    // Make sure settings changes cause a redraw
     useEffect(() => {
         simRef.current = undefined;
         trigger();
@@ -135,82 +135,14 @@ export default function Graph<T extends NodeID>({
     useEffect(() => {
         if (simRef.current) simRef.current.stop();
 
-        const newNodeRef = new Map<string, GraphNode<T>>();
-
-        nodes.forEach((n, ix) => {
-            const cur = nodeRef.current.get(n.id) || {
-                ...n,
-                ...defaultNodePosition(),
-            };
-            cur.size = n.size;
-            cur.index = ix;
-            if (cur.strength === 0 || internalState.current.focusNode === n.id) {
-                cur.fx = cur.x;
-                cur.fy = cur.y;
-            } else {
-                cur.fx = undefined;
-                cur.fy = undefined;
-            }
-            newNodeRef.set(n.id, cur);
-        });
-
+        const newNodeRef = makeNodes<T>(nodes, nodeRef.current, internalState.current.focusNode);
         nodeRef.current = newNodeRef;
-
         const lnodes = Array.from(nodeRef.current).map((v) => v[1]);
 
-        const llinks: InternalGraphLink<T, T>[] =
-            nodes.length > 0 && links
-                ? links
-                      .map((l) => {
-                          const s = nodeRef.current.get(l.source);
-                          const t = nodeRef.current.get(l.target);
-                          return s && t
-                              ? {
-                                    source: s,
-                                    target: t,
-                                    strength: l.strength,
-                                }
-                              : { source: lnodes[0], target: lnodes[0], strength: 0 };
-                      })
-                      .filter((l) => l.strength > 0)
-                : [];
-
-        // console.log('links', llinks);
+        const llinks = makeLinks<T>(nodes, nodeRef.current, links);
 
         if (!simRef.current) {
-            simRef.current = d3
-                .forceSimulation<GraphNode<T>>()
-                .force('center', d3.forceCenter())
-                .force(
-                    'collide',
-                    d3.forceCollide<GraphNode<T>>((n) => {
-                        return (n.size || 5) + 10;
-                    })
-                )
-                .force(
-                    'charge',
-                    d3
-                        .forceManyBody<GraphNode<T>>()
-                        .strength(-10000 * charge)
-                        //.strength((d) => (1 - (d.strength || 0)) * -10000 * charge) // -10000 * charge)
-                        .distanceMin(50)
-                        .distanceMax(10000)
-                )
-                .force(
-                    'link',
-                    d3
-                        .forceLink<GraphNode<T>, InternalGraphLink<T, T>>()
-                        .strength((d) => d.strength * 0.9 + 0.1)
-                        .distance((d) =>
-                            Math.max(
-                                10,
-                                (1 - d.strength) * linkScale * (d.source.size + d.target.size) +
-                                    (d.source.size + d.target.size)
-                            )
-                        )
-                );
-            //.stop();
-            //.force('attract', d3.forceManyBody().strength(20000).distanceMin(2000))
+            simRef.current = createSimulation<T>(charge, linkScale);
         }
 
         setNodeList(lnodes);
@@ -227,32 +159,27 @@ export default function Graph<T extends NodeID>({
         setLinkList(llinks);
     }, [nodes, links, redraw]);
 
+    // Animate camera motion
     useEffect(() => {
-        const newExtents: Extents = {
-            minX: 10000,
-            minY: 10000,
-            maxX: -10000,
-            maxY: -10000,
-        };
-
-        nodeList.forEach((n) => {
-            newExtents.minX = Math.min(newExtents.minX, (n.x || 0) - n.size);
-            newExtents.minY = Math.min(newExtents.minY, (n.y || 0) - n.size);
-            newExtents.maxX = Math.max(newExtents.maxX, (n.x || 0) + n.size);
-            newExtents.maxY = Math.max(newExtents.maxY, (n.y || 0) + n.size);
-        });
-        setExtents(newExtents);
-    }, [nodeList]);
-
-    useEffect(() => {
+        // Ensure aspect ratio is correct
+        if (svgRef.current) {
+            const ratio = svgRef.current.clientHeight / svgRef.current.clientWidth;
+            const h = (DEFAULT_EXTENTS.maxX - DEFAULT_EXTENTS.minX) * ratio;
+            DEFAULT_EXTENTS.maxY = h / 2;
+            DEFAULT_EXTENTS.minY = -h / 2;
+        }
+        const newExtents = calculateViewBox(DEFAULT_EXTENTS, actualZoom);
+        extents.current = newExtents;
         gsap.to(svgRef.current, {
             attr: {
-                viewBox: calculateViewBox(extents, 50, zoom, actualCenter),
+                viewBox: `${Math.floor(newExtents[0])} ${Math.floor(newExtents[1])} ${Math.floor(
+                    newExtents[2]
+                )} ${Math.floor(newExtents[3])}`,
             },
-            duration: 0.3,
+            duration: actualZoom.duration,
             //ease: 'none',
         });
-    }, [zoom, extents, actualCenter]);
+    }, [actualZoom]);
 
     return (
         <svg
@@ -262,57 +189,69 @@ export default function Graph<T extends NodeID>({
             height="100%"
             viewBox="-500 -500 1000 1000"
             data-testid="graph-svg"
-            onClick={() => onUnselect && onUnselect()}
-            onWheel={(e: WheelEvent<SVGSVGElement>) => onZoom && onZoom(Math.max(0.1, zoom + e.deltaY * 0.002))}
+            onClickCapture={(e: MouseEvent<SVGSVGElement>) => {
+                if (Math.max(movement.current[0], movement.current[1]) > MOVE_THRESHOLD) {
+                    movement.current = [0, 0];
+                    e.stopPropagation();
+                    return;
+                }
+                if (onUnselect && focusNode) onUnselect();
+                movement.current = [0, 0];
+            }}
+            onPointerMove={(e: PointerEvent<SVGSVGElement>) => {
+                setActualZoom((oldZoom) => {
+                    if (svgRef.current) {
+                        return pointerMove(
+                            e,
+                            oldZoom,
+                            extents.current,
+                            svgRef.current,
+                            pointerCache.current,
+                            movement.current
+                        );
+                    }
+                    return oldZoom;
+                });
+            }}
+            onPointerUp={(e: PointerEvent<SVGSVGElement>) => {
+                pointerCache.current.clear();
+                if (e.pointerType === 'touch') movement.current = [0, 0];
+            }}
+            onWheel={(e: WheelEvent<SVGSVGElement>) => {
+                setActualZoom((oldZoom) => {
+                    if (svgRef.current) {
+                        return wheelZoom(e, svgRef.current, extents.current, oldZoom);
+                    }
+                    return oldZoom;
+                });
+            }}
         >
             <g>
                 {showLines && (
-                    <g>
-                        {linkList.map((l, ix) => {
-                            if (l.target.id === ('dummy' as T)) return null;
-                            const styles =
-                                linkStyles?.get(l.source.id) || linkStyles?.get(l.target.id) || defaultLinkStyle;
-                            return (
-                                <line
-                                    className={
-                                        typeof styles?.className === 'function'
-                                            ? styles.className(l)
-                                            : styles?.className || style.link
-                                    }
-                                    key={ix}
-                                    x1={l.source.x}
-                                    y1={l.source.y}
-                                    x2={l.target.x}
-                                    y2={l.target.y}
-                                    opacity={
-                                        typeof styles?.opacity === 'function' ? styles.opacity(l) : styles?.opacity
-                                    }
-                                    strokeWidth={typeof styles?.width === 'function' ? styles.width(l) : styles?.width}
-                                    data-testid={`graph-link-${ix}`}
-                                />
-                            );
-                        })}
-                    </g>
+                    <Lines
+                        linkList={linkList}
+                        linkStyles={linkStyles}
+                        defaultLinkStyle={defaultLinkStyle}
+                    />
                 )}
-                <g>
-                    {nodeList.map((n, ix) => (
-                        <g
-                            key={ix}
-                            transform={`translate(${Math.floor(n.x || 0)},${Math.floor(n.y || 0)})`}
-                            onClick={(e: MouseEvent<SVGGElement>) => {
-                                if (onSelect)
-                                    onSelect(
-                                        n,
-                                        linkList.filter((l) => l.source.id === n.id || l.target.id === n.id)
-                                    );
-                                e.stopPropagation();
-                            }}
-                            className={style.node}
-                        >
-                            {Array.isArray(children) ? children[ix] : nodeList.length === 1 ? children : null}
-                        </g>
-                    ))}
-                </g>
+                <Nodes
+                    nodeList={nodeList}
+                    onSelect={(node: GraphNode<T>) => {
+                        if (onSelect) {
+                            if (Math.max(movement.current[0], movement.current[1]) > MOVE_THRESHOLD) {
+                                movement.current = [0, 0];
+                                return;
+                            }
+                            movement.current = [0, 0];
+                            onSelect(
+                                node,
+                                linkList.filter((l) => l.source.id === node.id || l.target.id === node.id)
+                            );
+                        }
+                    }}
+                >
+                    {children}
+                </Nodes>
             </g>
         </svg>
     );

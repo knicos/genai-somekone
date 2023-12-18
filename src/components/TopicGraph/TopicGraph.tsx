@@ -1,6 +1,7 @@
 import { useNodeType } from '@genaism/services/graph/hooks';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import Graph, { GraphLink, GraphNode, InternalGraphLink } from '../Graph/Graph';
+import Graph from '../Graph/Graph';
+import { GraphLink, GraphNode, InternalGraphLink } from '../Graph/types';
 import { TopicNodeId, WeightedNode } from '@genaism/services/graph/graphTypes';
 import TopicNode from './TopicNode';
 import { topicUserSimilarity } from './similarity';
