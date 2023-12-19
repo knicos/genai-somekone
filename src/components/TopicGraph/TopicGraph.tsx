@@ -30,7 +30,7 @@ export default function TopicGraph() {
     }, [topics]);
 
     const [focusNode, setFocusNode] = useState<string | undefined>();
-    const [zoom, setZoom] = useState(1);
+    const [zoom, setZoom] = useState(5);
     const [center, setCenter] = useState<[number, number] | undefined>();
 
     const doRedrawNodes = useCallback(() => {
@@ -86,18 +86,17 @@ export default function TopicGraph() {
             charge={charge}
             showLines={showLines}
             onSelect={(n: Readonly<GraphNode<TopicNodeId>>) => {
-                if (!focusNode) setZoom(0.5);
+                if (!focusNode) setZoom(3);
                 setCenter([n.x || 0, n.y || 0]);
                 setFocusNode(n.id);
             }}
             onUnselect={() => {
                 setFocusNode(undefined);
-                setZoom(1);
+                setZoom(5);
                 setCenter([0, 0]);
             }}
             focusNode={focusNode}
             zoom={zoom}
-            onZoom={setZoom}
             center={center}
             defaultLinkStyle={{
                 opacity: (l: InternalGraphLink<TopicNodeId, TopicNodeId>) => l.strength * 0.9,

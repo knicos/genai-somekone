@@ -7,6 +7,7 @@ import {
     PropsWithChildren,
     PointerEvent,
     MouseEvent,
+    FunctionComponent,
 } from 'react';
 import * as d3 from 'd3';
 import style from './style.module.css';
@@ -36,6 +37,11 @@ function calculateViewBox(extents: Extents, zoom: ZoomState): [number, number, n
     return [x, y, w, h]; //`${x} ${y} ${w} ${h}`;
 }
 
+interface LabelProps<T extends NodeID> {
+    node: GraphNode<T>;
+    scale: number;
+}
+
 interface Props<T extends NodeID> extends PropsWithChildren {
     nodes: GraphNode<T>[];
     links?: GraphLink<T, T>[];
@@ -50,6 +56,8 @@ interface Props<T extends NodeID> extends PropsWithChildren {
     charge?: number;
     linkStyles?: Map<T, LinkStyle<T>>;
     defaultLinkStyle?: LinkStyle<T>;
+    LabelComponent?: FunctionComponent<LabelProps<T>>;
+    labelProps?: object;
 }
 
 interface InternalState {
@@ -79,7 +87,7 @@ export default function Graph<T extends NodeID>({
     onUnselect,
     focusNode,
     zoom = 5,
-    //onZoom,
+    onZoom,
     children,
     center,
     linkScale = 6,
@@ -87,6 +95,8 @@ export default function Graph<T extends NodeID>({
     charge = 2,
     linkStyles,
     defaultLinkStyle = DEFAULT_LINK_STYLE,
+    LabelComponent,
+    labelProps,
 }: Props<T>) {
     const svgRef = useRef<SVGSVGElement>(null);
     const [redraw, trigger] = useReducer((a) => ++a, 0);
@@ -179,6 +189,7 @@ export default function Graph<T extends NodeID>({
             duration: actualZoom.duration,
             //ease: 'none',
         });
+        if (onZoom) onZoom(actualZoom.zoom);
     }, [actualZoom]);
 
     return (
@@ -252,6 +263,14 @@ export default function Graph<T extends NodeID>({
                 >
                     {children}
                 </Nodes>
+                {LabelComponent &&
+                    nodeList.map((n) => (
+                        <LabelComponent
+                            {...labelProps}
+                            node={n}
+                            scale={actualZoom.zoom}
+                        />
+                    ))}
             </g>
         </svg>
     );

@@ -2,6 +2,7 @@ import { describe, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { ScoredRecommendation } from '@genaism/services/recommender/recommenderTypes';
 import RecommendationsProfile from './RecommendationsProfile';
+import TestWrapper from '@genaism/util/TestWrapper';
 
 interface RecReturn {
     more: () => void;
@@ -18,7 +19,7 @@ vi.mock('@genaism/services/recommender/hooks', () => ({
 
 describe('RecommendationsProfile component', () => {
     it('works with no content', async ({ expect }) => {
-        render(<RecommendationsProfile />);
+        render(<RecommendationsProfile />, { wrapper: TestWrapper });
         expect(await screen.findByTestId('cloud-group')).toBeInTheDocument();
     });
 
@@ -28,7 +29,6 @@ describe('RecommendationsProfile component', () => {
                 candidateOrigin: 'topic_affinity',
                 score: 0.5,
                 contentId: 'content:xyz',
-                seenFactor: 1,
                 scores: [],
                 features: [],
                 rank: 0,
@@ -37,7 +37,7 @@ describe('RecommendationsProfile component', () => {
             },
         ];
         mockRecommendations.mockImplementation(() => ({ more: () => {}, recommendations }));
-        render(<RecommendationsProfile />);
+        render(<RecommendationsProfile />, { wrapper: TestWrapper });
 
         expect(await screen.findByTestId('cloud-image')).toBeInTheDocument();
         expect(screen.getByText(/recommendations.labels.topicCandidate/)).toBeInTheDocument();

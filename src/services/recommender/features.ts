@@ -1,9 +1,12 @@
 import { getTopicId } from '../concept/concept';
-import { ContentNodeId, TopicNodeId, WeightedNode } from '../graph/graphTypes';
+import { getEdge, getEdgeWeights } from '../graph/edges';
+import { ContentNodeId, TopicNodeId, UserNodeId, WeightedNode } from '../graph/graphTypes';
 import { getRelated } from '../graph/query';
 import { UserProfile } from '../profiler/profilerTypes';
 import { calculateSimilarity } from '../users/users';
-import { Recommendation } from './recommenderTypes';
+import { Recommendation, ScoringOptions } from './recommenderTypes';
+
+const COENGAGEMENT_MAX = 4;
 
 interface Preferences {
     viewing: WeightedNode<TopicNodeId>[];
@@ -73,7 +76,7 @@ function sumTopicScores(topics: Map<TopicNodeId, number>, pref: WeightedNode<Top
     return count > 0 ? sum / count : 0;
 }
 
-function calculatePreferenceScores(preferences: Preferences, id: ContentNodeId) {
+function calculatePreferenceScores(preferences: Preferences, id: ContentNodeId, options?: ScoringOptions) {
     const topicsArray = getRelated('topic', id, { count: 10 });
     const topics = new Map<TopicNodeId, number>();
     topicsArray.forEach((t) => {
@@ -81,15 +84,46 @@ function calculatePreferenceScores(preferences: Preferences, id: ContentNodeId) 
     });
 
     return {
-        viewingPreferenceScore: sumTopicScores(topics, preferences.viewing),
-        commentingPreferenceScore: sumTopicScores(topics, preferences.commenting),
-        sharingPreferenceScore: sumTopicScores(topics, preferences.sharing),
-        reactionPreferenceScore: sumTopicScores(topics, preferences.reacting),
-        followingPreferenceScore: sumTopicScores(topics, preferences.following),
+        viewingPreferenceScore: options?.noViewingScore ? 0 : sumTopicScores(topics, preferences.viewing),
+        commentingPreferenceScore: options?.noCommentingScore ? 0 : sumTopicScores(topics, preferences.commenting),
+        sharingPreferenceScore: options?.noSharingScore ? 0 : sumTopicScores(topics, preferences.sharing),
+        reactionPreferenceScore: options?.noReactionScore ? 0 : sumTopicScores(topics, preferences.reacting),
+        followingPreferenceScore: options?.noFollowingScore ? 0 : sumTopicScores(topics, preferences.following),
     };
 }
 
-export function makeFeatureVectors(candidates: Recommendation[], profile: UserProfile): number[][] {
+function calculateCoengagementScore(userId: UserNodeId, contentId: ContentNodeId) {
+    // Get all coengagements for content
+    const coengagements = getRelated('coengaged', contentId, { count: 30 });
+
+    // Check if the user has engaged with it
+    let sum = 0;
+    coengagements.forEach((e) => {
+        const engaged = getEdgeWeights('engaged', userId, e.id)[0] || 0;
+        sum += engaged;
+    });
+
+    return Math.min(1, sum / COENGAGEMENT_MAX);
+}
+
+const SEEN_TIME = 5 * 60 * 1000;
+
+function getLastSeenTime(userId: UserNodeId, contentId: ContentNodeId): number {
+    const edge = getEdge('seen', userId, contentId);
+    if (edge) {
+        const now = Date.now();
+        const diff = now - edge.timestamp;
+        const norm = Math.min(1, diff / SEEN_TIME);
+        return 1 - norm;
+    }
+    return 0;
+}
+
+export function makeFeatureVectors(
+    candidates: Recommendation[],
+    profile: UserProfile,
+    options?: ScoringOptions
+): number[][] {
     const preferences = calculatePreferences(profile);
 
     return candidates.map((c) => {
@@ -100,7 +134,13 @@ export function makeFeatureVectors(candidates: Recommendation[], profile: UserPr
             sharingPreferenceScore,
             reactionPreferenceScore,
             followingPreferenceScore,
-        } = calculatePreferenceScores(preferences, c.contentId);
+        } = calculatePreferenceScores(preferences, c.contentId, options);
+
+        const coengagementScore = options?.noCoengagementScore
+            ? 0
+            : calculateCoengagementScore(profile.id, c.contentId);
+
+        const lastSeenTime = options?.noLastSeenScore ? 0 : getLastSeenTime(profile.id, c.contentId);
 
         // userTasteSimilarity
         // userEngagementsSimilarity
@@ -117,6 +157,8 @@ export function makeFeatureVectors(candidates: Recommendation[], profile: UserPr
             reactionPreferenceScore,
             viewingPreferenceScore,
             0,
+            coengagementScore,
+            lastSeenTime,
         ];
     });
 }

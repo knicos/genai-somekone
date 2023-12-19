@@ -9,6 +9,7 @@ import FeedSettings from './Feed';
 import TopicGraphSettings from './TopicGraph';
 import GeneralSettings from './General';
 import ContentGraphSettings from './ContentGraph';
+import RecommendationSettings from './Recommendations';
 
 export default function SettingsDialog() {
     const { t } = useTranslation();
@@ -44,6 +45,7 @@ export default function SettingsDialog() {
                 </Tabs>
                 {tabNumber === 0 && <GeneralSettings />}
                 {tabNumber === 1 && <FeedSettings />}
+                {tabNumber === 2 && <RecommendationSettings />}
                 {tabNumber === 3 && <SocialGraphSettings />}
                 {tabNumber === 4 && <TopicGraphSettings />}
                 {tabNumber === 5 && <ContentGraphSettings />}

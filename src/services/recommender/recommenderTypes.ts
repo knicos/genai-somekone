@@ -17,18 +17,28 @@ export interface Recommendation {
 export interface ScoredRecommendation extends Recommendation {
     features: number[];
     scores: number[];
-    /*tasteSimilarityScore: number; //< Distance of content labels from taste profile
-    viewingPreferenceScore: number;
-    reactionPreferenceScore: number;
-    sharingPreferenceScore: number;
-    commentingPreferenceScore: number;
-    followingPreferenceScore: number;
-    contentTrendingScore: number; //< Recent engagements with this content item
-    topicTrendingScore: number; //< Recent engagements with the topics
-    coengagementScore: number; //< Strength of co-engagement with recently engaged items
-    userSimilarityScore: number; //< Similarity of users who engaged recently with this content.
-    randomnessScore: number; //< Depending on a heat setting, add a random component sometimes.*/
-    seenFactor: number; //< Reduce scores if content has been seen recently.
     score: number;
     rank: number;
+}
+
+export interface CandidateOptions {
+    noTaste?: boolean;
+    noRandom?: boolean;
+    noCoengaged?: boolean;
+    allowDuplicates?: boolean;
+}
+
+export interface ScoringOptions {
+    noTasteScore?: boolean;
+    noLastSeenScore?: boolean;
+    noSharingScore?: boolean;
+    noFollowingScore?: boolean;
+    noReactionScore?: boolean;
+    noViewingScore?: boolean;
+    noCoengagementScore?: boolean;
+    noCommentingScore?: boolean;
+}
+
+export interface RecommendationOptions extends ScoringOptions, CandidateOptions {
+    selection?: 'rank' | 'distribution';
 }

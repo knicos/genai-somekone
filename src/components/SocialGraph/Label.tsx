@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import style from './style.module.css';
 
 interface Props {
     label: string;
@@ -9,10 +10,22 @@ interface Props {
     color?: string;
     padding?: number;
     borderRadius?: number;
+    scale?: number;
     onResize?: (size: number) => void;
 }
 
-export default function Label({ label, x, y, fontSize, fill, color, padding = 0, borderRadius, onResize }: Props) {
+export default function Label({
+    label,
+    x,
+    y,
+    fontSize,
+    fill,
+    scale = 1,
+    color,
+    padding = 0,
+    borderRadius,
+    onResize,
+}: Props) {
     const gRef = useRef<SVGGElement>(null);
     const [size, setSize] = useState<[number, number]>([50, 20]);
 
@@ -29,27 +42,30 @@ export default function Label({ label, x, y, fontSize, fill, color, padding = 0,
     }, [label, fontSize, padding]);
 
     return (
-        <g
-            ref={gRef}
-            transform={`translate(${x}, ${y})`}
-        >
-            <rect
-                x={-size[0] / 2 - (padding || 0)}
-                y={-size[1] / 2 - (padding || 0)}
-                rx={borderRadius || 10}
-                width={size[0] + 2 * (padding || 0)}
-                height={size[1] + 2 * (padding || 0)}
-                fill={fill || 'white'}
-            />
-            <text
-                textAnchor="middle"
-                dominantBaseline="middle"
-                fontSize={fontSize || 30}
-                fontWeight="bold"
-                fill={color || 'black'}
+        <g transform={`translate(${x}, ${y})`}>
+            <g
+                ref={gRef}
+                transform={`scale(${scale * 0.4})`}
+                className={style.label}
             >
-                {label}
-            </text>
+                <rect
+                    x={-size[0] / 2 - (padding || 0)}
+                    y={-size[1] / 2 - (padding || 0)}
+                    rx={borderRadius || 10}
+                    width={size[0] + 2 * (padding || 0)}
+                    height={size[1] + 2 * (padding || 0)}
+                    fill={fill || 'white'}
+                />
+                <text
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    fontSize={fontSize || 30}
+                    fontWeight="bold"
+                    fill={color || 'black'}
+                >
+                    {label}
+                </text>
+            </g>
         </g>
     );
 }

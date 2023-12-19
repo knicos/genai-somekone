@@ -4,6 +4,8 @@ import style from './style.module.css';
 import { ContentNodeId, UserNodeId, WeightedNode } from '@genaism/services/graph/graphTypes';
 import { useRecommendations } from '@genaism/services/recommender/hooks';
 import RecommendationsTable from '../RecommendationsTable/RecommendationsTable';
+import { appConfiguration } from '@genaism/state/settingsState';
+import { useRecoilValue } from 'recoil';
 
 interface Props {
     id?: UserNodeId;
@@ -11,7 +13,8 @@ interface Props {
 
 export default function RecommendationsProfile({ id }: Props) {
     const [wcSize, setWCSize] = useState(300);
-    const { recommendations } = useRecommendations(10, id);
+    const appConfig = useRecoilValue(appConfiguration);
+    const { recommendations } = useRecommendations(10, id, appConfig.recommendations);
 
     const doResize = useCallback((size: number) => {
         setWCSize(size);

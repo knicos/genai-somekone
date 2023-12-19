@@ -29,7 +29,7 @@ export default function ContentGraph() {
     const similar = useAllCoengagements(content);
 
     const [focusNode, setFocusNode] = useState<string | undefined>();
-    const [zoom, setZoom] = useState(1);
+    const [zoom, setZoom] = useState(5);
     const [center, setCenter] = useState<[number, number] | undefined>();
     const [linkStyles, setLinkStyles] = useState<Map<ContentNodeId, LinkStyle<ContentNodeId>>>();
     const [connected, setConnected] = useState<Set<ContentNodeId>>();
@@ -93,7 +93,7 @@ export default function ContentGraph() {
             charge={charge}
             showLines={showLines}
             onSelect={(n: Readonly<GraphNode<ContentNodeId>>, l: InternalGraphLink<ContentNodeId, ContentNodeId>[]) => {
-                if (!focusNode) setZoom(0.5);
+                if (!focusNode) setZoom(2);
                 const newStyles = new Map<ContentNodeId, LinkStyle<ContentNodeId>>();
                 newStyles.set(n.id, {
                     className: style.selectedLink,
@@ -117,12 +117,10 @@ export default function ContentGraph() {
                 setFocusNode(undefined);
                 setConnected(undefined);
                 setLinkStyles(undefined);
-                setZoom(1);
-                setCenter([0, 0]);
+                setZoom(5);
             }}
             focusNode={focusNode}
             zoom={zoom}
-            onZoom={setZoom}
             center={center}
             defaultLinkStyle={{
                 className: style.link,

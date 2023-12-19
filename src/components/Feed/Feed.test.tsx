@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/react';
 import Feed from './Feed';
 import { addContent } from '@genaism/services/content/content';
 import { resetGraph } from '@genaism/services/graph/graph';
+import TestWrapper from '@genaism/util/TestWrapper';
 
 const TEST_IMAGE =
     'https://images.pexels.com/photos/3030647/pexels-photo-3030647.jpeg?cs=srgb&dl=pexels-nextvoyage-3030647.jpg&fm=jpg';
@@ -34,7 +35,7 @@ describe('Feed component', () => {
     });
 
     it('fetches and renders a feed', async ({ expect }) => {
-        render(<Feed content={['http://testuri.fi']} />);
+        render(<Feed content={['http://testuri.fi']} />, { wrapper: TestWrapper });
 
         expect(await screen.findAllByTestId('feed-image-element')).toHaveLength(1);
         await vi.waitFor(() => {

@@ -40,6 +40,7 @@ describe('ProfileNode component', () => {
             >
                 <svg>
                     <ProfileNode
+                        node={{ id: 'user:xyz', size: 100 }}
                         id="user:xyz"
                         onResize={resizeFn}
                         live={true}
@@ -50,36 +51,6 @@ describe('ProfileNode component', () => {
         );
 
         expect(screen.getByTestId('profile-circle')).toBeInTheDocument();
-        expect(screen.getByText('TestUser1')).toBeInTheDocument();
-    });
-
-    it('does not show the label if setting is false', async ({ expect }) => {
-        const resizeFn = vi.fn();
-
-        mockProfile.mockImplementation(() => ({
-            ...createEmptyProfile('user:xyz', 'TestUser1'),
-        }));
-
-        render(
-            <TestWrapper
-                initializeState={({ set }) => {
-                    set(settingDisplayLabel, false);
-                    set(settingShrinkOfflineUsers, false);
-                }}
-            >
-                <svg>
-                    <ProfileNode
-                        id="user:xyz"
-                        similarUsers={[]}
-                        onResize={resizeFn}
-                        live={true}
-                    />
-                </svg>
-            </TestWrapper>
-        );
-
-        expect(screen.getByTestId('profile-circle')).toBeInTheDocument();
-        expect(screen.queryByText('TestUser1')).not.toBeInTheDocument();
     });
 
     it('shows a single content item', async ({ expect }) => {
@@ -101,6 +72,7 @@ describe('ProfileNode component', () => {
                 <svg>
                     <ProfileNode
                         id="user:xyz"
+                        node={{ id: 'user:xyz', size: 100 }}
                         similarUsers={[]}
                         onResize={resizeFn}
                         live={true}

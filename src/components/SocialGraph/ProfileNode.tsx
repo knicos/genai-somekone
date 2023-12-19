@@ -4,7 +4,7 @@ import { useUserProfile } from '@genaism/services/profiler/hooks';
 import { UserNodeId, WeightedNode } from '@genaism/services/graph/graphTypes';
 import { useRecoilValue } from 'recoil';
 import {
-    settingDisplayLabel,
+    //settingDisplayLabel,
     settingNodeMode,
     settingShrinkOfflineUsers,
     settingSimilarPercent,
@@ -13,24 +13,7 @@ import WordCloud from '../WordCloud/WordCloud';
 import style from './style.module.css';
 import Label from './Label';
 import { getUserProfile } from '@genaism/services/profiler/profiler';
-
-function hexToRgb(hex: string) {
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result
-        ? {
-              r: parseInt(result[1], 16),
-              g: parseInt(result[2], 16),
-              b: parseInt(result[3], 16),
-          }
-        : null;
-}
-
-function isLight(colour: string): boolean {
-    const col = hexToRgb(colour);
-    if (!col) return true;
-    const Y = 0.2126 * col.r + 0.7152 * col.g + 0.0722 * col.b;
-    return Y >= 128;
-}
+import { GraphNode } from '../Graph/types';
 
 interface Props {
     id: UserNodeId;
@@ -40,6 +23,7 @@ interface Props {
     colourMapping?: Map<string, string>;
     similarUsers: WeightedNode<UserNodeId>[];
     onResize: (id: string, size: number) => void;
+    node: GraphNode<UserNodeId>;
 }
 
 const colours = [
@@ -57,10 +41,18 @@ const colours = [
     '#ff9499',
 ];
 
-export default function ProfileNode({ id, onResize, live, selected, colourMapping, disabled, similarUsers }: Props) {
+export default function ProfileNode({
+    id,
+    onResize,
+    live,
+    selected,
+    colourMapping,
+    disabled,
+    similarUsers,
+    node,
+}: Props) {
     const [size, setSize] = useState(100);
-    const [colour, setColour] = useState<string>();
-    const showLabel = useRecoilValue(settingDisplayLabel);
+    const [colour, setColour] = useState('#707070');
     const shrinkOffline = useRecoilValue(settingShrinkOfflineUsers);
     const nodeMode = useRecoilValue(settingNodeMode);
     const similarPercent = useRecoilValue(settingSimilarPercent);
@@ -98,11 +90,14 @@ export default function ProfileNode({ id, onResize, live, selected, colourMappin
             if (!colourMapping.has(bestTopic)) {
                 colourMapping.set(bestTopic, colours[colourMapping.size % colours.length]);
             }
-            setColour(colourMapping.get(bestTopic));
+            setColour(colourMapping.get(bestTopic) || '#707070');
         } else {
-            setColour(undefined);
+            setColour('#707070');
         }
     }, [profile, colourMapping, similarUsers, similarPercent]);
+
+    if (!node.data) node.data = {};
+    node.data.colour = colour;
 
     const doResize = useCallback(
         (s: number) => {
@@ -122,21 +117,11 @@ export default function ProfileNode({ id, onResize, live, selected, colourMappin
                 data-testid="profile-selected"
                 r={selected ? asize + 20 : asize}
             />
-            {showLabel && (
-                <Label
-                    label={profile.name}
-                    x={0}
-                    y={-asize - 20}
-                    fill={colour || '#707070'}
-                    color={isLight(colour || '#707070') ? 'black' : 'white'}
-                    padding={5}
-                />
-            )}
             <circle
                 data-testid="profile-circle"
                 r={asize}
                 fill={'white'}
-                stroke={colour || '#707070'}
+                stroke={colour}
                 strokeWidth={reduced ? 5 : 10}
             />
             {!reduced && nodeMode === 'image' && profile.engagedContent.length > 0 && (

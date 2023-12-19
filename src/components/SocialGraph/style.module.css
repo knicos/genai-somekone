@@ -80,3 +80,7 @@
     stroke: primary;
     opacity: 0.1 !important;
 }
+
+.label {
+    transition: transform 0.3s;
+}

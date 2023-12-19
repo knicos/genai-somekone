@@ -6,6 +6,8 @@ import { LogEntry, ProfileSummary } from '@genaism/services/profiler/profilerTyp
 import { addLogEntry, getUserProfile } from '@genaism/services/profiler/profiler';
 import { ScoredRecommendation } from '@genaism/services/recommender/recommenderTypes';
 import { useRecommendations } from '@genaism/services/recommender/hooks';
+import { useRecoilValue } from 'recoil';
+import { appConfiguration } from '@genaism/state/settingsState';
 
 interface Props {
     content?: (string | ArrayBuffer)[];
@@ -16,7 +18,8 @@ interface Props {
 
 export default function Feed({ content, onProfile, onLog, onRecommend }: Props) {
     const [feedList, setFeedList] = useState<ScoredRecommendation[]>([]);
-    const { recommendations, more } = useRecommendations(5);
+    const appConfig = useRecoilValue(appConfiguration);
+    const { recommendations, more } = useRecommendations(5, undefined, appConfig.recommendations);
 
     useEffect(() => {
         setFeedList((old) => [...old, ...recommendations]);

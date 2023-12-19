@@ -21,6 +21,7 @@ export function makeNodes<T extends NodeID>(
         };
         cur.size = n.size;
         cur.index = ix;
+        cur.data = n.data;
         if (cur.strength === 0 || focusNode === n.id) {
             cur.fx = cur.x;
             cur.fy = cur.y;

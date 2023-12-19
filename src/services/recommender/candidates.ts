@@ -1,8 +1,8 @@
 import { getNodesByType, getRelated } from '@genaism/services/graph/graph';
 import { getTopicId } from '@genaism/services/concept/concept';
 import { ProfileSummary, UserProfile } from '@genaism/services/profiler/profilerTypes';
-import { Recommendation } from './recommenderTypes';
-import { uniformUniqueSubset } from '@genaism/util/subsets';
+import { CandidateOptions, Recommendation } from './recommenderTypes';
+import { biasedUniqueSubset, uniformUniqueSubset } from '@genaism/util/subsets';
 
 function calculateCount(high: number, low: number, value: number, max: number) {
     const range = high - low;
@@ -36,6 +36,29 @@ function generateTasteBatch(profile: ProfileSummary, nodes: Recommendation[], co
     });
 }
 
+function generateCoengaged(profile: ProfileSummary, nodes: Recommendation[], count: number) {
+    const engaged = profile.engagedContent;
+    const high = engaged[0]?.weight || 0;
+    const low = engaged[engaged.length - 1]?.weight || 0;
+
+    engaged.forEach((e) => {
+        const c = calculateCount(high, low, e.weight, count);
+        // TODO: Consider using a popularity weighted edge here.
+        const related = getRelated('coengaged', e.id);
+        const result = biasedUniqueSubset(related, c, (v) => v.id);
+        result.forEach((tr) =>
+            nodes.push({
+                contentId: tr.id,
+                candidateOrigin: 'coengagement',
+                timestamp: Date.now(),
+                engagedItem: e.id,
+                engagedItemScore: e.weight,
+                coengagementScore: tr.weight,
+            })
+        );
+    });
+}
+
 function fillWithRandom(nodes: Recommendation[], count: number) {
     const allNodes = getNodesByType('content');
     if (allNodes.length === 0) return;
@@ -51,16 +74,11 @@ function fillWithRandom(nodes: Recommendation[], count: number) {
     });
 }
 
-export interface CandidateOptions {
-    noTaste?: boolean;
-    noRandom?: boolean;
-    allowDuplicates?: boolean;
-}
-
 export function generateCandidates(profile: UserProfile, count: number, options?: CandidateOptions): Recommendation[] {
     const nodes: Recommendation[] = [];
 
     if (!options?.noTaste) generateTasteBatch(profile, nodes, count * 2);
+    if (!options?.noCoengaged) generateCoengaged(profile, nodes, count * 2);
     if (!options?.noRandom) fillWithRandom(nodes, count);
 
     console.log('PROFILE', profile);

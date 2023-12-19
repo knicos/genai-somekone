@@ -5,5 +5,7 @@
     "followingTopicLikelihood": 1,
     "reactingTopicLikelihood": 1,
     "viewingTopicLikelihood": 1,
-    "randomness": 1
+    "randomness": 1,
+    "coengagementOverlap": 1,
+    "lastSeen": -1
 }

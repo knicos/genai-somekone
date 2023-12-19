@@ -15,7 +15,6 @@ import { addEdgeTypeListener, addNodeTypeListener } from '../graph/events';
 import { emitProfileEvent } from '../profiler/events';
 import { ContentNodeId, UserNodeId, isContentID, isUserID } from '../graph/graphTypes';
 import defaults from './defaultWeights.json';
-import { normalise } from '@genaism/util/vectors';
 import { ScoredRecommendation } from '../recommender/recommenderTypes';
 import { trainProfile } from './training';
 import { getCurrentUser, outOfDate, users, resetProfiles } from './state';
@@ -23,7 +22,7 @@ import { appendActionLog, addLogEntry, getActionLog, getActionLogSince } from '.
 
 export { appendActionLog, addLogEntry, getCurrentUser, resetProfiles, getActionLog, getActionLogSince };
 
-const defaultWeights = normalise(Array.from(Object.values(defaults)));
+const defaultWeights = Array.from(Object.values(defaults));
 const weightKeys = Array.from(Object.keys(defaults));
 export { defaultWeights, weightKeys };
 

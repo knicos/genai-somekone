@@ -1,4 +1,4 @@
-import { ScoredRecommendation } from './recommenderTypes';
+import { RecommendationOptions, ScoredRecommendation } from './recommenderTypes';
 import { generateCandidates } from './candidates';
 import { scoreCandidates } from './scoring';
 import { UserNodeId } from '../graph/graphTypes';
@@ -8,16 +8,23 @@ import { biasedUniqueSubset } from '@genaism/util/subsets';
 
 const store = new Map<UserNodeId, ScoredRecommendation[]>();
 
-export async function generateNewRecommendations(id: UserNodeId, count: number) {
+export async function generateNewRecommendations(id: UserNodeId, count: number, options?: RecommendationOptions) {
     const profile = getUserProfile(id);
-    const candidates = generateCandidates(profile, count);
-    const scored = scoreCandidates(candidates, profile);
+    const candidates = generateCandidates(profile, count, options);
+    const scored = scoreCandidates(candidates, profile, options);
 
     const old = store.get(profile.id) || [];
-    const subset = biasedUniqueSubset(scored, count, (v) => v.contentId);
 
-    store.set(profile.id, [...subset, ...old]);
-    emitRecommendationEvent(id, subset);
+    if (options?.selection === 'rank') {
+        const subset = scored.slice(0, count);
+        store.set(profile.id, [...subset, ...old]);
+        emitRecommendationEvent(id, subset);
+    } else {
+        const subset = biasedUniqueSubset(scored, count, (v) => v.contentId);
+
+        store.set(profile.id, [...subset, ...old]);
+        emitRecommendationEvent(id, subset);
+    }
 }
 
 export function getRecommendations(id: UserNodeId, count: number): ScoredRecommendation[] {

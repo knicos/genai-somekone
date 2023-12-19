@@ -6,6 +6,7 @@ import { GraphLink, GraphNode, InternalGraphLink, LinkStyle } from '../Graph/typ
 import { useRecoilValue } from 'recoil';
 import {
     settingClusterColouring,
+    settingDisplayLabel,
     settingDisplayLines,
     settingEgoOnSelect,
     settingLinkDistanceScale,
@@ -17,6 +18,7 @@ import { UserNodeId } from '@genaism/services/graph/graphTypes';
 // import FakeNode from '../FakeNode/FakeNode';
 import style from './style.module.css';
 import { useAllSimilarUsers } from './similarity';
+import UserLabel from './UserLabel';
 
 interface Props {
     liveUsers?: UserNodeId[];
@@ -33,6 +35,7 @@ export default function SocialGraph({ liveUsers }: Props) {
     const showOfflineUsers = useRecoilValue(settingShowOfflineUsers);
     const clusterColouring = useRecoilValue(settingClusterColouring);
     const egoSelect = useRecoilValue(settingEgoOnSelect);
+    const showLabel = useRecoilValue(settingDisplayLabel);
     const users = useNodeType('user');
     const liveSet = useMemo(() => {
         const set = new Set<string>();
@@ -132,17 +135,18 @@ export default function SocialGraph({ liveUsers }: Props) {
                 setFocusNode(undefined);
                 setConnected(undefined);
                 setLinkStyles(undefined);
-                //setZoom(8);
+                setZoom(5);
                 //setCenter([0, 0]);
             }}
             focusNode={focusNode}
             zoom={zoom}
-            onZoom={setZoom}
             center={center}
+            LabelComponent={showLabel ? UserLabel : undefined}
         >
             {nodes.map((n) => (
                 <ProfileNode
                     id={n.id}
+                    node={n}
                     onResize={doResize}
                     key={n.id}
                     live={liveSet.has(n.id)}

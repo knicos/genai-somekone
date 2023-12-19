@@ -105,6 +105,15 @@ export function getEdgeWeights<T extends EdgeType, S extends SourceFor<T>, D ext
     }
 }
 
+export function getEdge<T extends EdgeType, S extends SourceFor<T>, D extends DestinationFor<T, S>>(
+    type: T,
+    src: S,
+    dest: D
+): Edge<S, D> | undefined {
+    const id = `${dest}:${type}:${src}`;
+    return edgeStore.get(id) as Edge<S, D> | undefined;
+}
+
 export function getEdges<T extends NodeID<NodeType>>(node: T | T[], count?: number): Edge<T, NodeID<NodeType>>[] {
     if (Array.isArray(node)) {
         const resultSet: Edge<T, NodeID<NodeType>>[] = [];
