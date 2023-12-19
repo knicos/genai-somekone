@@ -1,0 +1,7 @@
+@value primary from "../../style/colours.module.css";
+
+.logBatch {
+    margin-bottom: 1rem;
+    border: 2px solid primary;
+    border-radius: 6px;
+}

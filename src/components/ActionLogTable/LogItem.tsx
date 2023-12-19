@@ -24,9 +24,10 @@ function generateMessage(log: LogEntry, t: TFunction) {
 
 interface Props {
     item: LogEntry;
+    first: boolean;
 }
 
-export default function LogItem({ item }: Props) {
+export default function LogItem({ item, first }: Props) {
     const { t } = useTranslation();
 
     const isSpecial = item.activity === 'engagement';
@@ -34,10 +35,10 @@ export default function LogItem({ item }: Props) {
     return (
         <TableItem
             message={generateMessage(item, t)}
-            image={item.id}
+            image={first ? item.id : undefined}
             time={isSpecial ? undefined : item.timestamp}
             score={isSpecial ? item.value || 0 : undefined}
-            highlight={isSpecial}
+            highlight={first}
         />
     );
 }
