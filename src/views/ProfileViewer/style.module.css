@@ -1,3 +1,5 @@
+@value backgroundLight from "../../style/colours.module.css";
+
 .container {
     display: flex;
     flex-direction: column;
@@ -28,4 +30,9 @@
     right: 0;
     bottom: 0;
     display: flex;
+    border-top: 1px solid backgroundLight;
+}
+
+.container :global .Mui-disabled {
+    opacity: 0.4;
 }

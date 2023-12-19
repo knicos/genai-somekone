@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import DataProfile from '@genaism/components/DataProfile/DataProfile';
 import { appendActionLog, createUserProfile, replaceProfile } from '@genaism/services/profiler/profiler';
 import { getZipBlob, loadFile } from '@genaism/services/loader/fileLoader';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { errorNotification } from '@genaism/state/errorState';
 import { BottomNavigation, BottomNavigationAction, Slide, SlideProps } from '@mui/material';
 import QueryStatsIcon from '@mui/icons-material/QueryStats';
@@ -42,7 +42,7 @@ export function Component() {
     const [hasData, setHasData] = useState(false);
     const [page, setPage] = useState(0);
     const prevPage = useRef(0);
-    const setConfig = useSetRecoilState<SMConfig>(appConfiguration);
+    const [config, setConfig] = useRecoilState<SMConfig>(appConfiguration);
 
     const onData = useCallback((data: EventProtocol) => {
         console.log('GOT DATA', data);
@@ -139,10 +139,12 @@ export function Component() {
                             icon={<QueryStatsIcon fontSize="large" />}
                         />
                         <BottomNavigationAction
+                            disabled={config.hideProfileView}
                             label={t('profile.actions.profile')}
                             icon={<PersonIcon fontSize="large" />}
                         />
                         <BottomNavigationAction
+                            disabled={config.hideRecommendationsView}
                             label={t('profile.actions.recommendations')}
                             icon={<ImageSearchIcon fontSize="large" />}
                         />

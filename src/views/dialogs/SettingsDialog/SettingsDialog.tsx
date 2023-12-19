@@ -36,12 +36,12 @@ export default function SettingsDialog() {
                     orientation="vertical"
                     sx={{ borderRight: '1px solid #008297' }}
                 >
-                    <Tab label="General" />
-                    <Tab label="Feeds" />
-                    <Tab label="Recommendations" />
-                    <Tab label="Social Graph" />
-                    <Tab label="Topic Graph" />
-                    <Tab label="Content Graph" />
+                    <Tab label={t('dashboard.titles.general')} />
+                    <Tab label={t('dashboard.titles.feedApp')} />
+                    <Tab label={t('dashboard.titles.recommendations')} />
+                    <Tab label={t('dashboard.titles.socialGraph')} />
+                    <Tab label={t('dashboard.titles.topicGraph')} />
+                    <Tab label={t('dashboard.titles.contentGraph')} />
                 </Tabs>
                 {tabNumber === 0 && <GeneralSettings />}
                 {tabNumber === 1 && <FeedSettings />}

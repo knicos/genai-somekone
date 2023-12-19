@@ -44,7 +44,13 @@
         "titles": {
             "save": "Save",
             "settings": "Settings",
-            "error": "Problem"
+            "error": "Problem",
+            "general": "General",
+            "feedApp": "Feed App",
+            "recommendations": "Recommendations",
+            "socialGraph": "Social Graph",
+            "topicGraph": "Topic Graph",
+            "contentGraph": "Content Graph"
         },
         "labels": {
             "saveContent": "Save the image content",
@@ -87,7 +93,11 @@
             "reactionScore": "Use likelihood of reacting",
             "viewingScore": "Use likelihood of viewing",
             "rankSelection": "Use the top ranked candidates",
-            "distributionSelection": "Use score as a selection probability"
+            "distributionSelection": "Use score as a selection probability",
+            "disableFeedApp": "Pause Feed App for all users",
+            "hideDataView": "Hide data view",
+            "hideProfileView": "Hide profile view",
+            "hideRecommendationsView": "Hide recommendations view"
         },
         "messages": {
             "connection": "Go to <PageLink><Code>{{linkText}}</Code></PageLink> and enter the code <Code>{{codeText}}</Code>, or use the QR code.",

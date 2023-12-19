@@ -1,7 +1,6 @@
-@value primary from "../../style/colours.module.css";
+@value backgroundDark, primary from "../../style/colours.module.css";
 
 .logBatch {
-    margin-bottom: 1rem;
-    border: 2px solid primary;
-    border-radius: 6px;
+    margin: 1rem;
+    box-shadow: 0 0 8px backgroundDark;
 }

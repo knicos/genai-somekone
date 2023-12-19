@@ -13,11 +13,47 @@ export default function FeedSettings() {
             <FormControlLabel
                 control={
                     <Checkbox
-                        checked={config.hideShareProfile || false}
-                        onChange={(_, checked) => setConfig((old) => ({ ...old, hideShareProfile: checked }))}
+                        checked={config.disableFeedApp || false}
+                        onChange={(_, checked) => setConfig((old) => ({ ...old, disableFeedApp: checked }))}
+                    />
+                }
+                label={t('dashboard.labels.disableFeedApp')}
+            />
+            <FormControlLabel
+                control={
+                    <Checkbox
+                        checked={config.hideActionsButton || false}
+                        onChange={(_, checked) => setConfig((old) => ({ ...old, hideActionsButton: checked }))}
                     />
                 }
                 label={t('dashboard.labels.hideFeedMenu')}
+            />
+            <FormControlLabel
+                control={
+                    <Checkbox
+                        checked={config.hideDataView || false}
+                        onChange={(_, checked) => setConfig((old) => ({ ...old, hideDataView: checked }))}
+                    />
+                }
+                label={t('dashboard.labels.hideDataView')}
+            />
+            <FormControlLabel
+                control={
+                    <Checkbox
+                        checked={config.hideProfileView || false}
+                        onChange={(_, checked) => setConfig((old) => ({ ...old, hideProfileView: checked }))}
+                    />
+                }
+                label={t('dashboard.labels.hideProfileView')}
+            />
+            <FormControlLabel
+                control={
+                    <Checkbox
+                        checked={config.hideRecommendationsView || false}
+                        onChange={(_, checked) => setConfig((old) => ({ ...old, hideRecommendationsView: checked }))}
+                    />
+                }
+                label={t('dashboard.labels.hideRecommendationsView')}
             />
         </div>
     );

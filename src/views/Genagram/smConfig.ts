@@ -2,7 +2,10 @@ import { RecommendationOptions } from '@genaism/services/recommender/recommender
 
 export interface SMConfig {
     hideShareProfile?: boolean;
-    topicCandidates?: boolean;
-    similarUserCandidates?: boolean;
+    hideDataView?: boolean;
+    hideProfileView?: boolean;
+    hideActionsButton?: boolean;
+    hideRecommendationsView?: boolean;
+    disableFeedApp?: boolean;
     recommendations?: RecommendationOptions;
 }

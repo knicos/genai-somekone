@@ -8,10 +8,6 @@ export interface PeerEvent {
     event: string;
 }
 
-function isPeerEvent(data: unknown): data is PeerEvent {
-    return typeof (data as PeerEvent).event === 'string';
-}
-
 interface Callbacks<T> {
     onOpen?: () => void;
     onConnect?: (conn: DataConnection) => void;
@@ -39,7 +35,16 @@ interface PeerWelcomeEvent extends PeerEvent {
     event: 'eter:welcome';
 }
 
-export type BuiltinEvent = PeerWelcomeEvent | PeerCloseEvent | PeerJoinEvent;
+interface PeerChainEvent extends PeerEvent {
+    event: 'eter:connect';
+    code: string;
+}
+
+export type BuiltinEvent = PeerWelcomeEvent | PeerCloseEvent | PeerJoinEvent | PeerChainEvent;
+
+function isPeerEvent(data: unknown): data is BuiltinEvent {
+    return typeof (data as PeerEvent).event === 'string';
+}
 
 type SenderType<T> = (data: T | BuiltinEvent) => void;
 
@@ -121,6 +126,52 @@ export default function usePeer<T extends PeerEvent>({
             peers: new Set<string>(),
         };
 
+        const createPeer = (code: string) => {
+            const conn = npeer.connect(code, { reliable: true });
+
+            conn.on('open', () => {
+                connRef.current?.connections.set(conn.connectionId, conn);
+                connRef.current?.peers.add(conn.peer);
+                conn.send({ event: 'eter:join' });
+                if (cbRef.current.onConnect) cbRef.current.onConnect(conn);
+                /*setSender(() => (s: T) => {
+                        conn.send(s);
+                    });*/
+                setReady(true);
+                setError((p) => {
+                    const s = new Set(p);
+                    s.delete('peer_failed');
+                    s.delete('peer_retrying');
+                    return s;
+                });
+            });
+            conn.on('data', async (data: unknown) => {
+                if (isPeerEvent(data)) {
+                    if (data.event === 'eter:connect') {
+                        createPeer(data.code);
+                    } else {
+                        if (cbRef.current.onData) cbRef.current.onData(data as T, conn);
+                    }
+                }
+            });
+            conn.on('error', (err: PeerError<string>) => {
+                console.error(err.type);
+                if (cbRef.current.onError) cbRef.current.onError(err);
+                setError((p) => {
+                    const s = new Set(p);
+                    s.add('peer_failed');
+                    return s;
+                });
+            });
+            conn.on('close', () => {
+                connRef.current?.connections.delete(conn.connectionId);
+                connRef.current?.peers.delete(conn.peer); // TODO: Check no other connections from peer
+
+                if (cbRef.current.onClose) cbRef.current.onClose(conn);
+                setReady(false);
+            });
+        };
+
         npeer.on('open', () => {
             if (cbRef.current.onOpen) {
                 cbRef.current.onOpen();
@@ -134,45 +185,7 @@ export default function usePeer<T extends PeerEvent>({
                 }
             });
             if (server) {
-                const conn = npeer.connect(server, { reliable: true });
-
-                conn.on('open', () => {
-                    connRef.current?.connections.set(conn.connectionId, conn);
-                    connRef.current?.peers.add(conn.peer);
-                    conn.send({ event: 'eter:join' });
-                    if (cbRef.current.onConnect) cbRef.current.onConnect(conn);
-                    /*setSender(() => (s: T) => {
-                        conn.send(s);
-                    });*/
-                    setReady(true);
-                    setError((p) => {
-                        const s = new Set(p);
-                        s.delete('peer_failed');
-                        s.delete('peer_retrying');
-                        return s;
-                    });
-                });
-                conn.on('data', async (data: unknown) => {
-                    if (isPeerEvent(data)) {
-                        if (cbRef.current.onData) cbRef.current.onData(data as T, conn);
-                    }
-                });
-                conn.on('error', (err: PeerError<string>) => {
-                    console.error(err.type);
-                    if (cbRef.current.onError) cbRef.current.onError(err);
-                    setError((p) => {
-                        const s = new Set(p);
-                        s.add('peer_failed');
-                        return s;
-                    });
-                });
-                conn.on('close', () => {
-                    connRef.current?.connections.delete(conn.connectionId);
-                    connRef.current?.peers.delete(conn.peer); // TODO: Check no other connections from peer
-
-                    if (cbRef.current.onClose) cbRef.current.onClose(conn);
-                    setReady(false);
-                });
+                createPeer(server);
             } else {
                 setReady(true);
                 setError((p) => {
@@ -189,8 +202,9 @@ export default function usePeer<T extends PeerEvent>({
         npeer.on('connection', (conn) => {
             conn.on('data', async (data: unknown) => {
                 if (isPeerEvent(data)) {
-                    if (data.event === 'peers') {
+                    if (data.event === 'eter:connect') {
                         // console.log('GOT PEERS', data.peers);
+                        createPeer(data.code);
                     } else {
                         if (cbRef.current.onData) {
                             cbRef.current.onData(data as T, conn);

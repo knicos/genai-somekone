@@ -49,6 +49,7 @@ export function Component() {
                 conn.send({ event: 'eter:reguser', username, id: getCurrentUser() });
                 conn.send({ event: 'eter:action_log', id: getCurrentUser(), log: logs });
                 conn.send({ event: 'eter:profile_data', profile, id: getCurrentUser() });
+                conn.send({ event: 'eter:connect', code: `sm-${code}` });
             }
         },
         [config, username, content]
@@ -108,7 +109,7 @@ export function Component() {
                                 onRecommend={doRecommend}
                                 onLog={doLog}
                             />
-                            {showFeedActions && !config.hideShareProfile && (
+                            {showFeedActions && !config.hideActionsButton && (
                                 <div className={style.speedContainer}>
                                     <SpeedMenu />
                                 </div>

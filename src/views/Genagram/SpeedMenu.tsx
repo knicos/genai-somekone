@@ -5,10 +5,11 @@ import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import PersonIcon from '@mui/icons-material/Person';
 import ImageSearchIcon from '@mui/icons-material/ImageSearch';
 import CloseIcon from '@mui/icons-material/Close';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { menuShowData, menuShowProfile, menuShowRecommendations, menuShowShareProfile } from '@genaism/state/menuState';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { appConfiguration } from '@genaism/state/settingsState';
 
 export default function SpeedMenu() {
     const { t } = useTranslation();
@@ -17,6 +18,7 @@ export default function SpeedMenu() {
     const setShowShareProfile = useSetRecoilState(menuShowShareProfile);
     const setShowRecommendations = useSetRecoilState(menuShowRecommendations);
     const [showMenu, setShowMenu] = useState(false);
+    const config = useRecoilValue(appConfiguration);
 
     return (
         <SpeedDial
@@ -29,42 +31,50 @@ export default function SpeedMenu() {
             openIcon={<CloseIcon />}
             FabProps={{ color: 'secondary' }}
         >
-            <SpeedDialAction
-                icon={<ShareIcon />}
-                tooltipTitle={'Share your profile'}
-                tooltipOpen
-                onClick={() => {
-                    setShowShareProfile(true);
-                    setShowMenu(false);
-                }}
-            />
-            <SpeedDialAction
-                icon={<QueryStatsIcon />}
-                tooltipTitle={t('profile.titles.yourData')}
-                tooltipOpen
-                onClick={() => {
-                    setShowData(true);
-                    setShowMenu(false);
-                }}
-            />
-            <SpeedDialAction
-                icon={<PersonIcon />}
-                tooltipTitle={t('profile.titles.yourProfile')}
-                tooltipOpen
-                onClick={() => {
-                    setShowProfile(true);
-                    setShowMenu(false);
-                }}
-            />
-            <SpeedDialAction
-                icon={<ImageSearchIcon />}
-                tooltipTitle={'Your recommendations'}
-                tooltipOpen
-                onClick={() => {
-                    setShowRecommendations(true);
-                    setShowMenu(false);
-                }}
-            />
+            {!config.hideShareProfile && (
+                <SpeedDialAction
+                    icon={<ShareIcon />}
+                    tooltipTitle={'Share your profile'}
+                    tooltipOpen
+                    onClick={() => {
+                        setShowShareProfile(true);
+                        setShowMenu(false);
+                    }}
+                />
+            )}
+            {!config.hideDataView && (
+                <SpeedDialAction
+                    icon={<QueryStatsIcon />}
+                    tooltipTitle={t('profile.titles.yourData')}
+                    tooltipOpen
+                    onClick={() => {
+                        setShowData(true);
+                        setShowMenu(false);
+                    }}
+                />
+            )}
+            {!config.hideProfileView && (
+                <SpeedDialAction
+                    icon={<PersonIcon />}
+                    tooltipTitle={t('profile.titles.yourProfile')}
+                    tooltipOpen
+                    onClick={() => {
+                        setShowProfile(true);
+                        setShowMenu(false);
+                    }}
+                />
+            )}
+            {!config.hideRecommendationsView && (
+                <SpeedDialAction
+                    icon={<ImageSearchIcon />}
+                    tooltipTitle={'Your recommendations'}
+                    tooltipOpen
+                    onClick={() => {
+                        setShowRecommendations(true);
+                        setShowMenu(false);
+                    }}
+                />
+            )}
         </SpeedDial>
     );
 }

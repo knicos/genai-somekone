@@ -19,6 +19,7 @@ export function makeNodes<T extends NodeID>(
             ...n,
             ...defaultNodePosition(),
         };
+        cur.strength = n.strength;
         cur.size = n.size;
         cur.index = ix;
         cur.data = n.data;
