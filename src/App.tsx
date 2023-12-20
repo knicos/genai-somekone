@@ -82,6 +82,10 @@ const router = createBrowserRouter(
                 path="create"
                 lazy={() => import('./views/Create/Create')}
             />
+            <Route
+                path="content"
+                lazy={() => import('./views/ContentTool/ContentTool')}
+            />
         </Route>
     )
 );

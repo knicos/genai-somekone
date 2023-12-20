@@ -23,6 +23,10 @@
         {
             "route": "/creator*",
             "rewrite": "index.html"
+        },
+        {
+            "route": "/content*",
+            "rewrite": "index.html"
         }
     ]
 }
