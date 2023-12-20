@@ -24,12 +24,19 @@ import { ScoredRecommendation } from '@genaism/services/recommender/recommenderT
 import RecommendationPage from './RecommendationPage';
 import BlockDialog from '../dialogs/BlockDialog/BlockDialog';
 
+const USERNAME_KEY = 'genai_somekone_username';
+
+function loadUser() {
+    const name = window.sessionStorage.getItem(USERNAME_KEY);
+    return name || undefined;
+}
+
 export function Component() {
     const { t } = useTranslation();
     const { code } = useParams();
     const [config, setConfig] = useRecoilState<SMConfig>(appConfiguration);
     const [content, setContent] = useState<(string | ArrayBuffer)[]>();
-    const [username, setUsername] = useState<string>();
+    const [username, setUsername] = useState<string | undefined>(loadUser);
     const logRef = useRef(0);
     const logTimer = useRef(-1);
     const showFeedActions = useRecoilValue(menuShowFeedActions);
@@ -60,6 +67,7 @@ export function Component() {
 
     useEffect(() => {
         if (username && send) {
+            window.sessionStorage.setItem(USERNAME_KEY, username);
             setUserName(getCurrentUser(), username);
             send({ event: 'eter:reguser', username, id: getCurrentUser() });
         }

@@ -3,9 +3,9 @@ import JSZip from 'jszip';
 import { ContentMetadata } from '@genaism/services/content/contentTypes';
 import { addContent } from '@genaism/services/content/content';
 import { LogEntry, UserProfile } from '@genaism/services/profiler/profilerTypes';
-import { addUserProfile, appendActionLog } from '@genaism/services/profiler/profiler';
+import { addUserProfile, appendActionLog, getActionLog, getCurrentUser } from '@genaism/services/profiler/profiler';
 import { UserNodeId } from '../graph/graphTypes';
-import { GraphExport } from '../graph/state';
+import { GraphExport, dump } from '../graph/state';
 import { addNodes } from '../graph/nodes';
 import { addEdges } from '../graph/edges';
 
@@ -104,4 +104,27 @@ export async function loadFile(file: File | Blob): Promise<void> {
     store.logs.forEach((l) => {
         appendActionLog(l.log, l.id);
     });
+}
+
+const GRAPH_KEY = 'genai_somekone_graph';
+const LOG_KEY = 'genai_somekone_logs';
+
+window.addEventListener('beforeunload', () => {
+    window.sessionStorage.setItem(GRAPH_KEY, JSON.stringify(dump()));
+    const logs = getActionLog(getCurrentUser());
+    window.sessionStorage.setItem(LOG_KEY, JSON.stringify(logs));
+});
+
+const sessionGraph = window.sessionStorage.getItem(GRAPH_KEY);
+if (sessionGraph) {
+    const graph = JSON.parse(sessionGraph) as GraphExport;
+    addNodes(graph.nodes);
+    addEdges(graph.edges);
+    console.log('Loaded session graph');
+}
+
+const sessionLogs = window.sessionStorage.getItem(LOG_KEY);
+if (sessionLogs) {
+    const logs = JSON.parse(sessionLogs) as LogEntry[];
+    appendActionLog(logs);
 }
