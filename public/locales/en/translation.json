@@ -50,7 +50,8 @@
             "recommendations": "Recommendations",
             "socialGraph": "Social Graph",
             "topicGraph": "Topic Graph",
-            "contentGraph": "Content Graph"
+            "contentGraph": "Content Graph",
+            "paused": "Paused"
         },
         "labels": {
             "saveContent": "Save the image content",
@@ -104,7 +105,8 @@
             "waitingPeople": "Waiting for people...",
             "onePerson": "{{count}} person has joined.",
             "manyPeople": "{{count}} people have joined.",
-            "loading": "Creating your social network..."
+            "loading": "Creating your social network...",
+            "paused": "The App has been paused."
         },
         "actions": {
             "start": "Start",

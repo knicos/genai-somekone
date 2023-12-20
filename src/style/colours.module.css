@@ -13,4 +13,6 @@
 @value primaryHover: rgba(0, 130, 151, 0.04);
 @value secondary: rgb(174, 37, 174);
 @value bgError: #ffcbcb;
+@value bgOk: #a2e4b8;
 @value borderGrey: #ddd;
+@value borderGreen: #19b1a8;

@@ -10,6 +10,10 @@
     border-radius: 6px;
 }
 
+.MuiDialog-root {
+    z-index: 2100;
+}
+
 .MuiTooltip-arrow {
     color: #5f7377;
 }
@@ -19,6 +23,10 @@
     padding: 0.5rem 1rem;
     background: #e5f6fd;
     margin-bottom: 0.5rem;
+}
+
+.MuiBackdrop-root {
+    background: rgba(255, 255, 255, 0.7);
 }
 
 .MuiDialog-paper {

@@ -22,6 +22,7 @@ import { DataConnection } from 'peerjs';
 import { appConfiguration } from '@genaism/state/settingsState';
 import { ScoredRecommendation } from '@genaism/services/recommender/recommenderTypes';
 import RecommendationPage from './RecommendationPage';
+import BlockDialog from '../dialogs/BlockDialog/BlockDialog';
 
 export function Component() {
     const { t } = useTranslation();
@@ -120,6 +121,7 @@ export function Component() {
                     <DataPage />
                     <ProfilePage />
                     <RecommendationPage />
+                    <BlockDialog />
                 </div>
             </Loading>
             <ErrorDialog />
