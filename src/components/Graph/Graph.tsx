@@ -268,6 +268,7 @@ export default function Graph<T extends NodeID>({
                         <LabelComponent
                             {...labelProps}
                             node={n}
+                            key={n.id}
                             scale={actualZoom.zoom}
                         />
                     ))}

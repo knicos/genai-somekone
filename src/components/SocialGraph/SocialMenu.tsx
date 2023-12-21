@@ -18,7 +18,7 @@ import { useRecoilState } from 'recoil';
 import { settingClusterColouring, settingNodeMode } from '@genaism/state/settingsState';
 import { useState } from 'react';
 import DeleteDialog from './DeleteDialog';
-import { menuShowFeed, menuShowUserData } from '@genaism/state/menuState';
+import { menuShowFeed, menuShowUserData, menuShowUserProfile } from '@genaism/state/menuState';
 
 interface Props {
     selectedUser?: UserNodeId;
@@ -35,6 +35,7 @@ export default function SocialMenu({ selectedUser }: Props) {
     const [showDelete, setShowDelete] = useState(false);
     const [showFeed, setShowFeed] = useRecoilState(menuShowFeed);
     const [showData, setShowData] = useRecoilState(menuShowUserData);
+    const [showProfile, setShowProfile] = useRecoilState(menuShowUserProfile);
 
     return (
         <IconMenu
@@ -92,7 +93,11 @@ export default function SocialMenu({ selectedUser }: Props) {
                         </IconButton>
                     </IconMenuItem>
                     <IconMenuItem tooltip={t('dashboard.labels.showProfile')}>
-                        <IconButton color="inherit">
+                        <IconButton
+                            data-testid="social-menu-profile-button"
+                            color={showProfile ? 'secondary' : 'inherit'}
+                            onClick={() => setShowProfile((old) => (old ? undefined : selectedUser))}
+                        >
                             <PersonIcon />
                         </IconButton>
                     </IconMenuItem>
