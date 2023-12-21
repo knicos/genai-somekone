@@ -10,7 +10,7 @@ interface Props extends PropsWithChildren {
 
 export default function AppPanel({ title, onClose, children }: Props) {
     return (
-        <div className={style.background}>
+        <div className={style.backgroundVisible}>
             <section className={style.panel}>
                 <header>
                     {title && <h1>{title}</h1>}
@@ -24,7 +24,7 @@ export default function AppPanel({ title, onClose, children }: Props) {
                         </IconButton>
                     )}
                 </header>
-                {children}
+                <div className={style.content}>{children}</div>
             </section>
         </div>
     );

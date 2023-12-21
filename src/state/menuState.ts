@@ -51,3 +51,8 @@ export const menuShowFeed = atom<UserNodeId | undefined>({
     key: 'menushowfeed',
     default: undefined,
 });
+
+export const menuShowUserData = atom<UserNodeId | undefined>({
+    key: 'menushowuserdata',
+    default: undefined,
+});

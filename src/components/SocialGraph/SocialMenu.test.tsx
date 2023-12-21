@@ -6,7 +6,7 @@ import { addNode } from '@genaism/services/graph/nodes';
 import { resetGraph } from '@genaism/services/graph/state';
 import userEvent from '@testing-library/user-event';
 import { useRecoilValue } from 'recoil';
-import { menuShowFeed } from '@genaism/state/menuState';
+import { menuShowFeed, menuShowUserData } from '@genaism/state/menuState';
 
 describe('SocialMenu component', () => {
     beforeEach(() => resetGraph());
@@ -50,6 +50,28 @@ describe('SocialMenu component', () => {
         );
 
         await user.click(screen.getByTestId('social-menu-feed-button'));
+        expect(observerFn).toHaveBeenCalledWith('user:test');
+    });
+
+    it('can show a data view', async ({ expect }) => {
+        const user = userEvent.setup();
+        const observerFn = vi.fn();
+
+        const Observer = function () {
+            const user = useRecoilValue(menuShowUserData);
+            if (user) observerFn(user);
+            return null;
+        };
+
+        addNode('user', 'user:test', { name: 'FakeUsername' });
+        render(
+            <TestWrapper>
+                <Observer />
+                <SocialMenu selectedUser="user:test" />
+            </TestWrapper>
+        );
+
+        await user.click(screen.getByTestId('social-menu-data-button'));
         expect(observerFn).toHaveBeenCalledWith('user:test');
     });
 });

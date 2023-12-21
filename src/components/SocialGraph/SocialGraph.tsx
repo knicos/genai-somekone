@@ -22,6 +22,7 @@ import UserLabel from './UserLabel';
 import SocialMenu from './SocialMenu';
 import { getCurrentUser } from '@genaism/services/profiler/state';
 import FeedPanel from './FeedPanel';
+import DataPanel from './DataPanel';
 
 interface Props {
     liveUsers?: UserNodeId[];
@@ -165,6 +166,7 @@ export default function SocialGraph({ liveUsers }: Props) {
                 ))}
             </Graph>
             <FeedPanel />
+            <DataPanel />
             <SocialMenu selectedUser={focusNode} />
         </>
     );
