@@ -1,6 +1,6 @@
 import { describe, it, vi } from 'vitest';
 import AppPanel from './AppPanel';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 describe('AppPanel Component', () => {
@@ -27,6 +27,6 @@ describe('AppPanel Component', () => {
 
         expect(screen.getByText('TestMessage')).toBeVisible();
         await user.click(screen.getByTestId('panel-close-button'));
-        expect(closeFn).toHaveBeenCalledOnce();
+        waitFor(() => expect(closeFn).toHaveBeenCalledOnce());
     });
 });

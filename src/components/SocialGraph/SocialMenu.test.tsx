@@ -6,7 +6,7 @@ import { addNode } from '@genaism/services/graph/nodes';
 import { resetGraph } from '@genaism/services/graph/state';
 import userEvent from '@testing-library/user-event';
 import { useRecoilValue } from 'recoil';
-import { menuShowFeed, menuShowUserData, menuShowUserProfile } from '@genaism/state/menuState';
+import { menuSelectedUser, menuShowUserPanel } from '@genaism/state/menuState';
 
 describe('SocialMenu component', () => {
     beforeEach(() => resetGraph());
@@ -23,8 +23,12 @@ describe('SocialMenu component', () => {
     it('renders a selected user menu', async ({ expect }) => {
         addNode('user', 'user:test', { name: 'FakeUsername' });
         render(
-            <TestWrapper>
-                <SocialMenu selectedUser="user:test" />
+            <TestWrapper
+                initializeState={({ set }) => {
+                    set(menuSelectedUser, 'user:test');
+                }}
+            >
+                <SocialMenu />
             </TestWrapper>
         );
 
@@ -36,21 +40,26 @@ describe('SocialMenu component', () => {
         const observerFn = vi.fn();
 
         const Observer = function () {
-            const user = useRecoilValue(menuShowFeed);
-            if (user) observerFn(user);
+            const user = useRecoilValue(menuSelectedUser);
+            const panel = useRecoilValue(menuShowUserPanel);
+            if (user) observerFn(user, panel);
             return null;
         };
 
         addNode('user', 'user:test', { name: 'FakeUsername' });
         render(
-            <TestWrapper>
+            <TestWrapper
+                initializeState={({ set }) => {
+                    set(menuSelectedUser, 'user:test');
+                }}
+            >
                 <Observer />
-                <SocialMenu selectedUser="user:test" />
+                <SocialMenu />
             </TestWrapper>
         );
 
         await user.click(screen.getByTestId('social-menu-feed-button'));
-        expect(observerFn).toHaveBeenCalledWith('user:test');
+        expect(observerFn).toHaveBeenCalledWith('user:test', 'feed');
     });
 
     it('can show a data view', async ({ expect }) => {
@@ -58,21 +67,26 @@ describe('SocialMenu component', () => {
         const observerFn = vi.fn();
 
         const Observer = function () {
-            const user = useRecoilValue(menuShowUserData);
-            if (user) observerFn(user);
+            const user = useRecoilValue(menuSelectedUser);
+            const panel = useRecoilValue(menuShowUserPanel);
+            if (user) observerFn(user, panel);
             return null;
         };
 
         addNode('user', 'user:test', { name: 'FakeUsername' });
         render(
-            <TestWrapper>
+            <TestWrapper
+                initializeState={({ set }) => {
+                    set(menuSelectedUser, 'user:test');
+                }}
+            >
                 <Observer />
-                <SocialMenu selectedUser="user:test" />
+                <SocialMenu />
             </TestWrapper>
         );
 
         await user.click(screen.getByTestId('social-menu-data-button'));
-        expect(observerFn).toHaveBeenCalledWith('user:test');
+        expect(observerFn).toHaveBeenCalledWith('user:test', 'data');
     });
 
     it('can show a profile view', async ({ expect }) => {
@@ -80,20 +94,52 @@ describe('SocialMenu component', () => {
         const observerFn = vi.fn();
 
         const Observer = function () {
-            const user = useRecoilValue(menuShowUserProfile);
-            if (user) observerFn(user);
+            const user = useRecoilValue(menuSelectedUser);
+            const panel = useRecoilValue(menuShowUserPanel);
+            if (user) observerFn(user, panel);
             return null;
         };
 
         addNode('user', 'user:test', { name: 'FakeUsername' });
         render(
-            <TestWrapper>
+            <TestWrapper
+                initializeState={({ set }) => {
+                    set(menuSelectedUser, 'user:test');
+                }}
+            >
                 <Observer />
-                <SocialMenu selectedUser="user:test" />
+                <SocialMenu />
             </TestWrapper>
         );
 
         await user.click(screen.getByTestId('social-menu-profile-button'));
-        expect(observerFn).toHaveBeenCalledWith('user:test');
+        expect(observerFn).toHaveBeenCalledWith('user:test', 'profile');
+    });
+
+    it('can show a recommendations view', async ({ expect }) => {
+        const user = userEvent.setup();
+        const observerFn = vi.fn();
+
+        const Observer = function () {
+            const user = useRecoilValue(menuSelectedUser);
+            const panel = useRecoilValue(menuShowUserPanel);
+            if (user) observerFn(user, panel);
+            return null;
+        };
+
+        addNode('user', 'user:test', { name: 'FakeUsername' });
+        render(
+            <TestWrapper
+                initializeState={({ set }) => {
+                    set(menuSelectedUser, 'user:test');
+                }}
+            >
+                <Observer />
+                <SocialMenu />
+            </TestWrapper>
+        );
+
+        await user.click(screen.getByTestId('social-menu-recom-button'));
+        expect(observerFn).toHaveBeenCalledWith('user:test', 'recommendations');
     });
 });

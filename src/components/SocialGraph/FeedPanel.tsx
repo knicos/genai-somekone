@@ -1,5 +1,5 @@
-import { menuShowFeed } from '@genaism/state/menuState';
-import { useRecoilState } from 'recoil';
+import { menuSelectedUser, menuShowUserPanel } from '@genaism/state/menuState';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import AppPanel from '../AppPanel/AppPanel';
 import Feed from '../Feed/Feed';
 import { getNodeData } from '@genaism/services/graph/nodes';
@@ -9,15 +9,17 @@ interface UserData {
 }
 
 export default function FeedPanel() {
-    const [showFeed, setShowFeed] = useRecoilState(menuShowFeed);
+    const [panel, setPanel] = useRecoilState(menuShowUserPanel);
+    const selectedUser = useRecoilValue(menuSelectedUser);
 
-    return showFeed ? (
+    return panel === 'feed' && selectedUser ? (
         <AppPanel
-            title={getNodeData<UserData>(showFeed)?.name}
-            onClose={() => setShowFeed(undefined)}
+            title={getNodeData<UserData>(selectedUser)?.name}
+            onClose={() => setPanel('none')}
+            data-testid="feed-panel"
         >
             <Feed
-                id={showFeed}
+                id={selectedUser}
                 noLog
                 noActions
             />

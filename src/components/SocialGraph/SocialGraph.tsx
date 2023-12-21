@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import ProfileNode from './ProfileNode';
 import Graph from '../Graph/Graph';
 import { GraphLink, GraphNode, InternalGraphLink, LinkStyle } from '../Graph/types';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import {
     settingClusterColouring,
     settingDisplayLabel,
@@ -24,6 +24,8 @@ import { getCurrentUser } from '@genaism/services/profiler/state';
 import FeedPanel from './FeedPanel';
 import DataPanel from './DataPanel';
 import ProfilePanel from './ProfilePanel';
+import { menuSelectedUser } from '@genaism/state/menuState';
+import RecommendationsPanel from './RecommendationsPanel';
 
 interface Props {
     liveUsers?: UserNodeId[];
@@ -49,7 +51,7 @@ export default function SocialGraph({ liveUsers }: Props) {
         });
         return set;
     }, [liveUsers]);
-    const [focusNode, setFocusNode] = useState<UserNodeId | undefined>();
+    const [focusNode, setFocusNode] = useRecoilState(menuSelectedUser);
     const [zoom, setZoom] = useState(5);
     const [center, setCenter] = useState<[number, number] | undefined>();
     const [linkStyles, setLinkStyles] = useState<Map<UserNodeId, LinkStyle<UserNodeId>>>();
@@ -169,7 +171,8 @@ export default function SocialGraph({ liveUsers }: Props) {
             <FeedPanel />
             <DataPanel />
             <ProfilePanel />
-            <SocialMenu selectedUser={focusNode} />
+            <RecommendationsPanel />
+            <SocialMenu />
         </>
     );
 }

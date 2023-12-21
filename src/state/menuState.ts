@@ -47,17 +47,13 @@ export const menuGraphType = atom<GraphTypes>({
     default: 'social',
 });
 
-export const menuShowFeed = atom<UserNodeId | undefined>({
-    key: 'menushowfeed',
+export const menuSelectedUser = atom<UserNodeId | undefined>({
+    key: 'menuselecteduser',
     default: undefined,
 });
 
-export const menuShowUserData = atom<UserNodeId | undefined>({
-    key: 'menushowuserdata',
-    default: undefined,
-});
-
-export const menuShowUserProfile = atom<UserNodeId | undefined>({
-    key: 'menushowuserprofile',
-    default: undefined,
+export type UserPanel = 'none' | 'feed' | 'data' | 'profile' | 'recommendations';
+export const menuShowUserPanel = atom<UserPanel>({
+    key: 'menushowuserpanel',
+    default: 'none',
 });

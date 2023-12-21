@@ -12,30 +12,24 @@ import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid';
 import Spacer from '../IconMenu/Spacer';
 import style from './style.module.css';
 import { useTranslation } from 'react-i18next';
-import { UserNodeId } from '@genaism/services/graph/graphTypes';
 import { getNodeData, removeNode } from '@genaism/services/graph/nodes';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { settingClusterColouring, settingNodeMode } from '@genaism/state/settingsState';
 import { useState } from 'react';
 import DeleteDialog from './DeleteDialog';
-import { menuShowFeed, menuShowUserData, menuShowUserProfile } from '@genaism/state/menuState';
-
-interface Props {
-    selectedUser?: UserNodeId;
-}
+import { menuSelectedUser, menuShowUserPanel } from '@genaism/state/menuState';
 
 interface UserData {
     name: string;
 }
 
-export default function SocialMenu({ selectedUser }: Props) {
+export default function SocialMenu() {
     const { t } = useTranslation();
     const [nodeMode, setNodeMode] = useRecoilState(settingNodeMode);
     const [colouring, setColouring] = useRecoilState(settingClusterColouring);
     const [showDelete, setShowDelete] = useState(false);
-    const [showFeed, setShowFeed] = useRecoilState(menuShowFeed);
-    const [showData, setShowData] = useRecoilState(menuShowUserData);
-    const [showProfile, setShowProfile] = useRecoilState(menuShowUserProfile);
+    const [panel, setPanel] = useRecoilState(menuShowUserPanel);
+    const selectedUser = useRecoilValue(menuSelectedUser);
 
     return (
         <IconMenu
@@ -50,6 +44,7 @@ export default function SocialMenu({ selectedUser }: Props) {
                 <IconButton
                     color={nodeMode === 'image' ? 'secondary' : 'inherit'}
                     onClick={() => setNodeMode('image')}
+                    data-testid="social-menu-images"
                 >
                     <CollectionsIcon />
                 </IconButton>
@@ -77,8 +72,8 @@ export default function SocialMenu({ selectedUser }: Props) {
                     <IconMenuItem tooltip={t('dashboard.labels.showFeed')}>
                         <IconButton
                             data-testid="social-menu-feed-button"
-                            color={showFeed ? 'secondary' : 'inherit'}
-                            onClick={() => setShowFeed((old) => (old ? undefined : selectedUser))}
+                            color={panel === 'feed' ? 'secondary' : 'inherit'}
+                            onClick={() => setPanel('feed')}
                         >
                             <PhoneAndroidIcon />
                         </IconButton>
@@ -86,8 +81,8 @@ export default function SocialMenu({ selectedUser }: Props) {
                     <IconMenuItem tooltip={t('dashboard.labels.showData')}>
                         <IconButton
                             data-testid="social-menu-data-button"
-                            color={showData ? 'secondary' : 'inherit'}
-                            onClick={() => setShowData((old) => (old ? undefined : selectedUser))}
+                            color={panel === 'data' ? 'secondary' : 'inherit'}
+                            onClick={() => setPanel('data')}
                         >
                             <QueryStatsIcon />
                         </IconButton>
@@ -95,14 +90,18 @@ export default function SocialMenu({ selectedUser }: Props) {
                     <IconMenuItem tooltip={t('dashboard.labels.showProfile')}>
                         <IconButton
                             data-testid="social-menu-profile-button"
-                            color={showProfile ? 'secondary' : 'inherit'}
-                            onClick={() => setShowProfile((old) => (old ? undefined : selectedUser))}
+                            color={panel === 'profile' ? 'secondary' : 'inherit'}
+                            onClick={() => setPanel('profile')}
                         >
                             <PersonIcon />
                         </IconButton>
                     </IconMenuItem>
                     <IconMenuItem tooltip={t('dashboard.labels.showRecommendations')}>
-                        <IconButton color="inherit">
+                        <IconButton
+                            data-testid="social-menu-recom-button"
+                            color={panel === 'recommendations' ? 'secondary' : 'inherit'}
+                            onClick={() => setPanel('recommendations')}
+                        >
                             <ImageSearchIcon />
                         </IconButton>
                     </IconMenuItem>
