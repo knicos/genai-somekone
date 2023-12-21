@@ -1,0 +1,35 @@
+.panel {
+    position: absolute;
+    aspect-ratio: 9/16;
+    max-width: calc(0.56 * 75vh);
+    max-height: 75vh;
+    box-sizing: border-box;
+    width: 500px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    background: white;
+    padding: 0;
+    padding-bottom: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #707070;
+}
+
+.panel header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0 1rem;
+    align-items: center;
+}
+
+.background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.8);
+}

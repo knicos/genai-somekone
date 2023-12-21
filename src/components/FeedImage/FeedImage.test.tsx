@@ -146,4 +146,17 @@ describe('FeedImage component', () => {
         await user.click(screen.getByTestId('share-friends-button'));
         expect(sharefn).toHaveBeenCalledWith('content:xyz', 'friends');
     });
+
+    it('can hide actions', async ({ expect }) => {
+        render(
+            <FeedImage
+                id="content:xyz"
+                active
+                visible
+                noActions
+            />
+        );
+
+        expect(screen.queryByTestId('feed-image-share-button')).not.toBeInTheDocument();
+    });
 });

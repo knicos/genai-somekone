@@ -20,6 +20,7 @@ interface Props {
     id: ContentNodeId;
     active?: boolean;
     visible?: boolean;
+    noActions?: boolean;
     onClick?: (id: ContentNodeId) => void;
     onLike?: (id: ContentNodeId, kind: LikeKind) => void;
     onShare?: (id: ContentNodeId, kind: ShareKind) => void;
@@ -69,7 +70,17 @@ function stringAvatar(name: string) {
     };
 }
 
-export default function FeedImage({ id, onClick, onLike, onFollow, onShare, onComment, active, visible }: Props) {
+export default function FeedImage({
+    id,
+    onClick,
+    onLike,
+    onFollow,
+    onShare,
+    onComment,
+    active,
+    visible,
+    noActions,
+}: Props) {
     const { t } = useTranslation();
     const contentData = getContentData(id); //useRecoilValue(contentCache(id));
     const contentMeta = getContentMetadata(id);
@@ -138,14 +149,16 @@ export default function FeedImage({ id, onClick, onLike, onFollow, onShare, onCo
                     <div className={style.name}>
                         <Avatar {...stringAvatar(contentMeta.author || 'Unknown')} />
                         <span className={style.author}>{contentMeta.author || 'Unknown'}</span>
-                        <SButton
-                            variant={followed ? 'outlined' : 'contained'}
-                            size="small"
-                            onClick={doFollow}
-                            data-testid="feed-image-follow-button"
-                        >
-                            {followed ? t('feed.actions.unfollow') : t('feed.actions.follow')}
-                        </SButton>
+                        {!noActions && (
+                            <SButton
+                                variant={followed ? 'outlined' : 'contained'}
+                                size="small"
+                                onClick={doFollow}
+                                data-testid="feed-image-follow-button"
+                            >
+                                {followed ? t('feed.actions.unfollow') : t('feed.actions.follow')}
+                            </SButton>
+                        )}
                     </div>
                 )}
                 <img
@@ -155,7 +168,7 @@ export default function FeedImage({ id, onClick, onLike, onFollow, onShare, onCo
                     alt="Insta Upload"
                     data-testid="feed-image-element"
                 />
-                {active && (
+                {active && !noActions && (
                     <div className={style.buttonRow}>
                         <IconButton
                             className={liked !== 'none' ? style.liked : ''}

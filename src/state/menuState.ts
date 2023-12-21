@@ -1,3 +1,4 @@
+import { UserNodeId } from '@genaism/services/graph/graphTypes';
 import { atom } from 'recoil';
 
 export const menuShowShare = atom<boolean>({
@@ -44,4 +45,9 @@ type GraphTypes = 'social' | 'topic' | 'content' | 'ego';
 export const menuGraphType = atom<GraphTypes>({
     key: 'menugraphtype',
     default: 'social',
+});
+
+export const menuShowFeed = atom<UserNodeId | undefined>({
+    key: 'menushowfeed',
+    default: undefined,
 });

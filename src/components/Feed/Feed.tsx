@@ -3,23 +3,35 @@ import style from './style.module.css';
 import ImageFeed from '@genaism/components/ImageFeed/ImageFeed';
 import { getZipBlob, loadFile } from '@genaism/services/loader/fileLoader';
 import { LogEntry, ProfileSummary } from '@genaism/services/profiler/profilerTypes';
-import { addLogEntry, getUserProfile } from '@genaism/services/profiler/profiler';
+import { addLogEntry, getCurrentUser, getUserProfile } from '@genaism/services/profiler/profiler';
 import { ScoredRecommendation } from '@genaism/services/recommender/recommenderTypes';
 import { useRecommendations } from '@genaism/services/recommender/hooks';
 import { useRecoilValue } from 'recoil';
 import { appConfiguration } from '@genaism/state/settingsState';
+import { UserNodeId } from '@genaism/services/graph/graphTypes';
 
 interface Props {
+    id?: UserNodeId;
     content?: (string | ArrayBuffer)[];
     onProfile?: (profile: ProfileSummary) => void;
     onRecommend?: (recommendations: ScoredRecommendation[]) => void;
     onLog?: () => void;
+    noLog?: boolean;
+    noActions?: boolean;
 }
 
-export default function Feed({ content, onProfile, onLog, onRecommend }: Props) {
+export default function Feed({
+    content,
+    onProfile,
+    onLog,
+    onRecommend,
+    id = getCurrentUser(),
+    noLog,
+    noActions,
+}: Props) {
     const [feedList, setFeedList] = useState<ScoredRecommendation[]>([]);
     const appConfig = useRecoilValue(appConfiguration);
-    const { recommendations, more } = useRecommendations(5, undefined, appConfig.recommendations);
+    const { recommendations, more } = useRecommendations(5, id, appConfig.recommendations);
 
     useEffect(() => {
         setFeedList((old) => [...old, ...recommendations]);
@@ -29,10 +41,12 @@ export default function Feed({ content, onProfile, onLog, onRecommend }: Props) 
 
     const doLog = useCallback(
         (data: LogEntry) => {
-            addLogEntry(data);
-            if (onLog) onLog();
+            if (!noLog) {
+                addLogEntry(data);
+                if (onLog) onLog();
+            }
         },
-        [onLog]
+        [onLog, noLog]
     );
 
     useEffect(() => {
@@ -43,6 +57,8 @@ export default function Feed({ content, onProfile, onLog, onRecommend }: Props) 
                     more();
                 });
             });
+        } else {
+            more();
         }
     }, [content, more]);
 
@@ -52,6 +68,7 @@ export default function Feed({ content, onProfile, onLog, onRecommend }: Props) 
                 images={feedList}
                 onMore={more}
                 onLog={doLog}
+                noActions={noActions}
             />
 
             <div className={style.footerOuter}></div>
