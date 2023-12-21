@@ -1,4 +1,4 @@
-@value primary, secondary, bgColourful1, textDark, textLight from "../../style/colours.module.css";
+@value primary, secondary, bgColourful1, textDark, textLight, bgSubdued1, borderBrightBlue from "../../style/colours.module.css";
 
 .group:hover > .outerCircle {
     fill: secondary;
@@ -83,4 +83,29 @@
 
 .label {
     transition: transform 0.3s;
+}
+
+.menuLogo {
+    color: white;
+    min-height: 48px;
+    font-weight: bold;
+    padding-right: 0.5rem;
+    display: flex;
+    align-items: center;
+    font-size: 1.1rem;
+}
+
+.deleteTitle {
+    background: bgSubdued1;
+    border-bottom: 2px solid borderBrightBlue;
+}
+
+.deleteContent {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 2rem;
+    padding-top: 1rem !important;
+    max-width: 400px;
+    align-items: center;
 }

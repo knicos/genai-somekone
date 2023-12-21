@@ -19,6 +19,8 @@ import { UserNodeId } from '@genaism/services/graph/graphTypes';
 import style from './style.module.css';
 import { useAllSimilarUsers } from './similarity';
 import UserLabel from './UserLabel';
+import SocialMenu from './SocialMenu';
+import { getCurrentUser } from '@genaism/services/profiler/state';
 
 interface Props {
     liveUsers?: UserNodeId[];
@@ -44,7 +46,7 @@ export default function SocialGraph({ liveUsers }: Props) {
         });
         return set;
     }, [liveUsers]);
-    const [focusNode, setFocusNode] = useState<string | undefined>();
+    const [focusNode, setFocusNode] = useState<UserNodeId | undefined>();
     const [zoom, setZoom] = useState(5);
     const [center, setCenter] = useState<[number, number] | undefined>();
     const [linkStyles, setLinkStyles] = useState<Map<UserNodeId, LinkStyle<UserNodeId>>>();
@@ -70,7 +72,9 @@ export default function SocialGraph({ liveUsers }: Props) {
     }, [similar, similarPercent]);
 
     const doRedrawNodes = useCallback(() => {
-        const filteredUsers = showOfflineUsers ? users : users.filter((u) => liveSet.has(u));
+        const filteredUsers = showOfflineUsers
+            ? users.filter((u) => u !== getCurrentUser())
+            : users.filter((u) => liveSet.has(u) && u !== getCurrentUser());
 
         // For all nodes not previously seen, and therefore without a position
         // Recursively search for their master node, or become a master node.
@@ -96,66 +100,70 @@ export default function SocialGraph({ liveUsers }: Props) {
     }, [doRedrawNodes]);
 
     return (
-        <Graph
-            links={links}
-            nodes={nodes}
-            linkScale={linkScale}
-            linkStyles={linkStyles}
-            defaultLinkStyle={{
-                className: style.link,
-                opacity: (l: InternalGraphLink<UserNodeId, UserNodeId>) =>
-                    egoSelect && linkStyles ? 0 : l.strength * l.strength * 0.9,
-                width: (l: InternalGraphLink<UserNodeId, UserNodeId>) => 1 + Math.floor(l.strength * l.strength * 30),
-            }}
-            charge={charge}
-            showLines={showLines}
-            onSelect={(n: Readonly<GraphNode<UserNodeId>>, l: InternalGraphLink<UserNodeId, UserNodeId>[]) => {
-                if (!focusNode) setZoom(3);
-                setCenter([n.x || 0, n.y || 0]);
-
-                const newStyles = new Map<UserNodeId, LinkStyle<UserNodeId>>();
-                newStyles.set(n.id, {
-                    className: style.selectedLink,
+        <>
+            <Graph
+                links={links}
+                nodes={nodes}
+                linkScale={linkScale}
+                linkStyles={linkStyles}
+                defaultLinkStyle={{
+                    className: style.link,
+                    opacity: (l: InternalGraphLink<UserNodeId, UserNodeId>) =>
+                        egoSelect && linkStyles ? 0 : l.strength * l.strength * 0.9,
                     width: (l: InternalGraphLink<UserNodeId, UserNodeId>) =>
-                        1 + Math.floor(l.strength * l.strength * 60),
-                });
+                        1 + Math.floor(l.strength * l.strength * 30),
+                }}
+                charge={charge}
+                showLines={showLines}
+                onSelect={(n: Readonly<GraphNode<UserNodeId>>, l: InternalGraphLink<UserNodeId, UserNodeId>[]) => {
+                    if (!focusNode) setZoom(3);
+                    setCenter([n.x || 0, n.y || 0]);
 
-                const conn = new Set<UserNodeId>();
-                conn.add(n.id);
-                l.forEach((link) => {
-                    conn.add(link.source.id);
-                    conn.add(link.target.id);
-                });
+                    const newStyles = new Map<UserNodeId, LinkStyle<UserNodeId>>();
+                    newStyles.set(n.id, {
+                        className: style.selectedLink,
+                        width: (l: InternalGraphLink<UserNodeId, UserNodeId>) =>
+                            1 + Math.floor(l.strength * l.strength * 60),
+                    });
 
-                setConnected(conn);
-                setLinkStyles(newStyles);
-                setFocusNode(n.id);
-            }}
-            onUnselect={() => {
-                setFocusNode(undefined);
-                setConnected(undefined);
-                setLinkStyles(undefined);
-                setZoom(5);
-                //setCenter([0, 0]);
-            }}
-            focusNode={focusNode}
-            zoom={zoom}
-            center={center}
-            LabelComponent={showLabel ? UserLabel : undefined}
-        >
-            {nodes.map((n) => (
-                <ProfileNode
-                    id={n.id}
-                    node={n}
-                    onResize={doResize}
-                    key={n.id}
-                    live={liveSet.has(n.id)}
-                    similarUsers={similar.similar.get(n.id)?.nodes || []}
-                    selected={n.id === focusNode}
-                    disabled={egoSelect && connected ? !connected.has(n.id) : false}
-                    colourMapping={clusterColouring ? coloursRef.current : undefined}
-                />
-            ))}
-        </Graph>
+                    const conn = new Set<UserNodeId>();
+                    conn.add(n.id);
+                    l.forEach((link) => {
+                        conn.add(link.source.id);
+                        conn.add(link.target.id);
+                    });
+
+                    setConnected(conn);
+                    setLinkStyles(newStyles);
+                    setFocusNode(n.id);
+                }}
+                onUnselect={() => {
+                    setFocusNode(undefined);
+                    setConnected(undefined);
+                    setLinkStyles(undefined);
+                    setZoom(5);
+                    //setCenter([0, 0]);
+                }}
+                focusNode={focusNode}
+                zoom={zoom}
+                center={center}
+                LabelComponent={showLabel ? UserLabel : undefined}
+            >
+                {nodes.map((n) => (
+                    <ProfileNode
+                        id={n.id}
+                        node={n}
+                        onResize={doResize}
+                        key={n.id}
+                        live={liveSet.has(n.id)}
+                        similarUsers={similar.similar.get(n.id)?.nodes || []}
+                        selected={n.id === focusNode}
+                        disabled={egoSelect && connected ? !connected.has(n.id) : false}
+                        colourMapping={clusterColouring ? coloursRef.current : undefined}
+                    />
+                ))}
+            </Graph>
+            <SocialMenu selectedUser={focusNode} />
+        </>
     );
 }

@@ -51,7 +51,9 @@
             "socialGraph": "Social Graph",
             "topicGraph": "Topic Graph",
             "contentGraph": "Content Graph",
-            "paused": "Paused"
+            "paused": "Paused",
+            "people": "People",
+            "deleteUser": "Delete User"
         },
         "labels": {
             "saveContent": "Save the image content",
@@ -98,7 +100,12 @@
             "disableFeedApp": "Pause Feed App for all users",
             "hideDataView": "Hide data view",
             "hideProfileView": "Hide profile view",
-            "hideRecommendationsView": "Hide recommendations view"
+            "hideRecommendationsView": "Hide recommendations view",
+            "showData": "Show user log data",
+            "showProfile": "Show user profile",
+            "showRecommendations": "Show user recommendations",
+            "deleteUser": "Delete User",
+            "showFeed": "Show user feed"
         },
         "messages": {
             "connection": "Go to <PageLink><Code>{{linkText}}</Code></PageLink> and enter the code <Code>{{codeText}}</Code>, or use the QR code.",
@@ -106,7 +113,8 @@
             "onePerson": "{{count}} person has joined.",
             "manyPeople": "{{count}} people have joined.",
             "loading": "Creating your social network...",
-            "paused": "The App has been paused."
+            "paused": "The App has been paused.",
+            "confirmDeleteUser": "Are you sure you want to delete user \"{{name}}\""
         },
         "actions": {
             "start": "Start",

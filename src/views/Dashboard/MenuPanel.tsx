@@ -1,4 +1,4 @@
-import { IconButton, Tooltip } from '@mui/material';
+import { IconButton } from '@mui/material';
 import style from './style.module.css';
 import DriveFolderUploadIcon from '@mui/icons-material/DriveFolderUpload';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -12,6 +12,9 @@ import { useCallback } from 'react';
 import { useRecoilState } from 'recoil';
 import { menuGraphType, menuShowSave, menuShowSettings, menuShowShare } from '@genaism/state/menuState';
 import { useTranslation } from 'react-i18next';
+import IconMenu from '@genaism/components/IconMenu/IconMenu';
+import IconMenuItem from '@genaism/components/IconMenu/Item';
+import Spacer from '@genaism/components/IconMenu/Spacer';
 
 interface Props {
     onOpen?: (data: Blob) => void;
@@ -44,8 +47,9 @@ export default function MenuPanel({ onOpen, onRefresh }: Props) {
     }, []);
 
     return (
-        <nav>
-            <div className={style.menuContainer}>
+        <IconMenu
+            placement="left"
+            label={
                 <div className={style.logo}>
                     <img
                         src="/logo48_bw_invert.png"
@@ -53,99 +57,74 @@ export default function MenuPanel({ onOpen, onRefresh }: Props) {
                         height="48"
                     />
                 </div>
-                <Tooltip
-                    title={t('dashboard.labels.shareTip')}
-                    arrow
-                    placement="right"
+            }
+        >
+            <IconMenuItem tooltip={t('dashboard.labels.shareTip')}>
+                <IconButton
+                    color={showShare ? 'secondary' : 'inherit'}
+                    onClick={doShowShare}
                 >
-                    <IconButton
-                        color={showShare ? 'secondary' : 'inherit'}
-                        onClick={doShowShare}
-                    >
-                        <ShareIcon />
-                    </IconButton>
-                </Tooltip>
-                <Tooltip
-                    title={t('dashboard.labels.openTip')}
-                    arrow
-                    placement="right"
+                    <ShareIcon />
+                </IconButton>
+            </IconMenuItem>
+            <IconMenuItem tooltip={t('dashboard.labels.openTip')}>
+                <IconButton
+                    color="inherit"
+                    onClick={openFile}
                 >
-                    <IconButton
-                        color="inherit"
-                        onClick={openFile}
-                    >
-                        <DriveFolderUploadIcon />
-                    </IconButton>
-                </Tooltip>
-                <Tooltip
-                    title={t('dashboard.labels.saveTip')}
-                    arrow
-                    placement="right"
+                    <DriveFolderUploadIcon />
+                </IconButton>
+            </IconMenuItem>
+            <IconMenuItem tooltip={t('dashboard.labels.saveTip')}>
+                <IconButton
+                    color={showSave ? 'secondary' : 'inherit'}
+                    onClick={doShowSave}
                 >
-                    <IconButton
-                        color={showSave ? 'secondary' : 'inherit'}
-                        onClick={doShowSave}
-                    >
-                        <SaveAltIcon />
-                    </IconButton>
-                </Tooltip>
-                <div className={style.menuSpacer} />
-                <Tooltip
-                    title={t('dashboard.labels.showSocialGraph')}
-                    arrow
-                    placement="right"
+                    <SaveAltIcon />
+                </IconButton>
+            </IconMenuItem>
+            <Spacer />
+            <IconMenuItem tooltip={t('dashboard.labels.showSocialGraph')}>
+                <IconButton
+                    color={graphMode === 'social' ? 'secondary' : 'inherit'}
+                    onClick={() => setGraphMode('social')}
                 >
-                    <IconButton
-                        color={graphMode === 'social' ? 'secondary' : 'inherit'}
-                        onClick={() => setGraphMode('social')}
-                    >
-                        <PeopleIcon />
-                    </IconButton>
-                </Tooltip>
-                <Tooltip
-                    title={t('dashboard.labels.showContentGraph')}
-                    arrow
-                    placement="right"
+                    <PeopleIcon />
+                </IconButton>
+            </IconMenuItem>
+            <IconMenuItem tooltip={t('dashboard.labels.showContentGraph')}>
+                <IconButton
+                    color={graphMode === 'content' ? 'secondary' : 'inherit'}
+                    onClick={() => setGraphMode('content')}
                 >
-                    <IconButton
-                        color={graphMode === 'content' ? 'secondary' : 'inherit'}
-                        onClick={() => setGraphMode('content')}
-                    >
-                        <CollectionsIcon />
-                    </IconButton>
-                </Tooltip>
-                <Tooltip
-                    title={t('dashboard.labels.showTopicGraph')}
-                    arrow
-                    placement="right"
+                    <CollectionsIcon />
+                </IconButton>
+            </IconMenuItem>
+            <IconMenuItem tooltip={t('dashboard.labels.showTopicGraph')}>
+                <IconButton
+                    color={graphMode === 'topic' ? 'secondary' : 'inherit'}
+                    onClick={() => setGraphMode('topic')}
                 >
-                    <IconButton
-                        color={graphMode === 'topic' ? 'secondary' : 'inherit'}
-                        onClick={() => setGraphMode('topic')}
-                    >
-                        <TextFieldsIcon />
-                    </IconButton>
-                </Tooltip>
-                <div className={style.menuSpacer} />
-                <Tooltip
-                    title={t('dashboard.labels.refreshGraph')}
-                    arrow
-                    placement="right"
+                    <TextFieldsIcon />
+                </IconButton>
+            </IconMenuItem>
+            <Spacer />
+            <IconMenuItem tooltip={t('dashboard.labels.refreshGraph')}>
+                <IconButton
+                    color={'inherit'}
+                    onClick={onRefresh}
                 >
-                    <IconButton
-                        color={'inherit'}
-                        onClick={onRefresh}
-                    >
-                        <RefreshIcon />
-                    </IconButton>
-                </Tooltip>
+                    <RefreshIcon />
+                </IconButton>
+            </IconMenuItem>
+            <IconMenuItem tooltip="">
                 <IconButton
                     color={showSettings ? 'secondary' : 'inherit'}
                     onClick={doShowSettings}
                 >
                     <SettingsIcon />
                 </IconButton>
-            </div>
+            </IconMenuItem>
             <input
                 type="file"
                 id="openfile"
@@ -153,6 +132,6 @@ export default function MenuPanel({ onOpen, onRefresh }: Props) {
                 hidden={true}
                 accept=".zip,application/zip"
             />
-        </nav>
+        </IconMenu>
     );
 }

@@ -1,0 +1,99 @@
+@value textDark, workspaceBg, bgColourful1 from "../../style/colours.module.css";
+
+.menuContainer {
+    position: absolute;
+    background: white;
+    border-radius: 2rem;
+    box-shadow: 1px 1px 8px #888;
+    display: flex;
+    overflow: hidden;
+    align-items: center;
+    color: textDark;
+}
+
+.left {
+    composes: menuContainer;
+    left: 0;
+    top: 50%;
+    bottom: 50%;
+    height: fit-content;
+    margin: auto;
+    margin-left: 1rem;
+    flex-direction: column;
+    padding-bottom: 1rem;
+}
+
+.right {
+    composes: menuContainer;
+    right: 0;
+    top: 50%;
+    bottom: 50%;
+    height: fit-content;
+    margin: auto;
+    margin-right: 1rem;
+    flex-direction: column;
+    padding-bottom: 1rem;
+}
+
+.top {
+    composes: menuContainer;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: fit-content;
+    margin: auto;
+    margin-top: 1rem;
+    flex-direction: row;
+    padding-right: 1rem;
+}
+
+.bottom {
+    composes: menuContainer;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: fit-content;
+    margin: auto;
+    margin-bottom: 1rem;
+    flex-direction: row;
+    padding-right: 1rem;
+}
+
+.menuSpacerRow {
+    margin: 0.5rem 0;
+    height: 2px;
+    background: workspaceBg;
+    align-self: stretch;
+}
+
+.menuSpacerColumn {
+    margin: 0 0.5rem;
+    width: 2px;
+    background: workspaceBg;
+    align-self: stretch;
+}
+
+.logoRow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0.2rem;
+    padding-top: 1rem;
+    margin-bottom: 1rem;
+    background: bgColourful1;
+    /*line-height: 0;*/
+    align-self: stretch;
+}
+
+.logoColumn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.2rem;
+    padding-left: 1rem;
+    margin-right: 1rem;
+    background: bgColourful1;
+    /*line-height: 0;*/
+    align-self: stretch;
+}
