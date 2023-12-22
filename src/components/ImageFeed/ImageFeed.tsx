@@ -16,12 +16,13 @@ const INTERACTION_TIMEOUT = 5000;
 interface Props {
     images: ScoredRecommendation[];
     noActions?: boolean;
+    showLabels?: boolean;
     onView?: (index: number, time: number) => void;
     onMore?: () => void;
     onLog: (e: LogEntry) => void;
 }
 
-export default function ImageFeed({ images, onView, onMore, onLog, noActions }: Props) {
+export default function ImageFeed({ images, onView, onMore, onLog, noActions, showLabels }: Props) {
     const { t } = useTranslation();
     const containerRef = useRef<HTMLDivElement>(null);
     const [viewed, setViewed] = useState(0);
@@ -224,6 +225,7 @@ export default function ImageFeed({ images, onView, onMore, onLog, noActions }: 
                         active={focus && active && (ix === viewed || (ix === 0 && viewed === -1))}
                         visible={Math.abs(ix - viewed) < 5}
                         noActions={noActions}
+                        showLabels={showLabels}
                     />
                 ))}
                 <FeedSpacer size={images.length - viewed - 5} />

@@ -69,6 +69,7 @@ export default function Feed({
                 onMore={more}
                 onLog={doLog}
                 noActions={noActions}
+                showLabels={appConfig?.showTopicLabels}
             />
 
             <div className={style.footerOuter}></div>

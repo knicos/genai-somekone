@@ -116,7 +116,8 @@
             "showRecommendations": "Show user recommendations",
             "deleteUser": "Delete User",
             "showFeed": "Show user feed",
-            "collectResearch": "Collect research data"
+            "collectResearch": "Collect research data",
+            "showFeedImageLabels": "Show image labels in feed"
         },
         "messages": {
             "connection": "Go to the address below and enter the code <Code>{{codeText}}</Code>, or use the QR code.",

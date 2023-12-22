@@ -1,3 +1,5 @@
+@value primary from "../../style/colours.module.css";
+
 .instaImage {
     width: 100%;
     height: 100%;
@@ -77,6 +79,15 @@
     top: 0;
     left: 0;
     color: white;
+}
+
+.name :global .MuiButtonBase-root {
+    background: #00000022;
+}
+
+.name :global .MuiButtonBase-root:hover {
+    background: #0000005e;
+    transform: scale(1.1);
 }
 
 .author {
@@ -198,4 +209,22 @@
     font-weight: bold;
     color: white;
     text-shadow: 0 0 5px black;
+}
+
+.topicLabel {
+    font-weight: bold;
+    color: white;
+    text-shadow: 0 0 5px black;
+    background: #0000005e;
+    border-radius: 1.2rem;
+    padding: 0 0.8rem;
+}
+
+.labelcontainer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    align-items: flex-end;
+    line-height: normal;
+    font-size: 1.2rem;
 }

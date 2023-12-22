@@ -55,6 +55,15 @@ export default function FeedSettings() {
                 }
                 label={t('dashboard.labels.hideRecommendationsView')}
             />
+            <FormControlLabel
+                control={
+                    <Checkbox
+                        checked={config?.showTopicLabels || false}
+                        onChange={(_, checked) => setConfig((old) => ({ ...old, showTopicLabels: checked }))}
+                    />
+                }
+                label={t('dashboard.labels.showFeedImageLabels')}
+            />
         </div>
     );
 }

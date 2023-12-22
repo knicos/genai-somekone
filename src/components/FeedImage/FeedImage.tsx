@@ -2,8 +2,6 @@ import { useCallback, useState } from 'react';
 import style from './style.module.css';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import IconButton from '@mui/material/IconButton';
-import Button from '@mui/material/Button';
-import { styled } from '@mui/material';
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import LikePanel, { LikeKind } from './LikePanel';
 import ReplyIcon from '@mui/icons-material/Reply';
@@ -11,8 +9,10 @@ import Avatar from '@mui/material/Avatar';
 import SharePanel, { ShareKind } from './SharePanel';
 import CommentPanel from './CommentPanel';
 import { getContentData, getContentMetadata } from '@genaism/services/content/content';
-import { useTranslation } from 'react-i18next';
 import { ContentNodeId } from '@genaism/services/graph/graphTypes';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
+import LabelsPanel from './LabelsPanel';
 
 type ActionPanel = 'none' | 'like' | 'comment' | 'share' | 'discard' | 'author';
 
@@ -21,17 +21,13 @@ interface Props {
     active?: boolean;
     visible?: boolean;
     noActions?: boolean;
+    showLabels?: boolean;
     onClick?: (id: ContentNodeId) => void;
     onLike?: (id: ContentNodeId, kind: LikeKind) => void;
     onShare?: (id: ContentNodeId, kind: ShareKind) => void;
     onComment?: (id: ContentNodeId, length: number) => void;
     onFollow?: (id: ContentNodeId) => void;
 }
-
-const SButton = styled(Button)({
-    textTransform: 'none',
-    alignSelf: 'right',
-});
 
 const LIKEMAP = {
     like: '👍',
@@ -80,8 +76,8 @@ export default function FeedImage({
     active,
     visible,
     noActions,
+    showLabels,
 }: Props) {
-    const { t } = useTranslation();
     const contentData = getContentData(id); //useRecoilValue(contentCache(id));
     const contentMeta = getContentMetadata(id);
     const [liked, setLiked] = useState<LikeKind>('none');
@@ -150,14 +146,23 @@ export default function FeedImage({
                         <Avatar {...stringAvatar(contentMeta.author || 'Unknown')} />
                         <span className={style.author}>{contentMeta.author || 'Unknown'}</span>
                         {!noActions && (
-                            <SButton
-                                variant={followed ? 'outlined' : 'contained'}
-                                size="small"
+                            <IconButton
+                                color="inherit"
                                 onClick={doFollow}
                                 data-testid="feed-image-follow-button"
                             >
-                                {followed ? t('feed.actions.unfollow') : t('feed.actions.follow')}
-                            </SButton>
+                                {followed ? (
+                                    <PersonRemoveIcon
+                                        color="inherit"
+                                        fontSize="large"
+                                    />
+                                ) : (
+                                    <PersonAddIcon
+                                        color="inherit"
+                                        fontSize="large"
+                                    />
+                                )}
+                            </IconButton>
                         )}
                     </div>
                 )}
@@ -207,6 +212,9 @@ export default function FeedImage({
                             />
                         </IconButton>
                     </div>
+                )}
+                {active && showLabels && activePanel === 'none' && (
+                    <LabelsPanel labels={contentMeta.labels.filter((l) => l.weight > 0).map((l) => l.label)} />
                 )}
                 {active && activePanel === 'like' && (
                     <LikePanel

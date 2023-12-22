@@ -9,4 +9,5 @@ export interface SMConfig {
     disableFeedApp?: boolean;
     recommendations?: RecommendationOptions;
     collectResearchData?: boolean;
+    showTopicLabels?: boolean;
 }

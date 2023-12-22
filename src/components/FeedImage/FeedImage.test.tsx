@@ -25,7 +25,7 @@ describe('FeedImage component', () => {
                 visible
             />
         );
-        expect(screen.getByText('feed.actions.follow')).toBeInTheDocument();
+        expect(screen.getByTestId('feed-image-follow-button')).toBeInTheDocument();
         expect(screen.getByText('TestAuthor')).toBeInTheDocument();
         expect(screen.getByTestId('feed-image-element')).toHaveAttribute('src', TEST_IMAGE);
         expect(screen.getByTestId('feed-image-like-button')).toBeInTheDocument();
