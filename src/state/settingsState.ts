@@ -5,7 +5,7 @@ import { atom } from 'recoil';
 
 export const appConfiguration = atom<SMConfig>({
     key: 'appconfig',
-    default: {},
+    default: undefined,
 });
 
 /* === Social Graph === */

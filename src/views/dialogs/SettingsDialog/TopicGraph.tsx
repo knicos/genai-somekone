@@ -1,5 +1,5 @@
 import { Checkbox, FormControlLabel, Slider } from '@mui/material';
-import { ChangeEvent, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useRecoilState } from 'recoil';
 import style from './style.module.css';
@@ -16,8 +16,6 @@ export default function TopicGraphSettings() {
     const [edgeScale, setEdgeScale] = useRecoilState(settingTopicLinkDistanceScale);
     const [similarPercent, setSimilarPercent] = useRecoilState(settingTopicSimilarPercent);
     const [nodeCharge, setNodeCharge] = useRecoilState(settingTopicNodeCharge);
-
-    const doShowLines = useCallback((e: ChangeEvent<HTMLInputElement>) => setShowLines(e.currentTarget.checked), []);
 
     const doEdgeScale = useCallback(
         (_: unknown, value: number | number[]) => setEdgeScale(value as number),
@@ -38,7 +36,7 @@ export default function TopicGraphSettings() {
                 control={
                     <Checkbox
                         checked={showLines}
-                        onChange={doShowLines}
+                        onChange={(_, checked) => setShowLines(checked)}
                     />
                 }
                 label={t('dashboard.labels.showLines')}

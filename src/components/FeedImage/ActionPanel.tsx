@@ -42,7 +42,7 @@ export default function ActionPanel({ onClose, children, horizontal, vertical }:
                 clearTimeout(timerRef.current);
             }
         };
-    }, []);
+    }, [onClose]);
 
     return (
         <div

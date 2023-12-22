@@ -50,5 +50,6 @@ export function useAllCoengagements(content: ContentNodeId[]) {
         };
     }, []);
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     return useMemo(() => ({ similar: simRef.current }), [count]);
 }

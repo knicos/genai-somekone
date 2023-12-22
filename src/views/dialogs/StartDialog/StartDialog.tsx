@@ -21,22 +21,27 @@ export default function StartDialog({ users, code }: Props) {
     return showDialog ? (
         <div className={style.groupedItems}>
             <div className={style.connectMessage}>
-                <QRCode url={`${window.location.origin}/feed/${code}`} />
-                <div>
-                    <Trans
-                        values={{ linkText: window.location.host, codeText: code }}
-                        i18nKey="dashboard.messages.connection"
-                        components={{
-                            PageLink: (
-                                <a
-                                    href={`${window.location.origin}`}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                />
-                            ),
-                            Code: <em />,
-                        }}
-                    />
+                <QRCode
+                    url={`${window.location.origin}/feed/${code}`}
+                    size="large"
+                />
+                <div className={style.column}>
+                    <div>
+                        <Trans
+                            values={{ codeText: code }}
+                            i18nKey="dashboard.messages.connection"
+                            components={{
+                                Code: <em />,
+                            }}
+                        />
+                    </div>
+                    <a
+                        href={`${window.location.origin}`}
+                        target="_blank"
+                        rel="noreferrer"
+                    >
+                        {window.location.host}
+                    </a>
                 </div>
             </div>
             <div className={style.userListing}>

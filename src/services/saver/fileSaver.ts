@@ -3,6 +3,7 @@ import { saveAs } from 'file-saver';
 import { getNodesByType } from '@genaism/services/graph/nodes';
 import { getActionLog, getUserProfile } from '@genaism/services/profiler/profiler';
 import { dumpJSON } from '../graph/state';
+import { getResearchLog } from '../research/research';
 
 /*function transformConcepts(concepts: ConceptNode[]): ConceptEntry[] {
     const mapping = new Map<number, ConceptEntry>();
@@ -65,6 +66,11 @@ async function generateBlob(incContent: boolean, incProfiles: boolean, incLogs: 
 
     if (incGraph) {
         zip.file('graph.json', dumpJSON());
+    }
+
+    const researchLog = getResearchLog();
+    if (researchLog.length > 0) {
+        zip.file('research.json', JSON.stringify(researchLog, undefined, 4));
     }
 
     const blob = await zip.generateAsync({ type: 'blob' });

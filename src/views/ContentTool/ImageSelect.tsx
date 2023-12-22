@@ -20,7 +20,7 @@ export default function ImageSelect({ topic, onAddNext }: Props) {
         if (selected.length === 5) {
             onAddNext(selected.map((s) => ({ view: 'style', contentId: s })));
         }
-    }, [selected]);
+    }, [selected, onAddNext]);
 
     const onAdd = (url: string, meta: ImageResult) => {
         addContent(url, { author: meta.author, id: meta.id, labels: [{ label: getTopicLabel(topic), weight: 1 }] });
@@ -31,7 +31,7 @@ export default function ImageSelect({ topic, onAddNext }: Props) {
     return (
         <>
             <header>
-                <h1>Select 5 Images of "{getTopicLabel(topic)}"</h1>
+                <h1>Select 5 Images of {getTopicLabel(topic)}</h1>
             </header>
             <div className={style.images}>
                 <ImageSearch onAdd={onAdd} />

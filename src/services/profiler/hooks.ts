@@ -12,6 +12,7 @@ export function useUserProfile(id?: UserNodeId): UserProfile {
         addProfileListener(aid, handler);
         return () => removeProfileListener(aid, handler);
     }, [aid]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     return useMemo(() => getUserProfile(aid), [aid, count]);
 }
 
@@ -25,9 +26,10 @@ export function useActionLog(id?: UserNodeId): LogEntry[] {
     }, [aid]);
     return useMemo(
         () =>
-            getActionLog(id)
+            getActionLog(aid)
                 .filter((a) => !!a.id)
                 .reverse(),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [count, aid]
     );
 }

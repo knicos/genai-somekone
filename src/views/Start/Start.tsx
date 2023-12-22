@@ -9,16 +9,19 @@ export function Component() {
     // const { t } = useTranslation();
     const inputRef = useRef<HTMLInputElement>(null);
     const navigate = useNavigate();
-    const doKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') {
-            const value = (e.target as HTMLInputElement).value;
-            if (value.length === 10) {
-                navigate(`/profile/${value}`);
-            } else {
-                navigate(`/feed/${value}`);
+    const doKeyDown = useCallback(
+        (e: React.KeyboardEvent<HTMLInputElement>) => {
+            if (e.key === 'Enter') {
+                const value = (e.target as HTMLInputElement).value;
+                if (value.length === 10) {
+                    navigate(`/profile/${value}`);
+                } else {
+                    navigate(`/feed/${value}`);
+                }
             }
-        }
-    }, []);
+        },
+        [navigate]
+    );
 
     const doGo = useCallback(() => {
         if (inputRef.current) {
@@ -29,7 +32,7 @@ export function Component() {
                 navigate(`/feed/${value}`);
             }
         }
-    }, []);
+    }, [navigate]);
 
     return (
         <div className={style.container}>

@@ -34,10 +34,19 @@ export interface ActionLogEvent extends PeerEvent {
     log: LogEntry[];
 }
 
+export interface ResearchLogEvent extends PeerEvent {
+    event: 'researchlog';
+    action: string;
+    timestamp: number;
+    userId: UserNodeId;
+    details: unknown;
+}
+
 export type EventProtocol =
     | BuiltinEvent
     | RecommendationEvent
     | ProfileEvent
     | UserRegistrationEvent
     | ConfigurationEvent
+    | ResearchLogEvent
     | ActionLogEvent;

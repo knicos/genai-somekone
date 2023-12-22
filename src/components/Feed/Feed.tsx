@@ -31,7 +31,7 @@ export default function Feed({
 }: Props) {
     const [feedList, setFeedList] = useState<ScoredRecommendation[]>([]);
     const appConfig = useRecoilValue(appConfiguration);
-    const { recommendations, more } = useRecommendations(5, id, appConfig.recommendations);
+    const { recommendations, more } = useRecommendations(5, id, appConfig?.recommendations);
 
     useEffect(() => {
         setFeedList((old) => [...old, ...recommendations]);

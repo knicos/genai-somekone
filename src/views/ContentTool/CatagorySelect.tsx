@@ -22,7 +22,7 @@ export default function CategorySelect({ onAddNext }: Props) {
         if (selected) {
             onAddNext([{ view: 'images', topicId: getTopicId(selected) }]);
         }
-    }, [selected]);
+    }, [selected, onAddNext]);
 
     return (
         <>
@@ -30,8 +30,9 @@ export default function CategorySelect({ onAddNext }: Props) {
                 <h1>Choose a Category</h1>
             </header>
             <div className={style.categories}>
-                {available.map((a) => (
+                {available.map((a, ix) => (
                     <Chip
+                        key={ix}
                         label={a}
                         onClick={() => setSelected(a)}
                     />

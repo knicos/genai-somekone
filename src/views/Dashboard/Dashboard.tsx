@@ -24,6 +24,7 @@ import useRandom from '@genaism/hooks/random';
 import { appConfiguration } from '@genaism/state/settingsState';
 import TopicGraph from '@genaism/components/TopicGraph/TopicGraph';
 import ContentGraph from '@genaism/components/ContentGraph/ContentGraph';
+import { appendResearchLog } from '@genaism/services/research/research';
 
 export function Component() {
     const [params] = useSearchParams();
@@ -39,7 +40,7 @@ export function Component() {
 
     const dataHandler = useCallback(
         (data: EventProtocol, conn: DataConnection) => {
-            console.log('GOT DATA', data);
+            // console.log('GOT DATA', data);
             if (data.event === 'eter:join') {
                 conn.send({ event: 'eter:config', configuration: config, content });
             } else if (data.event === 'eter:reguser') {
@@ -51,6 +52,13 @@ export function Component() {
                 updateProfile(data.id, data.profile);
             } else if (data.event === 'eter:action_log') {
                 appendActionLog(data.log, data.id);
+            } else if (data.event === 'researchlog') {
+                appendResearchLog({
+                    action: data.action,
+                    timestamp: data.timestamp,
+                    details: data.details,
+                    userId: data.userId,
+                });
             }
         },
         [config, content]
@@ -108,13 +116,13 @@ export function Component() {
         } else {
             // Show the file open dialog
         }
-    }, [params, ready]);
+    }, [params, ready, setConfig, setError]);
 
     useEffect(() => {
         if (users.length === 0) {
             setShowStartDialog(true);
         }
-    }, [users]);
+    }, [users, setShowStartDialog]);
 
     useEffect(() => {
         if (ready && content) setLoaded(true);

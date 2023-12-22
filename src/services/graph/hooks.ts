@@ -27,6 +27,7 @@ export function useNodeType<T extends NodeType>(type: T): NodeID<T>[] {
         addNodeTypeListener(type, handler);
         return () => removeNodeTypeListener(type, handler);
     }, [type]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     return useMemo(() => getNodesByType(type), [type, count]);
 }
 
@@ -41,5 +42,6 @@ export function useRelatedNodes<T extends EdgeType, S extends SourceFor<T>, D ex
         addNodeEdgeTypeListener(id, type, handler);
         return () => removeNodeEdgeTypeListener(id, type, handler);
     }, [id, type]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     return useMemo(() => getRelated(type, id, { count: size }), [id, type, size, count]);
 }

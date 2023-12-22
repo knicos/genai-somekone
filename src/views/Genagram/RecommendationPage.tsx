@@ -6,6 +6,7 @@ import style from './style.module.css';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import RecommendationsProfile from '@genaism/components/RecommendationsProfile/RecommendationsProfile';
+import { useLogger } from '@genaism/hooks/logger';
 
 interface Props {
     onClose?: () => void;
@@ -15,10 +16,15 @@ export default function RecommendationPage({ onClose }: Props) {
     const { t } = useTranslation();
     const [show, setShow] = useRecoilState(menuShowRecommendations);
     const setShowFeedActions = useSetRecoilState(menuShowFeedActions);
+    const logger = useLogger();
 
     useEffect(() => {
         setShowFeedActions(!show);
-    }, [show]);
+        if (logger) {
+            if (show) logger('open_recommendations_view');
+            else logger('close_recommendations_view');
+        }
+    }, [show, setShowFeedActions, logger]);
 
     return (
         <Slide

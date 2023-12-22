@@ -13,7 +13,7 @@ export default function FeedSettings() {
             <FormControlLabel
                 control={
                     <Checkbox
-                        checked={config.disableFeedApp || false}
+                        checked={config?.disableFeedApp || false}
                         onChange={(_, checked) => setConfig((old) => ({ ...old, disableFeedApp: checked }))}
                     />
                 }
@@ -22,7 +22,7 @@ export default function FeedSettings() {
             <FormControlLabel
                 control={
                     <Checkbox
-                        checked={config.hideActionsButton || false}
+                        checked={config?.hideActionsButton || false}
                         onChange={(_, checked) => setConfig((old) => ({ ...old, hideActionsButton: checked }))}
                     />
                 }
@@ -31,7 +31,7 @@ export default function FeedSettings() {
             <FormControlLabel
                 control={
                     <Checkbox
-                        checked={config.hideDataView || false}
+                        checked={config?.hideDataView || false}
                         onChange={(_, checked) => setConfig((old) => ({ ...old, hideDataView: checked }))}
                     />
                 }
@@ -40,7 +40,7 @@ export default function FeedSettings() {
             <FormControlLabel
                 control={
                     <Checkbox
-                        checked={config.hideProfileView || false}
+                        checked={config?.hideProfileView || false}
                         onChange={(_, checked) => setConfig((old) => ({ ...old, hideProfileView: checked }))}
                     />
                 }
@@ -49,7 +49,7 @@ export default function FeedSettings() {
             <FormControlLabel
                 control={
                     <Checkbox
-                        checked={config.hideRecommendationsView || false}
+                        checked={config?.hideRecommendationsView || false}
                         onChange={(_, checked) => setConfig((old) => ({ ...old, hideRecommendationsView: checked }))}
                     />
                 }

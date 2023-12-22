@@ -25,7 +25,7 @@ export default function TopicNode({ id, selected, onResize }: Props) {
                 onResize(id, newSize);
             }
         }
-    }, [id]);
+    }, [id, onResize]);
 
     return (
         <g

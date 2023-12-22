@@ -39,7 +39,7 @@ export default function Label({
                 if (onResize) onResize(Math.max((bbox.width + 30) / 2 + padding + 5, bbox.height / 2 + padding + 5));
             }
         }
-    }, [label, fontSize, padding]);
+    }, [label, fontSize, padding, onResize]);
 
     return (
         <g transform={`translate(${x}, ${y})`}>

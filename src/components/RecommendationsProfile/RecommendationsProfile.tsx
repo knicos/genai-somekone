@@ -14,7 +14,7 @@ interface Props {
 export default function RecommendationsProfile({ id }: Props) {
     const [wcSize, setWCSize] = useState(300);
     const appConfig = useRecoilValue(appConfiguration);
-    const { recommendations } = useRecommendations(10, id, appConfig.recommendations);
+    const { recommendations } = useRecommendations(10, id, appConfig?.recommendations);
 
     const doResize = useCallback((size: number) => {
         setWCSize(size);

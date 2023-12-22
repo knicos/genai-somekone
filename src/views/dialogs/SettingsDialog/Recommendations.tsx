@@ -15,7 +15,7 @@ export default function RecommendationSettings() {
                 <FormControlLabel
                     control={
                         <Checkbox
-                            checked={!(config.recommendations?.noTaste || false)}
+                            checked={!(config?.recommendations?.noTaste || false)}
                             onChange={(_, checked) =>
                                 setConfig((old) => ({
                                     ...old,
@@ -29,7 +29,7 @@ export default function RecommendationSettings() {
                 <FormControlLabel
                     control={
                         <Checkbox
-                            checked={!(config.recommendations?.noRandom || false)}
+                            checked={!(config?.recommendations?.noRandom || false)}
                             onChange={(_, checked) =>
                                 setConfig((old) => ({
                                     ...old,
@@ -43,7 +43,7 @@ export default function RecommendationSettings() {
                 <FormControlLabel
                     control={
                         <Checkbox
-                            checked={!(config.recommendations?.noCoengaged || false)}
+                            checked={!(config?.recommendations?.noCoengaged || false)}
                             onChange={(_, checked) =>
                                 setConfig((old) => ({
                                     ...old,
@@ -60,7 +60,7 @@ export default function RecommendationSettings() {
                 <FormControlLabel
                     control={
                         <Checkbox
-                            checked={!(config.recommendations?.noTasteScore || false)}
+                            checked={!(config?.recommendations?.noTasteScore || false)}
                             onChange={(_, checked) =>
                                 setConfig((old) => ({
                                     ...old,
@@ -74,7 +74,7 @@ export default function RecommendationSettings() {
                 <FormControlLabel
                     control={
                         <Checkbox
-                            checked={!(config.recommendations?.noSharingScore || false)}
+                            checked={!(config?.recommendations?.noSharingScore || false)}
                             onChange={(_, checked) =>
                                 setConfig((old) => ({
                                     ...old,
@@ -88,7 +88,7 @@ export default function RecommendationSettings() {
                 <FormControlLabel
                     control={
                         <Checkbox
-                            checked={!(config.recommendations?.noCoengagementScore || false)}
+                            checked={!(config?.recommendations?.noCoengagementScore || false)}
                             onChange={(_, checked) =>
                                 setConfig((old) => ({
                                     ...old,
@@ -102,7 +102,7 @@ export default function RecommendationSettings() {
                 <FormControlLabel
                     control={
                         <Checkbox
-                            checked={!(config.recommendations?.noFollowingScore || false)}
+                            checked={!(config?.recommendations?.noFollowingScore || false)}
                             onChange={(_, checked) =>
                                 setConfig((old) => ({
                                     ...old,
@@ -116,7 +116,7 @@ export default function RecommendationSettings() {
                 <FormControlLabel
                     control={
                         <Checkbox
-                            checked={!(config.recommendations?.noCommentingScore || false)}
+                            checked={!(config?.recommendations?.noCommentingScore || false)}
                             onChange={(_, checked) =>
                                 setConfig((old) => ({
                                     ...old,
@@ -130,7 +130,7 @@ export default function RecommendationSettings() {
                 <FormControlLabel
                     control={
                         <Checkbox
-                            checked={!(config.recommendations?.noLastSeenScore || false)}
+                            checked={!(config?.recommendations?.noLastSeenScore || false)}
                             onChange={(_, checked) =>
                                 setConfig((old) => ({
                                     ...old,
@@ -144,7 +144,7 @@ export default function RecommendationSettings() {
                 <FormControlLabel
                     control={
                         <Checkbox
-                            checked={!(config.recommendations?.noReactionScore || false)}
+                            checked={!(config?.recommendations?.noReactionScore || false)}
                             onChange={(_, checked) =>
                                 setConfig((old) => ({
                                     ...old,
@@ -158,7 +158,7 @@ export default function RecommendationSettings() {
                 <FormControlLabel
                     control={
                         <Checkbox
-                            checked={!(config.recommendations?.noViewingScore || false)}
+                            checked={!(config?.recommendations?.noViewingScore || false)}
                             onChange={(_, checked) =>
                                 setConfig((old) => ({
                                     ...old,
@@ -176,7 +176,7 @@ export default function RecommendationSettings() {
                     aria-labelledby="demo-radio-buttons-group-label"
                     defaultValue="image"
                     name="radio-buttons-group"
-                    value={config.recommendations?.selection || 'distribution'}
+                    value={config?.recommendations?.selection || 'distribution'}
                     onChange={(_, value) =>
                         setConfig((old) => ({
                             ...old,

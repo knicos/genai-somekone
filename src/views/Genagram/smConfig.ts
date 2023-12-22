@@ -8,4 +8,5 @@ export interface SMConfig {
     hideRecommendationsView?: boolean;
     disableFeedApp?: boolean;
     recommendations?: RecommendationOptions;
+    collectResearchData?: boolean;
 }

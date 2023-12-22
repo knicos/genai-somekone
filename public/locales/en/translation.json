@@ -19,7 +19,13 @@
         },
         "messages": {
             "noComments": "No comments yet.",
-            "loading": "Loading your feed..."
+            "loading": "Loading your feed...",
+            "usernameError": {
+                "missing": "A username is required"
+            },
+            "fullnameError": {
+                "missing": "Your full name is required"
+            }
         },
         "actionlog": {
             "dwell": "Viewed for {{time}} second(s)",
@@ -38,6 +44,10 @@
             "comment": "Comment of length {{length}}",
             "engagement": "Engagement {{score}}/10",
             "end": "Stopped using the app"
+        },
+        "labels": {
+            "enterUsername": "Enter Username",
+            "enterFullname": "Enter Fullname"
         }
     },
     "dashboard": {
@@ -105,10 +115,11 @@
             "showProfile": "Show user profile",
             "showRecommendations": "Show user recommendations",
             "deleteUser": "Delete User",
-            "showFeed": "Show user feed"
+            "showFeed": "Show user feed",
+            "collectResearch": "Collect research data"
         },
         "messages": {
-            "connection": "Go to <PageLink><Code>{{linkText}}</Code></PageLink> and enter the code <Code>{{codeText}}</Code>, or use the QR code.",
+            "connection": "Go to the address below and enter the code <Code>{{codeText}}</Code>, or use the QR code.",
             "waitingPeople": "Waiting for people...",
             "onePerson": "{{count}} person has joined.",
             "manyPeople": "{{count}} people have joined.",

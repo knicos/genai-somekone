@@ -15,7 +15,7 @@ export default function ContentNode({ id, selected, onResize, disabled }: Props)
 
     useEffect(() => {
         onResize(id, 180);
-    }, [id]);
+    }, [id, onResize]);
 
     return (
         <g

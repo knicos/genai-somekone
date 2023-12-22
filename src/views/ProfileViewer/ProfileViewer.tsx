@@ -22,6 +22,8 @@ import { SMConfig } from '../Genagram/smConfig';
 import { UserNodeId } from '@genaism/services/graph/graphTypes';
 import RecommendationsProfile from '@genaism/components/RecommendationsProfile/RecommendationsProfile';
 import { appendRecommendations } from '@genaism/services/recommender/recommender';
+import { LogProvider } from '@genaism/hooks/logger';
+import EnterName from './EnterName';
 
 function slideDirection(my: number, current: number, previous: number): SlideProps['direction'] {
     if (my === current) {
@@ -43,113 +45,129 @@ export function Component() {
     const [page, setPage] = useState(0);
     const prevPage = useRef(0);
     const [config, setConfig] = useRecoilState<SMConfig>(appConfiguration);
+    const [name, setName] = useState<string>();
 
-    const onData = useCallback((data: EventProtocol) => {
-        console.log('GOT DATA', data);
-        if (data.event === 'eter:reguser') {
-            try {
-                createUserProfile(data.id, data.username);
-            } catch (e) {
-                console.warn(e);
-            }
-            setID(data.id);
-        } else if (data.event === 'eter:profile_data') {
-            replaceProfile(data.id, data.profile);
-        } else if (data.event === 'eter:action_log') {
-            appendActionLog(data.log, data.id);
-        } else if (data.event === 'eter:recommendations') {
-            appendRecommendations(data.id, data.recommendations);
-        } else if (data.event === 'eter:config') {
-            setConfig((old) => ({ ...old, ...data.configuration }));
-            if (data.content) {
-                data.content.forEach((c, ix) => {
-                    getZipBlob(c)
-                        .then(async (blob) => {
-                            if (data.content && blob.arrayBuffer) {
-                                data.content[ix] = await blob.arrayBuffer();
-                            }
+    const onData = useCallback(
+        (data: EventProtocol) => {
+            console.log('GOT DATA', data);
+            if (data.event === 'eter:reguser') {
+                try {
+                    createUserProfile(data.id, data.username);
+                } catch (e) {
+                    console.warn(e);
+                }
+                setID(data.id);
+            } else if (data.event === 'eter:profile_data') {
+                replaceProfile(data.id, data.profile);
+            } else if (data.event === 'eter:action_log') {
+                appendActionLog(data.log, data.id);
+            } else if (data.event === 'eter:recommendations') {
+                appendRecommendations(data.id, data.recommendations);
+            } else if (data.event === 'eter:config') {
+                setConfig((old) => ({ ...old, ...data.configuration }));
+                if (data.content) {
+                    data.content.forEach((c, ix) => {
+                        getZipBlob(c)
+                            .then(async (blob) => {
+                                if (data.content && blob.arrayBuffer) {
+                                    data.content[ix] = await blob.arrayBuffer();
+                                }
 
-                            await loadFile(blob);
-                            setHasData(true);
-                        })
-                        .catch((e) => {
-                            console.error(e);
-                            setError((p) => {
-                                const s = new Set(p);
-                                s.add('content_not_found');
-                                return s;
+                                await loadFile(blob);
+                                setHasData(true);
+                            })
+                            .catch((e) => {
+                                console.error(e);
+                                setError((p) => {
+                                    const s = new Set(p);
+                                    s.add('content_not_found');
+                                    return s;
+                                });
                             });
-                        });
-                });
+                    });
+                }
             }
-        }
-    }, []);
+        },
+        [setError, setConfig]
+    );
 
-    const { ready } = usePeer<EventProtocol>({ code: code && `sm-${MYCODE}`, server: `sm-${code}`, onData });
+    const { ready, send } = usePeer<EventProtocol>({ code: code && `sm-${MYCODE}`, server: `sm-${code}`, onData });
 
     return (
         <>
             <Loading
-                loading={!ready || !hasData || !id}
+                loading={!ready || !hasData || !id || !config}
                 message={t('profile.messages.loading')}
             >
-                <div className={style.container}>
-                    <Slide
-                        direction={slideDirection(0, page, prevPage.current)}
-                        in={page === 0}
-                        mountOnEnter
-                        unmountOnExit
-                    >
-                        <div className={style.pageContainer}>
-                            <DataProfile id={id} />
+                <LogProvider sender={send}>
+                    {(!config?.collectResearchData || name) && (
+                        <div className={style.container}>
+                            <Slide
+                                direction={slideDirection(0, page, prevPage.current)}
+                                in={page === 0}
+                                mountOnEnter
+                                unmountOnExit
+                            >
+                                <div className={style.pageContainer}>
+                                    <DataProfile id={id} />
+                                </div>
+                            </Slide>
+                            <Slide
+                                direction={slideDirection(1, page, prevPage.current)}
+                                in={page === 1}
+                                mountOnEnter
+                                unmountOnExit
+                            >
+                                <div className={style.pageContainer}>
+                                    <UserProfile id={id} />
+                                </div>
+                            </Slide>
+                            <Slide
+                                direction={slideDirection(2, page, prevPage.current)}
+                                in={page === 2}
+                                mountOnEnter
+                                unmountOnExit
+                            >
+                                <div className={style.pageContainer}>
+                                    <RecommendationsProfile id={id} />
+                                </div>
+                            </Slide>
+                            <BottomNavigation
+                                showLabels
+                                value={page}
+                                onChange={(_, newValue) =>
+                                    setPage((old) => {
+                                        prevPage.current = old;
+                                        return newValue;
+                                    })
+                                }
+                            >
+                                <BottomNavigationAction
+                                    label={t('profile.actions.data')}
+                                    icon={<QueryStatsIcon fontSize="large" />}
+                                />
+                                <BottomNavigationAction
+                                    disabled={config?.hideProfileView}
+                                    label={t('profile.actions.profile')}
+                                    icon={<PersonIcon fontSize="large" />}
+                                />
+                                <BottomNavigationAction
+                                    disabled={config?.hideRecommendationsView}
+                                    label={t('profile.actions.recommendations')}
+                                    icon={<ImageSearchIcon fontSize="large" />}
+                                />
+                            </BottomNavigation>
                         </div>
-                    </Slide>
-                    <Slide
-                        direction={slideDirection(1, page, prevPage.current)}
-                        in={page === 1}
-                        mountOnEnter
-                        unmountOnExit
-                    >
-                        <div className={style.pageContainer}>
-                            <UserProfile id={id} />
+                    )}
+                    {id && config?.collectResearchData && !name && (
+                        <div className={style.container}>
+                            <EnterName
+                                onName={setName}
+                                hostUser={id}
+                            />
                         </div>
-                    </Slide>
-                    <Slide
-                        direction={slideDirection(2, page, prevPage.current)}
-                        in={page === 2}
-                        mountOnEnter
-                        unmountOnExit
-                    >
-                        <div className={style.pageContainer}>
-                            <RecommendationsProfile id={id} />
-                        </div>
-                    </Slide>
-                    <BottomNavigation
-                        showLabels
-                        value={page}
-                        onChange={(_, newValue) =>
-                            setPage((old) => {
-                                prevPage.current = old;
-                                return newValue;
-                            })
-                        }
-                    >
-                        <BottomNavigationAction
-                            label={t('profile.actions.data')}
-                            icon={<QueryStatsIcon fontSize="large" />}
-                        />
-                        <BottomNavigationAction
-                            disabled={config.hideProfileView}
-                            label={t('profile.actions.profile')}
-                            icon={<PersonIcon fontSize="large" />}
-                        />
-                        <BottomNavigationAction
-                            disabled={config.hideRecommendationsView}
-                            label={t('profile.actions.recommendations')}
-                            icon={<ImageSearchIcon fontSize="large" />}
-                        />
-                    </BottomNavigation>
-                </div>
+                    )}
+                </LogProvider>
             </Loading>
             <ErrorDialog />
         </>

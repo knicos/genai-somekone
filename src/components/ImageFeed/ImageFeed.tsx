@@ -54,7 +54,7 @@ export default function ImageFeed({ images, onView, onMore, onLog, noActions }: 
                 id: viewedRef.current.contentId,
             });
         }
-    }, [active]);
+    }, [active, onLog]);
 
     useEffect(() => {
         canMoreRef.current = true;
@@ -67,14 +67,14 @@ export default function ImageFeed({ images, onView, onMore, onLog, noActions }: 
                 onLog({ activity: 'seen', id: img.contentId, timestamp: Date.now() });
             }
         },
-        [images]
+        [images, onLog]
     );
 
     const doDwell = useCallback(
         (v: number, index: number) => {
             onLog({ activity: 'dwell', value: v, id: images[index].contentId, timestamp: Date.now() });
         },
-        [images]
+        [images, onLog]
     );
 
     useEffect(() => {
@@ -88,7 +88,7 @@ export default function ImageFeed({ images, onView, onMore, onLog, noActions }: 
         doSeen(viewed);
         startRef.current = now;
         prevRef.current = viewed;
-    }, [viewed, onView, onLog, images]);
+    }, [viewed, onView, onLog, images, doDwell, doSeen]);
 
     const doInteraction = useCallback(() => {
         const now = Date.now();

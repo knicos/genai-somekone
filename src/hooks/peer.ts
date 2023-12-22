@@ -46,7 +46,7 @@ function isPeerEvent(data: unknown): data is BuiltinEvent {
     return typeof (data as PeerEvent).event === 'string';
 }
 
-type SenderType<T> = (data: T | BuiltinEvent) => void;
+export type SenderType<T> = (data: T | BuiltinEvent) => void;
 
 interface PeerState<T> {
     connections: Map<string, DataConnection>;
@@ -306,7 +306,7 @@ export default function usePeer<T extends PeerEvent>({
             }
             npeer.destroy();
         };
-    }, [code, server, webrtc, ice]);
+    }, [code, server, webrtc, ice, setError, refreshRTC]);
 
     useEffect(() => {
         const tabClose = () => {
@@ -333,7 +333,7 @@ export default function usePeer<T extends PeerEvent>({
         return () => {
             window.removeEventListener('beforeunload', tabClose);
         };
-    }, []);
+    }, [setError, setWebRTC]);
 
     return {
         send: sender,

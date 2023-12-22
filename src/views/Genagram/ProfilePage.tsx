@@ -6,6 +6,7 @@ import { menuShowFeedActions, menuShowProfile } from '@genaism/state/menuState';
 import style from './style.module.css';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useLogger } from '@genaism/hooks/logger';
 
 interface Props {
     onClose?: () => void;
@@ -15,10 +16,15 @@ export default function ProfilePage({ onClose }: Props) {
     const { t } = useTranslation();
     const [showProfile, setShowProfile] = useRecoilState(menuShowProfile);
     const setShowFeedActions = useSetRecoilState(menuShowFeedActions);
+    const logger = useLogger();
 
     useEffect(() => {
         setShowFeedActions(!showProfile);
-    }, [showProfile]);
+        if (logger) {
+            if (showProfile) logger('open_profile_view');
+            else logger('close_profile_view');
+        }
+    }, [showProfile, setShowFeedActions, logger]);
 
     return (
         <Slide

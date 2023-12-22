@@ -26,6 +26,7 @@ export function useRecommendations(size: number, id?: UserNodeId, options?: Reco
             recommendations: getRecommendations(aid, size),
             more: doMore,
         }),
-        [aid, count, size]
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [aid, count, size, doMore]
     );
 }

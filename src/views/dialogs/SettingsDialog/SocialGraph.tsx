@@ -1,5 +1,5 @@
 import { Checkbox, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Slider } from '@mui/material';
-import { ChangeEvent, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useRecoilState } from 'recoil';
 import style from './style.module.css';
@@ -30,16 +30,6 @@ export default function SocialGraphSettings() {
     const [clusterColouring, setClusterColouring] = useRecoilState(settingClusterColouring);
     const [egoSelect, setEgoSelect] = useRecoilState(settingEgoOnSelect);
 
-    const doShowLines = useCallback((e: ChangeEvent<HTMLInputElement>) => setShowLines(e.currentTarget.checked), []);
-    const doShowLabels = useCallback((e: ChangeEvent<HTMLInputElement>) => setShowLabels(e.currentTarget.checked), []);
-    const doShowOffline = useCallback(
-        (e: ChangeEvent<HTMLInputElement>) => setShowOffline(e.currentTarget.checked),
-        []
-    );
-    const doShrinkOffline = useCallback(
-        (e: ChangeEvent<HTMLInputElement>) => setShrinkOffline(e.currentTarget.checked),
-        []
-    );
     const doEdgeScale = useCallback(
         (_: unknown, value: number | number[]) => setEdgeScale(value as number),
         [setEdgeScale]
@@ -59,7 +49,7 @@ export default function SocialGraphSettings() {
                 control={
                     <Checkbox
                         checked={showLines}
-                        onChange={doShowLines}
+                        onChange={(_, checked) => setShowLines(checked)}
                     />
                 }
                 label={t('dashboard.labels.showLines')}
@@ -68,7 +58,7 @@ export default function SocialGraphSettings() {
                 control={
                     <Checkbox
                         checked={showLabels}
-                        onChange={doShowLabels}
+                        onChange={(_, checked) => setShowLabels(checked)}
                     />
                 }
                 label={t('dashboard.labels.showLabels')}
@@ -77,7 +67,7 @@ export default function SocialGraphSettings() {
                 control={
                     <Checkbox
                         checked={showOffline}
-                        onChange={doShowOffline}
+                        onChange={(_, checked) => setShowOffline(checked)}
                     />
                 }
                 label={t('dashboard.labels.showOffline')}
@@ -86,7 +76,7 @@ export default function SocialGraphSettings() {
                 control={
                     <Checkbox
                         checked={shrinkOffline}
-                        onChange={doShrinkOffline}
+                        onChange={(_, checked) => setShrinkOffline(checked)}
                     />
                 }
                 label={t('dashboard.labels.shrinkOffline')}

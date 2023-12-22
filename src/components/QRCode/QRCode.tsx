@@ -15,7 +15,7 @@ export default function QRCode({ url, size, code }: Props) {
         if (canvas.current) {
             qr.toCanvas(canvas.current, url, { width: size === 'large' ? 250 : 164 }).catch((e) => console.error(e));
         }
-    }, [url]);
+    }, [url, size]);
 
     return (
         <a

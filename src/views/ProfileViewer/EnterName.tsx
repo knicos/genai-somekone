@@ -4,74 +4,60 @@ import { useCallback, useRef, useState } from 'react';
 import style from './style.module.css';
 import { useTranslation } from 'react-i18next';
 import { useLogger } from '@genaism/hooks/logger';
+import { UserNodeId } from '@genaism/services/graph/graphTypes';
 
 interface Props {
-    onUsername: (name: string) => void;
+    onName: (name: string) => void;
+    hostUser: UserNodeId;
 }
 
 interface FormErrors {
-    username?: 'missing' | 'bad';
     fullname?: 'missing' | 'bad';
 }
 
-export default function EnterUsername({ onUsername }: Props) {
+export default function EnterName({ onName, hostUser }: Props) {
     const { t } = useTranslation();
     const ref = useRef<HTMLInputElement>(null);
-    const nameref = useRef<HTMLInputElement>(null);
     const logger = useLogger();
     const [errors, setErrors] = useState<FormErrors>({});
 
-    const doUsernameKey = useCallback(
+    const doNameKey = useCallback(
         (e: React.KeyboardEvent<HTMLInputElement>) => {
             setErrors((old) => ({ ...old, username: undefined }));
-            if (logger) return;
             if (e.key === 'Enter') {
                 const name = (e.target as HTMLInputElement).value;
-                onUsername(name);
+                onName(name);
+                if (logger) {
+                    logger('enter_profile_fullname', { name, associatedUser: hostUser });
+                }
             }
         },
-        [onUsername, logger]
+        [onName, logger, hostUser]
     );
-
-    const doFullnameKey = useCallback(() => {
-        setErrors((old) => ({ ...old, fullname: undefined }));
-    }, []);
 
     return (
         <div className={style.userContainer}>
-            <TextField
-                inputRef={ref}
-                label={t('feed.labels.enterUsername')}
-                onKeyDown={doUsernameKey}
-                required
-                error={!!errors.username}
-                helperText={errors.username ? t(`feed.messages.usernameError.${errors.username}`) : undefined}
-            />
             {logger && (
                 <TextField
-                    inputRef={nameref}
+                    inputRef={ref}
                     required
                     label={t('feed.labels.enterFullname')}
                     error={!!errors.fullname}
-                    onKeyDown={doFullnameKey}
+                    onKeyDown={doNameKey}
                     helperText={errors.fullname ? t(`feed.messages.fullnameError.${errors.fullname}`) : undefined}
                 />
             )}
             <LargeButton
                 onClick={() => {
                     if (ref.current) {
-                        if (!ref.current.value) {
-                            setErrors({ username: 'missing' });
-                            return;
-                        }
-                        if (logger && nameref.current) {
-                            if (!nameref.current.value) {
+                        if (logger && ref.current) {
+                            if (!ref.current.value) {
                                 setErrors({ fullname: 'missing' });
                                 return;
                             }
-                            logger('enter_username', { username: ref.current.value, fullname: nameref.current.value });
+                            logger('enter_profile_fullname', { name: ref.current.value, associatedUser: hostUser });
                         }
-                        onUsername(ref.current.value);
+                        onName(ref.current.value);
                     }
                 }}
                 variant="contained"

@@ -39,7 +39,7 @@ export function useInteractionDetector(timeout: number) {
         return () => {
             if (intervalRef.current >= 0) clearInterval(intervalRef.current);
         };
-    }, [setStatus, tabActive]);
+    }, [setStatus, tabActive, timeout]);
 
     useEffect(() => {
         const detect = () => {

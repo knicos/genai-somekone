@@ -6,6 +6,7 @@ import style from './style.module.css';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import QRCode from '@genaism/components/QRCode/QRCode';
+import { useLogger } from '@genaism/hooks/logger';
 
 interface Props {
     code: string;
@@ -16,10 +17,15 @@ export default function SharePage({ code, onClose }: Props) {
     const { t } = useTranslation();
     const [showShareProfile, setShowShareProfile] = useRecoilState(menuShowShareProfile);
     const setShowFeedActions = useSetRecoilState(menuShowFeedActions);
+    const logger = useLogger();
 
     useEffect(() => {
         setShowFeedActions(!showShareProfile);
-    }, [showShareProfile]);
+        if (logger) {
+            if (showShareProfile) logger('open_share_view');
+            else logger('close_share_view');
+        }
+    }, [showShareProfile, setShowFeedActions, logger]);
 
     return (
         <Slide

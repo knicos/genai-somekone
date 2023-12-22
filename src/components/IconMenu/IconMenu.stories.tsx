@@ -39,6 +39,6 @@ export const Primary: Story = {
     ),
     args: {
         placement: 'left',
-        label: <span>'Test'</span>,
+        label: <span>Test</span>,
     },
 };

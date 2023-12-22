@@ -31,7 +31,7 @@ export default function SpeedMenu() {
             openIcon={<CloseIcon />}
             FabProps={{ color: 'secondary' }}
         >
-            {!config.hideShareProfile && (
+            {!config?.hideShareProfile && (
                 <SpeedDialAction
                     icon={<ShareIcon />}
                     tooltipTitle={'Share your profile'}
@@ -42,7 +42,7 @@ export default function SpeedMenu() {
                     }}
                 />
             )}
-            {!config.hideDataView && (
+            {!config?.hideDataView && (
                 <SpeedDialAction
                     icon={<QueryStatsIcon />}
                     tooltipTitle={t('profile.titles.yourData')}
@@ -53,7 +53,7 @@ export default function SpeedMenu() {
                     }}
                 />
             )}
-            {!config.hideProfileView && (
+            {!config?.hideProfileView && (
                 <SpeedDialAction
                     icon={<PersonIcon />}
                     tooltipTitle={t('profile.titles.yourProfile')}
@@ -64,7 +64,7 @@ export default function SpeedMenu() {
                     }}
                 />
             )}
-            {!config.hideRecommendationsView && (
+            {!config?.hideRecommendationsView && (
                 <SpeedDialAction
                     icon={<ImageSearchIcon />}
                     tooltipTitle={'Your recommendations'}

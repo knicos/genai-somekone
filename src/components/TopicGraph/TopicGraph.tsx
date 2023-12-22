@@ -64,7 +64,7 @@ export default function TopicGraph() {
         });
 
         setLinks(links);
-    }, [topics]);
+    }, [topics, similar]);
 
     const doResize = useCallback(
         (id: string, size: number) => {

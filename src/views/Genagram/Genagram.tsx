@@ -23,6 +23,7 @@ import { appConfiguration } from '@genaism/state/settingsState';
 import { ScoredRecommendation } from '@genaism/services/recommender/recommenderTypes';
 import RecommendationPage from './RecommendationPage';
 import BlockDialog from '../dialogs/BlockDialog/BlockDialog';
+import { LogProvider } from '@genaism/hooks/logger';
 
 const USERNAME_KEY = 'genai_somekone_username';
 
@@ -60,7 +61,7 @@ export function Component() {
                 conn.send({ event: 'eter:connect', code: `sm-${code}` });
             }
         },
-        [config, username, content]
+        [config, username, content, code, setConfig]
     );
 
     const { ready, send } = usePeer<EventProtocol>({ code: code && `sm-${MYCODE}`, server: `sm-${code}`, onData });
@@ -108,29 +109,31 @@ export function Component() {
                 loading={!!code && (!ready || !config)}
                 message={t('feed.messages.loading')}
             >
-                <div className={style.page}>
-                    {config && !username && <EnterUsername onUsername={setUsername} />}
-                    {config && username && (
-                        <>
-                            <Feed
-                                content={content}
-                                onProfile={doProfile}
-                                onRecommend={doRecommend}
-                                onLog={doLog}
-                            />
-                            {showFeedActions && !config.hideActionsButton && (
-                                <div className={style.speedContainer}>
-                                    <SpeedMenu />
-                                </div>
-                            )}
-                        </>
-                    )}
-                    <SharePage code={MYCODE} />
-                    <DataPage />
-                    <ProfilePage />
-                    <RecommendationPage />
-                    <BlockDialog />
-                </div>
+                <LogProvider sender={send}>
+                    <div className={style.page}>
+                        {config && !username && <EnterUsername onUsername={setUsername} />}
+                        {config && username && (
+                            <>
+                                <Feed
+                                    content={content}
+                                    onProfile={doProfile}
+                                    onRecommend={doRecommend}
+                                    onLog={doLog}
+                                />
+                                {showFeedActions && !config.hideActionsButton && (
+                                    <div className={style.speedContainer}>
+                                        <SpeedMenu />
+                                    </div>
+                                )}
+                            </>
+                        )}
+                        <SharePage code={MYCODE} />
+                        <DataPage />
+                        <ProfilePage />
+                        <RecommendationPage />
+                        <BlockDialog />
+                    </div>
+                </LogProvider>
             </Loading>
             <ErrorDialog />
         </>

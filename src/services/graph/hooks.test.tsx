@@ -15,13 +15,13 @@ function NodeComponent({ action }: { action: () => void }) {
 function NodeTypeComponent({ action }: { action: () => void }) {
     const nodes = useNodeType('user');
     action();
-    return nodes.map((n) => <span>{n}</span>);
+    return nodes.map((n, ix) => <span key={ix}>{n}</span>);
 }
 
 function RelatedComponent({ action }: { action: () => void }) {
     const nodes = useRelatedNodes('user:xyz', 'engaged');
     action();
-    return nodes.map((n) => <span>{n.id}</span>);
+    return nodes.map((n, ix) => <span key={ix}>{n.id}</span>);
 }
 
 beforeEach(() => resetGraph());

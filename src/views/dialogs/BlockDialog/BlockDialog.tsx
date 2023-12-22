@@ -10,7 +10,7 @@ export default function BlockDialog() {
     const config = useRecoilValue(appConfiguration);
 
     return (
-        <Dialog open={config.disableFeedApp || false}>
+        <Dialog open={config?.disableFeedApp || false}>
             <DialogTitle className={style.title}>{t('dashboard.titles.paused')}</DialogTitle>
             <DialogContent className={style.content}>
                 <div className={style.icon}>

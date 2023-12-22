@@ -167,7 +167,7 @@ export default function Graph<T extends NodeID>({
         simRef.current.alpha(0.3).restart();
 
         setLinkList(llinks);
-    }, [nodes, links, redraw]);
+    }, [nodes, links, redraw, charge, linkScale]);
 
     // Animate camera motion
     useEffect(() => {
@@ -190,7 +190,7 @@ export default function Graph<T extends NodeID>({
             //ease: 'none',
         });
         if (onZoom) onZoom(actualZoom.zoom);
-    }, [actualZoom]);
+    }, [actualZoom, onZoom]);
 
     return (
         <svg

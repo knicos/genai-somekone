@@ -17,7 +17,10 @@ export default function ContentGraphSettings() {
     const [similarPercent, setSimilarPercent] = useRecoilState(settingContentSimilarPercent);
     const [nodeCharge, setNodeCharge] = useRecoilState(settingContentNodeCharge);
 
-    const doShowLines = useCallback((e: ChangeEvent<HTMLInputElement>) => setShowLines(e.currentTarget.checked), []);
+    const doShowLines = useCallback(
+        (e: ChangeEvent<HTMLInputElement>) => setShowLines(e.currentTarget.checked),
+        [setShowLines]
+    );
 
     const doEdgeScale = useCallback(
         (_: unknown, value: number | number[]) => setEdgeScale(value as number),

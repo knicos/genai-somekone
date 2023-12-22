@@ -112,7 +112,7 @@ export default function FeedImage({
                 onComment(id, l);
             }
         },
-        [onComment]
+        [onComment, id]
     );
 
     const doShowPanel = useCallback(() => {
