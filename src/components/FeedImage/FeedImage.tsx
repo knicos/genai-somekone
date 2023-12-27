@@ -140,8 +140,8 @@ export default function FeedImage({
 
     return !visible || !contentData || !contentMeta ? null : (
         <div className={style.container}>
-            <div className={active ? style.activeImageContainer : style.imageContainer}>
-                {active && (
+            <div className={active || noActions ? style.activeImageContainer : style.imageContainer}>
+                {(active || noActions) && (
                     <div className={style.name}>
                         <Avatar {...stringAvatar(contentMeta.author || 'Unknown')} />
                         <span className={style.author}>{contentMeta.author || 'Unknown'}</span>

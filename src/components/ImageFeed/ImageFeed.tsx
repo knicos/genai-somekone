@@ -202,16 +202,19 @@ export default function ImageFeed({ images, onView, onMore, onLog, noActions, sh
                 onScroll={doScroll}
             >
                 <div className={style.titleOuter}>
-                    <div className={style.title}>
-                        <img
-                            src="/logo48_bw.png"
-                            alt="GenAIMedia Logo"
-                            width={48}
-                            height={48}
-                        />
-                        <h1>{t('feed.titles.main')}</h1>
-                    </div>
+                    {!noActions && (
+                        <div className={style.title}>
+                            <img
+                                src="/logo48_bw.png"
+                                alt="GenAIMedia Logo"
+                                width={48}
+                                height={48}
+                            />
+                            <h1>{t('feed.titles.main')}</h1>
+                        </div>
+                    )}
                 </div>
+
                 <div className={style.topSpacer} />
                 <FeedSpacer size={viewed - 4} />
                 {images.map((img, ix) => (
