@@ -3,6 +3,7 @@ import { getTopicId } from '@genaism/services/concept/concept';
 import { ProfileSummary, UserProfile } from '@genaism/services/profiler/profilerTypes';
 import { CandidateOptions, Recommendation } from './recommenderTypes';
 import { biasedUniqueSubset, uniformUniqueSubset } from '@genaism/util/subsets';
+import { ContentNodeId, UserNodeId, WeightedNode } from '../graph/graphTypes';
 
 function calculateCount(high: number, low: number, value: number, max: number) {
     const range = high - low;
@@ -59,6 +60,45 @@ function generateCoengaged(profile: ProfileSummary, nodes: Recommendation[], cou
     });
 }
 
+const MIN20 = 20 * 60 * 1000;
+
+interface UserSuggestion extends WeightedNode<ContentNodeId> {
+    user: UserNodeId;
+    similarityScore: number;
+}
+
+function generateSimilarUsers(profile: UserProfile, nodes: Recommendation[], count: number) {
+    // First, find similar users.
+    const similar = getRelated('similar', profile.id, { count: 15, timeDecay: 0.5, period: MIN20 });
+    const biasedSimilar = biasedUniqueSubset(similar, 5, (v) => v.id);
+
+    // For each similar user, get their favourite images.
+    let results: UserSuggestion[] = [];
+    biasedSimilar.forEach((user) => {
+        const best = getRelated('engaged', user.id, { count: 10, period: MIN20, timeDecay: 0.8 });
+        // console.log('SIMILAR', best);
+        const wbest = best.map((b) => ({
+            id: b.id,
+            weight: b.weight * user.weight,
+            user: user.id,
+            similarityScore: user.weight,
+        }));
+        results = [...results, ...wbest];
+    });
+
+    results.sort((a, b) => b.weight - a.weight);
+    const final = biasedUniqueSubset(results, count, (v) => v.id);
+    final.forEach((r) => {
+        nodes.push({
+            contentId: r.id,
+            candidateOrigin: 'similar_user',
+            timestamp: Date.now(),
+            similarUser: r.user,
+            userSimilarityScore: r.similarityScore,
+        });
+    });
+}
+
 function fillWithRandom(nodes: Recommendation[], count: number) {
     const allNodes = getNodesByType('content');
     if (allNodes.length === 0) return;
@@ -74,14 +114,13 @@ function fillWithRandom(nodes: Recommendation[], count: number) {
     });
 }
 
-export function generateCandidates(profile: UserProfile, count: number, options?: CandidateOptions): Recommendation[] {
+export function generateCandidates(profile: UserProfile, count: number, options: CandidateOptions): Recommendation[] {
     const nodes: Recommendation[] = [];
 
-    if (!options?.noTaste) generateTasteBatch(profile, nodes, count * 2);
-    if (!options?.noCoengaged) generateCoengaged(profile, nodes, count * 2);
-    if (!options?.noRandom) fillWithRandom(nodes, count);
-
-    console.log('PROFILE', profile);
+    if (options.taste > 0) generateTasteBatch(profile, nodes, count * options.taste);
+    if (options.coengaged > 0) generateCoengaged(profile, nodes, count * options.coengaged);
+    if (options.similarUsers > 0) generateSimilarUsers(profile, nodes, count * options.similarUsers);
+    if (options.random > 0) fillWithRandom(nodes, count * options.random);
 
     const selected = new Map<string, Recommendation>();
 

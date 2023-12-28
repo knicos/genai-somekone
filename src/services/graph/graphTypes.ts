@@ -31,6 +31,7 @@ export interface GNode<A extends NodeType> {
     id: NodeID<A>;
     type: A;
     data?: unknown;
+    timestamp: number;
 }
 
 export interface Edge<A extends NodeID<NodeType> = NodeID, B extends NodeID<NodeType> = NodeID> {
@@ -71,6 +72,7 @@ type UserViewedTopicEdge = GenericEdge<'viewed_topic', UserNodeId, TopicNodeId>;
 type UserReactedTopicEdge = GenericEdge<'reacted_topic', UserNodeId, TopicNodeId>;
 type TopicChildEdge = GenericEdge<'child', TopicNodeId, TopicNodeId>;
 type TopicParentEdge = GenericEdge<'parent', TopicNodeId, TopicNodeId>;
+type SimilarUserEdge = GenericEdge<'similar', UserNodeId, UserNodeId>;
 
 export type EdgeTypes =
     | ContentTopicEdge
@@ -94,6 +96,7 @@ export type EdgeTypes =
     | UserViewedTopicEdge
     | UserReactedTopicEdge
     | TopicParentEdge
+    | SimilarUserEdge
     | TopicChildEdge;
 export type BiEdgeTypes =
     | UserEngagedContentEdge
@@ -122,4 +125,11 @@ export function isUserID(id: string): id is UserNodeId {
 
 export function isTopicID(id: string): id is TopicNodeId {
     return id.startsWith('topic:');
+}
+
+export interface PartialEdge {
+    type: EdgeType;
+    source: NodeID;
+    destination: NodeID;
+    weight: number;
 }

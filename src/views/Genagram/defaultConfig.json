@@ -1,4 +1,11 @@
 {
-    "configuration": {},
+    "configuration": {
+        "recommendations": {
+            "taste": 2,
+            "similarUsers": 2,
+            "coengaged": 2,
+            "random": 2
+        }
+    },
     "content": ["https://tmstore.blob.core.windows.net/projects/smTestContent1.zip"]
 }

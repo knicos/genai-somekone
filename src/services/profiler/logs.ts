@@ -54,7 +54,6 @@ function processEngagement(id: UserNodeId, content: ContentNodeId, engagement: n
         for (let i = elog.length - 1; i >= Math.max(0, elog.length - 6); --i) {
             addOrAccumulateEdge('coengaged', content, elog[i].id, w * elog[i].weight);
             addOrAccumulateEdge('coengaged', elog[i].id, content, w * elog[i].weight);
-            console.log('coengage', content, elog[i], w);
             w *= 0.5;
         }
         elog.push({ id: content, weight: engagement });

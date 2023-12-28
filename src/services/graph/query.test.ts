@@ -65,6 +65,25 @@ describe('graph.getRelated', () => {
         expect(related[0].id).toBe(contentIds[0]);
     });
 
+    it('limits by strict time', async ({ expect }) => {
+        const userIds = [addNode('user'), addNode('user'), addNode('user')];
+
+        const contentIds = [addNode('content'), addNode('content'), addNode('content')];
+
+        addEdge('engaged', userIds[0], contentIds[1], 1.0);
+        addEdge('engaged', userIds[0], contentIds[0], 2.0);
+        addEdge('engaged', userIds[0], contentIds[2], 3.0, 1000);
+        addEdge('liked', userIds[0], contentIds[2], 4.0);
+        addEdge('engaged', userIds[1], contentIds[1], 1.0);
+
+        const related = getRelated('engaged', userIds[0], { count: 3, strictPeriod: 5 * 60 * 1000 });
+
+        expect(related).toHaveLength(2);
+        expect(related[0].weight).toBe(2);
+        expect(related[1].weight).toBe(1);
+        expect(related[0].id).toBe(contentIds[0]);
+    });
+
     it('weights by time', async ({ expect }) => {
         const userIds = [addNode('user'), addNode('user'), addNode('user')];
 

@@ -7,7 +7,7 @@ export interface SMConfig {
     hideActionsButton?: boolean;
     hideRecommendationsView?: boolean;
     disableFeedApp?: boolean;
-    recommendations?: RecommendationOptions;
+    recommendations: RecommendationOptions;
     collectResearchData?: boolean;
     showTopicLabels?: boolean;
 }

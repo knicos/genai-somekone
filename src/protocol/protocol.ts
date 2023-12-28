@@ -3,6 +3,7 @@ import { SMConfig } from '@genaism/views/Genagram/smConfig';
 import { LogEntry, ProfileSummary } from '@genaism/services/profiler/profilerTypes';
 import { UserNodeId } from '@genaism/services/graph/graphTypes';
 import { ScoredRecommendation } from '@genaism/services/recommender/recommenderTypes';
+import { Snapshot } from '@genaism/services/users/users';
 
 export interface ConfigurationEvent extends PeerEvent {
     event: 'eter:config';
@@ -42,8 +43,15 @@ export interface ResearchLogEvent extends PeerEvent {
     details: unknown;
 }
 
+export interface SnapshotEvent extends PeerEvent {
+    event: 'eter:snapshot';
+    id: UserNodeId;
+    snapshot?: Snapshot;
+}
+
 export type EventProtocol =
     | BuiltinEvent
+    | SnapshotEvent
     | RecommendationEvent
     | ProfileEvent
     | UserRegistrationEvent

@@ -18,18 +18,18 @@ export function uniformUniqueSubset<T, V extends string | number>(
     count: number,
     valueFn: (n: T) => V
 ): T[] {
-    if (nodes.length <= count) return uniqueSubset(nodes, valueFn);
-
+    const unique = uniqueSubset(nodes, valueFn);
+    if (unique.length <= count) return unique;
     const seen = new Set<V>();
     const results: T[] = [];
 
     // It might be faster to remove candidates than to retry.
     while (results.length < count) {
-        const ix = Math.floor(Math.random() * nodes.length);
-        const v = valueFn(nodes[ix]);
+        const ix = Math.floor(Math.random() * unique.length);
+        const v = valueFn(unique[ix]);
         if (!seen.has(v)) {
             seen.add(v);
-            results.push(nodes[ix]);
+            results.push(unique[ix]);
         }
     }
 
@@ -37,8 +37,8 @@ export function uniformUniqueSubset<T, V extends string | number>(
 }
 
 export function biasedUniqueSubset<T, V extends string | number>(nodes: T[], count: number, valueFn: (n: T) => V): T[] {
-    if (nodes.length <= count) return uniqueSubset(nodes, valueFn);
-
+    const unique = uniqueSubset(nodes, valueFn);
+    if (unique.length <= count) return unique;
     const seen = new Set<V>();
     const results: T[] = [];
 
@@ -47,12 +47,12 @@ export function biasedUniqueSubset<T, V extends string | number>(nodes: T[], cou
         const beta = Math.sin((uniform * Math.PI) / 2);
         const beta2 = beta * beta;
         const beta_left = beta2 < 0.5 ? 2 * beta2 : 2 * (1 - beta2);
-        const ix = Math.floor(beta_left * nodes.length);
+        const ix = Math.floor(beta_left * unique.length);
 
-        const v = valueFn(nodes[ix]);
+        const v = valueFn(unique[ix]);
         if (!seen.has(v)) {
             seen.add(v);
-            results.push(nodes[ix]);
+            results.push(unique[ix]);
         }
     }
 

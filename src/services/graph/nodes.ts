@@ -40,7 +40,7 @@ export function updateNode(id: NodeID, data: unknown) {
 export function addNode<T extends NodeType>(type: T, id?: NodeID<T>, data?: unknown): NodeID<T> {
     const nid = id ? id : (`${type}:${uuidv4()}` as NodeID<T>);
     if (nodeStore.has(nid)) throw new Error('id_exists');
-    const node = { type, id: nid, data };
+    const node = { type, id: nid, data, timestamp: Date.now() };
     nodeStore.set(nid, node);
     if (!nodeTypeIndex.has(type)) {
         nodeTypeIndex.set(type, []);
@@ -56,7 +56,7 @@ export function addNode<T extends NodeType>(type: T, id?: NodeID<T>, data?: unkn
 export function addNodeIfNotExists<T extends NodeType>(type: T, id: NodeID<T>, data?: unknown): NodeID<T> | undefined {
     const nid = id;
     if (nodeStore.has(nid)) return;
-    const node = { type, id: nid, data };
+    const node = { type, id: nid, data, timestamp: Date.now() };
     nodeStore.set(nid, node);
     if (!nodeTypeIndex.has(type)) {
         nodeTypeIndex.set(type, []);
@@ -92,6 +92,10 @@ export function getNodeData<T = unknown>(id: NodeID): T | undefined {
 export function getNodesByType<T extends NodeType>(type: T): NodeID<T>[] {
     const nt = nodeTypeIndex.get(type);
     return (nt ? nt.map((n) => n.id) : []) as NodeID<T>[];
+}
+
+export function getNodesSince<T extends NodeType>(type: T, time: number): GNode<T>[] {
+    return ((nodeTypeIndex.get(type) || []) as GNode<T>[]).filter((n) => n.timestamp > time);
 }
 
 const globalNode: NodeID<'special'> = 'special:root';

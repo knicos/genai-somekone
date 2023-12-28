@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useReducer } from 'react';
+import { useState, useEffect, useCallback, useReducer, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { SMConfig } from '../Genagram/smConfig';
 import { decompressFromEncodedURIComponent } from 'lz-string';
@@ -25,6 +25,10 @@ import { appConfiguration } from '@genaism/state/settingsState';
 import TopicGraph from '@genaism/components/TopicGraph/TopicGraph';
 import ContentGraph from '@genaism/components/ContentGraph/ContentGraph';
 import { appendResearchLog } from '@genaism/services/research/research';
+import { makeUserGraphSnapshot } from '@genaism/services/users/users';
+import { UserNodeId } from '@genaism/services/graph/graphTypes';
+
+const MAX_AGE = 30 * 60 * 1000; // 30 mins
 
 export function Component() {
     const [params] = useSearchParams();
@@ -37,6 +41,7 @@ export function Component() {
     const MYCODE = useRandom(5);
     const graphMode = useRecoilValue(menuGraphType);
     const [count, refresh] = useReducer((a) => ++a, 0);
+    const snapRef = useRef(new Map<UserNodeId, number>());
 
     const dataHandler = useCallback(
         (data: EventProtocol, conn: DataConnection) => {
@@ -59,6 +64,12 @@ export function Component() {
                     details: data.details,
                     userId: data.userId,
                 });
+            } else if (data.event === 'eter:snapshot') {
+                const now = Date.now();
+                const time = snapRef.current.get(data.id) || now - MAX_AGE;
+                const snap = makeUserGraphSnapshot(data.id, now - time);
+                snapRef.current.set(data.id, now);
+                conn.send({ event: 'eter:snapshot', id: data.id, snapshot: snap });
             }
         },
         [config, content]

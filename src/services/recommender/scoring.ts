@@ -22,5 +22,6 @@ export function scoreCandidates(
     results.forEach((r, ix) => {
         r.rank = ix + 1;
     });
+    //console.log('SCORED', results);
     return results;
 }

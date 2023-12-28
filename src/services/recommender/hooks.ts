@@ -10,6 +10,13 @@ interface RecReturn {
     recommendations: ScoredRecommendation[];
 }
 
+const DEFAULT_OPTIONS: RecommendationOptions = {
+    random: 2,
+    taste: 2,
+    coengaged: 2,
+    similarUsers: 2,
+};
+
 export function useRecommendations(size: number, id?: UserNodeId, options?: RecommendationOptions): RecReturn {
     const aid = id || getCurrentUser();
     const [count, trigger] = useReducer((a) => ++a, 0);
@@ -19,7 +26,10 @@ export function useRecommendations(size: number, id?: UserNodeId, options?: Reco
         return () => removeRecommendationListener(aid, handler);
     }, [aid]);
 
-    const doMore = useCallback(() => generateNewRecommendations(aid, size, options), [size, options, aid]);
+    const doMore = useCallback(
+        () => generateNewRecommendations(aid, size, options || DEFAULT_OPTIONS),
+        [size, options, aid]
+    );
 
     return useMemo(
         () => ({

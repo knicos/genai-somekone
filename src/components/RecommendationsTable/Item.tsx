@@ -3,6 +3,11 @@ import { useTranslation } from 'react-i18next';
 import TableItem from '../Table/TableItem';
 import { ScoredRecommendation } from '@genaism/services/recommender/recommenderTypes';
 import { weightKeys } from '@genaism/services/profiler/profiler';
+import { getNodeData } from '@genaism/services/graph/nodes';
+
+interface UserData {
+    name: string;
+}
 
 function generateMessage(item: ScoredRecommendation, t: TFunction) {
     let part1: string;
@@ -16,6 +21,11 @@ function generateMessage(item: ScoredRecommendation, t: TFunction) {
             break;
         case 'coengagement':
             part1 = t('recommendations.labels.coengagedCandidate');
+            break;
+        case 'similar_user':
+            part1 = t('recommendations.labels.similarUserCandidate', {
+                userName: item.similarUser ? getNodeData<UserData>(item.similarUser)?.name || '' : '',
+            });
             break;
         default:
             part1 = '';

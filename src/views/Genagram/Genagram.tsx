@@ -24,6 +24,8 @@ import { ScoredRecommendation } from '@genaism/services/recommender/recommenderT
 import RecommendationPage from './RecommendationPage';
 import BlockDialog from '../dialogs/BlockDialog/BlockDialog';
 import { LogProvider } from '@genaism/hooks/logger';
+import { addEdges } from '@genaism/services/graph/edges';
+import { addNodes } from '@genaism/services/graph/nodes';
 
 const USERNAME_KEY = 'genai_somekone_username';
 
@@ -46,7 +48,7 @@ export function Component() {
 
     const onData = useCallback(
         (data: EventProtocol, conn: DataConnection) => {
-            console.log('GOT DATA', data);
+            //console.log('GOT DATA', data);
             if (data.event === 'eter:config' && data.configuration) {
                 setConfig((old) => ({ ...old, ...data.configuration }));
                 if (data.content) setContent(data.content);
@@ -59,6 +61,9 @@ export function Component() {
                 conn.send({ event: 'eter:action_log', id: getCurrentUser(), log: logs });
                 conn.send({ event: 'eter:profile_data', profile, id: getCurrentUser() });
                 conn.send({ event: 'eter:connect', code: `sm-${code}` });
+            } else if (data.event === 'eter:snapshot' && data.snapshot) {
+                addNodes(data.snapshot.nodes);
+                addEdges(data.snapshot.edges.map((e) => ({ ...e, timestamp: Date.now(), metadata: {} })));
             }
         },
         [config, username, content, code, setConfig]
@@ -98,6 +103,7 @@ export function Component() {
         (recommendations: ScoredRecommendation[]) => {
             if (send) {
                 send({ event: 'eter:recommendations', recommendations, id: getCurrentUser() });
+                send({ event: 'eter:snapshot', id: getCurrentUser() });
             }
         },
         [send]

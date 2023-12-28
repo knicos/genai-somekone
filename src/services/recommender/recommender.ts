@@ -8,7 +8,7 @@ import { biasedUniqueSubset } from '@genaism/util/subsets';
 
 const store = new Map<UserNodeId, ScoredRecommendation[]>();
 
-export async function generateNewRecommendations(id: UserNodeId, count: number, options?: RecommendationOptions) {
+export async function generateNewRecommendations(id: UserNodeId, count: number, options: RecommendationOptions) {
     const profile = getUserProfile(id);
     const candidates = generateCandidates(profile, count, options);
     const scored = scoreCandidates(candidates, profile, options);
@@ -21,6 +21,7 @@ export async function generateNewRecommendations(id: UserNodeId, count: number, 
         emitRecommendationEvent(id, subset);
     } else {
         const subset = biasedUniqueSubset(scored, count, (v) => v.contentId);
+        subset.sort((a, b) => b.score - a.score);
 
         store.set(profile.id, [...subset, ...old]);
         emitRecommendationEvent(id, subset);
@@ -28,8 +29,8 @@ export async function generateNewRecommendations(id: UserNodeId, count: number, 
 }
 
 export function getRecommendations(id: UserNodeId, count: number): ScoredRecommendation[] {
-    const results = store.get(id);
-    return (results || []).slice(0, count);
+    const results = store.get(id) || [];
+    return results.slice(0, count);
 }
 
 export function appendRecommendations(id: UserNodeId, recommendations: ScoredRecommendation[]) {

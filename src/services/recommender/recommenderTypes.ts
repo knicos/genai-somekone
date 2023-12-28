@@ -1,6 +1,6 @@
 import { ContentNodeId, UserNodeId } from '../graph/graphTypes';
 
-type CandidateAlgorithm = 'topic_affinity' | 'similar_user_content' | 'similar_user_topic' | 'coengagement' | 'random';
+type CandidateAlgorithm = 'topic_affinity' | 'similar_user' | 'coengagement' | 'random';
 
 export interface Recommendation {
     contentId: ContentNodeId;
@@ -9,6 +9,7 @@ export interface Recommendation {
     similarUser?: UserNodeId;
     coengagementScore?: number;
     engagedItemScore?: number;
+    userSimilarityScore?: number;
     topic?: string;
     engagedItem?: ContentNodeId;
     timestamp: number;
@@ -22,10 +23,11 @@ export interface ScoredRecommendation extends Recommendation {
 }
 
 export interface CandidateOptions {
-    noTaste?: boolean;
-    noRandom?: boolean;
-    noCoengaged?: boolean;
+    taste: number;
+    random: number;
+    coengaged: number;
     allowDuplicates?: boolean;
+    similarUsers: number;
 }
 
 export interface ScoringOptions {

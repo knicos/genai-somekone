@@ -94,6 +94,7 @@
             "useTopicCandidates": "Use candidates from taste labels",
             "useRandomCandidates": "Use randomly generated candidates",
             "useCoengagedCandidates": "Use co-engaged content candidates",
+            "useSimilarUserCandidates": "Use similar user candidates",
             "candidates": "Candidate Selection Mechanisms",
             "scoring": "Scoring Features",
             "selectionMechanism": "Final Selection Strategy",
@@ -170,12 +171,15 @@
         "labels": {
             "topicCandidate": "Candidate: you like \"{{topic}}\".",
             "random": "Randomly selected.",
+            "coengagedCandidate": "Candidate: people also liked this.",
+            "similarUserCandidate": "Candidate: \"{{userName}}\" is similar to you and liked this.",
             "tasteSimilarity": "Ranked high for taste similarity",
             "sharingTopicLikelihood": "Ranked high for sharing probability",
             "commentingTopicLikelihood": "Ranked high for commenting probability",
             "followingTopicLikelihood": "Ranked high for follow probability",
             "reactingTopicLikelihood": "Ranked high for reaction probability",
             "viewingTopicLikelihood": "Ranked high for viewing time",
+            "coengagementOverlap": "Ranked high for engagement similarity",
             "randomness": "Randomly ranked"
         }
     },

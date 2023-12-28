@@ -1,58 +1,80 @@
-import { Checkbox, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material';
+import { Checkbox, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Slider } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useRecoilState } from 'recoil';
 import style from './style.module.css';
 import { appConfiguration } from '@genaism/state/settingsState';
+import { useEffect, useRef, useState } from 'react';
+import { SMConfig } from '@genaism/views/Genagram/smConfig';
 
 export default function RecommendationSettings() {
     const { t } = useTranslation();
     const [config, setConfig] = useRecoilState(appConfiguration);
+    const [localConfig, setLocalConfig] = useState<SMConfig>(config);
+    const debounce = useRef(-1);
+
+    useEffect(() => {
+        if (debounce.current >= 0) clearTimeout(debounce.current);
+        debounce.current = window.setTimeout(() => {
+            setConfig(localConfig);
+            debounce.current = -1;
+        }, 1000);
+    }, [localConfig, setConfig]);
 
     return (
         <div className={style.column}>
             <FormControl sx={{ marginTop: '1rem' }}>
                 <FormLabel id="demo-radio-buttons-group-label">{t('dashboard.labels.candidates')}</FormLabel>
-                <FormControlLabel
-                    control={
-                        <Checkbox
-                            checked={!(config?.recommendations?.noTaste || false)}
-                            onChange={(_, checked) =>
-                                setConfig((old) => ({
-                                    ...old,
-                                    recommendations: { ...old.recommendations, noTaste: !checked },
-                                }))
-                            }
-                        />
+                <div className={style.label}>{t('dashboard.labels.useTopicCandidates')}</div>
+                <Slider
+                    value={localConfig?.recommendations.taste || 0}
+                    onChange={(_, value) =>
+                        setLocalConfig((old) => ({
+                            ...old,
+                            recommendations: { ...old.recommendations, taste: value as number },
+                        }))
                     }
-                    label={t('dashboard.labels.useTopicCandidates')}
+                    min={0}
+                    max={5}
+                    step={0.1}
                 />
-                <FormControlLabel
-                    control={
-                        <Checkbox
-                            checked={!(config?.recommendations?.noRandom || false)}
-                            onChange={(_, checked) =>
-                                setConfig((old) => ({
-                                    ...old,
-                                    recommendations: { ...old.recommendations, noRandom: !checked },
-                                }))
-                            }
-                        />
+                <div className={style.label}>{t('dashboard.labels.useRandomCandidates')}</div>
+                <Slider
+                    value={localConfig?.recommendations.random || 0}
+                    onChange={(_, value) =>
+                        setLocalConfig((old) => ({
+                            ...old,
+                            recommendations: { ...old.recommendations, random: value as number },
+                        }))
                     }
-                    label={t('dashboard.labels.useRandomCandidates')}
+                    min={0}
+                    max={5}
+                    step={0.1}
                 />
-                <FormControlLabel
-                    control={
-                        <Checkbox
-                            checked={!(config?.recommendations?.noCoengaged || false)}
-                            onChange={(_, checked) =>
-                                setConfig((old) => ({
-                                    ...old,
-                                    recommendations: { ...old.recommendations, noCoengaged: !checked },
-                                }))
-                            }
-                        />
+                <div className={style.label}>{t('dashboard.labels.useCoengagedCandidates')}</div>
+                <Slider
+                    value={localConfig?.recommendations.coengaged || 0}
+                    onChange={(_, value) =>
+                        setLocalConfig((old) => ({
+                            ...old,
+                            recommendations: { ...old.recommendations, coengaged: value as number },
+                        }))
                     }
-                    label={t('dashboard.labels.useCoengagedCandidates')}
+                    min={0}
+                    max={5}
+                    step={0.1}
+                />
+                <div className={style.label}>{t('dashboard.labels.useSimilarUserCandidates')}</div>
+                <Slider
+                    value={localConfig?.recommendations.similarUsers || 0}
+                    onChange={(_, value) =>
+                        setLocalConfig((old) => ({
+                            ...old,
+                            recommendations: { ...old.recommendations, similarUsers: value as number },
+                        }))
+                    }
+                    min={0}
+                    max={5}
+                    step={0.1}
                 />
             </FormControl>
             <FormControl sx={{ marginTop: '1rem' }}>
@@ -60,9 +82,9 @@ export default function RecommendationSettings() {
                 <FormControlLabel
                     control={
                         <Checkbox
-                            checked={!(config?.recommendations?.noTasteScore || false)}
+                            checked={!(localConfig?.recommendations?.noTasteScore || false)}
                             onChange={(_, checked) =>
-                                setConfig((old) => ({
+                                setLocalConfig((old) => ({
                                     ...old,
                                     recommendations: { ...old.recommendations, noTasteScore: !checked },
                                 }))
@@ -74,9 +96,9 @@ export default function RecommendationSettings() {
                 <FormControlLabel
                     control={
                         <Checkbox
-                            checked={!(config?.recommendations?.noSharingScore || false)}
+                            checked={!(localConfig?.recommendations?.noSharingScore || false)}
                             onChange={(_, checked) =>
-                                setConfig((old) => ({
+                                setLocalConfig((old) => ({
                                     ...old,
                                     recommendations: { ...old.recommendations, noSharingScore: !checked },
                                 }))
@@ -88,9 +110,9 @@ export default function RecommendationSettings() {
                 <FormControlLabel
                     control={
                         <Checkbox
-                            checked={!(config?.recommendations?.noCoengagementScore || false)}
+                            checked={!(localConfig?.recommendations?.noCoengagementScore || false)}
                             onChange={(_, checked) =>
-                                setConfig((old) => ({
+                                setLocalConfig((old) => ({
                                     ...old,
                                     recommendations: { ...old.recommendations, noCoengagementScore: !checked },
                                 }))
@@ -102,9 +124,9 @@ export default function RecommendationSettings() {
                 <FormControlLabel
                     control={
                         <Checkbox
-                            checked={!(config?.recommendations?.noFollowingScore || false)}
+                            checked={!(localConfig?.recommendations?.noFollowingScore || false)}
                             onChange={(_, checked) =>
-                                setConfig((old) => ({
+                                setLocalConfig((old) => ({
                                     ...old,
                                     recommendations: { ...old.recommendations, noFollowingScore: !checked },
                                 }))
@@ -116,9 +138,9 @@ export default function RecommendationSettings() {
                 <FormControlLabel
                     control={
                         <Checkbox
-                            checked={!(config?.recommendations?.noCommentingScore || false)}
+                            checked={!(localConfig?.recommendations?.noCommentingScore || false)}
                             onChange={(_, checked) =>
-                                setConfig((old) => ({
+                                setLocalConfig((old) => ({
                                     ...old,
                                     recommendations: { ...old.recommendations, noCommentingScore: !checked },
                                 }))
@@ -130,9 +152,9 @@ export default function RecommendationSettings() {
                 <FormControlLabel
                     control={
                         <Checkbox
-                            checked={!(config?.recommendations?.noLastSeenScore || false)}
+                            checked={!(localConfig?.recommendations?.noLastSeenScore || false)}
                             onChange={(_, checked) =>
-                                setConfig((old) => ({
+                                setLocalConfig((old) => ({
                                     ...old,
                                     recommendations: { ...old.recommendations, noLastSeenScore: !checked },
                                 }))
@@ -144,9 +166,9 @@ export default function RecommendationSettings() {
                 <FormControlLabel
                     control={
                         <Checkbox
-                            checked={!(config?.recommendations?.noReactionScore || false)}
+                            checked={!(localConfig?.recommendations?.noReactionScore || false)}
                             onChange={(_, checked) =>
-                                setConfig((old) => ({
+                                setLocalConfig((old) => ({
                                     ...old,
                                     recommendations: { ...old.recommendations, noReactionScore: !checked },
                                 }))
@@ -158,9 +180,9 @@ export default function RecommendationSettings() {
                 <FormControlLabel
                     control={
                         <Checkbox
-                            checked={!(config?.recommendations?.noViewingScore || false)}
+                            checked={!(localConfig?.recommendations?.noViewingScore || false)}
                             onChange={(_, checked) =>
-                                setConfig((old) => ({
+                                setLocalConfig((old) => ({
                                     ...old,
                                     recommendations: { ...old.recommendations, noViewingScore: !checked },
                                 }))
@@ -176,9 +198,9 @@ export default function RecommendationSettings() {
                     aria-labelledby="demo-radio-buttons-group-label"
                     defaultValue="image"
                     name="radio-buttons-group"
-                    value={config?.recommendations?.selection || 'distribution'}
+                    value={localConfig?.recommendations?.selection || 'distribution'}
                     onChange={(_, value) =>
-                        setConfig((old) => ({
+                        setLocalConfig((old) => ({
                             ...old,
                             recommendations: { ...old.recommendations, selection: value as 'distribution' | 'rank' },
                         }))
