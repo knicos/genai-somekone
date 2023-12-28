@@ -169,10 +169,10 @@
     },
     "recommendations": {
         "labels": {
-            "topicCandidate": "Candidate: you like \"{{topic}}\".",
-            "random": "Randomly selected.",
-            "coengagedCandidate": "Candidate: people also liked this.",
-            "similarUserCandidate": "Candidate: \"{{userName}}\" is similar to you and liked this.",
+            "topicCandidate": "because you like #{{topic}}.",
+            "random": "randomly selected.",
+            "coengagedCandidate": "because people also liked this.",
+            "similarUserCandidate": "because \"{{userName}}\" is similar to you and liked this.",
             "tasteSimilarity": "Ranked high for taste similarity",
             "sharingTopicLikelihood": "Ranked high for sharing probability",
             "commentingTopicLikelihood": "Ranked high for commenting probability",
@@ -180,7 +180,20 @@
             "reactingTopicLikelihood": "Ranked high for reaction probability",
             "viewingTopicLikelihood": "Ranked high for viewing time",
             "coengagementOverlap": "Ranked high for engagement similarity",
-            "randomness": "Randomly ranked"
+            "randomness": "Randomly ranked",
+            "lastSeen": "It hasn't been seen recently",
+            "noReason": "No reason, just random",
+            "engagedWith": "You engaged with"
+        },
+        "features": {
+            "tasteSimilarity": "Taste Similarity",
+            "coengagementOverlap": "Common engagements",
+            "sharingTopicLikelihood": "Likely to share",
+            "commentingTopicLikelihood": "Likely to comment",
+            "followingTopicLikelihood": "Likely to follow",
+            "reactingTopicLikelihood": "Likely to react",
+            "viewingTopicLikelihood": "Likely to view",
+            "lastSeen": "Not seen recently"
         }
     },
     "creator": {

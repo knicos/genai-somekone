@@ -1,0 +1,77 @@
+@value backgroundDark, bgSubdued1, textDark, primary from "../../style/colours.module.css";
+
+.table {
+    display: flex;
+    flex-direction: column;
+    background: white;
+    justify-content: flex-start;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.item {
+    display: flex;
+    flex-direction: column;
+    margin: 1rem;
+    box-shadow: 0 0 8px backgroundDark;
+}
+
+.header {
+    background: primary;
+    display: flex;
+    gap: 1rem;
+    padding-right: 1rem;
+    color: white;
+    align-items: center;
+    transition: filter 0.2s;
+}
+
+.header:hover {
+    filter: brightness(1.2);
+}
+
+.header img {
+    overflow: hidden;
+    line-height: 0;
+    width: 75px;
+    flex-shrink: 0;
+}
+
+.content img {
+    border-radius: 6px;
+    overflow: hidden;
+    line-height: 0;
+    width: 50px;
+    flex-shrink: 0;
+}
+
+.content {
+    background: white;
+    color: textDark;
+    padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.contentColoured {
+    composes: content;
+    background: bgSubdued1;
+}
+
+.message {
+    flex-grow: 1;
+}
+
+.chart {
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.chart text {
+    fill: textDark !important;
+}

@@ -18,8 +18,10 @@ export interface Recommendation {
 export interface ScoredRecommendation extends Recommendation {
     features: number[];
     scores: number[];
+    significance?: number[];
     score: number;
     rank: number;
+    rankScore: number;
 }
 
 export interface CandidateOptions {
@@ -39,6 +41,7 @@ export interface ScoringOptions {
     noViewingScore?: boolean;
     noCoengagementScore?: boolean;
     noCommentingScore?: boolean;
+    excludeSignificance?: boolean;
 }
 
 export interface RecommendationOptions extends ScoringOptions, CandidateOptions {

@@ -106,7 +106,7 @@ function calculateCoengagementScore(userId: UserNodeId, contentId: ContentNodeId
     return Math.min(1, sum / COENGAGEMENT_MAX);
 }
 
-const SEEN_TIME = 5 * 60 * 1000;
+const SEEN_TIME = 10 * 60 * 1000;
 
 function getLastSeenTime(userId: UserNodeId, contentId: ContentNodeId): number {
     const edge = getEdge('seen', userId, contentId);

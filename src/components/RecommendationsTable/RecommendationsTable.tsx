@@ -1,6 +1,6 @@
 import Item from './Item';
-import Table from '../Table/Table';
 import { ScoredRecommendation } from '@genaism/services/recommender/recommenderTypes';
+import style from './style.module.css';
 
 interface Props {
     recommendations: ScoredRecommendation[];
@@ -11,14 +11,17 @@ export default function RecommendationsTable({ recommendations }: Props) {
 
     return (
         <>
-            <Table>
+            <ul
+                className={style.table}
+                data-testid="log-table"
+            >
                 {recommendations.map((l, ix) => (
                     <Item
                         key={recommendations.length - ix}
                         item={l}
                     />
                 ))}
-            </Table>
+            </ul>
         </>
     );
 }

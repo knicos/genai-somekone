@@ -15,6 +15,7 @@ interface Props {
 }
 
 const BORDER_SIZE = 1.5;
+const MIN_SIZE = 30;
 
 const ImageCloud = memo(function Cloud({ content, size, padding, colour, borderSize, onSize, className }: Props) {
     const [locations, setLocations] = useState<LocationItem<ContentNodeId>[]>([]);
@@ -22,7 +23,7 @@ const ImageCloud = memo(function Cloud({ content, size, padding, colour, borderS
     useEffect(() => {
         const maxWeight = Math.max(0.01, content.length > 0 ? content[0].weight : 1);
         const sizedContent: SizedItem<ContentNodeId>[] = content.map((c) => {
-            const asize = Math.floor((c.weight / maxWeight) * (size || 500) * 0.3);
+            const asize = Math.floor((c.weight / maxWeight) * ((size || 500) - MIN_SIZE) * 0.3) + MIN_SIZE;
             return {
                 id: c.id,
                 width: asize,

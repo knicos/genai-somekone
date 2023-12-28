@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useReducer } from 'react';
+import { useCallback, useEffect, useMemo, useReducer, useRef } from 'react';
 import { UserNodeId } from '../graph/graphTypes';
 import { getCurrentUser } from '../profiler/profiler';
 import { RecommendationOptions, ScoredRecommendation } from './recommenderTypes';
@@ -19,6 +19,7 @@ const DEFAULT_OPTIONS: RecommendationOptions = {
 
 export function useRecommendations(size: number, id?: UserNodeId, options?: RecommendationOptions): RecReturn {
     const aid = id || getCurrentUser();
+    const optRef = useRef(options);
     const [count, trigger] = useReducer((a) => ++a, 0);
     useEffect(() => {
         const handler = () => trigger();
@@ -26,9 +27,13 @@ export function useRecommendations(size: number, id?: UserNodeId, options?: Reco
         return () => removeRecommendationListener(aid, handler);
     }, [aid]);
 
+    useEffect(() => {
+        optRef.current = options;
+    }, [options]);
+
     const doMore = useCallback(
-        () => generateNewRecommendations(aid, size, options || DEFAULT_OPTIONS),
-        [size, options, aid]
+        () => generateNewRecommendations(aid, size, optRef.current || DEFAULT_OPTIONS),
+        [size, aid]
     );
 
     return useMemo(

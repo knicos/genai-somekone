@@ -21,6 +21,7 @@ describe('RecommendationsTable component', () => {
                         scores: [],
                         features: [],
                         rank: 0,
+                        rankScore: 0,
                         timestamp: 0,
                     },
                 ]}
@@ -43,6 +44,7 @@ describe('RecommendationsTable component', () => {
                         scores: [],
                         features: [],
                         rank: 0,
+                        rankScore: 0,
                         timestamp: 0,
                     },
                     {
@@ -52,6 +54,7 @@ describe('RecommendationsTable component', () => {
                         scores: [],
                         features: [],
                         rank: 0,
+                        rankScore: 0,
                         timestamp: 0,
                         topic: 'testtopic',
                     },
@@ -62,6 +65,7 @@ describe('RecommendationsTable component', () => {
                         scores: [],
                         features: [],
                         rank: 0,
+                        rankScore: 0,
                         timestamp: 0,
                     },
                 ]}

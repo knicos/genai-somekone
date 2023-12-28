@@ -25,8 +25,8 @@ export default function TableItem({ image, message, score, time, highlight, icon
             {image && (
                 <div className={style.image}>
                     <img
-                        width={50}
-                        height={50}
+                        width={75}
+                        height={75}
                         src={getContentData(image)}
                     />
                 </div>
