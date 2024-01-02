@@ -1,42 +1,4 @@
-@value backgroundDark, bgSubdued1, textDark, primary from "../../style/colours.module.css";
-
-.table {
-    display: flex;
-    flex-direction: column;
-    background: white;
-    justify-content: flex-start;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-.item {
-    display: flex;
-    flex-direction: column;
-    margin: 1rem;
-    box-shadow: 0 0 8px backgroundDark;
-}
-
-.header {
-    background: primary;
-    display: flex;
-    gap: 1rem;
-    padding-right: 1rem;
-    color: white;
-    align-items: center;
-    transition: filter 0.2s;
-}
-
-.header:hover {
-    filter: brightness(1.2);
-}
-
-.header img {
-    overflow: hidden;
-    line-height: 0;
-    width: 75px;
-    flex-shrink: 0;
-}
+@value bgSubdued1, textDark from "../../style/colours.module.css";
 
 .content img {
     border-radius: 6px;

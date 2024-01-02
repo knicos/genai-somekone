@@ -22,14 +22,16 @@ const ImageCloud = memo(function Cloud({ content, size, padding, colour, borderS
 
     useEffect(() => {
         const maxWeight = Math.max(0.01, content.length > 0 ? content[0].weight : 1);
-        const sizedContent: SizedItem<ContentNodeId>[] = content.map((c) => {
-            const asize = Math.floor((c.weight / maxWeight) * ((size || 500) - MIN_SIZE) * 0.3) + MIN_SIZE;
-            return {
-                id: c.id,
-                width: asize,
-                height: asize,
-            };
-        });
+        const sizedContent: SizedItem<ContentNodeId>[] = content
+            .filter((c) => c.weight > 0)
+            .map((c) => {
+                const asize = Math.floor((c.weight / maxWeight) * ((size || 500) - MIN_SIZE) * 0.3) + MIN_SIZE;
+                return {
+                    id: c.id,
+                    width: asize,
+                    height: asize,
+                };
+            });
 
         const [results, maxDist] = cloudLayout(sizedContent, size || 500, padding);
         const floorDist = Math.floor(maxDist);

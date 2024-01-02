@@ -1,6 +1,23 @@
 @value backgroundDark, primary from "../../style/colours.module.css";
 
-.logBatch {
-    margin: 1rem;
-    box-shadow: 0 0 8px backgroundDark;
+.logItem {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background: backgroundDark;
+    margin-top: 0.2rem;
+    padding: 0.5rem 1rem;
+    box-sizing: border-box;
+    color: white;
+    transition: filter 0.2s;
+}
+
+.logItem:hover {
+    filter: brightness(1.2);
+}
+
+.time {
+    font-size: 0.9rem;
+    font-style: italic;
+    color: #f3f3f3;
 }

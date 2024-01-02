@@ -4,9 +4,9 @@ import { ScoredRecommendation } from '@genaism/services/recommender/recommenderT
 import { weightKeys } from '@genaism/services/profiler/profiler';
 import { getNodeData } from '@genaism/services/graph/nodes';
 import { getContentData } from '@genaism/services/content/content';
-import PieScore from '../PieScore/PieScore';
 import style from './style.module.css';
 import ScorePie from './ScorePie';
+import Card from '../DataCard/Card';
 
 interface UserData {
     name: string;
@@ -55,20 +55,11 @@ export default function Item({ item }: Props) {
     const { t } = useTranslation();
 
     return (
-        <li
-            className={style.item}
-            data-testid="log-row"
+        <Card
+            image={item.contentId}
+            message={generateCandidateMessage(item, t)}
+            score={item.rankScore}
         >
-            <div className={style.header}>
-                <img
-                    src={getContentData(item.contentId)}
-                    alt="Content item"
-                    width={75}
-                    height={75}
-                />
-                <div className={style.message}>{generateCandidateMessage(item, t)}</div>
-                <PieScore value={item.rankScore} />
-            </div>
             {item.engagedItem && (
                 <div className={style.contentColoured}>
                     {t('recommendations.labels.engagedWith')}
@@ -84,6 +75,6 @@ export default function Item({ item }: Props) {
             <div className={style.content}>
                 <ScorePie item={item} />
             </div>
-        </li>
+        </Card>
     );
 }

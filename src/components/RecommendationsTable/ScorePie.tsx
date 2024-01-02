@@ -3,6 +3,7 @@ import style from './style.module.css';
 import { ScoredRecommendation } from '@genaism/services/recommender/recommenderTypes';
 import { weightKeys } from '@genaism/services/profiler/profiler';
 import { useTranslation } from 'react-i18next';
+import gcolours from '@genaism/style/graphColours.json';
 
 interface Props {
     item: ScoredRecommendation;
@@ -15,6 +16,7 @@ export default function ScorePie({ item }: Props) {
         item.significance.forEach((s, ix) => {
             if (s > 0) selectedScores.push(ix);
         });
+        selectedScores.sort((a, b) => (item.significance ? item.significance[b] - item.significance[a] : 0));
     }
 
     return selectedScores.length > 1 ? (
@@ -35,7 +37,7 @@ export default function ScorePie({ item }: Props) {
                         })),
                     },
                 ]}
-                colors={['#2e6df5', '#19b1a8', '#fad630', '#fd9d32', '#e04f66', '#a77bca', '#c2a251', '#97999b']}
+                colors={gcolours}
                 width={340}
                 height={120}
             />

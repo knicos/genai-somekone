@@ -1,8 +1,8 @@
-@value bgColourful1, textDark from "../../style/colours.module.css";
+@value bgColourful1, backgroundDark, textDark from "../../style/colours.module.css";
 
 .word rect {
     opacity: 0.9;
-    fill: bgColourful1;
+    fill: backgroundDark;
 }
 
 .word text {
@@ -14,4 +14,31 @@
     flex-direction: column;
     overflow-y: auto;
     gap: 0.5rem;
+}
+
+.similarUser {
+    display: flex;
+    background: backgroundDark;
+    color: white;
+    margin-top: 0.2rem;
+    padding: 0.5rem 1rem;
+    align-items: center;
+}
+
+.userName {
+    flex-grow: 1;
+}
+
+.topicContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    align-items: center;
+}
+
+.topicContainer img {
+    line-height: 0;
+    border-radius: 6px;
+    overflow: hidden;
 }

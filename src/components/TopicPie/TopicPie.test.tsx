@@ -8,6 +8,7 @@ describe('PieScore component', () => {
             <TopicPie
                 title="testtitle"
                 summary={[]}
+                percent={1}
             />
         );
         expect(screen.queryByText('testtitle')).not.toBeInTheDocument();
@@ -18,6 +19,7 @@ describe('PieScore component', () => {
             <TopicPie
                 title="testtitle"
                 summary={[{ label: 'topic1', percent: 0.5, total: 1, count: 1 }]}
+                percent={1}
             />
         );
         expect(screen.getByText('testtitle')).toBeInTheDocument();
@@ -38,6 +40,7 @@ describe('PieScore component', () => {
                     { label: 'topic7', percent: 0.1, total: 1, count: 1 },
                     { label: 'topic8', percent: 0.1, total: 1, count: 1 },
                 ]}
+                percent={1}
             />
         );
         expect(screen.getByText('testtitle')).toBeInTheDocument();

@@ -155,7 +155,8 @@
             "yourData": "Your Data",
             "yourProfile": "Your Profile",
             "yourRecommendations": "Your Recommendations",
-            "shareProfile": "Share Profile"
+            "shareProfile": "Share Profile",
+            "engagement": "Your engagement"
         },
         "actions": {
             "more": "More",

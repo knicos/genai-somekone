@@ -1,0 +1,7 @@
+.chart :global .MuiPieArc-root {
+    stroke: #2994a9;
+}
+
+.chartGrey :global .MuiPieArc-root {
+    stroke: #73888c;
+}

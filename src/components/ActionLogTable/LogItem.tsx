@@ -1,44 +1,23 @@
 import { LogEntry } from '@genaism/services/profiler/profilerTypes';
-import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
-import TableItem from '../Table/TableItem';
-
-function generateMessage(log: LogEntry, t: TFunction) {
-    switch (log.activity) {
-        case 'engagement':
-            return t('feed.actionlog.engagement', { score: Math.min(10, (log.value || 0) * 10).toFixed() });
-
-        case 'inactive':
-            return t('feed.actionlog.inactive', { time: ((log.value || 0) / 1000).toFixed(1) });
-
-        case 'dwell':
-            return t('feed.actionlog.dwell', { time: ((log.value || 0) / 1000).toFixed(1) });
-
-        case 'comment':
-            return t('feed.actionlog.comment', { length: log.value || 0 });
-
-        default:
-            return t(`feed.actionlog.${log.activity}`);
-    }
-}
+import { generateMessage } from './message';
+import style from './style.module.css';
+import { timeAgo } from '../DataCard/time';
 
 interface Props {
     item: LogEntry;
-    first: boolean;
 }
 
-export default function LogItem({ item, first }: Props) {
+export default function LogItem({ item }: Props) {
     const { t } = useTranslation();
 
-    const isSpecial = item.activity === 'engagement';
-
     return (
-        <TableItem
-            message={generateMessage(item, t)}
-            image={first ? item.id : undefined}
-            time={isSpecial ? undefined : item.timestamp}
-            score={isSpecial ? item.value || 0 : undefined}
-            highlight={first}
-        />
+        <div
+            className={style.logItem}
+            data-testid="log-item"
+        >
+            <div>{generateMessage(item, t)}</div>
+            <div className={style.time}>{timeAgo(item.timestamp)}</div>
+        </div>
     );
 }

@@ -13,6 +13,11 @@ export interface TopicSummary {
     viewed: TopicSummaryItem[];
     followed: TopicSummaryItem[];
     reacted: TopicSummaryItem[];
+    sharedPercent: number;
+    commentedPercent: number;
+    followedPercent: number;
+    viewedPercent: number;
+    reactedPercent: number;
 }
 
 export default function topicSummary(profile: UserProfile): TopicSummary {
@@ -20,6 +25,7 @@ export default function topicSummary(profile: UserProfile): TopicSummary {
     profile.seenTopics.forEach((t) => {
         seen.set(t.label, t.weight);
     });
+    const sumSeen = profile.seenTopics.reduce((sum, v) => sum + v.weight, 0);
 
     const shared = profile.sharedTopics.map((s) => ({
         label: s.label,
@@ -52,5 +58,22 @@ export default function topicSummary(profile: UserProfile): TopicSummary {
         total: seen.get(s.label) || 0,
     }));
 
-    return { shared, commented, viewed, followed, reacted };
+    const sumShared = profile.sharedTopics.reduce((sum, v) => sum + v.weight, 0);
+    const sumCommented = profile.commentedTopics.reduce((sum, v) => sum + v.weight, 0);
+    const sumViewed = profile.viewedTopics.reduce((sum, v) => sum + v.weight, 0);
+    const sumFollowed = profile.followedTopics.reduce((sum, v) => sum + v.weight, 0);
+    const sumReacted = profile.reactedTopics.reduce((sum, v) => sum + v.weight, 0);
+
+    return {
+        shared,
+        commented,
+        viewed,
+        followed,
+        reacted,
+        sharedPercent: sumShared / sumSeen,
+        commentedPercent: sumCommented / sumSeen,
+        viewedPercent: sumViewed / sumSeen,
+        followedPercent: sumFollowed / sumSeen,
+        reactedPercent: sumReacted / sumSeen,
+    };
 }

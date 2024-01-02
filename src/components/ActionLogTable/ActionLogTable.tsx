@@ -1,10 +1,9 @@
 import { LogEntry } from '@genaism/services/profiler/profilerTypes';
-import LogItem from './LogItem';
 import { useMemo, useState } from 'react';
 import { Button } from '../Button/Button';
-import Table from '../Table/Table';
 import { useTranslation } from 'react-i18next';
-import style from './style.module.css';
+import Cards from '../DataCard/Cards';
+import LogBatch from './LogBatch';
 
 interface Props {
     log: LogEntry[];
@@ -34,22 +33,12 @@ export default function ActionLogTable({ log }: Props) {
     }, [log, size]);
 
     return (
-        <>
+        <Cards>
             {logLimited.map((batch, ix) => (
-                <div
-                    className={style.logBatch}
+                <LogBatch
+                    batch={batch}
                     key={ix}
-                >
-                    <Table>
-                        {batch.map((l, ix) => (
-                            <LogItem
-                                key={ix}
-                                item={l}
-                                first={ix === 0}
-                            />
-                        ))}
-                    </Table>
-                </div>
+                />
             ))}
             <Button
                 variant="outlined"
@@ -58,6 +47,6 @@ export default function ActionLogTable({ log }: Props) {
             >
                 {t('profile.actions.more')}
             </Button>
-        </>
+        </Cards>
     );
 }

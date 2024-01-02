@@ -1,16 +1,23 @@
 import { PieChart } from '@mui/x-charts';
 import { TopicSummaryItem } from '../UserProfile/topicSummary';
 import style from './style.module.css';
+import gcolours from '@genaism/style/graphColours.json';
+import Card from '../DataCard/Card';
 
 interface Props {
     title: string;
     summary: TopicSummaryItem[];
+    percent: number;
 }
 
-export default function TopicPie({ summary, title }: Props) {
+export default function TopicPie({ summary, title, percent }: Props) {
+    const data = summary.slice(0, 5).map((s, ix) => ({ id: ix, label: s.label, value: s.percent }));
+    data.sort((a, b) => b.value - a.value);
     return summary.length > 0 ? (
-        <div className={style.container}>
-            <h2>{title}</h2>
+        <Card
+            title={title}
+            score={percent}
+        >
             <div className={style.chart}>
                 <PieChart
                     series={[
@@ -21,14 +28,14 @@ export default function TopicPie({ summary, title }: Props) {
                             innerRadius: 5,
                             cx: 90,
                             cy: 90,
-                            data: summary.slice(0, 5).map((s, ix) => ({ id: ix, label: s.label, value: s.percent })),
+                            data,
                         },
                     ]}
-                    colors={['#2e6df5', '#19b1a8', '#fad630', '#fd9d32', '#e04f66', '#a77bca', '#c2a251', '#97999b']}
+                    colors={gcolours}
                     width={340}
                     height={190}
                 />
             </div>
-        </div>
+        </Card>
     ) : null;
 }

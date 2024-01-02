@@ -6,8 +6,8 @@ describe('RecommendationsTable component', () => {
     it('renders with no recommendations', async ({ expect }) => {
         render(<RecommendationsTable recommendations={[]} />);
 
-        expect(screen.getByTestId('log-table')).toBeInTheDocument();
-        expect(screen.queryByTestId('log-row')).not.toBeInTheDocument();
+        expect(screen.getByTestId('data-cards')).toBeInTheDocument();
+        expect(screen.queryByTestId('data-card')).not.toBeInTheDocument();
     });
 
     it('shows a single random item', async ({ expect }) => {
@@ -28,8 +28,8 @@ describe('RecommendationsTable component', () => {
             />
         );
 
-        expect(screen.getByTestId('log-table')).toBeInTheDocument();
-        expect(screen.getByTestId('log-row')).toBeInTheDocument();
+        expect(screen.getByTestId('data-cards')).toBeInTheDocument();
+        expect(screen.getByTestId('data-card')).toBeInTheDocument();
         expect(screen.getByText(/recommendations.labels.random/)).toBeVisible();
     });
 
@@ -72,8 +72,8 @@ describe('RecommendationsTable component', () => {
             />
         );
 
-        expect(screen.getByTestId('log-table')).toBeInTheDocument();
-        expect(screen.getAllByTestId('log-row')).toHaveLength(3);
+        expect(screen.getByTestId('data-cards')).toBeInTheDocument();
+        expect(screen.getAllByTestId('data-card')).toHaveLength(3);
         expect(screen.getAllByText(/recommendations.labels.random/)).toHaveLength(2);
         expect(screen.getByText(/recommendations.labels.topicCandidate/)).toBeVisible();
     });

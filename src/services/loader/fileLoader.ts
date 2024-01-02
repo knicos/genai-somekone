@@ -4,10 +4,15 @@ import { ContentMetadata } from '@genaism/services/content/contentTypes';
 import { addContent } from '@genaism/services/content/content';
 import { LogEntry, UserProfile } from '@genaism/services/profiler/profilerTypes';
 import { addUserProfile, appendActionLog, getActionLog, getCurrentUser } from '@genaism/services/profiler/profiler';
-import { UserNodeId } from '../graph/graphTypes';
+import { TopicNodeId, UserNodeId, isTopicID } from '../graph/graphTypes';
 import { GraphExport, dump } from '../graph/state';
 import { addNodes } from '../graph/nodes';
 import { addEdges } from '../graph/edges';
+import { getTopicId } from '../concept/concept';
+
+interface TopicData {
+    label: string;
+}
 
 export async function getZipBlob(content: string | ArrayBuffer): Promise<Blob> {
     if (typeof content === 'string') {
@@ -84,6 +89,26 @@ export async function loadFile(file: File | Blob): Promise<void> {
     await Promise.all(promises);
 
     if (store.graph) {
+        // Patch to fix old data
+        const topicSet = new Map<TopicNodeId, string>();
+        store.graph.nodes.forEach((node) => {
+            if (node.type === 'topic') {
+                const label = (node.data as TopicData).label;
+                topicSet.set(node.id as TopicNodeId, label);
+                node.id = getTopicId(label);
+            }
+        });
+        store.graph.edges.forEach((edge) => {
+            if (isTopicID(edge.source)) {
+                const label = topicSet.get(edge.source) || '';
+                edge.source = getTopicId(label);
+            }
+            if (isTopicID(edge.destination)) {
+                const label = topicSet.get(edge.destination) || '';
+                edge.destination = getTopicId(label);
+            }
+        });
+
         addNodes(store.graph.nodes);
         addEdges(store.graph.edges);
         console.log('Graph loaded');

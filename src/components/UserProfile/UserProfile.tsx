@@ -5,7 +5,12 @@ import topicSummary from './topicSummary';
 import { useCallback, useMemo, useState } from 'react';
 import TopicPie from '../TopicPie/TopicPie';
 import { useTranslation } from 'react-i18next';
-import { UserNodeId } from '@genaism/services/graph/graphTypes';
+import { ContentNodeId, UserNodeId, WeightedNode } from '@genaism/services/graph/graphTypes';
+import Cards from '../DataCard/Cards';
+import Card from '../DataCard/Card';
+import TopicDetail from './TopicDetail';
+import { getRelated } from '@genaism/services/graph/query';
+import { getTopicLabel } from '@genaism/services/concept/concept';
 
 interface Props {
     id?: UserNodeId;
@@ -20,9 +25,32 @@ export default function Profile({ id }: Props) {
         return topicSummary(profile);
     }, [profile]);
 
+    const topicContent = useMemo(() => {
+        const newMap = new Map<string, WeightedNode<ContentNodeId>[]>();
+        let maxEngage = 0;
+        const engaged = getRelated('engaged', profile.id, { period: 20 * 60 * 1000 });
+        engaged.forEach((e) => {
+            if (e.weight === 0) return;
+            maxEngage = Math.max(e.weight, maxEngage);
+            const topics = getRelated('topic', e.id, { count: 5 });
+            topics.forEach((t) => {
+                if (t.weight === 0) return;
+                const label = getTopicLabel(t.id);
+                const old = newMap.get(label) || [];
+                old.push(e);
+                newMap.set(label, old);
+            });
+        });
+        return { map: newMap, max: maxEngage };
+    }, [profile]);
+
     const doResize = useCallback((size: number) => {
         setWCSize(size);
     }, []);
+
+    console.log('PROFILE', profile);
+
+    const tasteSum = profile.taste.reduce((sum, t) => sum + t.weight, 0);
 
     return (
         <div className={style.container}>
@@ -40,26 +68,50 @@ export default function Profile({ id }: Props) {
                     />
                 </svg>
             </div>
-            <TopicPie
-                title={t('profile.titles.sharingPreference')}
-                summary={topics.shared}
-            />
-            <TopicPie
-                title={t('profile.titles.followPreference')}
-                summary={topics.followed}
-            />
-            <TopicPie
-                title={t('profile.titles.commentPreference')}
-                summary={topics.commented}
-            />
-            <TopicPie
-                title={t('profile.titles.reactPreference')}
-                summary={topics.reacted}
-            />
-            <TopicPie
-                title={t('profile.titles.viewPreference')}
-                summary={topics.viewed}
-            />
+            <Cards>
+                <Card
+                    title={t('profile.titles.engagement')}
+                    score={Math.min(1, profile.engagement / 10)}
+                />
+                {profile &&
+                    profile.taste
+                        .filter((t) => t.weight > 0)
+                        .map((t) => (
+                            <TopicDetail
+                                key={t.label}
+                                id={profile.id}
+                                topic={t.label}
+                                score={t.weight / tasteSum}
+                                topicContent={topicContent.map}
+                                maxEngage={topicContent.max}
+                            />
+                        ))}
+                <TopicPie
+                    title={t('profile.titles.sharingPreference')}
+                    summary={topics.shared}
+                    percent={topics.sharedPercent}
+                />
+                <TopicPie
+                    title={t('profile.titles.followPreference')}
+                    summary={topics.followed}
+                    percent={topics.followedPercent}
+                />
+                <TopicPie
+                    title={t('profile.titles.commentPreference')}
+                    summary={topics.commented}
+                    percent={topics.commentedPercent}
+                />
+                <TopicPie
+                    title={t('profile.titles.reactPreference')}
+                    summary={topics.reacted}
+                    percent={topics.reactedPercent}
+                />
+                <TopicPie
+                    title={t('profile.titles.viewPreference')}
+                    summary={topics.viewed}
+                    percent={topics.viewedPercent}
+                />
+            </Cards>
         </div>
     );
 }

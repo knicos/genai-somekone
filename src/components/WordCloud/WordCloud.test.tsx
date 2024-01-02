@@ -10,7 +10,7 @@ describe('WordCloud component', () => {
             </svg>
         );
 
-        expect(screen.getByTestId('cloud-group')).toBeInTheDocument();
+        expect(screen.getByTestId('wordcloud-group')).toBeInTheDocument();
     });
 
     it('renders with one item', async ({ expect }) => {

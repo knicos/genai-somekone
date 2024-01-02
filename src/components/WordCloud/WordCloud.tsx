@@ -12,6 +12,8 @@ interface Props {
     className?: string;
 }
 
+const MIN_SIZE = 10;
+
 const WordCloud = memo(function Cloud({ content, size, padding, onSize, className }: Props) {
     const gRef = useRef<SVGGElement>(null);
     const [locations, setLocations] = useState(new Map<string, LocationItem<string>>());
@@ -58,11 +60,12 @@ const WordCloud = memo(function Cloud({ content, size, padding, onSize, classNam
 
     return (
         <g
-            data-testid="cloud-group"
+            data-testid="wordcloud-group"
             ref={gRef}
         >
             {content.map((c, ix) => {
                 const l = locations.get(c.label);
+                if (c.weight === 0) return null;
                 return (
                     <g
                         key={ix}
@@ -81,7 +84,7 @@ const WordCloud = memo(function Cloud({ content, size, padding, onSize, classNam
                         <text
                             dominantBaseline="middle"
                             textAnchor="middle"
-                            fontSize={Math.floor((c.weight / maxWeight) * 0.1 * (size || 500))}
+                            fontSize={Math.floor((c.weight / maxWeight) * 0.1 * ((size || 500) - MIN_SIZE)) + MIN_SIZE}
                             data-testid="cloud-image"
                             x={(l?.item.width || 0) / 2}
                             y={(l?.item.height || 0) / 2}
