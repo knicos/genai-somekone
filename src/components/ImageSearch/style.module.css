@@ -1,3 +1,5 @@
+@value textDark from "../../style/colours.module.css";
+
 .container {
     height: 100%;
     display: flex;
@@ -26,7 +28,8 @@
 }
 
 .candidateImage {
-    width: 100%;
+    max-width: 100%;
+    background: #ddd;
 }
 
 .candidate .addIcon {
@@ -53,5 +56,18 @@
 }
 
 .controls {
-    align-self: stretch;
+    align-self: flex-start;
+    background: white;
+    padding: 0.5rem;
+    border-radius: 10px;
+    margin-left: 2rem;
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.scroller {
+    height: 100%;
+    overflow-y: auto;
 }

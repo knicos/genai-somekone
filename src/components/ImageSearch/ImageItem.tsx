@@ -25,6 +25,8 @@ export default function ImageItem({ data, disabled, onClick }: Props) {
                 className={style.candidateImage}
                 src={data.url}
                 alt="Insta Upload"
+                width={data.width}
+                style={{ aspectRatio: `${data.width} / ${data.height}` }}
             />
             <div className={style.addIcon}>
                 <AddIcon fontSize="inherit" />

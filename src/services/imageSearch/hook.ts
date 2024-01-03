@@ -13,22 +13,24 @@ export interface ImageResult {
     url: string;
     author: string;
     tags: string[];
+    width: number;
+    height: number;
 }
 
-interface Result {
+export interface ImageSearchResult {
     total: number;
     pages: number;
     results: ImageResult[];
 }
 
-const DEFAULT_RESULT: Result = {
+const DEFAULT_RESULT: ImageSearchResult = {
     total: 0,
     pages: 0,
     results: [],
 };
 
-export default function useImageSearch(q: string, options?: Options): Result {
-    const [results, setResults] = useState<Result>(DEFAULT_RESULT);
+export default function useImageSearch(q: string, options?: Options): ImageSearchResult {
+    const [results, setResults] = useState<ImageSearchResult>(DEFAULT_RESULT);
     const source = options?.source || 'pixabay';
     const page = options?.page || 0;
 
@@ -43,6 +45,8 @@ export default function useImageSearch(q: string, options?: Options): Result {
                         author: h.user,
                         tags: h.tags.split(',').map((t) => t.trim()),
                         id: `pixabay-${h.id}`,
+                        width: h.webformatWidth,
+                        height: h.webformatHeight,
                     })),
                 });
             });

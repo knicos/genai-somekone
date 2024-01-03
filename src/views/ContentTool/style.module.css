@@ -1,29 +1,42 @@
+@value textDark, workspaceBg, backgroundDark, bgColourful1, bgSubdued2, textLight from "../../style/colours.module.css";
+
 .page {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 2rem;
     align-items: center;
     height: 100vh;
     width: 100%;
     box-sizing: border-box;
-    padding: 3rem;
+    padding: 2rem;
+    justify-content: center;
 }
 
 .page > main {
-    flex-grow: 1;
+    max-height: calc(100vh - 10rem);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.page header {
+    display: flex;
+    justify-content: center;
 }
 
 .page > nav {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     width: 80%;
-    margin: 0 10%;
+    margin: 0;
 }
 
 .categories {
     display: flex;
-    flex-wrap: wrap;
-    gap: 2rem;
+    margin-top: 3rem;
+    justify-content: center;
+    max-width: 300px;
+    width: 100%;
 }
 
 .categories :global .MuiChip-root {
@@ -31,6 +44,83 @@
 }
 
 .images {
+    display: flex;
+    min-height: 0;
+    border-radius: 10px;
+    background: backgroundDark;
+    overflow: hidden;
+    max-width: 1200px;
+    width: 100%;
+}
+
+.selectedImages {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    margin: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 0;
+}
+
+/*.selectedImages img {
+    line-height: 0;
+    border-radius: 5px;
+    overflow: hidden;
+}*/
+
+.deletableImage {
+    overflow: hidden;
+    height: 64px;
+    border-radius: 5px;
+    flex-shrink: 0;
+    position: relative;
+    display: flex;
+    width: 64px;
+    line-height: 0;
+}
+
+.placeholderImage {
+    width: 64px;
+    height: 64px;
+    background: #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+    color: #eee;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.deletableImage > button {
+    opacity: 0;
+}
+
+.deletableImage:hover > button {
+    opacity: 1;
+}
+
+.deletableImage > button:focus {
+    opacity: 1;
+}
+
+.tagContainer {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    min-height: 0;
     overflow-y: auto;
-    max-height: 80vh;
+}
+
+.tagContainer img {
+    max-width: 100%;
+}
+
+.tagList {
+    display: flex;
+    flex-wrap: wrap;
+    max-height: 400px;
+    flex-direction: column;
 }

@@ -4,67 +4,48 @@ import { getNodesByType } from '@genaism/services/graph/nodes';
 import { getActionLog, getUserProfile } from '@genaism/services/profiler/profiler';
 import { dumpJSON } from '../graph/state';
 import { getResearchLog } from '../research/research';
+import { getContentData, getContentMetadata } from '../content/content';
 
-/*function transformConcepts(concepts: ConceptNode[]): ConceptEntry[] {
-    const mapping = new Map<number, ConceptEntry>();
-    concepts.forEach((c, ix) => {
-        mapping.set(ix, {
-            label: c.label,
-            weight: c.weight,
-            children: c.leaf ? undefined : [],
-        });
-    });
+interface GenerateOptions {
+    includeContent?: boolean;
+    includeProfiles?: boolean;
+    includeLogs?: boolean;
+    includeGraph?: boolean;
+}
 
-    const roots: ConceptEntry[] = [];
-
-    concepts.forEach((c, ix) => {
-        const self = mapping.get(ix);
-        if (self) {
-            if (c.parent !== undefined) {
-                const parent = mapping.get(c.parent);
-                if (parent?.children) {
-                    parent.children.push(self);
-                }
-            } else {
-                roots.push(self);
-            }
-        }
-    });
-
-    return roots;
-}*/
-
-async function generateBlob(incContent: boolean, incProfiles: boolean, incLogs: boolean, incGraph: boolean) {
+async function generateBlob({ includeContent, includeProfiles, includeLogs, includeGraph }: GenerateOptions) {
     const zip = new JSZip();
 
-    if (incContent) {
-        //const imageFolder =
-        zip.folder('images');
+    if (includeContent) {
+        const imageFolder = zip.folder('images');
 
-        /*if (imageFolder) {
-            data.forEach((d) => {
-                imageFolder.file(`${d.meta.id}.jpg`, d.image.split(';base64,')[1], { base64: true });
+        if (imageFolder) {
+            const content = getNodesByType('content');
+            content.forEach((d) => {
+                const data = getContentData(d);
+                if (data) {
+                    imageFolder.file(`${d.split(':')[1]}.jpg`, data.split(';base64,')[1], { base64: true });
+                }
             });
+
+            const meta = content.map((c) => getContentMetadata(c));
+            zip.file('content.json', JSON.stringify(meta, undefined, 4));
         }
-
-        zip.file('content.json', JSON.stringify(data.map((d) => d.meta)));
-
-        zip.file('concepts.json', JSON.stringify(transformConcepts(concepts), undefined, 4));*/
     }
 
     const users = getNodesByType('user');
 
-    if (incProfiles) {
+    if (includeProfiles) {
         const profiles = users.map((u) => getUserProfile(u));
         zip.file('users.json', JSON.stringify(profiles, undefined, 4));
     }
 
-    if (incLogs) {
+    if (includeLogs) {
         const logs = users.map((u) => ({ id: u, log: getActionLog(u) }));
         zip.file('logs.json', JSON.stringify(logs, undefined, 4));
     }
 
-    if (incGraph) {
+    if (includeGraph) {
         zip.file('graph.json', dumpJSON());
     }
 
@@ -77,8 +58,8 @@ async function generateBlob(incContent: boolean, incProfiles: boolean, incLogs: 
     return blob;
 }
 
-export async function saveFile(includeContent: boolean, includeProfiles: boolean, incLogs: boolean, incGraph: boolean) {
-    const blob = await generateBlob(includeContent, includeProfiles, incLogs, incGraph);
+export async function saveFile(opts?: GenerateOptions) {
+    const blob = await generateBlob(opts || {});
     saveAs(blob, 'somekone.zip');
     return blob;
 }

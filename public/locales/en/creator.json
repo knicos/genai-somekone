@@ -1,0 +1,12 @@
+{
+    "categorySelectTitle": "Choose a hashtag for your images",
+    "imageSelectTitle": "Select at least {{minImages}} Images of #{{label}}",
+    "extraTagsTitle": "Add some extra hashtags",
+    "completeTitle": "Finished, please download the results",
+    "search": "Search",
+    "actions": {
+        "next": "Next",
+        "download": "Download",
+        "go": "Go"
+    }
+}

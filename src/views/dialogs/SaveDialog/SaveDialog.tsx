@@ -19,7 +19,12 @@ export default function SaveDialog() {
     const doClose = useCallback(() => setShowDialog(false), [setShowDialog]);
 
     const doSave = useCallback(() => {
-        saveFile(saveContent, saveProfiles, saveLogs, saveGraph);
+        saveFile({
+            includeContent: saveContent,
+            includeProfiles: saveProfiles,
+            includeLogs: saveLogs,
+            includeGraph: saveGraph,
+        });
         setShowDialog(false);
     }, [setShowDialog, saveContent, saveProfiles, saveLogs, saveGraph]);
 
@@ -34,7 +39,6 @@ export default function SaveDialog() {
                     <FormControlLabel
                         control={
                             <Checkbox
-                                disabled={true}
                                 checked={saveContent}
                                 onChange={(_, checked) => setSaveContent(checked)}
                             />

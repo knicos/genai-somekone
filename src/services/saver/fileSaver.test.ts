@@ -35,7 +35,7 @@ describe('saveFile()', () => {
         mockUsers.mockImplementation(() => ['xyz']);
         mockProfiles.mockImplementation(() => createEmptyProfile('user:xyz', 'TestUser'));
 
-        const blob = await saveFile(false, true, false, false);
+        const blob = await saveFile({ includeProfiles: true });
 
         expect(mockUsers).toHaveBeenCalledTimes(1);
         expect(mockProfiles).toHaveBeenCalledWith('xyz');
@@ -54,7 +54,7 @@ describe('saveFile()', () => {
         mockUsers.mockImplementation(() => ['xyz']);
         mockLog.mockImplementation(() => [{ activity: 'like', timestamp: 1 }] as LogEntry[]);
 
-        const blob = await saveFile(false, false, true, false);
+        const blob = await saveFile({ includeLogs: true });
 
         expect(mockUsers).toHaveBeenCalledTimes(1);
         expect(mockLog).toHaveBeenCalledWith('xyz');

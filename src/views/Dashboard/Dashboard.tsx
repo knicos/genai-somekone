@@ -101,9 +101,11 @@ export function Component() {
         if (contentParam) {
             const component = decompressFromEncodedURIComponent(contentParam);
             contentObj = JSON.parse(component);
+        } else if (contentParam === '') {
+            contentObj = [];
         }
 
-        if (contentObj) {
+        if (contentObj && contentObj.length > 0) {
             contentObj.forEach((c, ix) => {
                 getZipBlob(c)
                     .then(async (blob) => {
@@ -126,6 +128,8 @@ export function Component() {
             });
         } else {
             // Show the file open dialog
+            setConfig(configObj);
+            setContent(contentObj);
         }
     }, [params, ready, setConfig, setError]);
 

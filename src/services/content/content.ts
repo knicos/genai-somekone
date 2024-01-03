@@ -46,3 +46,9 @@ export function addContent(data: string, meta: ContentMetadata) {
         console.warn(e);
     }
 }
+
+export function removeContent(id: ContentNodeId) {
+    dataStore.delete(id);
+    metaStore.delete(id);
+    removeNode(id);
+}
