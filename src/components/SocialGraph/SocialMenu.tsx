@@ -34,6 +34,7 @@ export default function SocialMenu() {
     return (
         <IconMenu
             placement="top"
+            selected={!!selectedUser}
             label={
                 <div className={style.menuLogo}>
                     {selectedUser ? getNodeData<UserData>(selectedUser)?.name : t('dashboard.titles.people')}

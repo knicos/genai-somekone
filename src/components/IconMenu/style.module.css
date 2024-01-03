@@ -1,4 +1,4 @@
-@value textDark, workspaceBg, bgColourful1 from "../../style/colours.module.css";
+@value textDark, workspaceBg, bgColourful1, secondary from "../../style/colours.module.css";
 
 .menuContainer {
     position: absolute;
@@ -96,4 +96,8 @@
     background: bgColourful1;
     /*line-height: 0;*/
     align-self: stretch;
+}
+
+.selected {
+    background: secondary;
 }

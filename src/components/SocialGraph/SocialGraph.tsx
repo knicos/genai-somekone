@@ -104,6 +104,28 @@ export default function SocialGraph({ liveUsers }: Props) {
         doRedrawNodes();
     }, [doRedrawNodes]);
 
+    useEffect(() => {
+        if (focusNode) {
+            const newStyles = new Map<UserNodeId, LinkStyle<UserNodeId>>();
+            newStyles.set(focusNode, {
+                className: style.selectedLink,
+                width: (l: InternalGraphLink<UserNodeId, UserNodeId>) => 1 + Math.floor(l.strength * l.strength * 60),
+            });
+
+            const conn = new Set<UserNodeId>();
+            conn.add(focusNode);
+            links.forEach((link) => {
+                if (link.source === focusNode || link.target === focusNode) {
+                    conn.add(link.source);
+                    conn.add(link.target);
+                }
+            });
+
+            setConnected(conn);
+            setLinkStyles(newStyles);
+        }
+    }, [focusNode, links]);
+
     return (
         <>
             <Graph
@@ -120,26 +142,10 @@ export default function SocialGraph({ liveUsers }: Props) {
                 }}
                 charge={charge}
                 showLines={showLines}
-                onSelect={(n: Readonly<GraphNode<UserNodeId>>, l: InternalGraphLink<UserNodeId, UserNodeId>[]) => {
+                onSelect={(n: Readonly<GraphNode<UserNodeId>>) => {
                     if (!focusNode) setZoom(3);
                     setCenter([n.x || 0, n.y || 0]);
 
-                    const newStyles = new Map<UserNodeId, LinkStyle<UserNodeId>>();
-                    newStyles.set(n.id, {
-                        className: style.selectedLink,
-                        width: (l: InternalGraphLink<UserNodeId, UserNodeId>) =>
-                            1 + Math.floor(l.strength * l.strength * 60),
-                    });
-
-                    const conn = new Set<UserNodeId>();
-                    conn.add(n.id);
-                    l.forEach((link) => {
-                        conn.add(link.source.id);
-                        conn.add(link.target.id);
-                    });
-
-                    setConnected(conn);
-                    setLinkStyles(newStyles);
                     setFocusNode(n.id);
                 }}
                 onUnselect={() => {
