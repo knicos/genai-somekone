@@ -44,7 +44,6 @@ describe('ProfileNode component', () => {
                         id="user:xyz"
                         onResize={resizeFn}
                         live={true}
-                        similarUsers={[]}
                     />
                 </svg>
             </TestWrapper>
@@ -73,7 +72,6 @@ describe('ProfileNode component', () => {
                     <ProfileNode
                         id="user:xyz"
                         node={{ id: 'user:xyz', size: 100 }}
-                        similarUsers={[]}
                         onResize={resizeFn}
                         live={true}
                     />

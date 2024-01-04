@@ -34,7 +34,6 @@ interface Props {
 export default function SocialGraph({ liveUsers }: Props) {
     const [links, setLinks] = useState<GraphLink<UserNodeId, UserNodeId>[]>([]);
     const sizesRef = useRef<Map<string, number>>(new Map<string, number>());
-    const coloursRef = useRef(new Map<string, string>());
     const [nodes, setNodes] = useState<GraphNode<UserNodeId>[]>([]);
     const linkScale = useRecoilValue(settingLinkDistanceScale);
     const showLines = useRecoilValue(settingDisplayLines);
@@ -56,8 +55,8 @@ export default function SocialGraph({ liveUsers }: Props) {
     const [center, setCenter] = useState<[number, number] | undefined>();
     const [linkStyles, setLinkStyles] = useState<Map<UserNodeId, LinkStyle<UserNodeId>>>();
     const [connected, setConnected] = useState<Set<UserNodeId>>();
-    const similar = useAllSimilarUsers(users);
     const similarPercent = useRecoilValue(settingSimilarPercent);
+    const similar = useAllSimilarUsers(users, clusterColouring, clusterColouring ? similarPercent : undefined);
 
     useEffect(() => {
         const newLinks: GraphLink<UserNodeId, UserNodeId>[] = [];
@@ -87,6 +86,9 @@ export default function SocialGraph({ liveUsers }: Props) {
             id: u,
             size: sizesRef.current.get(u) || 100,
             strength: similar.similar.get(u)?.nodes.length || 0,
+            data: {
+                colour: similar.colours?.get(u) || '#707070',
+            },
         }));
 
         setNodes(newNodes);
@@ -167,10 +169,8 @@ export default function SocialGraph({ liveUsers }: Props) {
                         onResize={doResize}
                         key={n.id}
                         live={liveSet.has(n.id)}
-                        similarUsers={similar.similar.get(n.id)?.nodes || []}
                         selected={n.id === focusNode}
                         disabled={egoSelect && connected ? !connected.has(n.id) : false}
-                        colourMapping={clusterColouring ? coloursRef.current : undefined}
                     />
                 ))}
             </Graph>

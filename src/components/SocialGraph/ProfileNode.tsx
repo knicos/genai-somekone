@@ -1,18 +1,16 @@
 import ImageCloud from '../ImageCloud/ImageCloud';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useUserProfile } from '@genaism/services/profiler/hooks';
-import { UserNodeId, WeightedNode } from '@genaism/services/graph/graphTypes';
+import { UserNodeId } from '@genaism/services/graph/graphTypes';
 import { useRecoilValue } from 'recoil';
 import {
     //settingDisplayLabel,
     settingNodeMode,
     settingShrinkOfflineUsers,
-    settingSimilarPercent,
 } from '@genaism/state/settingsState';
 import WordCloud from '../WordCloud/WordCloud';
 import style from './style.module.css';
 import Label from './Label';
-import { getUserProfile } from '@genaism/services/profiler/profiler';
 import { GraphNode } from '../Graph/types';
 
 interface Props {
@@ -20,84 +18,16 @@ interface Props {
     live?: boolean;
     selected?: boolean;
     disabled?: boolean;
-    colourMapping?: Map<string, string>;
-    similarUsers: WeightedNode<UserNodeId>[];
     onResize: (id: string, size: number) => void;
     node: GraphNode<UserNodeId>;
 }
 
-const colours = [
-    '#2e6df5',
-    '#19b1a8',
-    '#fad630',
-    '#fd9d32',
-    '#e04f66',
-    '#a77bca',
-    '#c2a251',
-    '#97999b',
-    '#8bbee8',
-    '#a2e4b8',
-    '#fecb8b',
-    '#ff9499',
-];
-
-export default function ProfileNode({
-    id,
-    onResize,
-    live,
-    selected,
-    colourMapping,
-    disabled,
-    similarUsers,
-    node,
-}: Props) {
+export default function ProfileNode({ id, onResize, live, selected, disabled, node }: Props) {
     const [size, setSize] = useState(100);
-    const [colour, setColour] = useState('#707070');
     const shrinkOffline = useRecoilValue(settingShrinkOfflineUsers);
     const nodeMode = useRecoilValue(settingNodeMode);
-    const similarPercent = useRecoilValue(settingSimilarPercent);
 
     const profile = useUserProfile(id);
-
-    useEffect(() => {
-        if (colourMapping) {
-            let bestTopic = 'NOTOPIC';
-            let bestTopicScore = 0;
-            const maxWeight = similarUsers[0]?.weight || 0;
-
-            profile.taste.forEach((topic) => {
-                let topicScore = 0;
-                let userCount = 0;
-                similarUsers.forEach((user) => {
-                    if (user.weight >= maxWeight * (1 - similarPercent)) {
-                        const userProfile = getUserProfile(user.id);
-                        const match = userProfile.taste.find((v) => v.label === topic.label);
-                        if (match) {
-                            topicScore += match.weight * topic.weight * user.weight * user.weight;
-                        }
-                        ++userCount;
-                    }
-                });
-
-                topicScore /= userCount;
-
-                if (userCount > 0 && topicScore > bestTopicScore) {
-                    bestTopicScore = topicScore;
-                    bestTopic = topic.label;
-                }
-            });
-
-            if (!colourMapping.has(bestTopic)) {
-                colourMapping.set(bestTopic, colours[colourMapping.size % colours.length]);
-            }
-            setColour(colourMapping.get(bestTopic) || '#707070');
-        } else {
-            setColour('#707070');
-        }
-    }, [profile, colourMapping, similarUsers, similarPercent]);
-
-    if (!node.data) node.data = {};
-    node.data.colour = colour;
 
     const doResize = useCallback(
         (s: number) => {
@@ -121,7 +51,7 @@ export default function ProfileNode({
                 data-testid="profile-circle"
                 r={asize}
                 fill={'white'}
-                stroke={colour}
+                stroke={(node.data?.colour as string) || '#707070'}
                 strokeWidth={reduced ? 5 : 10}
             />
             {!reduced && nodeMode === 'image' && profile.engagedContent.length > 0 && (
