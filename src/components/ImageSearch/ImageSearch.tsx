@@ -8,6 +8,7 @@ import { InputAdornment } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { canvasFromURL } from '@genaism/util/canvas';
 import { LargeButton } from '../Button/Button';
+import AlertPara from '../AlertPara/AlertPara';
 
 interface Props {
     onAdd: (url: string, meta: ImageResult) => void;
@@ -102,28 +103,31 @@ export default function ImageSearch({ onAdd, columns, selected, onSelect, disabl
             style={{ pointerEvents: disabled ? 'none' : 'unset' }}
         >
             <div className={style.container}>
-                <div className={style.controls}>
-                    <TextField
-                        label={t('search')}
-                        type="search"
-                        variant="outlined"
-                        onKeyDown={doChange}
-                        disabled={disabled}
-                        inputRef={inputRef}
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position="start">
-                                    <SearchIcon />
-                                </InputAdornment>
-                            ),
-                        }}
-                    />
-                    <LargeButton
-                        variant="contained"
-                        onClick={doSearch}
-                    >
-                        {t('actions.go')}
-                    </LargeButton>
+                <div className={style.controlsContainer}>
+                    <div className={style.controls}>
+                        <TextField
+                            label={t('search')}
+                            type="search"
+                            variant="outlined"
+                            onKeyDown={doChange}
+                            disabled={disabled}
+                            inputRef={inputRef}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <SearchIcon />
+                                    </InputAdornment>
+                                ),
+                            }}
+                        />
+                        <LargeButton
+                            variant="contained"
+                            onClick={doSearch}
+                        >
+                            {t('actions.go')}
+                        </LargeButton>
+                    </div>
+                    <AlertPara severity="info">{t('hints.imageSearch')}</AlertPara>
                 </div>
                 <div className={style.grid}>
                     {columnBuckets.map((c, ix) => (

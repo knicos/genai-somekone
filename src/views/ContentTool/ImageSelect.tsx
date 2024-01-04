@@ -11,9 +11,11 @@ import Stepper from './Stepper';
 import DeletableImage from './DeletableImage';
 import { useTranslation } from 'react-i18next';
 import HideImageIcon from '@mui/icons-material/HideImage';
+import { useSetRecoilState } from 'recoil';
+import { unsavedChanges } from '@genaism/state/interaction';
 
-const MIN_IMAGES = 2;
-const MAX_IMAGES = 10;
+const MIN_IMAGES = 10;
+const MAX_IMAGES = 20;
 
 interface Props {
     topic: TopicNodeId;
@@ -26,6 +28,7 @@ export default function ImageSelect({ topic, onAddNext, onNext }: Props) {
     const [selected, setSelected] = useState<ContentNodeId[]>([]);
     const [selSet, setSelSet] = useState<Set<string>>();
     const [isdone, setDone] = useState(false);
+    const setUnsaved = useSetRecoilState(unsavedChanges);
 
     useEffect(() => {
         if (selected.length >= MIN_IMAGES) {
@@ -42,8 +45,9 @@ export default function ImageSelect({ topic, onAddNext, onNext }: Props) {
             addContent(url, { author: meta.author, id: meta.id, labels: [{ label: getTopicLabel(topic), weight: 1 }] });
             addEdge('topic', `content:${meta.id}`, topic, 1);
             setSelected((old) => [...old, `content:${meta.id}`]);
+            setUnsaved(true);
         },
-        [topic]
+        [topic, setUnsaved]
     );
 
     const doDelete = useCallback((id: ContentNodeId) => {
@@ -58,7 +62,10 @@ export default function ImageSelect({ topic, onAddNext, onNext }: Props) {
 
     const columns = Math.min(4, Math.ceil(Math.min(1200, window.innerWidth) / 400));
 
-    const selectionList = Array.from({ length: MAX_IMAGES }, (_, ix) => selected[ix] || null);
+    const selectionList = Array.from(
+        { length: Math.max(MIN_IMAGES, selected.length + 1) },
+        (_, ix) => selected[ix] || null
+    );
 
     return (
         <>

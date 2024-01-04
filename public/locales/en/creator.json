@@ -1,12 +1,24 @@
 {
     "categorySelectTitle": "Choose a hashtag for your images",
-    "imageSelectTitle": "Select at least {{minImages}} Images of #{{label}}",
+    "imageSelectTitle": "Select at least {{minImages}} images of #{{label}}",
     "extraTagsTitle": "Add some extra hashtags",
     "completeTitle": "Finished, please download the results",
     "search": "Search",
     "actions": {
         "next": "Next",
         "download": "Download",
-        "go": "Go"
+        "go": "Go",
+        "again": "Add more"
+    },
+    "hints": {
+        "describeImages": "Choose up to {{max}} that best describe this image.",
+        "imageSearch": "Find your favourite images",
+        "categorySelect": "The hashtag should be a topic, hobby or interest such as #cats, #dogs, #cars or #fashion. Use a more general hashtag such as #animals if you select many kinds of animal. Clicking the box below shows a list of existing hashtags. If an existing hashtag matches what you want then use it, otherwise create a new one."
+    },
+    "errors": {
+        "short": "Too short",
+        "long": "Too long",
+        "whitespace": "No spaces",
+        "hash": "Don't include the #"
     }
 }

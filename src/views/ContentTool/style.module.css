@@ -124,3 +124,8 @@
     max-height: 400px;
     flex-direction: column;
 }
+
+.confirmButtons {
+    display: flex;
+    gap: 1rem;
+}
