@@ -7,6 +7,7 @@ import ImageDescribe from './ImageDescribe';
 import Confirm from './Confirm';
 import { useRecoilValue } from 'recoil';
 import { unsavedChanges } from '@genaism/state/interaction';
+import LangSelect from '@genaism/components/LangSelect/LangSelect';
 
 export function Component() {
     const [stage, setStage] = useState<StageState[]>([{ view: 'category' }]);
@@ -37,6 +38,9 @@ export function Component() {
 
     return (
         <div className={style.page}>
+            <div className={style.language}>
+                <LangSelect />
+            </div>
             {current.view === 'category' && (
                 <CategorySelect
                     onAddNext={replaceNext}

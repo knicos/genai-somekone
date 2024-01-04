@@ -10,6 +10,13 @@
     box-sizing: border-box;
     padding: 2rem;
     justify-content: center;
+    position: relative;
+}
+
+.language {
+    position: absolute;
+    top: 1rem;
+    right: 2rem;
 }
 
 .page > main {

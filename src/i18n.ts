@@ -18,8 +18,8 @@ i18n.use(detector)
         interpolation: {
             escapeValue: false, // react already safes from xss
         },
-        fallbackLng: 'en',
-        supportedLngs: ['en'],
+        fallbackLng: 'en-GB',
+        supportedLngs: ['en-GB', 'fi-FI'],
     });
 
 export default i18n;
