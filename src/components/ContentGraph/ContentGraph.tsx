@@ -1,5 +1,5 @@
 import { useNodeType } from '@genaism/services/graph/hooks';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Graph from '../Graph/Graph';
 import { GraphLink, GraphNode, InternalGraphLink, LinkStyle } from '../Graph/types';
 import { ContentNodeId } from '@genaism/services/graph/graphTypes';
@@ -13,12 +13,21 @@ import {
 } from '@genaism/state/settingsState';
 import { useRecoilValue } from 'recoil';
 import style from './style.module.css';
+import { getRelated } from '@genaism/services/graph/query';
 
 const MIN_WEIGHT = 0.02;
+const MIN_SIZE = 50;
+const MAX_SIZE = 400;
+const SIZE_SCALE = 200;
+
+function calculateNodeSize(id: ContentNodeId) {
+    const engage = getRelated('engaged', id, { count: 10, timeDecay: 0.1, period: 60 * 60 * 1000 });
+    const sum = engage.reduce((s, v) => s + v.weight, 0);
+    return Math.min(MAX_SIZE, sum * SIZE_SCALE) + MIN_SIZE;
+}
 
 export default function ContentGraph() {
     const [links, setLinks] = useState<GraphLink<ContentNodeId, ContentNodeId>[]>([]);
-    const sizesRef = useRef<Map<string, number>>(new Map<string, number>());
     const [nodes, setNodes] = useState<GraphNode<ContentNodeId>[]>([]);
     const linkScale = useRecoilValue(settingContentLinkDistanceScale);
     const showLines = useRecoilValue(settingContentDisplayLines);
@@ -32,7 +41,6 @@ export default function ContentGraph() {
     const [zoom, setZoom] = useState(5);
     const [center, setCenter] = useState<[number, number] | undefined>();
     const [linkStyles, setLinkStyles] = useState<Map<ContentNodeId, LinkStyle<ContentNodeId>>>();
-    const [connected, setConnected] = useState<Set<ContentNodeId>>();
 
     const doRedrawNodes = useCallback(() => {
         const filteredTopics = content.filter((t) => {
@@ -42,7 +50,7 @@ export default function ContentGraph() {
 
         const newNodes = filteredTopics.map((u) => ({
             id: u,
-            size: sizesRef.current.get(u) || 20,
+            size: calculateNodeSize(u),
         }));
 
         setNodes(newNodes);
@@ -72,14 +80,6 @@ export default function ContentGraph() {
         setLinks(links);
     }, [content, similar, simPercent]);
 
-    const doResize = useCallback(
-        (id: string, size: number) => {
-            sizesRef.current.set(id, size);
-            doRedrawNodes();
-        },
-        [doRedrawNodes]
-    );
-
     useEffect(() => {
         doRedrawNodes();
     }, [doRedrawNodes]);
@@ -92,7 +92,7 @@ export default function ContentGraph() {
             linkStyles={linkStyles}
             charge={charge}
             showLines={showLines}
-            onSelect={(n: Readonly<GraphNode<ContentNodeId>>, l: InternalGraphLink<ContentNodeId, ContentNodeId>[]) => {
+            onSelect={(n: Readonly<GraphNode<ContentNodeId>>) => {
                 if (!focusNode) setZoom(2);
                 const newStyles = new Map<ContentNodeId, LinkStyle<ContentNodeId>>();
                 newStyles.set(n.id, {
@@ -100,22 +100,12 @@ export default function ContentGraph() {
                     width: (l: InternalGraphLink<ContentNodeId, ContentNodeId>) =>
                         1 + Math.floor(l.strength * l.strength * 60),
                 });
-
-                const conn = new Set<ContentNodeId>();
-                conn.add(n.id);
-                l.forEach((link) => {
-                    conn.add(link.source.id);
-                    conn.add(link.target.id);
-                });
-
-                setConnected(conn);
                 setLinkStyles(newStyles);
                 setCenter([n.x || 0, n.y || 0]);
                 setFocusNode(n.id);
             }}
             onUnselect={() => {
                 setFocusNode(undefined);
-                setConnected(undefined);
                 setLinkStyles(undefined);
                 setZoom(5);
             }}
@@ -124,7 +114,7 @@ export default function ContentGraph() {
             center={center}
             defaultLinkStyle={{
                 className: style.link,
-                opacity: (l: InternalGraphLink<ContentNodeId, ContentNodeId>) => (linkStyles ? 0 : l.strength * 0.9),
+                opacity: (l: InternalGraphLink<ContentNodeId, ContentNodeId>) => l.strength * 0.9,
                 width: (l: InternalGraphLink<ContentNodeId, ContentNodeId>) => 1 + Math.floor(l.strength * 60),
             }}
         >
@@ -132,9 +122,9 @@ export default function ContentGraph() {
                 <ContentNode
                     id={n.id}
                     key={n.id}
+                    size={n.size}
                     selected={n.id === focusNode}
-                    onResize={doResize}
-                    disabled={connected ? !connected.has(n.id) : false}
+                    disabled={false}
                 />
             ))}
         </Graph>
