@@ -5,15 +5,41 @@ import { getActionLog, getUserProfile } from '@genaism/services/profiler/profile
 import { dumpJSON } from '../graph/state';
 import { getResearchLog } from '../research/research';
 import { getContentData, getContentMetadata } from '../content/content';
+import { ProjectMeta, VERSION } from './types';
+import { v4 as uuidv4 } from 'uuid';
+import appVersion from '@genaism/generatedGitInfo.json';
+import { SMConfig } from '@genaism/views/Genagram/smConfig';
+import { dependencies } from '../loader/tracker';
+
+function makeMeta(configuration?: SMConfig, name?: string): ProjectMeta {
+    return {
+        date: new Date().toISOString(),
+        name: name || 'NoName',
+        version: VERSION,
+        appVersion: appVersion.gitTag || 'notag',
+        dependencies: Array.from(dependencies),
+        id: uuidv4(),
+        feedConfiguration: configuration,
+        origin: window.location.origin,
+    };
+}
 
 interface GenerateOptions {
     includeContent?: boolean;
     includeProfiles?: boolean;
     includeLogs?: boolean;
     includeGraph?: boolean;
+    configuration?: SMConfig;
+    name?: string;
 }
 
-async function generateBlob({ includeContent, includeProfiles, includeLogs, includeGraph }: GenerateOptions) {
+async function generateBlob({
+    includeContent,
+    includeProfiles,
+    includeLogs,
+    includeGraph,
+    configuration,
+}: GenerateOptions) {
     const zip = new JSZip();
 
     if (includeContent) {
@@ -48,6 +74,8 @@ async function generateBlob({ includeContent, includeProfiles, includeLogs, incl
     if (includeGraph) {
         zip.file('graph.json', dumpJSON());
     }
+
+    zip.file('metadata.json', JSON.stringify(makeMeta(configuration), undefined, 4));
 
     const researchLog = getResearchLog();
     if (researchLog.length > 0) {

@@ -2,11 +2,12 @@ import { menuShowSave } from '@genaism/state/menuState';
 import { Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel } from '@mui/material';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import style from './style.module.css';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import { Button } from '@genaism/components/Button/Button';
 import { saveFile } from '@genaism/services/saver/fileSaver';
+import { appConfiguration } from '@genaism/state/settingsState';
 
 export default function SaveDialog() {
     const { t } = useTranslation();
@@ -15,6 +16,7 @@ export default function SaveDialog() {
     const [saveProfiles, setSaveProfiles] = useState(false);
     const [saveLogs, setSaveLogs] = useState(true);
     const [saveGraph, setSaveGraph] = useState(true);
+    const appConfig = useRecoilValue(appConfiguration);
 
     const doClose = useCallback(() => setShowDialog(false), [setShowDialog]);
 
@@ -24,9 +26,10 @@ export default function SaveDialog() {
             includeProfiles: saveProfiles,
             includeLogs: saveLogs,
             includeGraph: saveGraph,
+            configuration: appConfig,
         });
         setShowDialog(false);
-    }, [setShowDialog, saveContent, saveProfiles, saveLogs, saveGraph]);
+    }, [setShowDialog, saveContent, saveProfiles, saveLogs, saveGraph, appConfig]);
 
     return (
         <Dialog

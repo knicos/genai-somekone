@@ -106,14 +106,23 @@ export function Component() {
         }
 
         if (contentObj && contentObj.length > 0) {
-            contentObj.forEach((c, ix) => {
+            contentObj.forEach((c) => {
                 getZipBlob(c)
                     .then(async (blob) => {
-                        if (contentObj && blob.arrayBuffer) {
+                        /*if (contentObj && blob.arrayBuffer) {
                             contentObj[ix] = await blob.arrayBuffer();
-                        }
+                        }*/
 
-                        await loadFile(blob);
+                        try {
+                            await loadFile(blob);
+                        } catch (e) {
+                            console.error(e);
+                            setError((p) => {
+                                const s = new Set(p);
+                                s.add('missing_dependency');
+                                return s;
+                            });
+                        }
                         setConfig(configObj);
                         setContent(contentObj);
                     })
@@ -143,14 +152,24 @@ export function Component() {
         if (ready && content) setLoaded(true);
     }, [ready, content]);
 
-    const doOpenFile = useCallback((data: Blob) => {
-        data.arrayBuffer().then((c) => {
-            setContent((old) => [...(old || []), c]);
+    const doOpenFile = useCallback(
+        (data: Blob) => {
+            data.arrayBuffer().then((c) => {
+                setContent((old) => [...(old || []), c]);
 
-            // TODO: Allow an optional graph reset here.
-            loadFile(data);
-        });
-    }, []);
+                // TODO: Allow an optional graph reset here.
+                loadFile(data).catch((e) => {
+                    console.error(e);
+                    setError((p) => {
+                        const s = new Set(p);
+                        s.add('missing_dependency');
+                        return s;
+                    });
+                });
+            });
+        },
+        [setError]
+    );
 
     return (
         <>

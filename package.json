@@ -4,8 +4,9 @@
     "version": "0.0.0",
     "type": "module",
     "scripts": {
+        "git-info": "node scripts/gitInfo.js",
         "dev": "vite",
-        "build": "tsc && vite build",
+        "build": "npm run git-info && tsc && vite build",
         "lint": "eslint ./src/**/*.{ts,tsx} --report-unused-disable-directives --max-warnings 0",
         "preview": "vite preview",
         "test": "vitest",

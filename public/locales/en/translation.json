@@ -142,7 +142,8 @@
             "peer_retrying": "Connection lost, retrying...",
             "peer_nortc": "Unable to start peer-2-peer, do you have an internet connection?",
             "peer_no_peer": "The peer was not found",
-            "peer_nowebcam": "You must allow use of the webcam to create the conference call"
+            "peer_nowebcam": "You must allow use of the webcam to create the conference call",
+            "missing_dependency": "This file depends on missing content"
         }
     },
     "profile": {

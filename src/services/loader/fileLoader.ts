@@ -9,6 +9,8 @@ import { GraphExport, dump } from '../graph/state';
 import { addNodes } from '../graph/nodes';
 import { addEdges } from '../graph/edges';
 import { getTopicId } from '../concept/concept';
+import { ProjectMeta, VERSION } from '../saver/types';
+import { dependencies } from './tracker';
 
 interface TopicData {
     label: string;
@@ -69,6 +71,21 @@ export async function loadFile(file: File | Blob): Promise<void> {
             promises.push(
                 data.async('string').then((r) => {
                     store.graph = JSON.parse(r);
+                })
+            );
+        } else if (data.name === 'metadata.json') {
+            promises.push(
+                data.async('string').then((r) => {
+                    const meta = JSON.parse(r) as ProjectMeta;
+                    if (meta.id) dependencies.add(meta.id);
+                    meta.dependencies.forEach((dep) => {
+                        if (!dependencies.has(dep)) {
+                            throw new Error('missing_dependency');
+                        }
+                    });
+                    if (meta.version > VERSION) {
+                        throw new Error('bad_version');
+                    }
                 })
             );
         } else {
