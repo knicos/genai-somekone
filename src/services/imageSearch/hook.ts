@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { pixabaySearch } from './pixabay';
+import { pexelsSearch } from './pexels';
 
-type SearchSource = 'pixabay';
+export type SearchSource = 'pixabay' | 'pexels';
 
 interface Options {
     source?: SearchSource;
@@ -47,6 +48,21 @@ export default function useImageSearch(q: string, options?: Options): ImageSearc
                         id: `pixabay-${h.id}`,
                         width: h.webformatWidth,
                         height: h.webformatHeight,
+                    })),
+                });
+            });
+        } else if (source === 'pexels') {
+            pexelsSearch(q, { page, perPage: 40 }).then((r) => {
+                setResults({
+                    total: r.total_results,
+                    pages: Math.ceil(r.total_results / 40),
+                    results: r.photos.map((h) => ({
+                        url: h.src.large,
+                        author: h.photographer,
+                        tags: [],
+                        id: `pexels-${h.id}`,
+                        width: h.width,
+                        height: h.height,
                     })),
                 });
             });

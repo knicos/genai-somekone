@@ -1,7 +1,7 @@
 import { useState, useCallback, KeyboardEvent, useMemo, useEffect, useRef } from 'react';
 import style from './style.module.css';
 import TextField from '@mui/material/TextField';
-import useImageSearch, { ImageResult } from '@genaism/services/imageSearch/hook';
+import useImageSearch, { ImageResult, SearchSource } from '@genaism/services/imageSearch/hook';
 import ImageItem from './ImageItem';
 import { useTranslation } from 'react-i18next';
 import { InputAdornment } from '@mui/material';
@@ -16,14 +16,15 @@ interface Props {
     selected?: Set<string>;
     onSelect?: (id: string) => void;
     disabled?: boolean;
+    source?: SearchSource;
 }
 
-export default function ImageSearch({ onAdd, columns, selected, onSelect, disabled }: Props) {
+export default function ImageSearch({ onAdd, columns, selected, onSelect, disabled, source }: Props) {
     const { t } = useTranslation('creator');
     const [page, setPage] = useState(1);
     const [query, setQuery] = useState('');
     const [images, setImages] = useState<ImageResult[]>([]);
-    const newimages = useImageSearch(query, { page });
+    const newimages = useImageSearch(query, { page, source });
     const [more, setMore] = useState(false);
     const inputRef = useRef<HTMLInputElement>();
 

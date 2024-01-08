@@ -2,7 +2,7 @@ import ImageSearch from '@genaism/components/ImageSearch/ImageSearch';
 import { getTopicLabel } from '@genaism/services/concept/concept';
 import { addContent, removeContent } from '@genaism/services/content/content';
 import { ContentNodeId, TopicNodeId } from '@genaism/services/graph/graphTypes';
-import { ImageResult } from '@genaism/services/imageSearch/hook';
+import { ImageResult, SearchSource } from '@genaism/services/imageSearch/hook';
 import { useCallback, useEffect, useState } from 'react';
 import { StageState } from './types';
 import style from './style.module.css';
@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next';
 import HideImageIcon from '@mui/icons-material/HideImage';
 import { useSetRecoilState } from 'recoil';
 import { unsavedChanges } from '@genaism/state/interaction';
+import { useSearchParams } from 'react-router-dom';
 
 const MIN_IMAGES = 10;
 const MAX_IMAGES = 20;
@@ -29,6 +30,7 @@ export default function ImageSelect({ topic, onAddNext, onNext }: Props) {
     const [selSet, setSelSet] = useState<Set<string>>();
     const [isdone, setDone] = useState(false);
     const setUnsaved = useSetRecoilState(unsavedChanges);
+    const [params] = useSearchParams();
 
     useEffect(() => {
         if (selected.length >= MIN_IMAGES) {
@@ -96,6 +98,7 @@ export default function ImageSelect({ topic, onAddNext, onNext }: Props) {
                 </ul>
                 <div className={style.images}>
                     <ImageSearch
+                        source={(params.get('source') as SearchSource) || 'pixabay'}
                         columns={columns}
                         onAdd={onAdd}
                         selected={selSet}
