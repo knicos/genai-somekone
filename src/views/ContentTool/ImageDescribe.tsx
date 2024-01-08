@@ -3,7 +3,6 @@ import { ContentNodeId } from '@genaism/services/graph/graphTypes';
 import Stepper from './Stepper';
 import style from './style.module.css';
 import { useTranslation } from 'react-i18next';
-import extraTags from './extraTags.json';
 import { Checkbox, FormControlLabel } from '@mui/material';
 import { useCallback, useEffect, useState } from 'react';
 import { addEdge } from '@genaism/services/graph/edges';
@@ -54,6 +53,8 @@ export default function ImageDescribe({ content, onNext }: Props) {
             return newSet;
         });
     }, []);
+
+    const extraTags = t('extraTags', { returnObjects: true }) as string[];
 
     return (
         <>

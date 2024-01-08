@@ -5,7 +5,6 @@ import { StageState } from './types';
 import { getTopicId } from '@genaism/services/concept/concept';
 import TagIcon from '@mui/icons-material/Tag';
 import Stepper from './Stepper';
-import suggestions from './allowedTopics.json';
 import { useTranslation } from 'react-i18next';
 import AlertPara from '@genaism/components/AlertPara/AlertPara';
 
@@ -37,6 +36,8 @@ export default function CategorySelect({ onAddNext, onNext }: Props) {
             setDone(true);
         }
     }, [selected, onAddNext]);
+
+    const suggestions = t('allowedTopics', { returnObjects: true }) as string[];
 
     return (
         <>

@@ -20,5 +20,46 @@
         "long": "Liian pitkä",
         "whitespace": "Välilyöntejä ei voi käyttää",
         "hash": "Jätä hashtag-merkki # pois"
-    }
+    },
+    "extraTags": [
+        "cute",
+        "scary",
+        "dark",
+        "funny",
+        "happy",
+        "sad",
+        "artistic",
+        "beautiful",
+        "angry",
+        "complex",
+        "simple",
+        "indoor",
+        "outdoor",
+        "day",
+        "night",
+        "active",
+        "calm",
+        "adventure",
+        "romantic",
+        "colourful",
+        "inspiring"
+    ],
+    "allowedTopics": [
+        "dogs",
+        "cats",
+        "wildAnimals",
+        "fashion",
+        "people",
+        "vehicles",
+        "landscapes",
+        "cities",
+        "travel",
+        "plants",
+        "architecture",
+        "technology",
+        "food",
+        "drink",
+        "sports",
+        "seasons"
+    ]
 }
