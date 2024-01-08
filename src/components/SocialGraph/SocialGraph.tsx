@@ -87,7 +87,7 @@ export default function SocialGraph({ liveUsers }: Props) {
             size: sizesRef.current.get(u) || 100,
             strength: similar.similar.get(u)?.nodes.length || 0,
             data: {
-                colour: similar.colours?.get(u) || '#707070',
+                colour: similar.colours?.get(u) || (liveSet.has(u) ? '#008297' : '#707070'),
             },
         }));
 

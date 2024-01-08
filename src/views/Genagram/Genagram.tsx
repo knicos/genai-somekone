@@ -72,12 +72,12 @@ export function Component() {
     const { ready, send } = usePeer<EventProtocol>({ code: code && `sm-${MYCODE}`, server: `sm-${code}`, onData });
 
     useEffect(() => {
-        if (username && send) {
+        if (username && send && ready) {
             window.sessionStorage.setItem(USERNAME_KEY, username);
             setUserName(getCurrentUser(), username);
             send({ event: 'eter:reguser', username, id: getCurrentUser() });
         }
-    }, [username, send]);
+    }, [username, send, ready]);
 
     const doLog = useCallback(() => {
         if (send && logTimer.current === -1) {

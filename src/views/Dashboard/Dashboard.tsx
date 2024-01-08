@@ -20,13 +20,13 @@ import SettingsDialog from '../dialogs/SettingsDialog/SettingsDialog';
 import Loading from '@genaism/components/Loading/Loading';
 import ErrorDialog from '../dialogs/ErrorDialog/ErrorDialog';
 import { errorNotification } from '@genaism/state/errorState';
-import useRandom from '@genaism/hooks/random';
 import { appConfiguration } from '@genaism/state/settingsState';
 import TopicGraph from '@genaism/components/TopicGraph/TopicGraph';
 import ContentGraph from '@genaism/components/ContentGraph/ContentGraph';
 import { appendResearchLog } from '@genaism/services/research/research';
 import { makeUserGraphSnapshot } from '@genaism/services/users/users';
 import { UserNodeId } from '@genaism/services/graph/graphTypes';
+import { useID } from '@genaism/hooks/id';
 
 const MAX_AGE = 30 * 60 * 1000; // 30 mins
 
@@ -38,14 +38,13 @@ export function Component() {
     const setShowStartDialog = useSetRecoilState(menuShowShare);
     const [loaded, setLoaded] = useState(false);
     const setError = useSetRecoilState(errorNotification);
-    const MYCODE = useRandom(5);
+    const MYCODE = useID(5);
     const graphMode = useRecoilValue(menuGraphType);
     const [count, refresh] = useReducer((a) => ++a, 0);
     const snapRef = useRef(new Map<UserNodeId, number>());
 
     const dataHandler = useCallback(
         (data: EventProtocol, conn: DataConnection) => {
-            // console.log('GOT DATA', data);
             if (data.event === 'eter:join') {
                 conn.send({ event: 'eter:config', configuration: config, content });
             } else if (data.event === 'eter:reguser') {

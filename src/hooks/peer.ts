@@ -169,6 +169,17 @@ export default function usePeer<T extends PeerEvent>({
 
                 if (cbRef.current.onClose) cbRef.current.onClose(conn);
                 setReady(false);
+
+                // Retry
+                setTimeout(() => {
+                    if (npeer.destroyed) return;
+                    createPeer(code);
+                }, 1000);
+            });
+            conn.on('iceStateChanged', (state: RTCIceConnectionState) => {
+                if (state === 'disconnected') {
+                    conn.close();
+                }
             });
         };
 
@@ -228,6 +239,12 @@ export default function usePeer<T extends PeerEvent>({
                 conn.send({ event: 'eter:welcome' });
             });
 
+            conn.on('iceStateChanged', (state: RTCIceConnectionState) => {
+                if (state === 'disconnected') {
+                    conn.close();
+                }
+            });
+
             conn.on('close', () => {
                 connRef.current?.connections.delete(conn.connectionId);
                 connRef.current?.peers.delete(conn.peer);
@@ -240,9 +257,12 @@ export default function usePeer<T extends PeerEvent>({
                 connRef.current?.peers.delete(conn.peer);
                 connRef.current?.connections.delete(id);
             }*/
+            console.log('Peer discon');
         });
 
-        npeer.on('close', () => {});
+        npeer.on('close', () => {
+            console.log('Peer close');
+        });
 
         npeer.on('error', (err) => {
             const type: string = err.type;
@@ -289,6 +309,9 @@ export default function usePeer<T extends PeerEvent>({
                         s.add('peer_no_peer');
                         return s;
                     });
+                    setTimeout(() => {
+                        if (server && !npeer.destroyed) createPeer(server);
+                    }, 1000);
                     break;
                 default:
                     npeer.destroy();

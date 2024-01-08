@@ -49,7 +49,6 @@ export function Component() {
 
     const onData = useCallback(
         (data: EventProtocol) => {
-            console.log('GOT DATA', data);
             if (data.event === 'eter:reguser') {
                 try {
                     createUserProfile(data.id, data.username);
