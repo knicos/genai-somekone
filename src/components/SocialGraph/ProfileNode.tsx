@@ -18,7 +18,7 @@ interface Props {
     live?: boolean;
     selected?: boolean;
     disabled?: boolean;
-    onResize: (id: string, size: number) => void;
+    onResize: (id: UserNodeId, size: number) => void;
     node: GraphNode<UserNodeId>;
 }
 

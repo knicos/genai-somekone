@@ -15,6 +15,7 @@ import { useTranslation } from 'react-i18next';
 import IconMenu from '@genaism/components/IconMenu/IconMenu';
 import IconMenuItem from '@genaism/components/IconMenu/Item';
 import Spacer from '@genaism/components/IconMenu/Spacer';
+import AppsIcon from '@mui/icons-material/Apps';
 
 interface Props {
     onOpen?: (data: Blob) => void;
@@ -84,6 +85,14 @@ export default function MenuPanel({ onOpen, onRefresh }: Props) {
                 </IconButton>
             </IconMenuItem>
             <Spacer />
+            <IconMenuItem tooltip={t('dashboard.labels.showUserGrid')}>
+                <IconButton
+                    color={graphMode === 'grid' ? 'secondary' : 'inherit'}
+                    onClick={() => setGraphMode('grid')}
+                >
+                    <AppsIcon />
+                </IconButton>
+            </IconMenuItem>
             <IconMenuItem tooltip={t('dashboard.labels.showSocialGraph')}>
                 <IconButton
                     color={graphMode === 'social' ? 'secondary' : 'inherit'}

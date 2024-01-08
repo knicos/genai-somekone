@@ -27,6 +27,7 @@ import { appendResearchLog } from '@genaism/services/research/research';
 import { makeUserGraphSnapshot } from '@genaism/services/users/users';
 import { UserNodeId } from '@genaism/services/graph/graphTypes';
 import { useID } from '@genaism/hooks/id';
+import UserGrid from '@genaism/components/UserGrid/UserGrid';
 
 const MAX_AGE = 30 * 60 * 1000; // 30 mins
 
@@ -191,6 +192,7 @@ export function Component() {
                         )}
                         {graphMode === 'topic' && <TopicGraph key={`tg-${count}`} />}
                         {graphMode === 'content' && <ContentGraph key={`cg-${count}`} />}
+                        {graphMode === 'grid' && <UserGrid key={`ug-${count}`} />}
 
                         <StartDialog
                             users={users}
