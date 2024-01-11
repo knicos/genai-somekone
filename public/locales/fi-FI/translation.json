@@ -1,0 +1,209 @@
+{
+    "feed": {
+        "actions": {
+            "follow": "Seuraa",
+            "unfollow": "Älä seuraa",
+            "share": {
+                "private": "Yksityisesti",
+                "friends": "Ystäville",
+                "everyone": "Kaikille"
+            },
+            "enterUser": "Enter"
+        },
+        "titles": {
+            "shareWith": "Jaa",
+            "main": "Somekone"
+        },
+        "placeholders": {
+            "comment": "Kirjoita kommentti..."
+        },
+        "messages": {
+            "noComments": "Kommentteja ei vielä ole.",
+            "loading": "Kuvia ladataan...",
+            "usernameError": {
+                "missing": "Käyttäjänimi puuttuu"
+            },
+            "fullnameError": {
+                "missing": "Koko nimi puuttuu"
+            }
+        },
+        "actionlog": {
+            "dwell": "Katsoi kuvaa {{time}} sekuntia",
+            "inactive": "Oli poissa {{time}} sekuntia",
+            "seen": "Näki kuvan",
+            "follow": "Aloitti seuraamaan käyttäjää",
+            "wow": "Reagoi emojilla 😯",
+            "love": "Reagoi emojilla 😍",
+            "sad": "Reagoi emojilla 😢",
+            "anger": "Reagoi emojilla 😡",
+            "laugh": "Reagoi emojilla 😂",
+            "like": "Tykkäsi kuvasta",
+            "share_friends": "Jakoi ystäville",
+            "share_private": "Jakoi yksityisesti",
+            "share_public": "Jakoi kaikille",
+            "comment": "Lisäsi {{length}} merkin pituisen kommentin",
+            "engagement": "Kiinnostus: {{score}}/10",
+            "end": "Lopetti appin käytön"
+        },
+        "labels": {
+            "enterUsername": "Anna käyttäjänimi",
+            "enterFullname": "Anna koko nimi"
+        }
+    },
+    "dashboard": {
+        "titles": {
+            "save": "Tallenna",
+            "settings": "Asetukset",
+            "error": "Virhe",
+            "general": "Yleiset",
+            "feedApp": "Feed App",
+            "recommendations": "Suositukset",
+            "socialGraph": "Sosiaalinen verkosto",
+            "topicGraph": "Aiheet verkostona",
+            "contentGraph": "Sisältö verkostona",
+            "paused": "Tauko",
+            "people": "Ihmiset",
+            "deleteUser": "Poista käyttäjä"
+        },
+        "labels": {
+            "saveContent": "Save the image content",
+            "saveProfiles": "Save user profiles",
+            "saveActions": "Save actions logs",
+            "saveGraph": "Save entire graph",
+            "shareTip": "Show the share code",
+            "openTip": "Upload existing saved data",
+            "saveTip": "Download profiles and content",
+            "engagedImages": "Show engaged images",
+            "topicCloud": "Show topic cloud",
+            "showLines": "Show the similar user lines",
+            "showLabels": "Show user name labels",
+            "showOffline": "Show offline or fake users",
+            "shrinkOffline": "Reduce size of offline users",
+            "edgeScaling": "Change the distance between clusters",
+            "similarPercent": "Similarity threshold for link display",
+            "nodeCharge": "Strength of separation force",
+            "hideFeedMenu": "Hide menu in feed view",
+            "nodeContents": "Node Contents",
+            "engagementScore": "Show engagement score",
+            "showSocialGraph": "Display social network",
+            "showContentGraph": "Display content relationships",
+            "showTopicGraph": "Display topic relationships",
+            "refreshGraph": "Refresh the graph display",
+            "clusterColouring": "Colour users by their cluster",
+            "egoSelect": "Hide unrelated on select",
+            "useTopicCandidates": "Use candidates from taste labels",
+            "useRandomCandidates": "Use randomly generated candidates",
+            "useCoengagedCandidates": "Use co-engaged content candidates",
+            "useSimilarUserCandidates": "Use similar user candidates",
+            "candidates": "Candidate Selection Mechanisms",
+            "scoring": "Scoring Features",
+            "selectionMechanism": "Final Selection Strategy",
+            "tasteScore": "Use a taste similarity score",
+            "sharingScore": "Use likelihood of sharing",
+            "coengagementScore": "Use the similarity of co-engagements",
+            "followingScore": "Use likelihood of following",
+            "commentingScore": "Use likelihood of commenting",
+            "lastSeenScore": "Use the time since last seen this image",
+            "reactionScore": "Use likelihood of reacting",
+            "viewingScore": "Use likelihood of viewing",
+            "rankSelection": "Use the top ranked candidates",
+            "distributionSelection": "Use score as a selection probability",
+            "disableFeedApp": "Pause Feed App for all users",
+            "hideDataView": "Hide data view",
+            "hideProfileView": "Hide profile view",
+            "hideRecommendationsView": "Hide recommendations view",
+            "showData": "Show user log data",
+            "showProfile": "Show user profile",
+            "showRecommendations": "Show user recommendations",
+            "deleteUser": "Delete User",
+            "showFeed": "Show user feed",
+            "collectResearch": "Collect research data",
+            "showFeedImageLabels": "Show image labels in feed"
+        },
+        "messages": {
+            "connection": "Mene allaolevaan www-osoitteeseen ja syötä koodi <Code>{{codeText}}</Code>, tai käytä QR -koodia.",
+            "waitingPeople": "Odotetaan käyttäjiä...",
+            "onePerson": "{{count}} käyttäjä on liittynyt mukaan.",
+            "manyPeople": "{{count}} käyttäjää on liittynyt mukaan.",
+            "loading": "Luodaan sosiaalista verkostoa...",
+            "paused": "The App has been paused.",
+            "confirmDeleteUser": "Haluatko varmasti poistaa käyttäjän \"{{name}}\""
+        },
+        "actions": {
+            "start": "Aloita",
+            "save": "Tallenna",
+            "cancel": "Peruuta",
+            "close": "Sulje"
+        },
+        "errors": {
+            "unknown": "Sovelluksessa tuli virhe.  Yritä uudelleen.",
+            "content_not_found": "Kuvasisältöä ei voi hakea",
+            "peer_failed": "Yhteyden luominen ei onnistu",
+            "peer_retrying": "Yhteys katkesi, yritetään uudelleen...",
+            "peer_nortc": "Laitteiden välille ei saada yhteyttä.  Ovathan molemmat laitteet yhteydessä Internetiin?",
+            "peer_no_peer": "Yhdistettävää laitetta ei löytynyt",
+            "peer_nowebcam": "Web-kameran käyttö pitää sallia jotta monen käyttäjän yhteys onnistuu",
+            "missing_dependency": "Tämän tiedoston tarvitsemaa sisältöä ei löydy"
+        }
+    },
+    "profile": {
+        "titles": {
+            "sharingPreference": "Sharing Preferences",
+            "viewPreference": "Viewing Preferences",
+            "commentPreference": "Commenting Preferences",
+            "followPreference": "Following Preferences",
+            "reactPreference": "Reaction Preferences",
+            "yourData": "Sinusta kerätty data",
+            "yourProfile": "Profiilisi",
+            "yourRecommendations": "Suosituksesi",
+            "shareProfile": "Jaa profiili",
+            "engagement": "Kiinnostuksesi"
+        },
+        "actions": {
+            "more": "Lisää",
+            "data": "Data",
+            "profile": "Profiili",
+            "recommendations": "Suositukset"
+        },
+        "messages": {
+            "loading": "Haetaan profiilidataa"
+        }
+    },
+    "recommendations": {
+        "labels": {
+            "topicCandidate": "koska olet tykännyt aiheesta #{{topic}}.",
+            "random": "sattumanvaraisesti valittu.",
+            "coengagedCandidate": "koska muutkin ovat tykänneet tästä.",
+            "similarUserCandidate": "koska kaltaisesi käyttäjä \"{{userName}}\" piti tästä.",
+            "tasteSimilarity": "Suositeltu samanlaisten mieltymysten takia",
+            "sharingTopicLikelihood": "Suositeltu koska jakamistesi perusteella on todennäköistä että jaat tämän jollekulle.",
+            "commentingTopicLikelihood": "Suositeltu koska kommentointisi perusteella on todennäköistä että kommentoit tätä.",
+            "followingTopicLikelihood": "Suositeltu koska seuraamistesi perusteella on todennäköistä että rupeaisit seuraamaan tämän tekijää.",
+            "reactingTopicLikelihood": "Suositeltu koska emojien käyttösi perusteella on todennäköistä että reagoit tähän jollakin emojilla.",
+            "viewingTopicLikelihood": "Suositeltu koska katsomiesi kuvien perusteella on todennäköistä että katsot tämänkin.",
+            "coengagementOverlap": "Suositeltu Ranked high for engagement similarity",
+            "randomness": "Suosittelu tehty sattumanvaraisesti",
+            "lastSeen": "Tätä ei ole nähty lähiaikoina",
+            "noReason": "Ei syytä (sattumanvarainen)",
+            "engagedWith": "Olet ollut kiinnostunut"
+        },
+        "features": {
+            "tasteSimilarity": "Taste Similarity",
+            "coengagementOverlap": "Common engagements",
+            "sharingTopicLikelihood": "Likely to share",
+            "commentingTopicLikelihood": "Likely to comment",
+            "followingTopicLikelihood": "Likely to follow",
+            "reactingTopicLikelihood": "Likely to react",
+            "viewingTopicLikelihood": "Likely to view",
+            "lastSeen": "Not seen recently"
+        }
+    },
+    "creator": {
+        "labels": {
+            "search": "Etsi"
+        },
+        "actions": {
+            "more": "Lisää"
+        }
+    }
+}
