@@ -34,7 +34,7 @@ export default function SpeedMenu() {
             {!config?.hideShareProfile && (
                 <SpeedDialAction
                     icon={<ShareIcon />}
-                    tooltipTitle={'Share your profile'}
+                    tooltipTitle={t('profile.titles.shareProfile')}
                     tooltipOpen
                     onClick={() => {
                         setShowShareProfile(true);
@@ -67,7 +67,7 @@ export default function SpeedMenu() {
             {!config?.hideRecommendationsView && (
                 <SpeedDialAction
                     icon={<ImageSearchIcon />}
-                    tooltipTitle={'Your recommendations'}
+                    tooltipTitle={t('profile.titles.yourRecommendations')}
                     tooltipOpen
                     onClick={() => {
                         setShowRecommendations(true);

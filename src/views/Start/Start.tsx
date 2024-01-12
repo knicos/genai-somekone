@@ -1,12 +1,13 @@
 import style from './style.module.css';
 import ErrorDialog from '../dialogs/ErrorDialog/ErrorDialog';
-// import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { Button, TextField } from '@mui/material';
 import { useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import LangSelect from '@genaism/components/LangSelect/LangSelect';
 
 export function Component() {
-    // const { t } = useTranslation();
+    const { t } = useTranslation();
     const inputRef = useRef<HTMLInputElement>(null);
     const navigate = useNavigate();
     const doKeyDown = useCallback(
@@ -36,6 +37,9 @@ export function Component() {
 
     return (
         <div className={style.container}>
+            <div className={style.language}>
+                <LangSelect />
+            </div>
             <div className={style.innerContainer}>
                 <img
                     src="/logo192_bw.png"
@@ -44,7 +48,7 @@ export function Component() {
                     height={192}
                 />
                 <TextField
-                    label="Enter Code  "
+                    label={t('start.labels.enterCode')}
                     onKeyDown={doKeyDown}
                     fullWidth
                     className={style.textbox}
@@ -57,7 +61,7 @@ export function Component() {
                     component="a"
                     onClick={doGo}
                 >
-                    Go
+                    {t('start.actions.go')}
                 </Button>
                 <div className={style.spacer} />
                 <Button
@@ -65,7 +69,7 @@ export function Component() {
                     href="/dashboard"
                     className={style.createButton}
                 >
-                    Create New
+                    {t('start.actions.createNew')}
                 </Button>
                 <ErrorDialog />
             </div>

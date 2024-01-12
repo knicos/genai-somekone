@@ -4,6 +4,7 @@
     align-items: center;
     flex-direction: column;
     height: 100%;
+    position: relative;
 }
 
 .innerContainer {
@@ -51,4 +52,10 @@
     .createButton {
         display: none;
     }
+}
+
+.language {
+    position: absolute;
+    top: 1rem;
+    right: 2rem;
 }

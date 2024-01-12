@@ -205,5 +205,14 @@
         "actions": {
             "more": "More"
         }
+    },
+    "start": {
+        "actions": {
+            "createNew": "Create New",
+            "go": "Go"
+        },
+        "labels": {
+            "enterCode": "Enter Code"
+        }
     }
 }

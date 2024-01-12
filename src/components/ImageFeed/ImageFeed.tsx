@@ -201,7 +201,10 @@ export default function ImageFeed({ images, onView, onMore, onLog, noActions, sh
                 className={style.container}
                 onScroll={doScroll}
             >
-                <div className={style.titleOuter}>
+                <div
+                    className={style.titleOuter}
+                    style={{ minHeight: noActions ? '40px' : undefined }}
+                >
                     {!noActions && (
                         <div className={style.title}>
                             <img

@@ -26,6 +26,7 @@ import BlockDialog from '../dialogs/BlockDialog/BlockDialog';
 import { LogProvider } from '@genaism/hooks/logger';
 import { addEdges } from '@genaism/services/graph/edges';
 import { addNodes } from '@genaism/services/graph/nodes';
+import LangSelect from '@genaism/components/LangSelect/LangSelect';
 
 const USERNAME_KEY = 'genai_somekone_username';
 
@@ -117,6 +118,11 @@ export function Component() {
             >
                 <LogProvider sender={send}>
                     <div className={style.page}>
+                        {config && !username && (
+                            <div className={style.language}>
+                                <LangSelect />
+                            </div>
+                        )}
                         {config && !username && <EnterUsername onUsername={setUsername} />}
                         {config && username && (
                             <>
