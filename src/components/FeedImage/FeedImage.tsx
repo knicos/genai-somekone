@@ -124,8 +124,10 @@ export default function FeedImage({
     }, [setActivePanel]);
 
     const doFollow = useCallback(() => {
-        setFollowed((v) => !v);
-        if (onFollow) onFollow(id);
+        setFollowed((v) => {
+            if (onFollow && !v) onFollow(id);
+            return !v;
+        });
     }, [onFollow, id]);
 
     const doCloseLike = useCallback(() => {
