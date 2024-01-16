@@ -3,6 +3,7 @@ import style from './style.module.css';
 import { appConfiguration } from '@genaism/state/settingsState';
 import { useTranslation } from 'react-i18next';
 import { Checkbox, FormControlLabel } from '@mui/material';
+import LangSelect from '@genaism/components/LangSelect/LangSelect';
 
 export default function GeneralSettings() {
     const { t } = useTranslation();
@@ -10,6 +11,8 @@ export default function GeneralSettings() {
 
     return (
         <div className={style.column}>
+            <LangSelect />
+            <div className={style.spacer} />
             <FormControlLabel
                 control={
                     <Checkbox

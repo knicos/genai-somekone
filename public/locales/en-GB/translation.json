@@ -75,6 +75,7 @@
             "saveTip": "Download profiles and content",
             "engagedImages": "Show engaged images",
             "topicCloud": "Show topic cloud",
+            "showUserGrid": "Show grid of users",
             "showLines": "Show connecting lines",
             "showLabels": "Show user name labels",
             "showOffline": "Show offline or fake users",
