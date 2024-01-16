@@ -17,6 +17,16 @@ export interface UserRegistrationEvent extends PeerEvent {
     id: UserNodeId;
 }
 
+export interface UserEntry {
+    name: string;
+    id: UserNodeId;
+}
+
+export interface UserListEvent extends PeerEvent {
+    event: 'eter:users';
+    users: UserEntry[];
+}
+
 export interface ProfileEvent extends PeerEvent {
     event: 'eter:profile_data';
     id: UserNodeId;
@@ -57,4 +67,5 @@ export type EventProtocol =
     | UserRegistrationEvent
     | ConfigurationEvent
     | ResearchLogEvent
+    | UserListEvent
     | ActionLogEvent;

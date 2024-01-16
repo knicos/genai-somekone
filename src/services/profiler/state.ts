@@ -23,6 +23,11 @@ export function resetProfiles() {
     userID = undefined;
 }
 
+export function setUser(id: UserNodeId) {
+    userID = addNode('user', id);
+    window.sessionStorage.setItem(USER_KEY, userID);
+}
+
 export function newUser() {
     userID = addNode('user');
     window.sessionStorage.setItem(USER_KEY, userID);

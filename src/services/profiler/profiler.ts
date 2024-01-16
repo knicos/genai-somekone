@@ -79,6 +79,11 @@ addNodeTypeListener('user', (id: UserNodeId) => {
     }
 });
 
+export function getUserName(id: UserNodeId): string {
+    const d = getNodeData<UserData>(id);
+    return d ? d.name : '';
+}
+
 export function setUserName(id: UserNodeId, name: string) {
     if (!hasNode(id)) {
         addNode('user', id, {

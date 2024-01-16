@@ -7,14 +7,21 @@ import { SMConfig } from './smConfig';
 import EnterUsername from './EnterUsername';
 import { EventProtocol } from '../../protocol/protocol';
 import { ProfileSummary } from '@genaism/services/profiler/profilerTypes';
-import { getActionLogSince, getCurrentUser, getUserProfile, setUserName } from '@genaism/services/profiler/profiler';
+import {
+    appendActionLog,
+    getActionLogSince,
+    getCurrentUser,
+    getUserProfile,
+    setUserName,
+    updateProfile,
+} from '@genaism/services/profiler/profiler';
 import ErrorDialog from '../dialogs/ErrorDialog/ErrorDialog';
 import Loading from '@genaism/components/Loading/Loading';
 import { useTranslation } from 'react-i18next';
 import SpeedMenu from './SpeedMenu';
 import DataPage from './DataPage';
 import ProfilePage from './ProfilePage';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { menuShowFeedActions } from '@genaism/state/menuState';
 import useRandom from '@genaism/hooks/random';
 import SharePage from './SharePage';
@@ -27,6 +34,7 @@ import { LogProvider } from '@genaism/hooks/logger';
 import { addEdges } from '@genaism/services/graph/edges';
 import { addNodes } from '@genaism/services/graph/nodes';
 import LangSelect from '@genaism/components/LangSelect/LangSelect';
+import { availableUsers } from '@genaism/state/sessionState';
 
 const USERNAME_KEY = 'genai_somekone_username';
 
@@ -46,14 +54,20 @@ export function Component() {
     const showFeedActions = useRecoilValue(menuShowFeedActions);
     // const { onTouchStart, onTouchMove, onTouchEnd, swipe, distance } = useSwipe();
     const MYCODE = useRandom(10);
+    const setAvailableUsers = useSetRecoilState(availableUsers);
 
     const onData = useCallback(
         (data: EventProtocol, conn: DataConnection) => {
-            //console.log('GOT DATA', data);
+            // console.log('GOT DATA', data);
             if (data.event === 'eter:config' && data.configuration) {
                 setConfig((old) => ({ ...old, ...data.configuration }));
                 if (data.content) setContent(data.content);
-                // For direct profile viewing connections
+            } else if (data.event === 'eter:users') {
+                setAvailableUsers(data.users);
+            } else if (data.event === 'eter:profile_data') {
+                updateProfile(data.id, data.profile);
+            } else if (data.event === 'eter:action_log') {
+                appendActionLog(data.log, data.id);
             } else if (data.event === 'eter:join') {
                 const profile = getUserProfile();
                 const logs = getActionLogSince(Date.now() - 5 * 60 * 1000).filter((a) => a.timestamp <= logRef.current);
@@ -67,7 +81,7 @@ export function Component() {
                 addEdges(data.snapshot.edges.map((e) => ({ ...e, timestamp: Date.now(), metadata: {} })));
             }
         },
-        [config, username, content, code, setConfig]
+        [config, username, content, code, setConfig, setAvailableUsers]
     );
 
     const { ready, send } = usePeer<EventProtocol>({ code: code && `sm-${MYCODE}`, server: `sm-${code}`, onData });

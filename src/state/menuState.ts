@@ -3,7 +3,7 @@ import { atom } from 'recoil';
 
 export const menuShowShare = atom<boolean>({
     key: 'menushowshare',
-    default: false,
+    default: true,
 });
 
 export const menuShowSave = atom<boolean>({
