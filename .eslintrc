@@ -6,6 +6,10 @@
             "jsx": true
         }
     },
+    "env": {
+        "browser": true,
+        "node": true
+    },
     "parser": "@typescript-eslint/parser",
     "extends": [
         "eslint:recommended",
