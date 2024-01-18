@@ -12,7 +12,7 @@ interface Props {
     className?: string;
 }
 
-const MIN_SIZE = 10;
+const MIN_SIZE = 15;
 
 const WordCloud = memo(function Cloud({ content, size, padding, onSize, className }: Props) {
     const gRef = useRef<SVGGElement>(null);
@@ -57,6 +57,9 @@ const WordCloud = memo(function Cloud({ content, size, padding, onSize, classNam
     const maxWeight = useMemo(() => {
         return content.length > 0 ? content[0].weight : 1;
     }, [content]);
+    const minWeight = useMemo(() => {
+        return content.length > 1 ? content[content.length - 1].weight : 0;
+    }, [content]);
 
     return (
         <g
@@ -84,7 +87,13 @@ const WordCloud = memo(function Cloud({ content, size, padding, onSize, classNam
                         <text
                             dominantBaseline="middle"
                             textAnchor="middle"
-                            fontSize={Math.floor((c.weight / maxWeight) * 0.1 * ((size || 500) - MIN_SIZE)) + MIN_SIZE}
+                            fontSize={
+                                Math.floor(
+                                    ((c.weight - minWeight) / (maxWeight - minWeight)) *
+                                        0.1 *
+                                        ((size || 500) - MIN_SIZE)
+                                ) + MIN_SIZE
+                            }
                             data-testid="cloud-image"
                             x={(l?.item.width || 0) / 2}
                             y={(l?.item.height || 0) / 2}

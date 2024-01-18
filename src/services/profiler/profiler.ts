@@ -28,6 +28,7 @@ export { defaultWeights, weightKeys };
 
 const TIME_WINDOW = 20 * 60 * 1000;
 const TIME_DECAY = 0.5;
+const PROFILE_COUNTS = 10;
 
 function triggerProfileEvent(id: UserNodeId) {
     const wasOOD = outOfDate.has(id);
@@ -186,7 +187,7 @@ export function getUserProfile(id?: UserNodeId): UserProfile {
 
 export function recreateUserProfile(id?: UserNodeId): UserProfile {
     const aid = id || getCurrentUser();
-    const summary = createProfileSummaryById(aid, 10);
+    const summary = createProfileSummaryById(aid, PROFILE_COUNTS);
     const state = users.get(aid);
 
     // const seenItems = getRelated('seen', aid, { period: TIME_WINDOW });

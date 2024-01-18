@@ -9,6 +9,7 @@ import {
     settingTopicDisplayLines,
     settingTopicLinkDistanceScale,
     settingTopicNodeCharge,
+    settingTopicSimilarPercent,
 } from '@genaism/state/settingsState';
 import { useRecoilValue } from 'recoil';
 
@@ -18,16 +19,23 @@ export default function TopicGraph() {
     const [nodes, setNodes] = useState<GraphNode<TopicNodeId>[]>([]);
     const linkScale = useRecoilValue(settingTopicLinkDistanceScale);
     const showLines = useRecoilValue(settingTopicDisplayLines);
+    const similarityThreshold = useRecoilValue(settingTopicSimilarPercent);
     const charge = useRecoilValue(settingTopicNodeCharge);
     const topics = useNodeType('topic');
 
     const similar = useMemo(() => {
         const results = new Map<TopicNodeId, WeightedNode<TopicNodeId>[]>();
         topics.forEach((topic) => {
-            results.set(topic, topicUserSimilarity(topic));
+            const allSimilar = topicUserSimilarity(topic);
+            allSimilar.sort((a, b) => b.weight - a.weight);
+            const maxsim = allSimilar[0]?.weight || 0;
+            results.set(
+                topic,
+                allSimilar.filter((s) => s.weight >= (1 - similarityThreshold) * maxsim)
+            );
         });
         return results;
-    }, [topics]);
+    }, [topics, similarityThreshold]);
 
     const [focusNode, setFocusNode] = useState<string | undefined>();
     const [zoom, setZoom] = useState(5);

@@ -26,6 +26,10 @@ import DataPanel from './DataPanel';
 import ProfilePanel from './ProfilePanel';
 import { menuSelectedUser } from '@genaism/state/menuState';
 import RecommendationsPanel from './RecommendationsPanel';
+import { colourLabel } from './colourise';
+
+const LINE_THICKNESS_UNSELECTED = 40;
+const LINE_THICKNESS_SELECTED = 60;
 
 interface Props {
     liveUsers?: UserNodeId[];
@@ -60,6 +64,10 @@ export default function SocialGraph({ liveUsers }: Props) {
 
     useEffect(() => {
         const newLinks: GraphLink<UserNodeId, UserNodeId>[] = [];
+        let globalMax = 0;
+        similar.similar.forEach((s) => {
+            globalMax = Math.max(globalMax, s.nodes[0]?.weight || 0);
+        });
         similar.similar.forEach((s, id) => {
             const maxWeight = s.nodes[0]?.weight || 0;
             s.nodes.forEach((node) => {
@@ -67,7 +75,7 @@ export default function SocialGraph({ liveUsers }: Props) {
                     newLinks.push({
                         source: id,
                         target: node.id,
-                        strength: node.weight,
+                        strength: node.weight / globalMax,
                     });
                 }
             });
@@ -76,22 +84,40 @@ export default function SocialGraph({ liveUsers }: Props) {
     }, [similar, similarPercent]);
 
     const doRedrawNodes = useCallback(() => {
-        const filteredUsers = showOfflineUsers
-            ? users.filter((u) => u !== getCurrentUser())
-            : users.filter((u) => liveSet.has(u) && u !== getCurrentUser());
+        setNodes((oldNodes) => {
+            const filteredUsers = showOfflineUsers
+                ? users.filter((u) => u !== getCurrentUser())
+                : users.filter((u) => liveSet.has(u) && u !== getCurrentUser());
 
-        // For all nodes not previously seen, and therefore without a position
-        // Recursively search for their master node, or become a master node.
-        const newNodes = filteredUsers.map((u) => ({
-            id: u,
-            size: sizesRef.current.get(u) || 100,
-            strength: similar.similar.get(u)?.nodes.length || 0,
-            data: {
-                colour: similar.colours?.get(u) || (liveSet.has(u) ? '#008297' : '#707070'),
-            },
-        }));
+            const oldMap = new Map<UserNodeId, GraphNode<UserNodeId>>();
+            oldNodes.map((on) => oldMap.set(on.id, on));
 
-        setNodes(newNodes);
+            const newNodes = filteredUsers.map((u) => {
+                const newSize = sizesRef.current.get(u) || 100;
+                const topicData = similar.topics?.get(u);
+                const newColour = topicData
+                    ? colourLabel(topicData[0]?.label || '')
+                    : liveSet.has(u)
+                    ? '#008297'
+                    : '#707070';
+
+                const old = oldMap.get(u);
+                if (old && old.size === newSize && old.data?.colour === newColour) {
+                    return old;
+                } else {
+                    return {
+                        id: u,
+                        size: newSize,
+                        strength: similar.similar.get(u)?.nodes.length || 0,
+                        data: {
+                            topics: topicData || [],
+                            colour: newColour,
+                        },
+                    };
+                }
+            });
+            return newNodes;
+        });
     }, [users, liveSet, showOfflineUsers, similar]);
 
     const doResize = useCallback(
@@ -111,7 +137,8 @@ export default function SocialGraph({ liveUsers }: Props) {
             const newStyles = new Map<UserNodeId, LinkStyle<UserNodeId>>();
             newStyles.set(focusNode, {
                 className: style.selectedLink,
-                width: (l: InternalGraphLink<UserNodeId, UserNodeId>) => 1 + Math.floor(l.strength * l.strength * 60),
+                width: (l: InternalGraphLink<UserNodeId, UserNodeId>) =>
+                    1 + Math.floor(l.strength * LINE_THICKNESS_SELECTED),
             });
 
             const conn = new Set<UserNodeId>();
@@ -140,7 +167,7 @@ export default function SocialGraph({ liveUsers }: Props) {
                     opacity: (l: InternalGraphLink<UserNodeId, UserNodeId>) =>
                         egoSelect && linkStyles ? 0 : l.strength * l.strength * 0.9,
                     width: (l: InternalGraphLink<UserNodeId, UserNodeId>) =>
-                        1 + Math.floor(l.strength * l.strength * 30),
+                        1 + Math.floor(l.strength * LINE_THICKNESS_UNSELECTED),
                 }}
                 charge={charge}
                 showLines={showLines}

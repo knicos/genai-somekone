@@ -1,5 +1,5 @@
 import ImageCloud from '../ImageCloud/ImageCloud';
-import { useCallback, useState } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
 import { useUserProfile } from '@genaism/services/profiler/hooks';
 import { UserNodeId } from '@genaism/services/graph/graphTypes';
 import { useRecoilValue } from 'recoil';
@@ -7,11 +7,14 @@ import {
     //settingDisplayLabel,
     settingNodeMode,
     settingShrinkOfflineUsers,
+    settingTopicThreshold,
 } from '@genaism/state/settingsState';
 import WordCloud from '../WordCloud/WordCloud';
 import style from './style.module.css';
 import Label from './Label';
 import { GraphNode } from '../Graph/types';
+import { WeightedLabel } from '@genaism/services/content/contentTypes';
+import { isDisallowedTopic } from './disallowed';
 
 interface Props {
     id: UserNodeId;
@@ -22,10 +25,17 @@ interface Props {
     node: GraphNode<UserNodeId>;
 }
 
-export default function ProfileNode({ id, onResize, live, selected, disabled, node }: Props) {
+function filterTaste(taste: WeightedLabel[], threshold: number): WeightedLabel[] {
+    if (taste.length === 0) return taste;
+    const max = taste[0].weight;
+    return taste.filter((t) => t.weight >= threshold * max);
+}
+
+const ProfileNode = memo(function ProfileNode({ id, onResize, live, selected, disabled, node }: Props) {
     const [size, setSize] = useState(100);
     const shrinkOffline = useRecoilValue(settingShrinkOfflineUsers);
     const nodeMode = useRecoilValue(settingNodeMode);
+    const topicThreshold = useRecoilValue(settingTopicThreshold);
 
     const profile = useUserProfile(id);
 
@@ -39,6 +49,22 @@ export default function ProfileNode({ id, onResize, live, selected, disabled, no
 
     const reduced = shrinkOffline && !live;
     const asize = reduced ? size * 0.4 : size;
+
+    const ftaste = useMemo(() => {
+        /*if (node.data?.topics) {
+            return filterTaste(node.data.topics as WeightedLabel[], topicThreshold);
+        } else {
+            return [];
+        }*/
+        if (profile?.taste) {
+            return filterTaste(
+                profile.taste.filter((t) => !isDisallowedTopic(t.label)),
+                topicThreshold
+            );
+        } else {
+            return [];
+        }
+    }, [profile, topicThreshold]);
 
     return (
         <g className={disabled ? style.disabledGroup : style.group}>
@@ -65,7 +91,7 @@ export default function ProfileNode({ id, onResize, live, selected, disabled, no
             )}
             {!reduced && nodeMode === 'word' && (
                 <WordCloud
-                    content={profile.taste}
+                    content={ftaste}
                     size={500}
                     padding={3}
                     className={style.cloudItem}
@@ -86,4 +112,6 @@ export default function ProfileNode({ id, onResize, live, selected, disabled, no
             )}
         </g>
     );
-}
+});
+
+export default ProfileNode;

@@ -9,7 +9,7 @@ export interface GraphNode<T extends NodeID> {
     index?: number;
     fx?: number;
     fy?: number;
-    data?: Record<string, string | number | boolean>;
+    data?: Record<string, string | number | boolean | object>;
 }
 
 export interface GraphLink<A extends NodeID, B extends NodeID> {

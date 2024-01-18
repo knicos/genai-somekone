@@ -35,6 +35,11 @@ export const settingNodeCharge = atom<number>({
     default: 4,
 });
 
+export const settingTopicThreshold = atom<number>({
+    key: 'settingtopicthreshold',
+    default: 0.5,
+});
+
 export const settingShrinkOfflineUsers = atom<boolean>({
     key: 'settingshrinkofflineusers',
     default: false,

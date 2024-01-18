@@ -119,7 +119,8 @@
             "deleteUser": "Delete User",
             "showFeed": "Show user feed",
             "collectResearch": "Collect research data",
-            "showFeedImageLabels": "Show image labels in feed"
+            "showFeedImageLabels": "Show image labels in feed",
+            "topicThreshold": "Node topic threshold"
         },
         "messages": {
             "connection": "Go to the address below and enter the code <Code>{{codeText}}</Code>, or use the QR code.",

@@ -15,6 +15,7 @@ import {
     settingShowOfflineUsers,
     settingShrinkOfflineUsers,
     settingSimilarPercent,
+    settingTopicThreshold,
 } from '@genaism/state/settingsState';
 
 export default function SocialGraphSettings() {
@@ -29,6 +30,7 @@ export default function SocialGraphSettings() {
     const [nodeMode, setNodeMode] = useRecoilState(settingNodeMode);
     const [clusterColouring, setClusterColouring] = useRecoilState(settingClusterColouring);
     const [egoSelect, setEgoSelect] = useRecoilState(settingEgoOnSelect);
+    const [topicThreshold, setTopicThreshold] = useRecoilState(settingTopicThreshold);
 
     const doEdgeScale = useCallback(
         (_: unknown, value: number | number[]) => setEdgeScale(value as number),
@@ -41,6 +43,10 @@ export default function SocialGraphSettings() {
     const doNodeCharge = useCallback(
         (_: unknown, value: number | number[]) => setNodeCharge(value as number),
         [setNodeCharge]
+    );
+    const doTopicThreshold = useCallback(
+        (_: unknown, value: number | number[]) => setTopicThreshold(value as number),
+        [setTopicThreshold]
     );
 
     return (
@@ -148,6 +154,14 @@ export default function SocialGraphSettings() {
                 min={0}
                 max={10}
                 step={0.5}
+            />
+            <div className={style.label}>{t('dashboard.labels.topicThreshold')}</div>
+            <Slider
+                value={topicThreshold}
+                onChange={doTopicThreshold}
+                min={0}
+                max={1}
+                step={0.1}
             />
         </div>
     );
