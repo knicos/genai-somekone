@@ -24,7 +24,7 @@
                 "missing": "Käyttäjänimi puuttuu"
             },
             "fullnameError": {
-                "missing": "Koko nimi puuttuu"
+                "missing": "Oikea nimi puuttuu"
             }
         },
         "actionlog": {
@@ -46,8 +46,8 @@
             "end": "Lopetti appin käytön"
         },
         "labels": {
-            "enterUsername": "Anna käyttäjänimi",
-            "enterFullname": "Anna koko nimi"
+            "enterUsername": "Anna käyttäjänimesi",
+            "enterFullname": "Anna oikea nimesi"
         }
     },
     "dashboard": {
@@ -60,8 +60,8 @@
             "recommendations": "Suositukset",
             "socialGraph": "Sosiaalinen verkosto",
             "topicGraph": "#Hashtagien verkosto",
-            "contentGraph": "Sisältö verkostona",
-            "paused": "Pysäytä",
+            "contentGraph": "Kuvat verkostona",
+            "paused": "Pysäytetty",
             "people": "Käyttäjät",
             "deleteUser": "Poista käyttäjä"
         },
@@ -75,12 +75,13 @@
             "saveTip": "Tallenna profiilit ja kuvat",
             "engagedImages": "Näytä kiinnostaneet kuvat",
             "topicCloud": "Näytä #hashtagit",
-            "showLines": "Yhdistä samanlaiset käyttäjät viivalla",
+            "showUserGrid": "Järjestele käyttäjät ruudukolle",
+            "showLines": "Yhdistä samanlaiset asiat viivalla",
             "showLabels": "Näytä käyttäjien nimet",
             "showOffline": "Näytä ei-aktiiviset ja keinotekoiset käyttäjät",
             "shrinkOffline": "Näytä ei-aktiiviset käyttäjät pienempinä",
-            "edgeScaling": "Muuta etäisyyttä ryhmien välillä",
-            "similarPercent": "Samankaltaisuuden raja-arvo yhteyksien näyttämiselle",
+            "edgeScaling": "Skaalaa etäisyyttä ryhmien välillä",
+            "similarPercent": "Yhdistävien viivojen määrä",
             "nodeCharge": "Solmujen pyrkiminen kauemmas toisistaan",
             "hideFeedMenu": "Piilota menu kuvavirtanäkymässä",
             "nodeContents": "Verkoston solmujen sisältö",
@@ -88,7 +89,7 @@
             "showSocialGraph": "Näytä sosiaalinen verkosto",
             "showContentGraph": "Näytä kuvien väliset suhteet",
             "showTopicGraph": "Näytä #hashtagien väliset suhteet",
-            "refreshGraph": "Päivitä näyttö",
+            "refreshGraph": "Piirrä verkosto uudelleen",
             "clusterColouring": "Ryhmittele ja väritä käyttäjäryhmät",
             "egoSelect": "Valittaessa piilota erillään olevat ",
             "useTopicCandidates": "Valitse kuvia #hashtagien perusteella",
@@ -118,7 +119,8 @@
             "deleteUser": "Poista käyttäjä",
             "showFeed": "Näytä käyttäjän kuvavirta",
             "collectResearch": "Kerää tutkimusdataa",
-            "showFeedImageLabels": "Näytä #hashtagit kuvavirrassa"
+            "showFeedImageLabels": "Näytä #hashtagit kuvavirrassa",
+            "topicThreshold": "#hashtagien määrä per käyttäjä"
         },
         "messages": {
             "connection": "Mene allaolevaan www-osoitteeseen ja syötä koodi <Code>{{codeText}}</Code>, tai käytä QR -koodia.",
