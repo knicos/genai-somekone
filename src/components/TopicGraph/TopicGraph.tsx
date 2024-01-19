@@ -60,7 +60,12 @@ export default function TopicGraph() {
             if (similarNodes) {
                 similarNodes.forEach((target) => {
                     if (target.weight > 0 && source !== target.id) {
-                        links.push({ source, target: target.id, strength: target.weight });
+                        links.push({
+                            source,
+                            target: target.id,
+                            strength: target.weight,
+                            actualStrength: target.weight,
+                        });
                         maxLink = Math.max(maxLink, target.weight);
                     }
                 });

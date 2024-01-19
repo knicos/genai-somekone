@@ -71,7 +71,12 @@ export default function ContentGraph() {
 
                 similarNodes.nodes.forEach((target) => {
                     if (target.weight > (1 - simPercent) * maxWeight && source !== target.id) {
-                        links.push({ source, target: target.id, strength: target.weight / maxmax });
+                        links.push({
+                            source,
+                            target: target.id,
+                            strength: target.weight / maxmax,
+                            actualStrength: target.weight / maxmax,
+                        });
                     }
                 });
             }
@@ -114,8 +119,8 @@ export default function ContentGraph() {
             center={center}
             defaultLinkStyle={{
                 className: style.link,
-                opacity: (l: InternalGraphLink<ContentNodeId, ContentNodeId>) => l.strength * 0.9,
-                width: (l: InternalGraphLink<ContentNodeId, ContentNodeId>) => 1 + Math.floor(l.strength * 60),
+                opacity: (l: InternalGraphLink<ContentNodeId, ContentNodeId>) => l.strength * 0.8 + 0.2,
+                width: (l: InternalGraphLink<ContentNodeId, ContentNodeId>) => 5 + Math.floor(l.strength * 80),
             }}
         >
             {nodes.map((n) => (
