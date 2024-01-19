@@ -16,12 +16,14 @@ export interface GraphLink<A extends NodeID, B extends NodeID> {
     source: A;
     target: B;
     strength: number;
+    actualStrength?: number;
 }
 
 export interface InternalGraphLink<A extends NodeID, B extends NodeID> {
     source: GraphNode<A>;
     target: GraphNode<B>;
     strength: number;
+    actualStrength?: number;
 }
 
 type StyleMappingFn<T extends NodeID, R> = (l: InternalGraphLink<T, T>) => R;

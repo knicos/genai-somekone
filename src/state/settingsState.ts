@@ -20,6 +20,11 @@ export const settingDisplayLabel = atom<boolean>({
     default: true,
 });
 
+export const settingIncludeAllLinks = atom<boolean>({
+    key: 'settingalllinks',
+    default: false,
+});
+
 export const settingLinkDistanceScale = atom<number>({
     key: 'settinglinkdistscale',
     default: 3,

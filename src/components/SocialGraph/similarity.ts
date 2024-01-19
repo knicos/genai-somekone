@@ -1,32 +1,17 @@
 import { WeightedLabel } from '@genaism/services/content/contentTypes';
 import { UserNodeId, WeightedNode } from '@genaism/services/graph/graphTypes';
 import { addAnyProfileListener, removeAnyProfileListener } from '@genaism/services/profiler/events';
-import { getUserProfile } from '@genaism/services/profiler/profiler';
 import { findSimilarUsers } from '@genaism/services/users/users';
 import { useEffect, useRef, useState } from 'react';
-import { isDisallowedTopic } from './disallowed';
+import { clusterUsers } from './cluster';
 
-export interface Similarities {
-    nodes: WeightedNode<UserNodeId>[];
-    maxSimilarity: number;
-    minSimilarity: number;
-    sumSimilarity: number;
-}
-
-function getSimilar(
-    id: UserNodeId,
-    similarities: Map<UserNodeId, Similarities>,
-    topics?: Map<UserNodeId, WeightedLabel[]>,
-    similarity?: number
-) {
+function getSimilar(id: UserNodeId, similarities: Map<UserNodeId, WeightedNode<UserNodeId>[]>) {
     const s = findSimilarUsers(id);
-    similarities.set(id, {
-        nodes: s,
-        maxSimilarity: s[0]?.weight || 0,
-        minSimilarity: s[s.length - 1]?.weight || 0,
-        sumSimilarity: s.reduce((sum, v) => sum + v.weight, 0),
-    });
-    if (topics && similarity) {
+    similarities.set(
+        id,
+        s.filter((ss) => ss.weight > 0)
+    );
+    /*if (topics && similarity) {
         const profile = getUserProfile(id);
         //let bestTopic = 'NOTOPIC';
         //let bestTopicScore = 0;
@@ -66,52 +51,57 @@ function getSimilar(
                     //console.log('TOPIC', profile.name, topic.label, topicScore);
                     bestTopics.push({ label: topic.label, weight: topicScore });
 
-                    /*if (userCount > 0 && topicScore > bestTopicScore) {
-                    bestTopicScore = topicScore;
-                    bestTopic = topic.label;
-                }*/
+                //    if (userCount > 0 && topicScore > bestTopicScore) {
+                //    bestTopicScore = topicScore;
+                //    bestTopic = topic.label;
+                //}
                 }
             });
         }
 
-        /*if (!colours.has(bestTopic)) {
-            colours.set(bestTopic, COLOURS[colours.size % COLOURS.length]);
-        }
+        //if (!colours.has(bestTopic)) {
+        //    colours.set(bestTopic, COLOURS[colours.size % COLOURS.length]);
+        //}
 
-        topics.set(id, colours.get(bestTopic) || 'black');*/
+        //topics.set(id, colours.get(bestTopic) || 'black');
 
         bestTopics.sort((a, b) => b.weight - a.weight);
         topics.set(id, bestTopics);
-    }
+    }*/
 }
 
 interface Result {
-    similar: Map<UserNodeId, Similarities>;
-    topics?: Map<UserNodeId, WeightedLabel[]>;
+    similar: Map<UserNodeId, WeightedNode<UserNodeId>[]>;
+    topics?: Map<UserNodeId, WeightedLabel>;
 }
 
 export function useAllSimilarUsers(users: UserNodeId[], cluster?: boolean, similarity?: number): Result {
-    const simRef = useRef(new Map<UserNodeId, Similarities>());
-    const topicRef = useRef(new Map<UserNodeId, WeightedLabel[]>());
+    const simRef = useRef(new Map<UserNodeId, WeightedNode<UserNodeId>[]>());
     const [result, setResult] = useState<Result>({ similar: simRef.current });
 
     useEffect(() => {
         users.forEach((c) => {
-            getSimilar(c, simRef.current, cluster ? topicRef.current : undefined, similarity);
+            getSimilar(c, simRef.current);
         });
-        setResult({ similar: simRef.current, topics: cluster ? topicRef.current : undefined });
+        setResult({
+            similar: simRef.current,
+            topics: cluster ? clusterUsers(users, simRef.current, similarity || 0.2) : undefined,
+        });
     }, [users, cluster, similarity]);
 
     useEffect(() => {
         const handler = (id: UserNodeId) => {
-            getSimilar(id, simRef.current, cluster ? topicRef.current : undefined, similarity);
-            setResult({ similar: simRef.current, topics: cluster ? topicRef.current : undefined });
+            getSimilar(id, simRef.current);
+            setResult({
+                similar: simRef.current,
+                topics: cluster ? clusterUsers(users, simRef.current, similarity || 0.2) : undefined,
+            });
         };
         addAnyProfileListener(handler);
         return () => {
             removeAnyProfileListener(handler);
         };
-    }, [cluster, similarity]);
+    }, [users, cluster, similarity]);
 
     return result;
 }

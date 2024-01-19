@@ -9,6 +9,7 @@ import {
     settingDisplayLabel,
     settingDisplayLines,
     settingEgoOnSelect,
+    settingIncludeAllLinks,
     settingLinkDistanceScale,
     settingNodeCharge,
     settingNodeMode,
@@ -31,6 +32,7 @@ export default function SocialGraphSettings() {
     const [clusterColouring, setClusterColouring] = useRecoilState(settingClusterColouring);
     const [egoSelect, setEgoSelect] = useRecoilState(settingEgoOnSelect);
     const [topicThreshold, setTopicThreshold] = useRecoilState(settingTopicThreshold);
+    const [allLinks, setAllLinks] = useRecoilState(settingIncludeAllLinks);
 
     const doEdgeScale = useCallback(
         (_: unknown, value: number | number[]) => setEdgeScale(value as number),
@@ -104,6 +106,15 @@ export default function SocialGraphSettings() {
                     />
                 }
                 label={t('dashboard.labels.egoSelect')}
+            />
+            <FormControlLabel
+                control={
+                    <Checkbox
+                        checked={allLinks}
+                        onChange={(_, checked) => setAllLinks(checked)}
+                    />
+                }
+                label={t('dashboard.labels.allLinks')}
             />
             <FormControl sx={{ marginTop: '1rem' }}>
                 <FormLabel id="demo-radio-buttons-group-label">{t('dashboard.labels.nodeContents')}</FormLabel>

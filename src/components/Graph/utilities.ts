@@ -51,9 +51,10 @@ export function makeLinks<T extends NodeID>(
                             source: s,
                             target: t,
                             strength: l.strength,
+                            actualStrength: l.actualStrength,
                         }
                       : { source: nodes[0], target: nodes[0], strength: 0 };
               })
-              .filter((l) => l.strength > 0)
+              .filter((l) => (l.actualStrength || 0) > 0)
         : [];
 }

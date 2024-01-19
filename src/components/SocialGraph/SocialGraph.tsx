@@ -9,6 +9,7 @@ import {
     settingDisplayLabel,
     settingDisplayLines,
     settingEgoOnSelect,
+    settingIncludeAllLinks,
     settingLinkDistanceScale,
     settingNodeCharge,
     settingShowOfflineUsers,
@@ -46,6 +47,7 @@ export default function SocialGraph({ liveUsers }: Props) {
     const clusterColouring = useRecoilValue(settingClusterColouring);
     const egoSelect = useRecoilValue(settingEgoOnSelect);
     const showLabel = useRecoilValue(settingDisplayLabel);
+    const allLinks = useRecoilValue(settingIncludeAllLinks);
     const users = useNodeType('user');
     const liveSet = useMemo(() => {
         const set = new Set<string>();
@@ -66,22 +68,24 @@ export default function SocialGraph({ liveUsers }: Props) {
         const newLinks: GraphLink<UserNodeId, UserNodeId>[] = [];
         let globalMax = 0;
         similar.similar.forEach((s) => {
-            globalMax = Math.max(globalMax, s.nodes[0]?.weight || 0);
+            globalMax = Math.max(globalMax, s[0]?.weight || 0);
         });
         similar.similar.forEach((s, id) => {
-            const maxWeight = s.nodes[0]?.weight || 0;
-            s.nodes.forEach((node) => {
-                if (node.weight >= maxWeight * (1 - similarPercent)) {
+            const maxWeight = s[0]?.weight || 0;
+            s.forEach((node) => {
+                if (allLinks || node.weight >= maxWeight * (1 - similarPercent)) {
+                    const astrength = node.weight / globalMax;
                     newLinks.push({
                         source: id,
                         target: node.id,
-                        strength: node.weight / globalMax,
+                        strength: node.weight >= maxWeight * (1 - similarPercent) ? astrength : 0,
+                        actualStrength: astrength,
                     });
                 }
             });
         });
         setLinks(newLinks);
-    }, [similar, similarPercent]);
+    }, [similar, similarPercent, allLinks]);
 
     const doRedrawNodes = useCallback(() => {
         setNodes((oldNodes) => {
@@ -96,7 +100,7 @@ export default function SocialGraph({ liveUsers }: Props) {
                 const newSize = sizesRef.current.get(u) || 100;
                 const topicData = similar.topics?.get(u);
                 const newColour = topicData
-                    ? colourLabel(topicData[0]?.label || '')
+                    ? colourLabel(topicData?.label || '')
                     : liveSet.has(u)
                     ? '#008297'
                     : '#707070';
@@ -108,7 +112,7 @@ export default function SocialGraph({ liveUsers }: Props) {
                     return {
                         id: u,
                         size: newSize,
-                        strength: similar.similar.get(u)?.nodes.length || 0,
+                        strength: similar.similar.get(u)?.length || 0,
                         data: {
                             topics: topicData || [],
                             colour: newColour,
@@ -138,7 +142,7 @@ export default function SocialGraph({ liveUsers }: Props) {
             newStyles.set(focusNode, {
                 className: style.selectedLink,
                 width: (l: InternalGraphLink<UserNodeId, UserNodeId>) =>
-                    1 + Math.floor(l.strength * LINE_THICKNESS_SELECTED),
+                    1 + Math.floor((l.actualStrength || l.strength) * LINE_THICKNESS_SELECTED),
             });
 
             const conn = new Set<UserNodeId>();

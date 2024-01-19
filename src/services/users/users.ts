@@ -40,6 +40,7 @@ export function cosinesim(A: number[], B: number[]): number {
 export function calculateSimilarity(a: WeightedNode<TopicNodeId>[], b: WeightedNode<TopicNodeId>[]): number {
     const sumA = a.reduce((p, v) => p + v.weight, 0);
     const sumB = b.reduce((p, v) => p + v.weight, 0);
+    if (sumA === 0 || sumB === 0) return 0;
     const normA = a.map((v) => ({ id: v.id, weight: v.weight / sumA }));
     const normB = b.map((v) => ({ id: v.id, weight: v.weight / sumB }));
 
