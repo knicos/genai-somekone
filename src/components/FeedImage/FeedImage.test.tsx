@@ -112,7 +112,7 @@ describe('FeedImage component', () => {
         await user.click(screen.getByTestId('feed-image-comment-button'));
         await user.click(screen.getByTestId('comment-input'));
         await user.keyboard('helloworld[Enter]');
-        expect(commentfn).toHaveBeenCalledWith('content:xyz', 10);
+        expect(commentfn).toHaveBeenCalledWith('content:xyz', 'helloworld');
     });
 
     it('shows the share panel', async ({ expect }) => {

@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useReducer, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { SMConfig } from '../Genagram/smConfig';
 import { decompressFromEncodedURIComponent } from 'lz-string';
-import usePeer from '@genaism/hooks/peer';
+import usePeer, { SenderType } from '@genaism/hooks/peer';
 import { DataConnection } from 'peerjs';
 import style from './style.module.css';
 import { EventProtocol, UserEntry } from '@genaism/protocol/protocol';
@@ -58,6 +58,7 @@ export function Component() {
     const graphMode = useRecoilValue(menuGraphType);
     const [count, refresh] = useReducer((a) => ++a, 0);
     const snapRef = useRef(new Map<UserNodeId, number>());
+    const senderRef = useRef<SenderType<EventProtocol> | undefined>();
 
     const dataHandler = useCallback(
         (data: EventProtocol, conn: DataConnection) => {
@@ -80,6 +81,18 @@ export function Component() {
                 updateProfile(data.id, data.profile);
             } else if (data.event === 'eter:action_log') {
                 appendActionLog(data.log, data.id);
+                data.log.forEach((l) => {
+                    if (l.activity === 'comment') {
+                        if (senderRef.current) {
+                            senderRef.current({
+                                event: 'eter:comment',
+                                id: data.id,
+                                comment: l.content || '',
+                                contentId: l.id || 'content:none',
+                            });
+                        }
+                    }
+                });
             } else if (data.event === 'researchlog') {
                 appendResearchLog({
                     action: data.action,
@@ -107,6 +120,7 @@ export function Component() {
 
     useEffect(() => {
         if (send) send({ event: 'eter:config', configuration: config });
+        senderRef.current = send;
     }, [config, send]);
 
     useEffect(() => {

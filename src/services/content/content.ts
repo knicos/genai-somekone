@@ -1,10 +1,11 @@
-import { ContentMetadata } from './contentTypes';
+import { CommentEntry, ContentMetadata } from './contentTypes';
 import { addNode, addEdge, removeNode } from '@genaism/services/graph/graph';
 import { getTopicId } from '@genaism/services/concept/concept';
-import { ContentNodeId } from '../graph/graphTypes';
+import { ContentNodeId, UserNodeId } from '../graph/graphTypes';
 
 const dataStore = new Map<ContentNodeId, string>();
 const metaStore = new Map<ContentNodeId, ContentMetadata>();
+const commentStore = new Map<ContentNodeId, CommentEntry[]>();
 
 export function resetContent() {
     for (const n of metaStore) {
@@ -51,4 +52,14 @@ export function removeContent(id: ContentNodeId) {
     dataStore.delete(id);
     metaStore.delete(id);
     removeNode(id);
+}
+
+export function addComment(id: ContentNodeId, user: UserNodeId, comment: string) {
+    const comments = commentStore.get(id) || [];
+    comments.push({ userId: user, comment });
+    commentStore.set(id, comments);
+}
+
+export function getComments(id: ContentNodeId): CommentEntry[] {
+    return commentStore.get(id) || [];
 }

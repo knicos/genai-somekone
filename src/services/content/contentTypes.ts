@@ -1,3 +1,5 @@
+import { UserNodeId } from '../graph/graphTypes';
+
 export interface TextComponent {
     type: 'text';
     content: string;
@@ -37,4 +39,9 @@ export interface ImageEntity {
     disableShare?: boolean;
     sponsored?: boolean;
     components?: ContentComponent[];
+}
+
+export interface CommentEntry {
+    userId: UserNodeId;
+    comment: string;
 }

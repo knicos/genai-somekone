@@ -8,7 +8,8 @@
                 "friends": "Friends",
                 "everyone": "Everyone"
             },
-            "enterUser": "Enter"
+            "enterUser": "Enter",
+            "moreComments": "More Comments"
         },
         "titles": {
             "shareWith": "Share with",

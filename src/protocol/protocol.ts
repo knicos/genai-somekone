@@ -1,7 +1,7 @@
 import { PeerEvent, BuiltinEvent } from '@genaism/hooks/peer';
 import { SMConfig } from '@genaism/views/Genagram/smConfig';
 import { LogEntry, ProfileSummary } from '@genaism/services/profiler/profilerTypes';
-import { UserNodeId } from '@genaism/services/graph/graphTypes';
+import { ContentNodeId, UserNodeId } from '@genaism/services/graph/graphTypes';
 import { ScoredRecommendation } from '@genaism/services/recommender/recommenderTypes';
 import { Snapshot } from '@genaism/services/users/users';
 
@@ -45,6 +45,13 @@ export interface ActionLogEvent extends PeerEvent {
     log: LogEntry[];
 }
 
+export interface CommentEvent extends PeerEvent {
+    event: 'eter:comment';
+    id: UserNodeId;
+    contentId: ContentNodeId;
+    comment: string;
+}
+
 export interface ResearchLogEvent extends PeerEvent {
     event: 'researchlog';
     action: string;
@@ -68,4 +75,5 @@ export type EventProtocol =
     | ConfigurationEvent
     | ResearchLogEvent
     | UserListEvent
+    | CommentEvent
     | ActionLogEvent;

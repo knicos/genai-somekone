@@ -175,8 +175,8 @@ export default function ImageFeed({ images, onView, onMore, onLog, noActions, sh
     );
 
     const doComment = useCallback(
-        (id: ContentNodeId, l: number) => {
-            onLog({ activity: 'comment', id, timestamp: Date.now(), value: l });
+        (id: ContentNodeId, l: string) => {
+            onLog({ activity: 'comment', id, timestamp: Date.now(), value: l.length, content: l });
         },
         [onLog]
     );

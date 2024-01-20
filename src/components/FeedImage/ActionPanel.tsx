@@ -11,9 +11,10 @@ interface Props extends React.PropsWithChildren {
     onClose?: () => void;
     horizontal: HorizontalPosition;
     vertical: VerticalPosition;
+    noTimeout?: boolean;
 }
 
-export default function ActionPanel({ onClose, children, horizontal, vertical }: Props) {
+export default function ActionPanel({ onClose, children, horizontal, vertical, noTimeout }: Props) {
     const timerRef = useRef(-1);
 
     const doLeave = useCallback(() => {
@@ -33,16 +34,18 @@ export default function ActionPanel({ onClose, children, horizontal, vertical }:
     }, []);
 
     useEffect(() => {
-        timerRef.current = window.setTimeout(() => {
-            timerRef.current = -1;
-            if (onClose) onClose();
-        }, OPENTIMEOUT);
+        if (!noTimeout) {
+            timerRef.current = window.setTimeout(() => {
+                timerRef.current = -1;
+                if (onClose) onClose();
+            }, OPENTIMEOUT);
+        }
         return () => {
             if (timerRef.current !== -1) {
                 clearTimeout(timerRef.current);
             }
         };
-    }, [onClose]);
+    }, [onClose, noTimeout]);
 
     return (
         <div

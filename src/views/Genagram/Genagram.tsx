@@ -35,6 +35,7 @@ import { addEdges } from '@genaism/services/graph/edges';
 import { addNodes } from '@genaism/services/graph/nodes';
 import LangSelect from '@genaism/components/LangSelect/LangSelect';
 import { availableUsers } from '@genaism/state/sessionState';
+import { addComment } from '@genaism/services/content/content';
 
 const USERNAME_KEY = 'genai_somekone_username';
 
@@ -68,6 +69,8 @@ export function Component() {
                 updateProfile(data.id, data.profile);
             } else if (data.event === 'eter:action_log') {
                 appendActionLog(data.log, data.id);
+            } else if (data.event === 'eter:comment') {
+                addComment(data.contentId, data.id, data.comment);
             } else if (data.event === 'eter:join') {
                 const profile = getUserProfile();
                 const logs = getActionLogSince(Date.now() - 5 * 60 * 1000).filter((a) => a.timestamp <= logRef.current);

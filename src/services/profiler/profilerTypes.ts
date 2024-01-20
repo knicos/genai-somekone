@@ -30,6 +30,7 @@ export interface LogEntry {
     id?: ContentNodeId;
     timestamp: number;
     value?: number;
+    content?: string;
 }
 
 export interface ProfileSummary {

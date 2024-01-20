@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import style from './style.module.css';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import IconButton from '@mui/material/IconButton';
@@ -25,7 +25,7 @@ interface Props {
     onClick?: (id: ContentNodeId) => void;
     onLike?: (id: ContentNodeId, kind: LikeKind) => void;
     onShare?: (id: ContentNodeId, kind: ShareKind) => void;
-    onComment?: (id: ContentNodeId, length: number) => void;
+    onComment?: (id: ContentNodeId, comment: string) => void;
     onFollow?: (id: ContentNodeId) => void;
 }
 
@@ -85,6 +85,7 @@ export default function FeedImage({
     const [followed, setFollowed] = useState(false);
     const doClick = useCallback(() => {
         if (onClick) onClick(id);
+        setActivePanel('none');
     }, [onClick, id]);
 
     const doLike = useCallback(
@@ -103,7 +104,7 @@ export default function FeedImage({
     );
 
     const doComment = useCallback(
-        (l: number) => {
+        (l: string) => {
             if (onComment) {
                 onComment(id, l);
             }
@@ -120,7 +121,7 @@ export default function FeedImage({
     }, [setActivePanel]);
 
     const doShowComments = useCallback(() => {
-        setActivePanel('comment');
+        setActivePanel((current) => (current === 'comment' ? 'none' : 'comment'));
     }, [setActivePanel]);
 
     const doFollow = useCallback(() => {
@@ -133,6 +134,10 @@ export default function FeedImage({
     const doCloseLike = useCallback(() => {
         setActivePanel('none');
     }, []);
+
+    useEffect(() => {
+        if (!active) setActivePanel('none');
+    }, [active]);
 
     /*useEffect(() => {
         if (!content && reqContent) {
@@ -232,6 +237,7 @@ export default function FeedImage({
                 )}
                 {active && activePanel === 'comment' && (
                     <CommentPanel
+                        id={id}
                         onClose={doCloseLike}
                         onComment={doComment}
                     />

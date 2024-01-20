@@ -1,4 +1,4 @@
-@value primary from "../../style/colours.module.css";
+@value primary, bgSubdued1 from "../../style/colours.module.css";
 
 .instaImage {
     width: 100%;
@@ -187,7 +187,31 @@
 
 .commentList {
     padding: 0.5rem;
-    margin-top: 1rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0;
+    list-style: none;
+    line-height: normal;
+    overflow-y: auto;
+    max-height: 200px;
+}
+
+.commentItem {
+    margin-top: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    border-left: 4px solid primary;
+    border-right: 4px solid primary;
+    padding-left: 0.6rem;
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
+    border-radius: 6px;
+    background: bgSubdued1;
+}
+
+.commentUser {
+    font-style: italic;
+    opacity: 0.8;
+    font-size: 0.9rem;
 }
 
 .sharecontainer {

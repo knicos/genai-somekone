@@ -98,6 +98,7 @@ describe('ImageFeed component', () => {
             activity: 'comment',
             id: 'content:xyz',
             value: 10,
+            content: 'helloworld',
             timestamp: expect.any(Number),
         });
     });
