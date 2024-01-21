@@ -137,7 +137,8 @@
             "start": "Start",
             "save": "Download",
             "cancel": "Cancel",
-            "close": "Close"
+            "close": "Close",
+            "delete": "Delete"
         },
         "errors": {
             "unknown": "There was a problem, please try again.",

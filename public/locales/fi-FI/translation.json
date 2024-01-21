@@ -135,7 +135,8 @@
             "start": "Aloita",
             "save": "Tallenna",
             "cancel": "Peruuta",
-            "close": "Sulje"
+            "close": "Sulje",
+            "delete": "Poista"
         },
         "errors": {
             "unknown": "Sovelluksessa tuli virhe.  Yritä uudelleen.",
@@ -158,8 +159,8 @@
             "yourData": "Sinusta kerätty data",
             "yourProfile": "Profiilisi",
             "yourRecommendations": "Suosituksesi",
-            "shareProfile": "Jaa profiilisi",
-            "engagement": "Kiinnostuksen aktiivisuutesi"
+            "shareProfile": "Jaa datasi",
+            "engagement": "Kiinnostuksesi taso"
         },
         "actions": {
             "more": "Lisää",

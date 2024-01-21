@@ -28,14 +28,14 @@ export default function DeleteDialog({ open, onClose, onDelete, name }: Props) {
                     color="primary"
                     onClick={onDelete}
                 >
-                    Delete
+                    {t('dashboard.actions.delete')}
                 </Button>
                 <Button
                     variant="outlined"
                     color="primary"
                     onClick={onClose}
                 >
-                    Cancel
+                    {t('dashboard.actions.cancel')}
                 </Button>
             </DialogActions>
         </Dialog>
