@@ -42,7 +42,7 @@
             "share_private": "Jakoi yksityisesti",
             "share_public": "Jakoi kaikille",
             "comment": "Lisäsi {{length}} merkin pituisen kommentin",
-            "engagement": "Kiinnostus: {{score}}/10",
+            "engagement": "Aktiivisuus: {{score}}/10",
             "end": "Lopetti appin käytön"
         },
         "labels": {
@@ -85,7 +85,7 @@
             "nodeCharge": "Solmujen pyrkiminen kauemmas toisistaan",
             "hideFeedMenu": "Piilota menu kuvavirtanäkymässä",
             "nodeContents": "Verkoston solmujen sisältö",
-            "engagementScore": "Näytä kiinnostuksen pisteytys",
+            "engagementScore": "Näytä aktiivisuuden pisteytys",
             "showSocialGraph": "Näytä sosiaalinen verkosto",
             "showContentGraph": "Näytä kuvien väliset suhteet",
             "showTopicGraph": "Näytä #hashtagien väliset suhteet",
@@ -94,7 +94,7 @@
             "egoSelect": "Valittaessa piilota erillään olevat ",
             "useTopicCandidates": "Valitse kuvia #hashtagien perusteella",
             "useRandomCandidates": "Valitse satunnaisesti valittuja kuvia",
-            "useCoengagedCandidates": "Valitse usein yhdessä kiinnostaneita kuvia",
+            "useCoengagedCandidates": "Valitse usein yhdessä aktivoineita kuvia",
             "useSimilarUserCandidates": "Valitse samankaltaisten käyttäjien kuvia",
             "candidates": "Kuvakandidaattien valintamekaniikat",
             "scoring": "Kuvien pisteytyksen perusteet",
@@ -160,7 +160,7 @@
             "yourProfile": "Profiilisi",
             "yourRecommendations": "Suosituksesi",
             "shareProfile": "Jaa datasi",
-            "engagement": "Kiinnostuksesi taso"
+            "engagement": "Aktiivisuutesi"
         },
         "actions": {
             "more": "Lisää",
@@ -184,15 +184,15 @@
             "followingTopicLikelihood": "Suositeltu koska vaikutat seuraavan tämänkaltaisten kuvien tekijöitä.",
             "reactingTopicLikelihood": "Suositeltu koska vaikutat reagoivan tällaisiin kuviin emojeilla.",
             "viewingTopicLikelihood": "Suositeltu koska vaikutat katsovan tällaisia kuvia.",
-            "coengagementOverlap": "Suositeltu muiden käyttäjien yhteisten kiinnostuksenkohteiden perusteella.",
+            "coengagementOverlap": "Suositeltu muiden käyttäjien yhteisten kiinnostuksen kohteiden perusteella.",
             "randomness": "Suosittelu tehty sattumanvaraisesti",
             "lastSeen": "Tätä ei ole nähty lähiaikoina",
             "noReason": "Ei syytä (sattumanvarainen)",
-            "engagedWith": "Olet ollut kiinnostunut"
+            "engagedWith": "Olet reagoinut"
         },
         "features": {
             "tasteSimilarity": "Mieltymysten perusteella",
-            "coengagementOverlap": "Kiinnostusten perusteella",
+            "coengagementOverlap": "Aktiivisuuden perusteella",
             "sharingTopicLikelihood": "Jaat todennäköisesti",
             "commentingTopicLikelihood": "Kommentoit todennäköisesti",
             "followingTopicLikelihood": "Seuraat todennäköisesti",
