@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { ContentNodeId } from '@genaism/services/graph/graphTypes';
 import { ScoredRecommendation } from '@genaism/services/recommender/recommenderTypes';
 import { updateEngagement } from '@genaism/services/profiler/profiler';
+import Spinner from '../Spinner/Spinner';
 
 const INTERACTION_TIMEOUT = 5000;
 
@@ -220,6 +221,7 @@ export default function ImageFeed({ images, onView, onMore, onLog, noActions, sh
 
                 <div className={style.topSpacer} />
                 <FeedSpacer size={viewed - 4} />
+                {images.length === 0 && <Spinner />}
                 {images.map((img, ix) => (
                     <IImage
                         key={ix}
