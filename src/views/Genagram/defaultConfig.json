@@ -5,7 +5,12 @@
             "similarUsers": 2,
             "coengaged": 2,
             "random": 2
-        }
+        },
+        "hideDataView": true,
+        "hideProfileView": true,
+        "hideActionsButton": true,
+        "hideRecommendationsView": true,
+        "collectResearchData": true
     },
     "content": ["https://tmstore.blob.core.windows.net/projects/imageSet1.zip"]
 }
