@@ -24,6 +24,7 @@ import RecommendationsProfile from '@genaism/components/RecommendationsProfile/R
 import { appendRecommendations } from '@genaism/services/recommender/recommender';
 import { LogProvider } from '@genaism/hooks/logger';
 import EnterName from './EnterName';
+import BlockDialog from '../dialogs/BlockDialog/BlockDialog';
 
 function slideDirection(my: number, current: number, previous: number): SlideProps['direction'] {
     if (my === current) {
@@ -156,6 +157,7 @@ export function Component() {
                                     icon={<ImageSearchIcon fontSize="large" />}
                                 />
                             </BottomNavigation>
+                            <BlockDialog />
                         </div>
                     )}
                     {id && config?.collectResearchData && !name && (
