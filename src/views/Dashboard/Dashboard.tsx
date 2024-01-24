@@ -36,6 +36,7 @@ import { UserNodeId } from '@genaism/services/graph/graphTypes';
 import { useID } from '@genaism/hooks/id';
 import UserGrid from '@genaism/components/UserGrid/UserGrid';
 import { getNodesByType } from '@genaism/services/graph/nodes';
+import { addComment } from '@genaism/services/content/content';
 
 const MAX_AGE = 30 * 60 * 1000; // 30 mins
 
@@ -91,6 +92,7 @@ export function Component() {
                                 contentId: l.id || 'content:none',
                             });
                         }
+                        addComment(l.id || 'content:none', data.id, l.content || '');
                     }
                 });
             } else if (data.event === 'researchlog') {

@@ -4,7 +4,7 @@ import { getNodesByType } from '@genaism/services/graph/nodes';
 import { getActionLog, getUserProfile } from '@genaism/services/profiler/profiler';
 import { dumpJSON } from '../graph/state';
 import { getResearchLog } from '../research/research';
-import { getContentData, getContentMetadata } from '../content/content';
+import { dumpComments, getContentData, getContentMetadata } from '../content/content';
 import { ProjectMeta, VERSION } from './types';
 import { v4 as uuidv4 } from 'uuid';
 import appVersion from '@genaism/generatedGitInfo.json';
@@ -80,6 +80,7 @@ async function generateBlob({
     const researchLog = getResearchLog();
     if (researchLog.length > 0) {
         zip.file('research.json', JSON.stringify(researchLog, undefined, 4));
+        zip.file('comments.json', JSON.stringify(dumpComments(), undefined, 4));
     }
 
     const blob = await zip.generateAsync({ type: 'blob' });

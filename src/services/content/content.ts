@@ -63,3 +63,17 @@ export function addComment(id: ContentNodeId, user: UserNodeId, comment: string)
 export function getComments(id: ContentNodeId): CommentEntry[] {
     return commentStore.get(id) || [];
 }
+
+export interface CommentDataItem {
+    content: ContentNodeId;
+    comments: CommentEntry[];
+}
+
+export function dumpComments(): CommentDataItem[] {
+    const result: CommentDataItem[] = [];
+    commentStore.forEach((value, key) => {
+        result.push({ content: key, comments: value });
+    });
+
+    return result;
+}
