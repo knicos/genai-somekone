@@ -37,6 +37,7 @@ import LangSelect from '@genaism/components/LangSelect/LangSelect';
 import { availableUsers } from '@genaism/state/sessionState';
 import { addComment } from '@genaism/services/content/content';
 
+const DATA_LOG_TIME = 15 * 60 * 1000;
 const USERNAME_KEY = 'genai_somekone_username';
 
 function loadUser() {
@@ -73,7 +74,7 @@ export function Component() {
                 addComment(data.contentId, data.id, data.comment);
             } else if (data.event === 'eter:join') {
                 const profile = getUserProfile();
-                const logs = getActionLogSince(Date.now() - 5 * 60 * 1000).filter((a) => a.timestamp <= logRef.current);
+                const logs = getActionLogSince(Date.now() - DATA_LOG_TIME).filter((a) => a.timestamp <= logRef.current);
                 conn.send({ event: 'eter:config', configuration: config, content });
                 conn.send({ event: 'eter:reguser', username, id: getCurrentUser() });
                 conn.send({ event: 'eter:action_log', id: getCurrentUser(), log: logs });
