@@ -22,11 +22,11 @@ export default function TopicPie({ summary, title, percent }: Props) {
                 <PieChart
                     series={[
                         {
-                            outerRadius: 90,
+                            outerRadius: 70,
                             paddingAngle: 5,
                             cornerRadius: 4,
                             innerRadius: 5,
-                            cx: 90,
+                            cx: 70,
                             cy: 90,
                             data,
                         },
