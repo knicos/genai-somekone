@@ -57,3 +57,8 @@ export const menuShowUserPanel = atom<UserPanel>({
     key: 'menushowuserpanel',
     default: 'none',
 });
+
+export const menuShowReplay = atom<boolean>({
+    key: 'menushowreplay',
+    default: false,
+});

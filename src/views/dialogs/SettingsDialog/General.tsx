@@ -4,10 +4,12 @@ import { appConfiguration } from '@genaism/state/settingsState';
 import { useTranslation } from 'react-i18next';
 import { Checkbox, FormControlLabel } from '@mui/material';
 import LangSelect from '@genaism/components/LangSelect/LangSelect';
+import { menuShowReplay } from '@genaism/state/menuState';
 
 export default function GeneralSettings() {
     const { t } = useTranslation();
     const [config, setConfig] = useRecoilState(appConfiguration);
+    const [replay, showReplay] = useRecoilState(menuShowReplay);
 
     return (
         <div className={style.column}>
@@ -21,6 +23,15 @@ export default function GeneralSettings() {
                     />
                 }
                 label={t('dashboard.labels.collectResearch')}
+            />
+            <FormControlLabel
+                control={
+                    <Checkbox
+                        checked={replay}
+                        onChange={(_, checked) => showReplay(checked)}
+                    />
+                }
+                label={t('dashboard.labels.showReplay')}
             />
         </div>
     );

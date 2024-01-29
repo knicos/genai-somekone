@@ -10,6 +10,7 @@ const MAX_DWELL_TIME = 10000;
 
 function affinityBoost(id: UserNodeId, content: ContentNodeId, weight: number) {
     const topics = getRelated('topic', content);
+
     topics.forEach((t) => {
         const engageScore = (getEdgeWeights('engaged_topic', id, t.id)[0] || 0) + t.weight * weight;
         addEdge('engaged_topic', id, t.id, engageScore);
@@ -21,6 +22,7 @@ function affinityBoost(id: UserNodeId, content: ContentNodeId, weight: number) {
     });
 
     addOrAccumulateEdge('engaged', id, content, weight);
+    addOrAccumulateEdge('engaged', content, id, weight);
     addOrAccumulateEdge('last_engaged', id, content, weight);
 }
 
@@ -61,13 +63,8 @@ function processEngagement(id: UserNodeId, content: ContentNodeId, engagement: n
     }
 }
 
-export function addLogEntry(data: LogEntry, id?: UserNodeId, noEvent?: boolean) {
+export function processLogEntry(data: LogEntry, id?: UserNodeId, noEvent?: boolean) {
     const aid = id || getCurrentUser();
-    const logArray: LogEntry[] = logs.get(aid) || [];
-
-    logArray.push(data);
-    logs.set(aid, logArray);
-
     const cid = (data.id || '') as ContentNodeId;
 
     switch (data.activity) {
@@ -120,12 +117,27 @@ export function addLogEntry(data: LogEntry, id?: UserNodeId, noEvent?: boolean) 
     if (!noEvent) emitLogEvent(aid);
 }
 
-export function appendActionLog(data: LogEntry[], id?: UserNodeId) {
+export function addLogEntry(data: LogEntry, id?: UserNodeId, noEvent?: boolean) {
+    const aid = id || getCurrentUser();
+    const logArray: LogEntry[] = logs.get(aid) || [];
+
+    logArray.push(data);
+    logs.set(aid, logArray);
+
+    processLogEntry(data, aid, noEvent);
+}
+
+export function appendActionLog(data: LogEntry[], id?: UserNodeId, noProcess?: boolean) {
     const aid = id || getCurrentUser();
 
-    data.forEach((d) => {
-        addLogEntry(d, aid, true);
-    });
+    if (noProcess) {
+        const logArray: LogEntry[] = logs.get(aid) || [];
+        logs.set(aid, [...logArray, ...data]);
+    } else {
+        data.forEach((d) => {
+            addLogEntry(d, aid, true);
+        });
+    }
     emitLogEvent(aid);
 }
 

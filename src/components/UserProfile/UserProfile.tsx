@@ -48,8 +48,6 @@ export default function Profile({ id }: Props) {
         setWCSize(size);
     }, []);
 
-    console.log('PROFILE', profile);
-
     const tasteSum = profile.taste.reduce((sum, t) => sum + t.weight, 0);
 
     return (

@@ -21,7 +21,7 @@ import {
 } from '@genaism/services/profiler/profiler';
 import SocialGraph from '@genaism/components/SocialGraph/SocialGraph';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { menuGraphType } from '@genaism/state/menuState';
+import { menuGraphType, menuShowReplay } from '@genaism/state/menuState';
 import SaveDialog from '../dialogs/SaveDialog/SaveDialog';
 import SettingsDialog from '../dialogs/SettingsDialog/SettingsDialog';
 import Loading from '@genaism/components/Loading/Loading';
@@ -37,6 +37,7 @@ import { useID } from '@genaism/hooks/id';
 import UserGrid from '@genaism/components/UserGrid/UserGrid';
 import { getNodesByType } from '@genaism/services/graph/nodes';
 import { addComment } from '@genaism/services/content/content';
+import Replay from '@genaism/components/Replay/Replay';
 
 const MAX_AGE = 30 * 60 * 1000; // 30 mins
 
@@ -60,6 +61,7 @@ export function Component() {
     const [count, refresh] = useReducer((a) => ++a, 0);
     const snapRef = useRef(new Map<UserNodeId, number>());
     const senderRef = useRef<SenderType<EventProtocol> | undefined>();
+    const showReplay = useRecoilValue(menuShowReplay);
 
     const dataHandler = useCallback(
         (data: EventProtocol, conn: DataConnection) => {
@@ -238,6 +240,7 @@ export function Component() {
                     />
                     <SaveDialog />
                     <SettingsDialog />
+                    {showReplay && <Replay />}
                 </main>
             </Loading>
             <ErrorDialog />

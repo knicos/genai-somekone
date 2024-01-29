@@ -99,6 +99,11 @@ export function setUserName(id: UserNodeId, name: string) {
     }
 }
 
+export function clearProfile(id: UserNodeId) {
+    outOfDate.add(id);
+    emitProfileEvent(id);
+}
+
 export function addUserProfile(profile: UserProfile) {
     const uid = isUserID(profile.id) ? profile.id : (`user:${profile.id}` as UserNodeId);
     const hadNode = hasNode(uid);

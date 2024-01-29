@@ -50,3 +50,8 @@ export function getTopicParent(id: TopicNodeId): WeightedNode<TopicNodeId> | nul
 export function getTopicChildren(id: TopicNodeId): WeightedNode<TopicNodeId>[] {
     return getRelated('child', id);
 }
+
+export function resetTopics() {
+    topicStore.clear();
+    topicLabelIndex.clear();
+}

@@ -61,22 +61,26 @@ function generateCoengaged(profile: ProfileSummary, nodes: Recommendation[], cou
 }
 
 const MIN20 = 20 * 60 * 1000;
+const NUM_SIMILAR_USERS = 5;
+const IMAGES_PER_USER = 30;
 
 interface UserSuggestion extends WeightedNode<ContentNodeId> {
     user: UserNodeId;
     similarityScore: number;
 }
 
+// FIXME: Select different numbers of candidates from the similar users depending upon their weight. More
+// candidates should come from those more similar users. Also, use biasedUniqueSubset to randomly select N from the
+// larger set to avoid only ever considering the most recent ones. What are the performance implications of this?
+
 function generateSimilarUsers(profile: UserProfile, nodes: Recommendation[], count: number) {
     // First, find similar users.
-    const similar = getRelated('similar', profile.id, { count: 15, timeDecay: 0.5, period: MIN20 });
-    const biasedSimilar = biasedUniqueSubset(similar, 5, (v) => v.id);
+    const similar = getRelated('similar', profile.id, { count: NUM_SIMILAR_USERS, timeDecay: 0.5, period: MIN20 });
 
     // For each similar user, get their favourite images.
     let results: UserSuggestion[] = [];
-    biasedSimilar.forEach((user) => {
-        const best = getRelated('engaged', user.id, { count: 10, period: MIN20, timeDecay: 0.8 });
-        // console.log('SIMILAR', best);
+    similar.forEach((user) => {
+        const best = getRelated('engaged', user.id, { count: IMAGES_PER_USER, period: MIN20, timeDecay: 0.8 });
         const wbest = best.map((b) => ({
             id: b.id,
             weight: b.weight * user.weight,

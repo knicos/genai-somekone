@@ -120,7 +120,10 @@
             "showFeed": "Näytä käyttäjän kuvavirta",
             "collectResearch": "Kerää tutkimusdataa",
             "showFeedImageLabels": "Näytä #hashtagit kuvavirrassa",
-            "topicThreshold": "#hashtagien määrä per käyttäjä"
+            "topicThreshold": "#hashtagien määrä per käyttäjä",
+            "showReplay": "Show replay controls",
+            "stop": "Stop",
+            "play": "Play"
         },
         "messages": {
             "connection": "Mene allaolevaan www-osoitteeseen ja syötä koodi <Code>{{codeText}}</Code>, tai käytä QR -koodia.",

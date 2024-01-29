@@ -144,7 +144,7 @@ export async function loadFile(file: File | Blob): Promise<void> {
     });
 
     store.logs.forEach((l) => {
-        appendActionLog(l.log, l.id);
+        appendActionLog(l.log, l.id, !!store.graph);
     });
 }
 

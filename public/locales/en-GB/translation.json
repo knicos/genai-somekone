@@ -122,7 +122,10 @@
             "collectResearch": "Collect research data",
             "showFeedImageLabels": "Show image labels in feed",
             "topicThreshold": "Node topic threshold",
-            "allLinks": "Show all links on select"
+            "allLinks": "Show all links on select",
+            "showReplay": "Show replay controls",
+            "stop": "Stop",
+            "play": "Play"
         },
         "messages": {
             "connection": "Go to the address below and enter the code <Code>{{codeText}}</Code>, or use the QR code.",

@@ -16,9 +16,9 @@ export const users = new Map<UserNodeId, UserProfile>();
 export const logs = new Map<UserNodeId, LogEntry[]>();
 export const outOfDate = new Set<string>();
 
-export function resetProfiles() {
+export function resetProfiles(excludeLogs?: boolean) {
     users.clear();
-    logs.clear();
+    if (!excludeLogs) logs.clear();
     outOfDate.clear();
     userID = undefined;
 }
