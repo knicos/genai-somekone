@@ -68,7 +68,7 @@ addNodeTypeListener('user', (id: UserNodeId) => {
             sharedTopics: [],
             viewedTopics: [],
             followedTopics: [],
-            featureWeights: data.featureWeights,
+            featureWeights: data.featureWeights || [...defaultWeights],
             seenItems: 0,
             engagementTotal: 0,
             positiveRecommendations: 0,
@@ -199,6 +199,7 @@ export function recreateUserProfile(id?: UserNodeId): UserProfile {
 
     // Attempt to find data
     const data = getNodeData<UserData>(aid);
+    if (data && !data?.featureWeights) data.featureWeights = [...defaultWeights];
 
     return {
         ...summary,

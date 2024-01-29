@@ -62,3 +62,8 @@ export const menuShowReplay = atom<boolean>({
     key: 'menushowreplay',
     default: false,
 });
+
+export const menuAllowFeedActions = atom<boolean>({
+    key: 'menuallowfeedactions',
+    default: false,
+});

@@ -1,7 +1,8 @@
 import { ScoredRecommendation } from '../recommender/recommenderTypes';
 import { UserProfile } from './profilerTypes';
 
-const MAX_LEARNING_RATE = 0.1;
+const MAX_LEARNING_RATE = 0.3;
+const MIN_LEARNING_RATE = 0;
 
 export function trainProfile(input: ScoredRecommendation, profile: UserProfile, score: number) {
     profile.seenItems++;
@@ -22,7 +23,10 @@ export function trainProfile(input: ScoredRecommendation, profile: UserProfile, 
             (error > 0
                 ? profile.positiveRecommendations / profile.seenItems
                 : profile.negativeRecommendations / profile.seenItems)) *
-        MAX_LEARNING_RATE;
+            MAX_LEARNING_RATE +
+        MIN_LEARNING_RATE;
+
+    //console.log('TRAIN', profile, input, error * learningRate);
 
     profile.featureWeights.forEach((w, ix) => {
         profile.featureWeights[ix] = w + error * learningRate * input.features[ix];

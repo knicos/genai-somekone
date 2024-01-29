@@ -18,6 +18,7 @@ import {
     settingSimilarPercent,
     settingTopicThreshold,
 } from '@genaism/state/settingsState';
+import { menuAllowFeedActions } from '@genaism/state/menuState';
 
 export default function SocialGraphSettings() {
     const { t } = useTranslation();
@@ -33,6 +34,7 @@ export default function SocialGraphSettings() {
     const [egoSelect, setEgoSelect] = useRecoilState(settingEgoOnSelect);
     const [topicThreshold, setTopicThreshold] = useRecoilState(settingTopicThreshold);
     const [allLinks, setAllLinks] = useRecoilState(settingIncludeAllLinks);
+    const [allowActions, setAllowActions] = useRecoilState(menuAllowFeedActions);
 
     const doEdgeScale = useCallback(
         (_: unknown, value: number | number[]) => setEdgeScale(value as number),
@@ -115,6 +117,15 @@ export default function SocialGraphSettings() {
                     />
                 }
                 label={t('dashboard.labels.allLinks')}
+            />
+            <FormControlLabel
+                control={
+                    <Checkbox
+                        checked={allowActions}
+                        onChange={(_, checked) => setAllowActions(checked)}
+                    />
+                }
+                label={t('dashboard.labels.allowFeedActions')}
             />
             <FormControl sx={{ marginTop: '1rem' }}>
                 <FormLabel id="demo-radio-buttons-group-label">{t('dashboard.labels.nodeContents')}</FormLabel>

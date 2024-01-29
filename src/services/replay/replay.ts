@@ -11,6 +11,9 @@ import { resetProfiles } from '../profiler/state';
 import { scoreCandidates } from '../recommender/scoring';
 import { trainProfile } from '../profiler/training';
 import { getEdgeWeights } from '../graph/edges';
+import { ScoredRecommendation } from '../recommender/recommenderTypes';
+
+const cacheRecommendations = new Map<string, ScoredRecommendation>();
 
 function firstTimestamp(users: UserNodeId[]) {
     let firstTS = Date.now();
@@ -33,23 +36,29 @@ function endTimestamp(users: UserNodeId[]) {
 }
 
 function replayEntry(id: UserNodeId, log: LogEntry) {
+    if (log.activity === 'seen') {
+        const profile = getUserProfile(id);
+        const scores = scoreCandidates(
+            [
+                {
+                    contentId: log.id || 'content:none',
+                    timestamp: log.timestamp,
+                    candidateOrigin: 'topic_affinity',
+                },
+            ],
+            profile
+        );
+        cacheRecommendations.set(id + log.id, scores[0]);
+    }
     processLogEntry(log, id);
-    const profile = getUserProfile(id);
-
-    const scores = scoreCandidates(
-        [
-            {
-                contentId: log.id || 'content:none',
-                timestamp: log.timestamp,
-                candidateOrigin: 'topic_affinity',
-            },
-        ],
-        profile
-    );
 
     if (log.activity === 'engagement') {
-        const weight = getEdgeWeights('last_engaged', id, scores[0].contentId)[0] || 0;
-        trainProfile(scores[0], profile, weight);
+        const profile = getUserProfile(id);
+        const score = cacheRecommendations.get(id + log.id);
+        if (score) {
+            const weight = getEdgeWeights('last_engaged', id, score.contentId)[0] || 0;
+            trainProfile(score, profile, weight);
+        }
     }
 }
 
@@ -68,10 +77,34 @@ function replayUserEntries(id: UserNodeId, index: number, end: number) {
     return logs.length;
 }
 
+/*function averageWeights(users: UserNodeId[]) {
+    const weights: number[] = [];
+    users.forEach((user) => {
+        const profile = getUserProfile(user);
+        if (weights.length === 0) {
+            profile.featureWeights.forEach(() => weights.push(0));
+        }
+
+        profile.featureWeights.forEach((value, ix) => {
+            weights[ix] += value;
+        });
+    });
+
+    weights.forEach((w, ix) => {
+        weights[ix] = w / users.length;
+    });
+
+    console.log('Average weights:', weights);
+}*/
+
 interface ReplayState {
     startTime: number;
     endTime: number;
     indexes: Map<UserNodeId, number>;
+}
+
+interface UserData {
+    name: string;
 }
 
 export function useLogReplay(speed: number) {
@@ -87,20 +120,21 @@ export function useLogReplay(speed: number) {
     useEffect(() => {
         if (active) {
             const users = getNodesByType('user');
-            const data = new Map<UserNodeId, unknown>();
+            const data = new Map<UserNodeId, UserData>();
             users.forEach((user) => {
-                const d = getNodeData(user);
-                data.set(user, d);
+                const d = getNodeData<UserData>(user);
+                if (d) data.set(user, d);
             });
 
             resetGraph();
             resetTopics();
             resetProfiles(true);
             rebuildContent();
+            cacheRecommendations.clear();
 
             users.forEach((user) => {
                 if (getActionLog(user)?.length > 0) {
-                    addNode('user', user, data.get(user));
+                    addNode('user', user, { name: data.get(user)?.name });
                 }
             });
 
@@ -127,6 +161,8 @@ export function useLogReplay(speed: number) {
             const endIx = replayUserEntries(user, startIx, currentTime);
             state.current.indexes.set(user, endIx);
         });
+
+        // averageWeights(users);
     }, [currentTime]);
 
     return {

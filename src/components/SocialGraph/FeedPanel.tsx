@@ -1,4 +1,4 @@
-import { menuSelectedUser, menuShowUserPanel } from '@genaism/state/menuState';
+import { menuAllowFeedActions, menuSelectedUser, menuShowUserPanel } from '@genaism/state/menuState';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import AppPanel from '../AppPanel/AppPanel';
 import Feed from '../Feed/Feed';
@@ -11,6 +11,7 @@ interface UserData {
 export default function FeedPanel() {
     const [panel, setPanel] = useRecoilState(menuShowUserPanel);
     const selectedUser = useRecoilValue(menuSelectedUser);
+    const allowActions = useRecoilValue(menuAllowFeedActions);
 
     return panel === 'feed' && selectedUser ? (
         <AppPanel
@@ -20,8 +21,8 @@ export default function FeedPanel() {
         >
             <Feed
                 id={selectedUser}
-                noLog
-                noActions
+                noLog={!allowActions}
+                noActions={!allowActions}
             />
         </AppPanel>
     ) : null;

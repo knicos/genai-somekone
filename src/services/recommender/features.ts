@@ -106,15 +106,16 @@ function calculateCoengagementScore(userId: UserNodeId, contentId: ContentNodeId
     return Math.min(1, sum / COENGAGEMENT_MAX);
 }
 
-const SEEN_TIME = 10 * 60 * 1000;
+// This depends on number of images available and classroom activity rate.
+const SEEN_TIME = 2 * 60 * 1000;
 
 function getLastSeenTime(userId: UserNodeId, contentId: ContentNodeId): number {
     const edge = getEdge('seen', userId, contentId);
     if (edge) {
         const now = Date.now();
         const diff = now - edge.timestamp;
-        const norm = Math.min(1, diff / SEEN_TIME);
-        return 1 - norm;
+        const norm = 1 - Math.min(1, diff / SEEN_TIME);
+        return norm * norm;
     }
     return 0;
 }
