@@ -79,6 +79,7 @@ const DEFAULT_LINK_STYLE = {
 
 const MOVE_THRESHOLD = 10;
 const CAMERA_DURATION = 0.3;
+const REFRESH_COUNT = 30;
 
 export default function Graph<T extends NodeID>({
     nodes,
@@ -116,6 +117,7 @@ export default function Graph<T extends NodeID>({
     const extents = useRef<[number, number, number, number]>([0, 0, 0, 0]);
     const movement = useRef<[number, number]>([0, 0]);
     const pointerCache = useRef(new Map<number, PointerEvent<SVGSVGElement>>());
+    const drawCount = useRef(0);
 
     internalState.current.focusNode = focusNode;
 
@@ -144,6 +146,13 @@ export default function Graph<T extends NodeID>({
 
     useEffect(() => {
         if (simRef.current) simRef.current.stop();
+
+        // Force a reposition sometimes
+        if (drawCount.current > REFRESH_COUNT) {
+            drawCount.current = 0;
+            nodeRef.current.clear();
+        }
+        drawCount.current++;
 
         const newNodeRef = makeNodes<T>(nodes, nodeRef.current, internalState.current.focusNode);
         nodeRef.current = newNodeRef;
