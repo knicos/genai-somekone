@@ -8,11 +8,12 @@ import ReplyIcon from '@mui/icons-material/Reply';
 import Avatar from '@mui/material/Avatar';
 import SharePanel, { ShareKind } from './SharePanel';
 import CommentPanel from './CommentPanel';
-import { getContentData, getContentMetadata } from '@genaism/services/content/content';
+import { getComments, getContentData, getContentMetadata } from '@genaism/services/content/content';
 import { ContentNodeId } from '@genaism/services/graph/graphTypes';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import LabelsPanel from './LabelsPanel';
+import IconButtonDot from '../IconButtonDot/IconButtonDot';
 
 type ActionPanel = 'none' | 'like' | 'comment' | 'share' | 'discard' | 'author';
 
@@ -197,7 +198,8 @@ export default function FeedImage({
                                 />
                             )}
                         </IconButton>
-                        <IconButton
+                        <IconButtonDot
+                            count={getComments(id).length}
                             color="inherit"
                             onClick={doShowComments}
                             data-testid="feed-image-comment-button"
@@ -206,7 +208,7 @@ export default function FeedImage({
                                 color="inherit"
                                 fontSize="large"
                             />
-                        </IconButton>
+                        </IconButtonDot>
                         <IconButton
                             color="inherit"
                             onClick={doShowSharePanel}
