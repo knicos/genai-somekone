@@ -38,7 +38,6 @@ export default function ScorePie({ item }: Props) {
                     },
                 ]}
                 colors={gcolours}
-                width={340}
                 height={120}
             />
         </div>

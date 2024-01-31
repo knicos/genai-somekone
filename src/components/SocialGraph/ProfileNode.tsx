@@ -23,6 +23,7 @@ interface Props {
     disabled?: boolean;
     onResize: (id: UserNodeId, size: number) => void;
     node: GraphNode<UserNodeId>;
+    fixedSize?: boolean;
 }
 
 function filterTaste(taste: WeightedLabel[], threshold: number): WeightedLabel[] {
@@ -31,7 +32,7 @@ function filterTaste(taste: WeightedLabel[], threshold: number): WeightedLabel[]
     return taste.filter((t) => t.weight >= threshold * max);
 }
 
-const ProfileNode = memo(function ProfileNode({ id, onResize, live, selected, disabled, node }: Props) {
+const ProfileNode = memo(function ProfileNode({ id, onResize, live, selected, disabled, node, fixedSize }: Props) {
     const [size, setSize] = useState(100);
     const shrinkOffline = useRecoilValue(settingShrinkOfflineUsers);
     const nodeMode = useRecoilValue(settingNodeMode);
@@ -41,10 +42,12 @@ const ProfileNode = memo(function ProfileNode({ id, onResize, live, selected, di
 
     const doResize = useCallback(
         (s: number) => {
-            setSize(s + 20);
-            onResize(id, s + 20);
+            if (!fixedSize) {
+                setSize(s + 20);
+                onResize(id, s + 20);
+            }
         },
-        [onResize, id]
+        [onResize, id, fixedSize]
     );
 
     const reduced = shrinkOffline && !live;
