@@ -15,17 +15,18 @@ function limitString(value: string) {
 interface Props {
     comment: string;
     user: UserNodeId;
+    noLimit?: boolean;
 }
 
 interface UserData {
     name: string;
 }
 
-export default function Comment({ comment, user }: Props) {
+export default function Comment({ comment, user, noLimit }: Props) {
     const username = getNodeData<UserData>(user)?.name;
     return (
         <li className={style.commentItem}>
-            <div className={style.commentText}>{limitString(comment)}</div>
+            <div className={style.commentText}>{noLimit ? comment : limitString(comment)}</div>
             <div className={style.commentUser}>{username || 'Unknown'}</div>
         </li>
     );

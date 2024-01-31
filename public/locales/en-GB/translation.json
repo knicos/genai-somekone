@@ -9,7 +9,8 @@
                 "everyone": "Everyone"
             },
             "enterUser": "Enter",
-            "moreComments": "More Comments"
+            "moreComments": "More Comments",
+            "post": "Post"
         },
         "titles": {
             "shareWith": "Share with",

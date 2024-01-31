@@ -92,7 +92,8 @@ describe('ImageFeed component', () => {
 
         await user.click(screen.getByTestId('feed-image-comment-button'));
         await user.click(screen.getByTestId('comment-input'));
-        await user.keyboard('helloworld[Enter]');
+        await user.keyboard('helloworld');
+        await user.click(screen.getByTestId('comment-post-button'));
 
         expect(logfn).toHaveBeenCalledWith({
             activity: 'comment',

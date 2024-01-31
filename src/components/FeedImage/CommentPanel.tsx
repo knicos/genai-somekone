@@ -2,7 +2,7 @@ import style from './style.module.css';
 import TextField from '@mui/material/TextField';
 import ActionPanel from './ActionPanel';
 import { useTranslation } from 'react-i18next';
-import { useCallback, useState } from 'react';
+import { useRef, useState } from 'react';
 import { ContentNodeId } from '@genaism/services/graph/graphTypes';
 import { getComments } from '@genaism/services/content/content';
 import Comment from './Comment';
@@ -17,19 +17,7 @@ interface Props {
 export default function CommentPanel({ onClose, onComment, id }: Props) {
     const { t } = useTranslation();
     const [showMore, setShowMore] = useState(false);
-
-    const doKeyCheck = useCallback(
-        (e: React.KeyboardEvent<HTMLInputElement>) => {
-            if (e.key === 'Enter') {
-                if (onComment) {
-                    onComment((e.target as HTMLInputElement).value);
-                }
-
-                if (onClose) onClose();
-            }
-        },
-        [onComment, onClose]
-    );
+    const ref = useRef<HTMLInputElement>(null);
 
     const comments = getComments(id);
 
@@ -44,12 +32,29 @@ export default function CommentPanel({ onClose, onComment, id }: Props) {
                 className={style.commentbubble}
                 data-testid="feed-image-comment-panel"
             >
-                <TextField
-                    variant="outlined"
-                    placeholder={t('feed.placeholders.comment')}
-                    inputProps={{ 'data-testid': 'comment-input' }}
-                    onKeyDown={doKeyCheck}
-                />
+                <div className={style.commentInputRow}>
+                    <TextField
+                        fullWidth
+                        variant="outlined"
+                        placeholder={t('feed.placeholders.comment')}
+                        inputProps={{ 'data-testid': 'comment-input' }}
+                        inputRef={ref}
+                        multiline
+                        maxRows={2}
+                    />
+                    <Button
+                        data-testid="comment-post-button"
+                        variant="contained"
+                        onClick={() => {
+                            if (onComment && ref.current) {
+                                onComment(ref.current.value);
+                            }
+                            if (onClose) onClose();
+                        }}
+                    >
+                        {t('feed.actions.post')}
+                    </Button>
+                </div>
                 <ul className={style.commentList}>
                     {comments.length === 0 && <li>{t('feed.messages.noComments')}</li>}
                     {comments.length > 0 && (
@@ -66,6 +71,7 @@ export default function CommentPanel({ onClose, onComment, id }: Props) {
                                         key={ix}
                                         comment={c.comment}
                                         user={c.userId}
+                                        noLimit
                                     />
                                 ))}
                             {comments.length > 1 && !showMore && (
