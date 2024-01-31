@@ -123,7 +123,10 @@
             "topicThreshold": "#hashtagien määrä per käyttäjä",
             "showReplay": "Show replay controls",
             "stop": "Stop",
-            "play": "Play"
+            "play": "Play",
+            "storageOptions": "Load and save data",
+            "viewOptions": "Graph to display",
+            "appOptions": "Feed app options"
         },
         "messages": {
             "connection": "Mene allaolevaan www-osoitteeseen ja syötä koodi <Code>{{codeText}}</Code>, tai käytä QR -koodia.",

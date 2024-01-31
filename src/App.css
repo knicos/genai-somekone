@@ -33,6 +33,12 @@
     border-radius: 6px;
 }
 
+.MuiMenu-paper {
+    margin-left: 20px;
+    box-shadow: none;
+    box-shadow: 1px 1px 8px #888;
+}
+
 .MuiDialogContent-root {
     font-family: Andika;
 }
