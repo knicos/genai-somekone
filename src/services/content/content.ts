@@ -2,6 +2,7 @@ import { CommentEntry, ContentMetadata } from './contentTypes';
 import { addNode, addEdge, removeNode } from '@genaism/services/graph/graph';
 import { getTopicId } from '@genaism/services/concept/concept';
 import { ContentNodeId, UserNodeId } from '../graph/graphTypes';
+import { isDisallowedTopic } from './disallowed';
 
 const dataStore = new Map<ContentNodeId, string>();
 const metaStore = new Map<ContentNodeId, ContentMetadata>();
@@ -37,9 +38,10 @@ export function rebuildContent() {
 
             meta.labels.forEach((l) => {
                 if (l.weight > 0) {
+                    const isdis = isDisallowedTopic(l.label);
                     const tid = getTopicId(l.label);
-                    addEdge('topic', cid, tid, l.weight);
-                    addEdge('content', tid, cid, l.weight);
+                    addEdge('topic', cid, tid, isdis ? l.weight * 0.1 : l.weight);
+                    addEdge('content', tid, cid, isdis ? l.weight * 0.1 : l.weight);
                 }
             });
         } catch (e) {
@@ -59,9 +61,10 @@ export function addContent(data: string, meta: ContentMetadata) {
         });
         meta.labels.forEach((l) => {
             if (l.weight > 0) {
+                const isdis = isDisallowedTopic(l.label);
                 const tid = getTopicId(l.label);
-                addEdge('topic', cid, tid, l.weight);
-                addEdge('content', tid, cid, l.weight);
+                addEdge('topic', cid, tid, isdis ? l.weight * 0.1 : l.weight);
+                addEdge('content', tid, cid, isdis ? l.weight * 0.1 : l.weight);
             }
         });
     } catch (e) {

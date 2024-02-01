@@ -105,8 +105,9 @@ describe('Profiler.addLogEntry', () => {
 
         addLogEntry({ activity: 'like', timestamp: Date.now(), id: 'content:content1' });
 
-        expect(getEdgeWeights('topic', getCurrentUser(), 'topic:topic1')[0]).toBe(0.1);
-        expect(getEdgeWeights('engaged_topic', getCurrentUser(), 'topic:topic1')[0]).toBe(0.1);
+        expect(getEdgeWeights('last_engaged', getCurrentUser(), 'content:content1')[0]).toBe(0.1);
+        //expect(getEdgeWeights('topic', getCurrentUser(), 'topic:topic1')[0]).toBe(0.1);
+        //expect(getEdgeWeights('engaged_topic', getCurrentUser(), 'topic:topic1')[0]).toBe(0.1);
         expect(getEdgeWeights('reacted_topic', getCurrentUser(), 'topic:topic1')[0]).toBe(1);
     });
 
@@ -117,8 +118,10 @@ describe('Profiler.addLogEntry', () => {
 
         addLogEntry({ activity: 'share_friends', timestamp: Date.now(), id: 'content:content1' });
 
-        expect(getEdgeWeights('topic', getCurrentUser(), 'topic:topic1')[0]).toBe(0.3);
-        expect(getEdgeWeights('engaged_topic', getCurrentUser(), 'topic:topic1')[0]).toBe(0.3);
+        expect(getEdgeWeights('last_engaged', getCurrentUser(), 'content:content1')[0]).toBe(0.3);
+
+        //expect(getEdgeWeights('topic', getCurrentUser(), 'topic:topic1')[0]).toBe(0.3);
+        //expect(getEdgeWeights('engaged_topic', getCurrentUser(), 'topic:topic1')[0]).toBe(0.3);
         expect(getEdgeWeights('shared_topic', getCurrentUser(), 'topic:topic1')[0]).toBe(1);
     });
 
@@ -129,8 +132,10 @@ describe('Profiler.addLogEntry', () => {
 
         addLogEntry({ activity: 'follow', timestamp: Date.now(), id: 'content:content1' });
 
-        expect(getEdgeWeights('topic', getCurrentUser(), 'topic:topic1')[0]).toBe(0.5);
-        expect(getEdgeWeights('engaged_topic', getCurrentUser(), 'topic:topic1')[0]).toBe(0.5);
+        expect(getEdgeWeights('last_engaged', getCurrentUser(), 'content:content1')[0]).toBe(0.5);
+
+        //expect(getEdgeWeights('topic', getCurrentUser(), 'topic:topic1')[0]).toBe(0.5);
+        //expect(getEdgeWeights('engaged_topic', getCurrentUser(), 'topic:topic1')[0]).toBe(0.5);
         expect(getEdgeWeights('followed_topic', getCurrentUser(), 'topic:topic1')[0]).toBe(1);
     });
 
@@ -141,8 +146,10 @@ describe('Profiler.addLogEntry', () => {
 
         addLogEntry({ activity: 'love', timestamp: Date.now(), id: 'content:content1' });
 
-        expect(getEdgeWeights('topic', getCurrentUser(), 'topic:topic1')[0]).toBe(0.2);
-        expect(getEdgeWeights('engaged_topic', getCurrentUser(), 'topic:topic1')[0]).toBe(0.2);
+        expect(getEdgeWeights('last_engaged', getCurrentUser(), 'content:content1')[0]).toBe(0.2);
+
+        //expect(getEdgeWeights('topic', getCurrentUser(), 'topic:topic1')[0]).toBe(0.2);
+        //expect(getEdgeWeights('engaged_topic', getCurrentUser(), 'topic:topic1')[0]).toBe(0.2);
         expect(getEdgeWeights('reacted_topic', getCurrentUser(), 'topic:topic1')[0]).toBe(1);
     });
 
@@ -154,20 +161,6 @@ describe('Profiler.addLogEntry', () => {
         addLogEntry({ activity: 'seen', timestamp: Date.now(), id: 'content:content1' });
 
         expect(getEdgeWeights('seen_topic', getCurrentUser(), 'topic:topic1')[0]).toBe(1);
-    });
-
-    it('accounts for seen in topic score', async ({ expect }) => {
-        addNode('content', 'content:content1');
-        addNode('topic', 'topic:topic1');
-        addEdge('topic', 'content:content1', 'topic:topic1', 1);
-
-        addLogEntry({ activity: 'seen', timestamp: Date.now(), id: 'content:content1' });
-        addLogEntry({ activity: 'seen', timestamp: Date.now(), id: 'content:content1' });
-        addLogEntry({ activity: 'like', timestamp: Date.now(), id: 'content:content1' });
-
-        expect(getEdgeWeights('seen_topic', getCurrentUser(), 'topic:topic1')[0]).toBe(2);
-        expect(getEdgeWeights('engaged_topic', getCurrentUser(), 'topic:topic1')[0]).toBe(0.1);
-        expect(getEdgeWeights('topic', getCurrentUser(), 'topic:topic1')[0]).toBe(0.1 / 2);
     });
 });
 

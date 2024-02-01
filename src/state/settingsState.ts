@@ -22,12 +22,12 @@ export const settingDisplayLabel = atom<boolean>({
 
 export const settingIncludeAllLinks = atom<boolean>({
     key: 'settingalllinks',
-    default: false,
+    default: true,
 });
 
 export const settingLinkDistanceScale = atom<number>({
     key: 'settinglinkdistscale',
-    default: 3,
+    default: 4,
 });
 
 export const settingSimilarPercent = atom<number>({
@@ -37,7 +37,7 @@ export const settingSimilarPercent = atom<number>({
 
 export const settingNodeCharge = atom<number>({
     key: 'settingnodecharge',
-    default: 4,
+    default: 3,
 });
 
 export const settingTopicThreshold = atom<number>({

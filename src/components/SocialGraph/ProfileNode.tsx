@@ -14,7 +14,6 @@ import style from './style.module.css';
 import Label from './Label';
 import { GraphNode } from '../Graph/types';
 import { WeightedLabel } from '@genaism/services/content/contentTypes';
-import { isDisallowedTopic } from './disallowed';
 
 interface Props {
     id: UserNodeId;
@@ -61,7 +60,7 @@ const ProfileNode = memo(function ProfileNode({ id, onResize, live, selected, di
         }*/
         if (profile?.taste) {
             return filterTaste(
-                profile.taste.filter((t) => !isDisallowedTopic(t.label)),
+                profile.taste, // .filter((t) => !isDisallowedTopic(t.label)),
                 topicThreshold
             );
         } else {

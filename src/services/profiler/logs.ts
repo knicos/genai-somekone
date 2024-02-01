@@ -1,4 +1,4 @@
-import { addEdge, addOrAccumulateEdge, getEdgeWeights } from '../graph/edges';
+import { addEdge, addOrAccumulateEdge, getEdge } from '../graph/edges';
 import { ContentNodeId, UserNodeId, WeightedNode } from '../graph/graphTypes';
 import { getRelated } from '../graph/query';
 import { emitLogEvent } from './events';
@@ -7,20 +7,10 @@ import { getCurrentUser, logs } from './state';
 
 const MIN_DWELL_TIME = 2000;
 const MAX_DWELL_TIME = 10000;
+// const MAX_AFFINITY_AGE = 2 * 60 * 1000;
+// const MIN_AFFINITY_DECAY = 0.1;
 
 function affinityBoost(id: UserNodeId, content: ContentNodeId, weight: number) {
-    const topics = getRelated('topic', content);
-
-    topics.forEach((t) => {
-        const engageScore = (getEdgeWeights('engaged_topic', id, t.id)[0] || 0) + t.weight * weight;
-        addEdge('engaged_topic', id, t.id, engageScore);
-
-        const seenScore = getEdgeWeights('seen_topic', id, t.id)[0] || 1;
-
-        addEdge('topic', id, t.id, engageScore / seenScore);
-        addEdge('topic', t.id, getCurrentUser(), engageScore / seenScore);
-    });
-
     addOrAccumulateEdge('engaged', id, content, weight);
     addOrAccumulateEdge('engaged', content, id, weight);
     addOrAccumulateEdge('last_engaged', id, content, weight);
@@ -38,9 +28,18 @@ function boostTopics(id: UserNodeId, type: TopicEdgeTypes, content: ContentNodeI
     const topics = getRelated('topic', content);
     topics.forEach((t) => {
         if (t.weight === 0) return;
-        addOrAccumulateEdge(type, id, t.id, 1.0);
+        const edge = getEdge(type, id, t.id);
+        addEdge(type, id, t.id, (edge ? edge.weight : 0) + 1);
     });
 }
+
+/*function decayEdge(edge: Edge<UserNodeId, TopicNodeId>) {
+    const now = Date.now();
+    const age = now - edge.timestamp;
+    const normAge = 1.0 - Math.min(1, age / MAX_AFFINITY_AGE);
+    const normAge2 = normAge * normAge * (1 - MIN_AFFINITY_DECAY) + MIN_AFFINITY_DECAY;
+    return edge.weight * normAge2;
+}*/
 
 function normDwell(d: number): number {
     return Math.max(0, Math.min(10, (d - MIN_DWELL_TIME) / (MAX_DWELL_TIME - MIN_DWELL_TIME)));
@@ -50,16 +49,48 @@ const engageLog = new Map<UserNodeId, WeightedNode<ContentNodeId>[]>();
 
 function processEngagement(id: UserNodeId, content: ContentNodeId, engagement: number) {
     if (engagement > 0) {
+        const topics = getRelated('topic', content);
+
+        topics.forEach((t) => {
+            const edge = getEdge('engaged_topic', id, t.id);
+            const oldWeight = edge ? edge.weight : 0;
+            const engageScore = oldWeight + t.weight * engagement;
+            addEdge('engaged_topic', id, t.id, engageScore);
+
+            //const seenEdge = getEdge('seen_topic', id, t.id);
+            //const seenScore = seenEdge ? decayEdge(seenEdge) : 1;
+
+            addEdge('topic', id, t.id, engageScore);
+            addEdge('topic', t.id, id, engageScore);
+        });
+
         const elog = engageLog.get(id) || [];
         // Now add some co-engagement edges
         let w = engagement;
         for (let i = elog.length - 1; i >= Math.max(0, elog.length - 6); --i) {
-            addOrAccumulateEdge('coengaged', content, elog[i].id, w * elog[i].weight);
-            addOrAccumulateEdge('coengaged', elog[i].id, content, w * elog[i].weight);
+            if (content !== elog[i].id) {
+                addOrAccumulateEdge('coengaged', content, elog[i].id, w * elog[i].weight);
+                addOrAccumulateEdge('coengaged', elog[i].id, content, w * elog[i].weight);
+            }
             w *= 0.5;
         }
         elog.push({ id: content, weight: engagement });
         engageLog.set(id, elog);
+    } else {
+        const topics = getRelated('topic', content);
+
+        topics.forEach((t) => {
+            const edge = getEdge('engaged_topic', id, t.id);
+            const oldWeight = edge ? edge.weight : 0;
+            const engageScore = Math.max(0, oldWeight - t.weight * 0.01);
+            addEdge('engaged_topic', id, t.id, engageScore);
+
+            //const seenEdge = getEdge('seen_topic', id, t.id);
+            //const seenScore = seenEdge ? decayEdge(seenEdge) : 1;
+
+            addEdge('topic', id, t.id, engageScore);
+            addEdge('topic', t.id, id, engageScore);
+        });
     }
 }
 

@@ -26,8 +26,8 @@ const defaultWeights = Array.from(Object.values(defaults));
 const weightKeys = Array.from(Object.keys(defaults));
 export { defaultWeights, weightKeys };
 
-const TIME_WINDOW = 20 * 60 * 1000;
-const TIME_DECAY = 0.5;
+const TIME_WINDOW = 10 * 60 * 1000;
+const TIME_DECAY = 0.2;
 const PROFILE_COUNTS = 10;
 
 function triggerProfileEvent(id: UserNodeId) {
