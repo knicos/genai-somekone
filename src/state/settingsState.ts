@@ -27,7 +27,7 @@ export const settingIncludeAllLinks = atom<boolean>({
 
 export const settingLinkDistanceScale = atom<number>({
     key: 'settinglinkdistscale',
-    default: 4,
+    default: 5,
 });
 
 export const settingSimilarPercent = atom<number>({
@@ -42,7 +42,7 @@ export const settingNodeCharge = atom<number>({
 
 export const settingTopicThreshold = atom<number>({
     key: 'settingtopicthreshold',
-    default: 0.5,
+    default: 0.4,
 });
 
 export const settingShrinkOfflineUsers = atom<boolean>({
@@ -62,9 +62,9 @@ export const settingNodeMode = atom<NodeDisplayMode>({
     default: 'image',
 });
 
-export const settingClusterColouring = atom<boolean>({
+export const settingClusterColouring = atom<number>({
     key: 'settingclustercolouring',
-    default: false,
+    default: 0,
 });
 
 export const settingEgoOnSelect = atom<boolean>({

@@ -12,6 +12,7 @@ import {
 import { getUserProfile } from '../profiler/profiler';
 import { useMemo } from 'react';
 import { UserProfile } from '../profiler/profilerTypes';
+import { WeightedLabel } from '../content/contentTypes';
 
 function identifyCandidateUsers(users: Set<UserNodeId>, candidates: WeightedNode<UserNodeId>[]) {
     candidates.forEach((c) => {
@@ -35,6 +36,33 @@ export function cosinesim(A: number[], B: number[]): number {
     const similarity = dotproduct / (mA * mB);
 
     return similarity;
+}
+
+export function calculateSimilarityLabels(a: WeightedLabel[], b: Map<string, number>): number {
+    const sumA = a.reduce((p, v) => p + v.weight, 0);
+    let sumB = 0;
+    b.forEach((v) => {
+        sumB += v;
+    });
+    if (sumA === 0 || sumB === 0) return 0;
+    const normA = a.map((v) => ({ id: v.label, weight: v.weight / sumA }));
+    const normB = new Map<string, number>();
+    b.forEach((v, k) => {
+        normB.set(k, v / sumB);
+    });
+
+    const labelMap = new Map<string, { a: number; b: number }>();
+    normA.forEach((v) => {
+        labelMap.set(v.id, { a: v.weight, b: 0 });
+    });
+    normB.forEach((v, k) => {
+        labelMap.set(k, { a: labelMap.get(k)?.a || 0, b: v });
+    });
+
+    const larray = Array.from(labelMap);
+    const vec1 = larray.map((v) => v[1].a);
+    const vec2 = larray.map((v) => v[1].b);
+    return cosinesim(vec1, vec2);
 }
 
 export function calculateSimilarity(a: WeightedNode<TopicNodeId>[], b: WeightedNode<TopicNodeId>[]): number {

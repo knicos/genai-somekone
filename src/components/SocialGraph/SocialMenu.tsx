@@ -61,8 +61,8 @@ export default function SocialMenu() {
             <Spacer />
             <IconMenuItem tooltip={t('dashboard.labels.clusterColouring')}>
                 <IconButton
-                    color={colouring ? 'secondary' : 'inherit'}
-                    onClick={() => setColouring((old) => !old)}
+                    color={colouring > 0 ? 'secondary' : 'inherit'}
+                    onClick={() => setColouring((old) => (old > 0 ? 0 : 2))}
                 >
                     <WorkspacesIcon />
                 </IconButton>

@@ -75,7 +75,7 @@ interface Result {
     topics?: Map<UserNodeId, WeightedLabel>;
 }
 
-export function useAllSimilarUsers(users: UserNodeId[], cluster?: boolean, similarity?: number): Result {
+export function useAllSimilarUsers(users: UserNodeId[], cluster?: boolean, k?: number): Result {
     const simRef = useRef(new Map<UserNodeId, WeightedNode<UserNodeId>[]>());
     const [result, setResult] = useState<Result>({ similar: simRef.current });
 
@@ -85,23 +85,23 @@ export function useAllSimilarUsers(users: UserNodeId[], cluster?: boolean, simil
         });
         setResult({
             similar: simRef.current,
-            topics: cluster ? clusterUsers(users, simRef.current, similarity || 0.2) : undefined,
+            topics: cluster ? clusterUsers(users, simRef.current, k || 2) : undefined,
         });
-    }, [users, cluster, similarity]);
+    }, [users, cluster, k]);
 
     useEffect(() => {
         const handler = (id: UserNodeId) => {
             getSimilar(id, simRef.current);
             setResult({
                 similar: simRef.current,
-                topics: cluster ? clusterUsers(users, simRef.current, similarity || 0.2) : undefined,
+                topics: cluster ? clusterUsers(users, simRef.current, k || 2) : undefined,
             });
         };
         addAnyProfileListener(handler);
         return () => {
             removeAnyProfileListener(handler);
         };
-    }, [users, cluster, similarity]);
+    }, [users, cluster, k]);
 
     return result;
 }

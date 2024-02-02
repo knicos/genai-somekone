@@ -91,14 +91,13 @@ export default function SocialGraphSettings() {
                 }
                 label={t('dashboard.labels.shrinkOffline')}
             />
-            <FormControlLabel
-                control={
-                    <Checkbox
-                        checked={clusterColouring}
-                        onChange={(_, checked) => setClusterColouring(checked)}
-                    />
-                }
-                label={t('dashboard.labels.clusterColouring')}
+            <div className={style.label}>{t('dashboard.labels.clusterColouring')}</div>
+            <Slider
+                value={clusterColouring}
+                onChange={(_, value) => setClusterColouring(value as number)}
+                min={0}
+                max={4}
+                step={1}
             />
             <FormControlLabel
                 control={

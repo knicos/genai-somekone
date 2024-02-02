@@ -62,7 +62,11 @@ export default function SocialGraph({ liveUsers }: Props) {
     const [linkStyles, setLinkStyles] = useState<Map<UserNodeId, LinkStyle<UserNodeId>>>();
     const [connected, setConnected] = useState<Set<UserNodeId>>();
     const similarPercent = useRecoilValue(settingSimilarPercent);
-    const similar = useAllSimilarUsers(users, clusterColouring, clusterColouring ? similarPercent : undefined);
+    const similar = useAllSimilarUsers(
+        users,
+        clusterColouring > 0,
+        clusterColouring > 0 ? clusterColouring : undefined
+    );
 
     useEffect(() => {
         const newLinks: GraphLink<UserNodeId, UserNodeId>[] = [];
