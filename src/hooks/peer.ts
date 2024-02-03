@@ -1,8 +1,17 @@
 import { useRef, useEffect, useState } from 'react';
 import { Peer as P2P, DataConnection, PeerError } from 'peerjs';
 import { iceConfig, webrtcActive } from '@genaism/state/webrtcState';
-import { useRecoilRefresher_UNSTABLE, useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { errorNotification } from '@genaism/state/errorState';
+import { useRecoilValue } from 'recoil';
+
+export type PeerStatus = 'starting' | 'disconnected' | 'connecting' | 'failed' | 'signaling' | 'ready' | 'retry';
+export type PeerErrorType =
+    | 'none'
+    | 'id-in-use'
+    | 'peer-not-found'
+    | 'no-signaling'
+    | 'missing-ice'
+    | 'unknown'
+    | 'bad-browser';
 
 export interface PeerEvent {
     event: string;
@@ -58,6 +67,8 @@ interface PeerReturn<T> {
     send?: SenderType<T>;
     ready: boolean;
     peer?: P2P;
+    status: PeerStatus;
+    error: PeerErrorType;
 }
 
 export default function usePeer<T extends PeerEvent>({
@@ -72,12 +83,12 @@ export default function usePeer<T extends PeerEvent>({
     const [peer, setPeer] = useState<P2P>();
     const connRef = useRef<PeerState<T>>();
     const cbRef = useRef<Callbacks<T>>({});
-    const [webrtc, setWebRTC] = useRecoilState(webrtcActive);
-    const refreshRTC = useRecoilRefresher_UNSTABLE(iceConfig);
+    const webrtc = useRecoilValue(webrtcActive);
     const ice = useRecoilValue(iceConfig);
     const [sender, setSender] = useState<SenderType<T>>();
-    const setError = useSetRecoilState(errorNotification);
-    const [ready, setReady] = useState(false);
+    //const setError = useSetRecoilState(errorNotification);
+    const [status, setStatus] = useState<PeerStatus>('starting');
+    const [error, setError] = useState<PeerErrorType>('none');
 
     useEffect(() => {
         cbRef.current.onClose = onClose;
@@ -92,24 +103,19 @@ export default function usePeer<T extends PeerEvent>({
     }
 
     useEffect(() => {
-        if (!webrtc) return;
+        if (webrtc === 'unset') return;
         if (!code) return;
         if (!ice) {
             setTimeout(() => {
-                refreshRTC();
-                setError((p) => {
-                    const s = new Set(p);
-                    s.delete('peer_nortc');
-                    return s;
-                });
+                setStatus('failed');
+                setError('missing-ice');
             }, 5000);
-            setError((p) => {
-                const s = new Set(p);
-                s.add('peer_nortc');
-                return s;
-            });
+            setStatus('failed');
+            setError('missing-ice');
             return;
         }
+
+        setStatus('connecting');
 
         const npeer = new P2P(code, {
             host: import.meta.env.VITE_APP_PEER_SERVER,
@@ -117,7 +123,11 @@ export default function usePeer<T extends PeerEvent>({
             key: import.meta.env.VITE_APP_PEER_KEY || 'peerjs',
             port: import.meta.env.VITE_APP_PEER_PORT ? parseInt(import.meta.env.VITE_APP_PEER_PORT) : 443,
             debug: 0,
-            config: { iceServers: ice.iceServers, sdpSemantics: 'unified-plan' },
+            config: {
+                iceServers: [ice.iceServers[0]],
+                sdpSemantics: 'unified-plan',
+                iceTransportPolicy: webrtc === 'relay' ? 'relay' : undefined,
+            },
         });
         setPeer(npeer);
 
@@ -137,13 +147,8 @@ export default function usePeer<T extends PeerEvent>({
                 /*setSender(() => (s: T) => {
                         conn.send(s);
                     });*/
-                setReady(true);
-                setError((p) => {
-                    const s = new Set(p);
-                    s.delete('peer_failed');
-                    s.delete('peer_retrying');
-                    return s;
-                });
+                setStatus('ready');
+                setError('none');
             });
             conn.on('data', async (data: unknown) => {
                 if (isPeerEvent(data)) {
@@ -157,18 +162,15 @@ export default function usePeer<T extends PeerEvent>({
             conn.on('error', (err: PeerError<string>) => {
                 console.error(err.type);
                 if (cbRef.current.onError) cbRef.current.onError(err);
-                setError((p) => {
-                    const s = new Set(p);
-                    s.add('peer_failed');
-                    return s;
-                });
+                setError('unknown');
+                setStatus('failed');
             });
             conn.on('close', () => {
                 connRef.current?.connections.delete(conn.connectionId);
                 connRef.current?.peers.delete(conn.peer); // TODO: Check no other connections from peer
 
                 if (cbRef.current.onClose) cbRef.current.onClose(conn);
-                setReady(false);
+                setStatus('disconnected');
 
                 // Retry
                 setTimeout(() => {
@@ -198,13 +200,8 @@ export default function usePeer<T extends PeerEvent>({
             if (server) {
                 createPeer(server);
             } else {
-                setReady(true);
-                setError((p) => {
-                    const s = new Set(p);
-                    s.delete('peer_failed');
-                    s.delete('peer_retrying');
-                    return s;
-                });
+                setStatus('ready');
+                setError('none');
             }
         });
         npeer.on('close', () => {
@@ -259,6 +256,7 @@ export default function usePeer<T extends PeerEvent>({
                 connRef.current?.connections.delete(id);
             }*/
             console.log('Peer discon');
+            setStatus('failed');
         });
 
         npeer.on('close', () => {
@@ -271,56 +269,35 @@ export default function usePeer<T extends PeerEvent>({
             switch (type) {
                 case 'disconnected':
                 case 'network':
-                    setError((p) => {
-                        const s = new Set(p);
-                        s.add('peer_retrying');
-                        return s;
-                    });
+                    setStatus('retry');
                     setTimeout(() => npeer.reconnect(), 1000);
                     break;
                 case 'server-error':
-                    setError((p) => {
-                        const s = new Set(p);
-                        s.add('peer_retrying');
-                        return s;
-                    });
+                    setStatus('retry');
                     setTimeout(() => npeer.reconnect(), 5000);
                     break;
                 case 'unavailable-id':
                     // setCode(randomId(8));
                     npeer.destroy();
-                    setError((p) => {
-                        const s = new Set(p);
-                        s.add('peer_failed');
-                        return s;
-                    });
+                    setStatus('failed');
+                    setError('id-in-use');
                     setPeer(undefined);
                     break;
                 case 'browser-incompatible':
-                    console.error('Your browser does not support WebRTC');
-                    setError((p) => {
-                        const s = new Set(p);
-                        s.add('peer_failed');
-                        return s;
-                    });
+                    setStatus('failed');
+                    setError('bad-browser');
                     break;
                 case 'peer-unavailable':
-                    setError((p) => {
-                        const s = new Set(p);
-                        s.add('peer_no_peer');
-                        return s;
-                    });
+                    setStatus('failed');
+                    setError('peer-not-found');
                     setTimeout(() => {
                         if (server && !npeer.destroyed) createPeer(server);
                     }, 1000);
                     break;
                 default:
                     npeer.destroy();
-                    setError((p) => {
-                        const s = new Set(p);
-                        s.add('peer_failed');
-                        return s;
-                    });
+                    setStatus('failed');
+                    setError('unknown');
                     setPeer(undefined);
             }
         });
@@ -330,7 +307,7 @@ export default function usePeer<T extends PeerEvent>({
             }
             npeer.destroy();
         };
-    }, [code, server, webrtc, ice, setError, refreshRTC]);
+    }, [code, server, webrtc, ice, setError]);
 
     useEffect(() => {
         const tabClose = () => {
@@ -338,30 +315,16 @@ export default function usePeer<T extends PeerEvent>({
             if (connRef.current?.sender) connRef.current?.sender({ event: 'eter:close' });
         };
         window.addEventListener('beforeunload', tabClose);
-        navigator?.mediaDevices
-            ?.getUserMedia({ video: true })
-            .then((stream) => {
-                stream.getTracks().forEach(function (track) {
-                    track.stop();
-                });
-                setWebRTC(true);
-            })
-            .catch(() => {
-                setError((p) => {
-                    const s = new Set(p);
-                    s.add('peer_nowebcam');
-                    return s;
-                });
-            });
-
         return () => {
             window.removeEventListener('beforeunload', tabClose);
         };
-    }, [setError, setWebRTC]);
+    }, []);
 
     return {
         send: sender,
-        ready,
+        ready: status === 'ready',
+        status,
+        error,
         peer,
     };
 }

@@ -1,4 +1,36 @@
 {
+    "loader": {
+        "messages": {
+            "getIceConfig": "Retrieving network configuration",
+            "cameraPermission": "To allow direct connections between devices you need to allow temporary access to the camera.",
+            "connecting": "Trying to connect...",
+            "signaling": "Finding other devices",
+            "disconnected": "Disconnected from the other device",
+            "retry": "Retrying connection...",
+            "content_load": "Loading the content",
+            "content_download": "Downloading the content",
+            "ready": "Connection ready",
+            "content_none": "Content ready"
+        },
+        "errors": {
+            "unknown": "A connection problem occurred",
+            "id-in-use": "Someone is already using this code",
+            "peer-not-found": "The code could not be found",
+            "missing-ice": "Configuration is missing",
+            "no-signaling": "Our server isn't responding",
+            "bad-browser": "Your device doesn't support this app",
+            "unknownContent": "There is a problem with the media content",
+            "load": "Could not load the media content",
+            "download": "Could not download the media content"
+        },
+        "titles": {
+            "iceConfig": "Configuring",
+            "permission": "Permissions",
+            "connecting": "Connection",
+            "error": "Problem",
+            "contentLoad": "Media Content"
+        }
+    },
     "feed": {
         "actions": {
             "follow": "Follow",

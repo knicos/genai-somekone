@@ -1,7 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import style from './style.module.css';
 import ImageFeed from '@genaism/components/ImageFeed/ImageFeed';
-import { getZipBlob, loadFile } from '@genaism/services/loader/fileLoader';
 import { LogEntry, ProfileSummary } from '@genaism/services/profiler/profilerTypes';
 import { addLogEntry, getCurrentUser, getUserProfile } from '@genaism/services/profiler/profiler';
 import { ScoredRecommendation } from '@genaism/services/recommender/recommenderTypes';
@@ -9,6 +8,7 @@ import { useRecommendations } from '@genaism/services/recommender/hooks';
 import { useRecoilValue } from 'recoil';
 import { appConfiguration } from '@genaism/state/settingsState';
 import { UserNodeId } from '@genaism/services/graph/graphTypes';
+import ContentLoader from '../ContentLoader/ContentLoader';
 
 interface Props {
     id?: UserNodeId;
@@ -49,18 +49,9 @@ export default function Feed({
         [onLog, noLog]
     );
 
-    useEffect(() => {
-        if (content) {
-            content.forEach((c) => {
-                getZipBlob(c).then(async (blob) => {
-                    await loadFile(blob);
-                    more();
-                });
-            });
-        } else {
-            more();
-        }
-    }, [content, more]);
+    const doLoaded = useCallback(() => {
+        more();
+    }, [more]);
 
     return (
         <section className={style.feedView}>
@@ -73,6 +64,10 @@ export default function Feed({
             />
 
             <div className={style.footerOuter}></div>
+            <ContentLoader
+                content={content}
+                onLoaded={doLoaded}
+            />
         </section>
     );
 }

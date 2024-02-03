@@ -7,11 +7,10 @@ interface Props extends PropsWithChildren {
     message?: string;
 }
 
-export default function Loading({ loading, children, message }: Props) {
+export default function Loading({ loading, children }: Props) {
     return loading ? (
         <div className={style.container}>
-            <Spinner size="large" />
-            <h1>{message || '...'}</h1>
+            <Spinner />
         </div>
     ) : (
         children

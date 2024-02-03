@@ -20,4 +20,7 @@ export default defineConfig({
             '@genaism': path.resolve(__dirname, './src'),
         },
     },
+    preview: {
+        port: 5173,
+    },
 });

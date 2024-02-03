@@ -16,15 +16,40 @@ interface TopicData {
     label: string;
 }
 
-export async function getZipBlob(content: string | ArrayBuffer): Promise<Blob> {
+export async function getZipBlob(content: string | ArrayBuffer, progress?: (percent: number) => void): Promise<Blob> {
     if (typeof content === 'string') {
+        if (progress) progress(0);
+
         const result = await fetch(content);
         if (result.status !== 200) {
             console.error(result);
             throw new Error('zip_fetch_failed');
         }
-        return result.blob();
+        const parts: BlobPart[] = [];
+
+        if (result.body) {
+            const reader = result.body.getReader();
+
+            const contentLength = parseInt(result.headers.get('Content-Length') || '1');
+
+            let receivedLength = 0;
+
+            while (receivedLength < contentLength) {
+                const { done, value } = await reader.read();
+
+                if (done) {
+                    break;
+                }
+
+                parts.push(value);
+                receivedLength += value.length;
+                if (progress) progress(Math.floor((receivedLength / contentLength) * 100));
+            }
+        }
+
+        return new Blob(parts);
     } else {
+        if (progress) progress(100);
         return new Blob([content]);
     }
 }
