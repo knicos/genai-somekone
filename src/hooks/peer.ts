@@ -140,6 +140,18 @@ export default function usePeer<T extends PeerEvent>({
             const conn = npeer.connect(code, { reliable: true });
 
             conn.on('open', () => {
+                conn.peerConnection.getStats().then((stats) => {
+                    stats.forEach((v) => {
+                        if (v.type === 'candidate-pair' && v.state === 'succeeded') {
+                            const remote = stats.get(v.remoteCandidateId);
+                            if (remote) {
+                                //setCandidateType(remote.candidateType === 'relay' ? 'relay' : 'other');
+                                console.log('REMOTE', remote);
+                            }
+                        }
+                    });
+                });
+
                 connRef.current?.connections.set(conn.connectionId, conn);
                 connRef.current?.peers.add(conn.peer);
                 conn.send({ event: 'eter:join' });

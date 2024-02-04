@@ -21,6 +21,7 @@ export default function ContentLoader({ content, onLoaded }: Props) {
                 getZipBlob(c, setProgress)
                     .then(async (blob) => {
                         setStatus('loading');
+                        setProgress(undefined);
 
                         try {
                             await loadFile(blob);
