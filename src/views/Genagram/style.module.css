@@ -1,4 +1,4 @@
-@value borderGrey from "../../style/colours.module.css";
+@value borderGrey, textDark from "../../style/colours.module.css";
 
 .page {
     display: flex;
@@ -61,6 +61,27 @@
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid borderGrey;
+}
+
+.link {
+    color: textDark;
+    font-size: 1.4rem;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.shareMessage {
+    color: textDark;
+    padding: 1rem;
+    font-size: 1.2rem;
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.shareMessage em {
+    font-style: normal;
+    font-weight: bold;
 }
 
 @media screen and (max-width: 600px) {

@@ -4,7 +4,7 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import { menuShowFeedActions, menuShowShareProfile } from '@genaism/state/menuState';
 import style from './style.module.css';
 import { useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import QRCode from '@genaism/components/QRCode/QRCode';
 import { useLogger } from '@genaism/hooks/logger';
 
@@ -51,8 +51,17 @@ export default function SharePage({ code, onClose }: Props) {
                     <QRCode
                         url={`${window.location.origin}/profile/${code}`}
                         size="large"
-                        code={code}
                     />
+                    <div className={style.shareMessage}>
+                        <Trans
+                            values={{ codeText: code }}
+                            i18nKey="dashboard.messages.connection"
+                            components={{
+                                Code: <em />,
+                            }}
+                        />
+                    </div>
+                    <div className={style.link}>{window.location.host}</div>
                 </div>
             </section>
         </Slide>
