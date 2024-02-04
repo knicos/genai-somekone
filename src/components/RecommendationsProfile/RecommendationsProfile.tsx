@@ -1,5 +1,5 @@
 import ImageCloud from '../ImageCloud/ImageCloud';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import style from './style.module.css';
 import { ContentNodeId, UserNodeId, WeightedNode } from '@genaism/services/graph/graphTypes';
 import { useRecommendations } from '@genaism/services/recommender/hooks';
@@ -9,12 +9,13 @@ import { useRecoilValue } from 'recoil';
 
 interface Props {
     id?: UserNodeId;
+    generate?: boolean;
 }
 
-export default function RecommendationsProfile({ id }: Props) {
+export default function RecommendationsProfile({ id, generate }: Props) {
     const [wcSize, setWCSize] = useState(300);
     const appConfig = useRecoilValue(appConfiguration);
-    const { recommendations } = useRecommendations(5, id, appConfig?.recommendations);
+    const { recommendations, more } = useRecommendations(5, id, appConfig?.recommendations);
 
     const doResize = useCallback((size: number) => {
         setWCSize(size);
@@ -25,9 +26,9 @@ export default function RecommendationsProfile({ id }: Props) {
         weight: Math.max(r.score, 0.01),
     }));
 
-    /*useEffect(() => {
-        if (recommendations.length < 5) more();
-    }, [recommendations, more]);*/
+    useEffect(() => {
+        if (generate) more();
+    }, [generate, more]);
 
     return (
         <div className={style.container}>

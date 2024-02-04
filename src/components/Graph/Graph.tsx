@@ -148,7 +148,7 @@ export default function Graph<T extends NodeID>({
         if (simRef.current) simRef.current.stop();
 
         // Force a reposition sometimes
-        if (drawCount.current > REFRESH_COUNT) {
+        if (drawCount.current > REFRESH_COUNT && internalState.current.focusNode === undefined) {
             drawCount.current = 0;
             nodeRef.current.clear();
         }

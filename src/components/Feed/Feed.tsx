@@ -53,6 +53,10 @@ export default function Feed({
         more();
     }, [more]);
 
+    useEffect(() => {
+        if (!content) more();
+    }, [more, content]);
+
     return (
         <section className={style.feedView}>
             <ImageFeed

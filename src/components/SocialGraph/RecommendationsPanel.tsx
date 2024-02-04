@@ -18,7 +18,10 @@ export default function RecommendationsPanel() {
             onClose={() => setPanel('none')}
             data-testid="recom-panel"
         >
-            <RecommendationsProfile id={selectedUser} />
+            <RecommendationsProfile
+                id={selectedUser}
+                generate
+            />
         </AppPanel>
     ) : null;
 }

@@ -3,13 +3,12 @@ import { useSearchParams } from 'react-router-dom';
 import { SMConfig } from '../Genagram/smConfig';
 import { decompressFromEncodedURIComponent } from 'lz-string';
 import style from './style.module.css';
-import { loadFile } from '@genaism/services/loader/fileLoader';
 import StartDialog from '../dialogs/StartDialog/StartDialog';
 import DEFAULT_CONFIG from '../Genagram/defaultConfig.json';
 import MenuPanel from './MenuPanel';
 import SocialGraph from '@genaism/components/SocialGraph/SocialGraph';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { menuGraphType, menuShowReplay } from '@genaism/state/menuState';
+import { menuGraphType, menuSelectedUser, menuShowReplay } from '@genaism/state/menuState';
 import SaveDialog from '../dialogs/SaveDialog/SaveDialog';
 import SettingsDialog from '../dialogs/SettingsDialog/SettingsDialog';
 import Loading from '@genaism/components/Loading/Loading';
@@ -37,6 +36,8 @@ export function Component() {
     const [count, refresh] = useReducer((a) => ++a, 0);
     const [ready, setReady] = useState(false);
     const showReplay = useRecoilValue(menuShowReplay);
+    const setSelectedNode = useSetRecoilState(menuSelectedUser);
+    const [fileToOpen, setFileToOpen] = useState<ArrayBuffer[] | undefined>();
 
     useEffect(() => {
         if (!ready) return;
@@ -61,28 +62,20 @@ export function Component() {
         setConfig(configObj);
     }, [params, ready, setConfig, setError]);
 
-    const doOpenFile = useCallback(
-        (data: Blob) => {
-            data.arrayBuffer().then(() => {
-                //setContent((old) => [...(old || []), c]);
-
-                // TODO: Allow an optional graph reset here.
-                loadFile(data).catch((e) => {
-                    console.error(e);
-                    setError((p) => {
-                        const s = new Set(p);
-                        s.add('missing_dependency');
-                        return s;
-                    });
-                });
-            });
-        },
-        [setError]
-    );
+    const doOpenFile = useCallback((data: Blob) => {
+        data.arrayBuffer().then((c) => {
+            setFileToOpen([c]);
+        });
+    }, []);
 
     const doLoaded = useCallback(() => {
         setLoaded(true);
     }, []);
+
+    // Always unselect user when changing graphs.
+    useEffect(() => {
+        setSelectedNode(undefined);
+    }, [graphMode, setSelectedNode]);
 
     return (
         <>
@@ -130,6 +123,7 @@ export function Component() {
                 content={content}
                 onLoaded={doLoaded}
             />
+            <ContentLoader content={fileToOpen} />
             <ErrorDialog />
         </>
     );

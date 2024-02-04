@@ -160,6 +160,9 @@ export default function SocialGraph({ liveUsers }: Props) {
 
             setConnected(conn);
             setLinkStyles(newStyles);
+        } else {
+            setConnected(undefined);
+            setLinkStyles(undefined);
         }
     }, [focusNode, links]);
 
