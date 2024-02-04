@@ -96,7 +96,8 @@
             "contentGraph": "Kuvat verkostona",
             "paused": "Pysäytetty",
             "people": "Käyttäjät",
-            "deleteUser": "Poista käyttäjä"
+            "deleteUser": "Poista käyttäjä",
+            "connectUsers": "Connect Users"
         },
         "labels": {
             "saveContent": "Tallenna myös kuvat",

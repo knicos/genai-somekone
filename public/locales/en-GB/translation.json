@@ -97,7 +97,8 @@
             "contentGraph": "Content Graph",
             "paused": "Paused",
             "people": "People",
-            "deleteUser": "Delete User"
+            "deleteUser": "Delete User",
+            "connectUsers": "Connect Users"
         },
         "labels": {
             "saveContent": "Save the image content",

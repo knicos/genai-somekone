@@ -1,4 +1,4 @@
-@value bgColourful1, textLight from "../../../style/colours.module.css";
+@value bgSubdued1, borderBrightBlue, textDark from "../../../style/colours.module.css";
 
 .groupedItems {
     display: flex;
@@ -11,13 +11,10 @@
 
 .connectMessage {
     font-size: 1.6rem;
-    background-color: bgColourful1;
-    color: textLight;
+    color: textDark;
     padding: 2rem;
     display: flex;
     gap: 2rem;
-    border-top-right-radius: 16px;
-    border-top-left-radius: 16px;
     overflow: hidden;
 }
 
@@ -37,18 +34,20 @@
 .userListing {
     padding: 2rem;
     font-size: 1.2rem;
-    background-color: bgColourful1;
     display: flex;
     justify-content: space-around;
     gap: 2rem;
     flex-wrap: wrap;
-    border-bottom-right-radius: 16px;
-    border-bottom-left-radius: 16px;
-    color: textLight;
+    color: textDark;
 }
 
 .column {
     display: flex;
     flex-direction: column;
     gap: 2rem;
+}
+
+.title {
+    background: bgSubdued1;
+    border-bottom: 2px solid borderBrightBlue;
 }
