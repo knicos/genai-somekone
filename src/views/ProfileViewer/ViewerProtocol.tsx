@@ -30,6 +30,7 @@ export default function ViewerProtocol({ server, mycode, children, onID }: Props
     const setConfig = useSetRecoilState<SMConfig>(appConfiguration);
     const username = useRecoilValue<string | undefined>(currentUserName);
     const [content, setContent] = useState<(string | ArrayBuffer)[]>();
+    const [loaded, setLoaded] = useState(false);
 
     const onData = useCallback(
         (data: EventProtocol) => {
@@ -72,8 +73,11 @@ export default function ViewerProtocol({ server, mycode, children, onID }: Props
 
     return (
         <>
-            {ready && <LogProvider sender={send}>{children}</LogProvider>}
-            <ContentLoader content={content} />
+            {ready && loaded && <LogProvider sender={send}>{children}</LogProvider>}
+            <ContentLoader
+                content={content}
+                onLoaded={() => setLoaded(true)}
+            />
             <ConnectionMonitor
                 ready={ready}
                 status={status}

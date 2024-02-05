@@ -15,7 +15,6 @@ import { appConfiguration } from '@genaism/state/settingsState';
 import { SMConfig } from '../Genagram/smConfig';
 import { UserNodeId } from '@genaism/services/graph/graphTypes';
 import RecommendationsProfile from '@genaism/components/RecommendationsProfile/RecommendationsProfile';
-import EnterName from './EnterName';
 import BlockDialog from '../dialogs/BlockDialog/BlockDialog';
 import ViewerProtocol from './ViewerProtocol';
 
@@ -37,7 +36,6 @@ export function Component() {
     const [page, setPage] = useState(0);
     const prevPage = useRef(0);
     const config = useRecoilValue<SMConfig>(appConfiguration);
-    const [name, setName] = useState<string>();
 
     return (
         <>
@@ -46,74 +44,64 @@ export function Component() {
                 mycode={MYCODE}
                 onID={setID}
             >
-                {(!config?.collectResearchData || name) && (
-                    <div className={style.container}>
-                        <Slide
-                            direction={slideDirection(0, page, prevPage.current)}
-                            in={page === 0}
-                            mountOnEnter
-                            unmountOnExit
-                        >
-                            <div className={style.pageContainer}>
-                                <DataProfile id={id} />
-                            </div>
-                        </Slide>
-                        <Slide
-                            direction={slideDirection(1, page, prevPage.current)}
-                            in={page === 1}
-                            mountOnEnter
-                            unmountOnExit
-                        >
-                            <div className={style.pageContainer}>
-                                <UserProfile id={id} />
-                            </div>
-                        </Slide>
-                        <Slide
-                            direction={slideDirection(2, page, prevPage.current)}
-                            in={page === 2}
-                            mountOnEnter
-                            unmountOnExit
-                        >
-                            <div className={style.pageContainer}>
-                                <RecommendationsProfile id={id} />
-                            </div>
-                        </Slide>
-                        <BottomNavigation
-                            showLabels
-                            value={page}
-                            onChange={(_, newValue) =>
-                                setPage((old) => {
-                                    prevPage.current = old;
-                                    return newValue;
-                                })
-                            }
-                        >
-                            <BottomNavigationAction
-                                label={t('profile.actions.data')}
-                                icon={<QueryStatsIcon fontSize="large" />}
-                            />
-                            <BottomNavigationAction
-                                disabled={config?.hideProfileView}
-                                label={t('profile.actions.profile')}
-                                icon={<PersonIcon fontSize="large" />}
-                            />
-                            <BottomNavigationAction
-                                disabled={config?.hideRecommendationsView}
-                                label={t('profile.actions.recommendations')}
-                                icon={<ImageSearchIcon fontSize="large" />}
-                            />
-                        </BottomNavigation>
-                        <BlockDialog />
-                    </div>
-                )}
-                {id && config?.collectResearchData && !name && (
-                    <div className={style.container}>
-                        <EnterName
-                            onName={setName}
-                            hostUser={id}
+                <div className={style.container}>
+                    <Slide
+                        direction={slideDirection(0, page, prevPage.current)}
+                        in={page === 0}
+                        mountOnEnter
+                        unmountOnExit
+                    >
+                        <div className={style.pageContainer}>
+                            <DataProfile id={id} />
+                        </div>
+                    </Slide>
+                    <Slide
+                        direction={slideDirection(1, page, prevPage.current)}
+                        in={page === 1}
+                        mountOnEnter
+                        unmountOnExit
+                    >
+                        <div className={style.pageContainer}>
+                            <UserProfile id={id} />
+                        </div>
+                    </Slide>
+                    <Slide
+                        direction={slideDirection(2, page, prevPage.current)}
+                        in={page === 2}
+                        mountOnEnter
+                        unmountOnExit
+                    >
+                        <div className={style.pageContainer}>
+                            <RecommendationsProfile id={id} />
+                        </div>
+                    </Slide>
+                    <BottomNavigation
+                        showLabels
+                        value={page}
+                        onChange={(_, newValue) =>
+                            setPage((old) => {
+                                prevPage.current = old;
+                                return newValue;
+                            })
+                        }
+                    >
+                        <BottomNavigationAction
+                            label={t('profile.actions.data')}
+                            icon={<QueryStatsIcon fontSize="large" />}
                         />
-                    </div>
-                )}
+                        <BottomNavigationAction
+                            disabled={config?.hideProfileView}
+                            label={t('profile.actions.profile')}
+                            icon={<PersonIcon fontSize="large" />}
+                        />
+                        <BottomNavigationAction
+                            disabled={config?.hideRecommendationsView}
+                            label={t('profile.actions.recommendations')}
+                            icon={<ImageSearchIcon fontSize="large" />}
+                        />
+                    </BottomNavigation>
+                    <BlockDialog />
+                </div>
                 <span></span>
             </ViewerProtocol>
             <ErrorDialog />

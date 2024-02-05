@@ -1,5 +1,5 @@
 import { getZipBlob, loadFile } from '@genaism/services/loader/fileLoader';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ContentError from './ContentError';
 import ContentProgress from './ContentProgress';
 
@@ -11,32 +11,53 @@ interface Props {
 }
 
 export default function ContentLoader({ content, onLoaded }: Props) {
+    const contentRef = useRef(new Set<string>());
     const [status, setStatus] = useState<LoadingStatus>('waiting');
     const [progress, setProgress] = useState<number | undefined>();
 
     useEffect(() => {
         if (content && content.length > 0) {
-            setStatus('downloading');
-            content.forEach((c) => {
-                getZipBlob(c, setProgress)
-                    .then(async (blob) => {
-                        setStatus('loading');
-                        setProgress(undefined);
+            // Only load each once
+            const contentf = content.filter((c) => (typeof c === 'string' ? !contentRef.current.has(c) : true));
+            if (contentf.length === 0) return;
 
-                        try {
-                            await loadFile(blob);
+            setStatus('downloading');
+
+            const promises: Promise<Blob>[] = [];
+            const downloadState = new Array(contentf.length).fill(0);
+
+            contentf.forEach((c, ix) => {
+                if (typeof c === 'string') {
+                    contentRef.current.add(c);
+                }
+                promises.push(
+                    getZipBlob(c, (percent: number) => {
+                        downloadState[ix] = percent;
+                        setProgress(downloadState.reduce((s, v) => s + v, 0) / contentf.length);
+                    })
+                );
+            });
+
+            Promise.all(promises)
+                .then((blobs) => {
+                    setStatus('loading');
+                    setProgress(undefined);
+
+                    const loadPromises = blobs.map((blob) => loadFile(blob));
+                    Promise.all(loadPromises)
+                        .then(() => {
                             setStatus('done');
                             if (onLoaded) onLoaded();
-                        } catch (e) {
+                        })
+                        .catch((e) => {
                             console.error(e);
                             setStatus('failed-load');
-                        }
-                    })
-                    .catch((e) => {
-                        console.error(e);
-                        setStatus('failed-download');
-                    });
-            });
+                        });
+                })
+                .catch((e) => {
+                    console.error(e);
+                    setStatus('failed-download');
+                });
         } else {
             setStatus('waiting');
         }
