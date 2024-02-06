@@ -71,6 +71,13 @@
     box-sizing: border-box;
     height: 130px;
     color: #444;
+    position: relative;
+}
+
+.language {
+    position: absolute;
+    top: 0.5rem;
+    right: 1rem;
 }
 
 .title > h1 {

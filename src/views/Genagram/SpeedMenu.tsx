@@ -25,7 +25,7 @@ export default function SpeedMenu() {
             open={showMenu}
             onClose={() => setShowMenu(false)}
             onOpen={() => setShowMenu(true)}
-            direction="down"
+            direction="up"
             ariaLabel="Additional data views menu"
             icon={<MenuIcon />}
             openIcon={<CloseIcon />}

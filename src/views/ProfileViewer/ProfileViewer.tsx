@@ -17,6 +17,7 @@ import { UserNodeId } from '@genaism/services/graph/graphTypes';
 import RecommendationsProfile from '@genaism/components/RecommendationsProfile/RecommendationsProfile';
 import BlockDialog from '../dialogs/BlockDialog/BlockDialog';
 import ViewerProtocol from './ViewerProtocol';
+import LangSelect from '@genaism/components/LangSelect/LangSelect';
 
 function slideDirection(my: number, current: number, previous: number): SlideProps['direction'] {
     if (my === current) {
@@ -52,6 +53,9 @@ export function Component() {
                         unmountOnExit
                     >
                         <div className={style.pageContainer}>
+                            <div className={style.lang}>
+                                <LangSelect />
+                            </div>
                             <DataProfile id={id} />
                         </div>
                     </Slide>
@@ -62,6 +66,9 @@ export function Component() {
                         unmountOnExit
                     >
                         <div className={style.pageContainer}>
+                            <div className={style.lang}>
+                                <LangSelect />
+                            </div>
                             <UserProfile id={id} />
                         </div>
                     </Slide>
@@ -72,6 +79,9 @@ export function Component() {
                         unmountOnExit
                     >
                         <div className={style.pageContainer}>
+                            <div className={style.lang}>
+                                <LangSelect />
+                            </div>
                             <RecommendationsProfile id={id} />
                         </div>
                     </Slide>

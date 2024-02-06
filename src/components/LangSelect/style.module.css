@@ -1,0 +1,8 @@
+@value textDark from "../../style/colours.module.css";
+
+.lang {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    color: #aaa;
+}

@@ -1,6 +1,7 @@
 import { NativeSelect } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useCallback } from 'react';
+import style from './style.module.css';
 
 export const LANGS = [
     { name: 'en-GB', label: 'English' },
@@ -17,21 +18,23 @@ export default function LangSelect() {
     );
 
     return (
-        <NativeSelect
-            value={i18n.language}
-            onChange={doChangeLanguage}
-            variant="outlined"
-            data-testid="select-lang"
-            inputProps={{ 'aria-label': t('app.language') }}
-        >
-            {LANGS.map((lng) => (
-                <option
-                    key={lng.name}
-                    value={lng.name}
-                >
-                    {lng.label}
-                </option>
-            ))}
-        </NativeSelect>
+        <div className={style.lang}>
+            <NativeSelect
+                value={i18n.language}
+                onChange={doChangeLanguage}
+                variant="outlined"
+                data-testid="select-lang"
+                inputProps={{ 'aria-label': t('app.language') }}
+            >
+                {LANGS.map((lng) => (
+                    <option
+                        key={lng.name}
+                        value={lng.name}
+                    >
+                        {lng.label}
+                    </option>
+                ))}
+            </NativeSelect>
+        </div>
     );
 }

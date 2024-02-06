@@ -11,6 +11,7 @@ import { ContentNodeId } from '@genaism/services/graph/graphTypes';
 import { ScoredRecommendation } from '@genaism/services/recommender/recommenderTypes';
 import { updateEngagement } from '@genaism/services/profiler/profiler';
 import Spinner from '../Spinner/Spinner';
+import LangSelect from '../LangSelect/LangSelect';
 
 const INTERACTION_TIMEOUT = 5000;
 
@@ -215,6 +216,9 @@ export default function ImageFeed({ images, onView, onMore, onLog, noActions, sh
                                 height={48}
                             />
                             <h1>{t('feed.titles.main')}</h1>
+                            <div className={style.language}>
+                                <LangSelect />
+                            </div>
                         </div>
                     )}
                 </div>
