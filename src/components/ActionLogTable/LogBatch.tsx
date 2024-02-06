@@ -13,6 +13,7 @@ export default function LogBatch({ batch }: Props) {
     if (batch.length === 0) return null;
 
     const message = generateMessage(batch[0], t);
+
     const image = batch[0].id || 'content:unknown';
     const time = batch[0].timestamp;
 

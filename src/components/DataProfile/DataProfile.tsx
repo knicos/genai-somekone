@@ -4,6 +4,7 @@ import { useCallback, useState } from 'react';
 import ActionLogTable from '../ActionLogTable/ActionLogTable';
 import style from './style.module.css';
 import { UserNodeId } from '@genaism/services/graph/graphTypes';
+import { getCurrentUser } from '@genaism/services/profiler/state';
 
 interface Props {
     id?: UserNodeId;
@@ -33,7 +34,10 @@ export default function Profile({ id }: Props) {
                     />
                 </svg>
             </div>
-            <ActionLogTable log={log} />
+            <ActionLogTable
+                user={id || getCurrentUser()}
+                log={log}
+            />
         </div>
     );
 }
