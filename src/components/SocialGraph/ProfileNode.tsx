@@ -80,7 +80,7 @@ const ProfileNode = memo(function ProfileNode({ id, onResize, live, selected, di
                 r={asize}
                 fill={'white'}
                 stroke={(node.data?.colour as string) || '#707070'}
-                strokeWidth={reduced ? 5 : 10}
+                strokeWidth={reduced ? 5 : 15}
             />
             {!reduced && nodeMode === 'image' && profile.engagedContent.length > 0 && (
                 <ImageCloud

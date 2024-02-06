@@ -162,7 +162,8 @@
             "play": "Play",
             "storageOptions": "Load and save data",
             "viewOptions": "Graph to display",
-            "appOptions": "Feed app options"
+            "appOptions": "Feed app options",
+            "none": "none"
         },
         "messages": {
             "connection": "Go to the address below and enter the code <Code>{{codeText}}</Code>, or use the QR code.",

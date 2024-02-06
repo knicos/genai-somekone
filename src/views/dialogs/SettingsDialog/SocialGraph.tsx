@@ -96,8 +96,16 @@ export default function SocialGraphSettings() {
                 value={clusterColouring}
                 onChange={(_, value) => setClusterColouring(value as number)}
                 min={0}
-                max={4}
-                step={1}
+                max={6}
+                step={null}
+                marks={[
+                    { value: 0, label: t('dashboard.labels.none') },
+                    { value: 2, label: '2' },
+                    { value: 3, label: '3' },
+                    { value: 4, label: '4' },
+                    { value: 5, label: '5' },
+                    { value: 6, label: '6' },
+                ]}
             />
             <FormControlLabel
                 control={

@@ -44,6 +44,7 @@ export function calculateSimilarityLabels(a: WeightedLabel[], b: Map<string, num
     b.forEach((v) => {
         sumB += v;
     });
+
     if (sumA === 0 || sumB === 0) return 0;
     const normA = a.map((v) => ({ id: v.label, weight: v.weight / sumA }));
     const normB = new Map<string, number>();

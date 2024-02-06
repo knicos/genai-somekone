@@ -3,7 +3,6 @@ import IconMenu from '../IconMenu/IconMenu';
 import IconMenuItem from '../IconMenu/Item';
 import CollectionsIcon from '@mui/icons-material/Collections';
 import TextFieldsIcon from '@mui/icons-material/TextFields';
-import WorkspacesIcon from '@mui/icons-material/Workspaces';
 import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import PersonIcon from '@mui/icons-material/Person';
 import ImageSearchIcon from '@mui/icons-material/ImageSearch';
@@ -14,10 +13,11 @@ import style from './style.module.css';
 import { useTranslation } from 'react-i18next';
 import { getNodeData, removeNode } from '@genaism/services/graph/nodes';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { settingClusterColouring, settingNodeMode } from '@genaism/state/settingsState';
+import { settingNodeMode } from '@genaism/state/settingsState';
 import { useState } from 'react';
 import DeleteDialog from './DeleteDialog';
 import { menuSelectedUser, menuShowUserPanel } from '@genaism/state/menuState';
+import ClusterMenu from './ClusterMenu';
 
 interface UserData {
     name: string;
@@ -26,7 +26,6 @@ interface UserData {
 export default function SocialMenu() {
     const { t } = useTranslation();
     const [nodeMode, setNodeMode] = useRecoilState(settingNodeMode);
-    const [colouring, setColouring] = useRecoilState(settingClusterColouring);
     const [showDelete, setShowDelete] = useState(false);
     const [panel, setPanel] = useRecoilState(menuShowUserPanel);
     const selectedUser = useRecoilValue(menuSelectedUser);
@@ -59,14 +58,7 @@ export default function SocialMenu() {
                 </IconButton>
             </IconMenuItem>
             <Spacer />
-            <IconMenuItem tooltip={t('dashboard.labels.clusterColouring')}>
-                <IconButton
-                    color={colouring > 0 ? 'secondary' : 'inherit'}
-                    onClick={() => setColouring((old) => (old > 0 ? 0 : 2))}
-                >
-                    <WorkspacesIcon />
-                </IconButton>
-            </IconMenuItem>
+            <ClusterMenu />
             {selectedUser && (
                 <>
                     <Spacer />

@@ -85,7 +85,7 @@ export function useAllSimilarUsers(users: UserNodeId[], cluster?: boolean, k?: n
         });
         setResult({
             similar: simRef.current,
-            topics: cluster ? clusterUsers(users, simRef.current, k || 2) : undefined,
+            topics: cluster ? clusterUsers(users, k || 2) : undefined,
         });
     }, [users, cluster, k]);
 
@@ -94,7 +94,7 @@ export function useAllSimilarUsers(users: UserNodeId[], cluster?: boolean, k?: n
             getSimilar(id, simRef.current);
             setResult({
                 similar: simRef.current,
-                topics: cluster ? clusterUsers(users, simRef.current, k || 2) : undefined,
+                topics: cluster ? clusterUsers(users, k || 2) : undefined,
             });
         };
         addAnyProfileListener(handler);

@@ -57,7 +57,6 @@ export default function SocialGraph({ liveUsers }: Props) {
         return set;
     }, [liveUsers]);
     const [focusNode, setFocusNode] = useRecoilState(menuSelectedUser);
-    const [zoom, setZoom] = useState(5);
     const [center, setCenter] = useState<[number, number] | undefined>();
     const [linkStyles, setLinkStyles] = useState<Map<UserNodeId, LinkStyle<UserNodeId>>>();
     const [connected, setConnected] = useState<Set<UserNodeId>>();
@@ -183,7 +182,6 @@ export default function SocialGraph({ liveUsers }: Props) {
                 charge={charge}
                 showLines={showLines}
                 onSelect={(n: Readonly<GraphNode<UserNodeId>>) => {
-                    if (!focusNode) setZoom(3);
                     setCenter([n.x || 0, n.y || 0]);
 
                     setFocusNode(n.id);
@@ -192,11 +190,9 @@ export default function SocialGraph({ liveUsers }: Props) {
                     setFocusNode(undefined);
                     setConnected(undefined);
                     setLinkStyles(undefined);
-                    setZoom(5);
-                    //setCenter([0, 0]);
                 }}
                 focusNode={focusNode}
-                zoom={zoom}
+                zoom={5}
                 center={center}
                 LabelComponent={showLabel ? UserLabel : undefined}
             >

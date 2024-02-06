@@ -41,6 +41,7 @@
                 "everyone": "Kaikille"
             },
             "enterUser": "Aloita",
+            "moreComments": "More Comments",
             "post": "Lähetä"
         },
         "titles": {
@@ -155,12 +156,14 @@
             "collectResearch": "Kerää tutkimusdataa",
             "showFeedImageLabels": "Näytä #hashtagit kuvavirrassa",
             "topicThreshold": "#hashtagien määrä per käyttäjä",
+            "allLinks": "Show all links on select",
             "showReplay": "Show replay controls",
             "stop": "Stop",
             "play": "Play",
             "storageOptions": "Load and save data",
             "viewOptions": "Graph to display",
-            "appOptions": "Feed app options"
+            "appOptions": "Feed app options",
+            "none": "none"
         },
         "messages": {
             "connection": "Mene allaolevaan www-osoitteeseen ja syötä koodi <Code>{{codeText}}</Code>, tai käytä QR -koodia.",
