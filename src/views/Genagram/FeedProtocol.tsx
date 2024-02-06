@@ -11,7 +11,7 @@ import {
     setUserName,
     updateProfile,
 } from '@genaism/services/profiler/profiler';
-import { ProfileSummary } from '@genaism/services/profiler/profilerTypes';
+import { UserProfile } from '@genaism/services/profiler/profilerTypes';
 import { ScoredRecommendation } from '@genaism/services/recommender/recommenderTypes';
 import { availableUsers, currentUserName } from '@genaism/state/sessionState';
 import { DataConnection } from 'peerjs';
@@ -26,7 +26,7 @@ const DATA_LOG_TIME = 15 * 60 * 1000;
 const USERNAME_KEY = 'genai_somekone_username';
 
 interface ProtocolContextType {
-    doProfile?: (profile: ProfileSummary) => void;
+    doProfile?: (profile: UserProfile) => void;
     doRecommend?: (recommendations: ScoredRecommendation[]) => void;
     doLog?: () => void;
 }
@@ -107,7 +107,7 @@ export default function FeedProtocol({ content, server, mycode, setContent, chil
     }, [send]);
 
     const doProfile = useCallback(
-        (profile: ProfileSummary) => {
+        (profile: UserProfile) => {
             if (send) {
                 send({ event: 'eter:profile_data', profile, id: getCurrentUser() });
             }

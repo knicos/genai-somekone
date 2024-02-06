@@ -55,6 +55,7 @@ export default function ServerProtocol({ onReady, code, content }: Props) {
             } else if (data.event === 'eter:close') {
                 setUsers((old) => old.filter((o) => o.connection !== conn));
             } else if (data.event === 'eter:profile_data') {
+                console.log('UPDATE', data.profile);
                 updateProfile(data.id, data.profile);
             } else if (data.event === 'eter:action_log') {
                 appendActionLog(data.log, data.id);

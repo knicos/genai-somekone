@@ -126,10 +126,21 @@ export function addUserProfile(profile: UserProfile) {
     }
 }
 
-export function updateProfile(id: UserNodeId, profile: ProfileSummary) {
+export function updateProfile(id: UserNodeId, profile: UserProfile | ProfileSummary) {
     outOfDate.add(id);
 
     addNodeIfNotExists('user', id);
+
+    // Update node data
+    if ('featureWeights' in profile && profile.featureWeights) {
+        const data = getNodeData<UserData>(id);
+        if (data) {
+            profile.featureWeights.forEach((v, ix) => {
+                data.featureWeights[ix] = v;
+            });
+        }
+    }
+
     profile.engagedContent.forEach((c) => {
         const cid = isContentID(c.id) ? c.id : (`content:${c.id}` as ContentNodeId);
         addEdge('engaged', id, cid, c.weight);
