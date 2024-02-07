@@ -1,5 +1,5 @@
 import { LogEntry } from '@genaism/services/profiler/profilerTypes';
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { Button } from '../Button/Button';
 import { useTranslation } from 'react-i18next';
 import Cards from '../DataCard/Cards';
@@ -13,7 +13,7 @@ interface Props {
     log: LogEntry[];
 }
 
-function batchLogs(user: UserNodeId, log: LogEntry[], size: number): LogEntry[][] {
+function batchLogs(user: UserNodeId, log: LogEntry[], size: number, startOffset: number): LogEntry[][] {
     const results: LogEntry[][] = [[]];
     if (log.length === 0) return results;
 
@@ -27,13 +27,15 @@ function batchLogs(user: UserNodeId, log: LogEntry[], size: number): LogEntry[][
         });
     }
 
+    let counter = size;
     for (let i = 0; i < log.length; ++i) {
         const l = log[i];
 
         const current = results[results.length - 1];
 
         if (current.length > 0 && current[0].id !== l.id) {
-            if (results.length === size) break;
+            if (i >= startOffset) --counter;
+            if (counter === 0) break;
             results.push([l]);
         } else {
             current.push(l);
@@ -45,9 +47,10 @@ function batchLogs(user: UserNodeId, log: LogEntry[], size: number): LogEntry[][
 export default function ActionLogTable({ user, log }: Props) {
     const { t } = useTranslation();
     const [size, setSize] = useState(5);
+    const firstSize = useRef(log.length);
 
     const logLimited = useMemo(() => {
-        return batchLogs(user || getCurrentUser(), log, size);
+        return batchLogs(user || getCurrentUser(), log, size, log.length - firstSize.current);
     }, [log, size, user]);
 
     return (
@@ -55,7 +58,7 @@ export default function ActionLogTable({ user, log }: Props) {
             {logLimited.map((batch, ix) => (
                 <LogBatch
                     batch={batch}
-                    key={ix}
+                    key={logLimited.length - ix}
                 />
             ))}
             <Button
