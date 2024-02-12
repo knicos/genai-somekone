@@ -15,7 +15,7 @@ import { UserProfile } from '@genaism/services/profiler/profilerTypes';
 import { ScoredRecommendation } from '@genaism/services/recommender/recommenderTypes';
 import { availableUsers, currentUserName } from '@genaism/state/sessionState';
 import { DataConnection } from 'peerjs';
-import { PropsWithChildren, createContext, useCallback, useContext, useEffect, useRef } from 'react';
+import { PropsWithChildren, createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { SMConfig } from './smConfig';
 import { appConfiguration } from '@genaism/state/settingsState';
@@ -50,18 +50,25 @@ export default function FeedProtocol({ content, server, mycode, setContent, chil
     const setAvailableUsers = useSetRecoilState(availableUsers);
     const [config, setConfig] = useRecoilState<SMConfig>(appConfiguration);
     const username = useRecoilValue<string | undefined>(currentUserName);
+    const hasBeenConnected = useRef(false);
+    const [hasBeenReady, setHasBeenReady] = useState(false);
 
     const onData = useCallback(
         (data: EventProtocol, conn: DataConnection) => {
-            // console.log('GOT DATA', data);
             if (data.event === 'eter:config' && data.configuration) {
                 setConfig((old) => ({ ...old, ...data.configuration }));
                 if (data.content) setContent && setContent(data.content);
             } else if (data.event === 'eter:users') {
                 setAvailableUsers(data.users);
             } else if (data.event === 'eter:profile_data') {
+                if (hasBeenConnected.current) {
+                    console.info('Skipping profile update');
+                    return;
+                }
                 updateProfile(data.id, data.profile);
             } else if (data.event === 'eter:action_log') {
+                if (hasBeenConnected.current) return;
+                hasBeenConnected.current = true;
                 appendActionLog(data.log, data.id);
             } else if (data.event === 'eter:comment') {
                 addComment(data.contentId, data.id, data.comment);
@@ -125,6 +132,10 @@ export default function FeedProtocol({ content, server, mycode, setContent, chil
         [send]
     );
 
+    useEffect(() => {
+        setHasBeenReady(true);
+    }, [ready]);
+
     return (
         <ProtocolContext.Provider
             value={{
@@ -133,7 +144,7 @@ export default function FeedProtocol({ content, server, mycode, setContent, chil
                 doProfile,
             }}
         >
-            {ready && <LogProvider sender={send}>{children}</LogProvider>}
+            {hasBeenReady && <LogProvider sender={send}>{children}</LogProvider>}
             <ConnectionMonitor
                 ready={ready}
                 status={status}

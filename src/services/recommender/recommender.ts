@@ -23,7 +23,7 @@ export async function generateNewRecommendations(id: UserNodeId, count: number, 
         const subset = biasedUniqueSubset(scored, count, (v) => v.contentId);
         subset.sort((a, b) => b.score - a.score);
 
-        console.log('RECOM', subset);
+        // console.log('RECOM', subset);
 
         store.set(profile.id, [...subset, ...old]);
         emitRecommendationEvent(id, subset);
