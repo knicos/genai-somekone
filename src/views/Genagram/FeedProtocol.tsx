@@ -1,6 +1,6 @@
 import usePeer from '@genaism/hooks/peer';
 import { EventProtocol } from '@genaism/protocol/protocol';
-import { addComment } from '@genaism/services/content/content';
+import { addComment, updateContentStats } from '@genaism/services/content/content';
 import { addEdges } from '@genaism/services/graph/edges';
 import { addNodes } from '@genaism/services/graph/nodes';
 import {
@@ -83,6 +83,8 @@ export default function FeedProtocol({ content, server, mycode, setContent, chil
             } else if (data.event === 'eter:snapshot' && data.snapshot) {
                 addNodes(data.snapshot.nodes);
                 addEdges(data.snapshot.edges.map((e) => ({ ...e, timestamp: Date.now(), metadata: {} })));
+            } else if (data.event === 'eter:content_stats') {
+                updateContentStats(data.statistics);
             }
         },
         [config, username, content, server, setConfig, setAvailableUsers, setContent]

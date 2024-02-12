@@ -4,13 +4,10 @@ import defaults from './defaultWeights.json';
 
 export type Features = typeof defaults;
 
+export type ReactionType = 'like' | 'love' | 'wow' | 'laugh' | 'anger' | 'sad';
+
 export type LogActivity =
-    | 'like'
-    | 'love'
-    | 'wow'
-    | 'laugh'
-    | 'anger'
-    | 'sad'
+    | ReactionType
     | 'share_public'
     | 'share_private'
     | 'share_friends'
@@ -24,6 +21,20 @@ export type LogActivity =
     | 'seen'
     | 'inactive'
     | 'engagement';
+
+export function isReaction(act: LogActivity) {
+    switch (act) {
+        case 'like':
+        case 'love':
+        case 'wow':
+        case 'laugh':
+        case 'anger':
+        case 'sad':
+            return true;
+        default:
+            return false;
+    }
+}
 
 export interface LogEntry {
     activity: LogActivity;

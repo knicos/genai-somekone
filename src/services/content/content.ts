@@ -1,4 +1,4 @@
-import { CommentEntry, ContentMetadata } from './contentTypes';
+import { CommentEntry, ContentMetadata, ContentStats, ContentStatsId } from './contentTypes';
 import { addNode, addEdge, removeNode } from '@genaism/services/graph/graph';
 import { getTopicId } from '@genaism/services/concept/concept';
 import { ContentNodeId, UserNodeId } from '../graph/graphTypes';
@@ -7,6 +7,7 @@ import { isDisallowedTopic } from './disallowed';
 const dataStore = new Map<ContentNodeId, string>();
 const metaStore = new Map<ContentNodeId, ContentMetadata>();
 const commentStore = new Map<ContentNodeId, CommentEntry[]>();
+const statsStore = new Map<ContentNodeId, ContentStats>();
 
 export function resetContent() {
     for (const n of metaStore) {
@@ -100,4 +101,28 @@ export function dumpComments(): CommentDataItem[] {
     });
 
     return result;
+}
+
+export function addContentReaction(id: ContentNodeId) {
+    const stats = statsStore.get(id) || { reactions: 0, shares: 0, views: 0 };
+    stats.reactions += 1;
+    statsStore.set(id, stats);
+}
+
+export function updateContentStats(stats: ContentStatsId[]) {
+    stats.forEach((s) => {
+        const old = statsStore.get(s.id) || { reactions: 0, shares: 0, views: 0 };
+        old.reactions = Math.max(old.reactions, s.reactions);
+        statsStore.set(s.id, s);
+    });
+}
+
+export function getContentStats(id: ContentNodeId[]): ContentStats[];
+export function getContentStats(id: ContentNodeId): ContentStats;
+export function getContentStats(id: ContentNodeId | ContentNodeId[]): ContentStats | ContentStats[] {
+    if (Array.isArray(id)) {
+        return id.map((i) => ({ id: i, ...(statsStore.get(i) || { reactions: 0, shares: 0, views: 0 }) }));
+    } else {
+        return statsStore.get(id) || { reactions: 0, shares: 0, views: 0 };
+    }
 }

@@ -8,7 +8,7 @@ import ReplyIcon from '@mui/icons-material/Reply';
 import Avatar from '@mui/material/Avatar';
 import SharePanel, { ShareKind } from './SharePanel';
 import CommentPanel from './CommentPanel';
-import { getComments, getContentData, getContentMetadata } from '@genaism/services/content/content';
+import { getComments, getContentData, getContentMetadata, getContentStats } from '@genaism/services/content/content';
 import { ContentNodeId } from '@genaism/services/graph/graphTypes';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
@@ -183,7 +183,8 @@ export default function FeedImage({
                 />
                 {active && !noActions && (
                     <div className={style.buttonRow}>
-                        <IconButton
+                        <IconButtonDot
+                            count={getContentStats(id)?.reactions || 0}
                             className={liked !== 'none' ? style.liked : ''}
                             onClick={doShowPanel}
                             color="inherit"
@@ -197,7 +198,7 @@ export default function FeedImage({
                                     fontSize="large"
                                 />
                             )}
-                        </IconButton>
+                        </IconButtonDot>
                         <IconButtonDot
                             count={getComments(id).length}
                             color="inherit"

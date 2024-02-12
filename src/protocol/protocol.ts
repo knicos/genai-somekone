@@ -4,6 +4,7 @@ import { LogEntry, UserProfile } from '@genaism/services/profiler/profilerTypes'
 import { ContentNodeId, UserNodeId } from '@genaism/services/graph/graphTypes';
 import { ScoredRecommendation } from '@genaism/services/recommender/recommenderTypes';
 import { Snapshot } from '@genaism/services/users/users';
+import { ContentStatsId } from '@genaism/services/content/contentTypes';
 
 export interface ConfigurationEvent extends PeerEvent {
     event: 'eter:config';
@@ -39,6 +40,11 @@ export interface RecommendationEvent extends PeerEvent {
     recommendations: ScoredRecommendation[];
 }
 
+export interface ContentStatsEvent extends PeerEvent {
+    event: 'eter:content_stats';
+    statistics: ContentStatsId[];
+}
+
 export interface ActionLogEvent extends PeerEvent {
     event: 'eter:action_log';
     id: UserNodeId;
@@ -68,6 +74,7 @@ export interface SnapshotEvent extends PeerEvent {
 
 export type EventProtocol =
     | BuiltinEvent
+    | ContentStatsEvent
     | SnapshotEvent
     | RecommendationEvent
     | ProfileEvent

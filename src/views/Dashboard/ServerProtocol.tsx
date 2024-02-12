@@ -10,7 +10,7 @@ import { appendActionLog, getActionLogSince } from '@genaism/services/profiler/l
 import { getUserName, getUserProfile, setUserName, updateProfile } from '@genaism/services/profiler/profiler';
 import { appendResearchLog } from '@genaism/services/research/research';
 import { makeUserGraphSnapshot } from '@genaism/services/users/users';
-import { addComment } from '@genaism/services/content/content';
+import { addComment, getContentStats } from '@genaism/services/content/content';
 import { getNodesByType } from '@genaism/services/graph/nodes';
 import { onlineUsers } from '@genaism/state/sessionState';
 import ConnectionMonitor from '@genaism/components/ConnectionMonitor/ConnectionMonitor';
@@ -55,7 +55,6 @@ export default function ServerProtocol({ onReady, code, content }: Props) {
             } else if (data.event === 'eter:close') {
                 setUsers((old) => old.filter((o) => o.connection !== conn));
             } else if (data.event === 'eter:profile_data') {
-                console.log('UPDATE', data.profile);
                 updateProfile(data.id, data.profile);
             } else if (data.event === 'eter:action_log') {
                 appendActionLog(data.log, data.id);
@@ -85,6 +84,12 @@ export default function ServerProtocol({ onReady, code, content }: Props) {
                 const snap = makeUserGraphSnapshot(data.id, now - time);
                 snapRef.current.set(data.id, now);
                 conn.send({ event: 'eter:snapshot', id: data.id, snapshot: snap });
+            } else if (data.event === 'eter:recommendations') {
+                // Send some updated statistics for these new recommendations
+                conn.send({
+                    event: 'eter:content_stats',
+                    statistics: getContentStats(data.recommendations.map((r) => r.contentId)),
+                });
             }
         },
         [config, content, users, setUsers]

@@ -1,3 +1,4 @@
+import { addContentReaction } from '../content/content';
 import { addEdge, addOrAccumulateEdge, getEdge } from '../graph/edges';
 import { ContentNodeId, UserNodeId, WeightedNode } from '../graph/graphTypes';
 import { getRelated } from '../graph/query';
@@ -107,6 +108,7 @@ export function processLogEntry(data: LogEntry, id?: UserNodeId, noEvent?: boole
         case 'like':
             affinityBoost(aid, cid, 0.1);
             boostTopics(aid, 'reacted_topic', cid);
+            addContentReaction(cid);
             break;
         case 'laugh':
         case 'anger':
@@ -115,6 +117,7 @@ export function processLogEntry(data: LogEntry, id?: UserNodeId, noEvent?: boole
         case 'love':
             affinityBoost(aid, cid, 0.2);
             boostTopics(aid, 'reacted_topic', cid);
+            addContentReaction(cid);
             break;
         case 'share_public':
             affinityBoost(aid, cid, 0.5);

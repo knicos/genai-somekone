@@ -1,4 +1,4 @@
-import { UserNodeId } from '../graph/graphTypes';
+import { ContentNodeId, UserNodeId } from '../graph/graphTypes';
 
 export interface TextComponent {
     type: 'text';
@@ -44,4 +44,14 @@ export interface ImageEntity {
 export interface CommentEntry {
     userId: UserNodeId;
     comment: string;
+}
+
+export interface ContentStats {
+    reactions: number;
+    shares: number;
+    views: number;
+}
+
+export interface ContentStatsId extends ContentStats {
+    id: ContentNodeId;
 }
