@@ -109,6 +109,12 @@ export function addContentReaction(id: ContentNodeId) {
     statsStore.set(id, stats);
 }
 
+export function addContentShare(id: ContentNodeId) {
+    const stats = statsStore.get(id) || { reactions: 0, shares: 0, views: 0 };
+    stats.shares += 1;
+    statsStore.set(id, stats);
+}
+
 export function updateContentStats(stats: ContentStatsId[]) {
     stats.forEach((s) => {
         const old = statsStore.get(s.id) || { reactions: 0, shares: 0, views: 0 };

@@ -18,3 +18,9 @@
     align-items: center;
     font-size: 0.8rem;
 }
+
+.leftDot {
+    composes: dot;
+    left: unset;
+    right: calc(100% - 1rem);
+}

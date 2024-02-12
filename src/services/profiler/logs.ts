@@ -1,4 +1,4 @@
-import { addContentReaction } from '../content/content';
+import { addContentReaction, addContentShare } from '../content/content';
 import { addEdge, addOrAccumulateEdge, getEdge } from '../graph/edges';
 import { ContentNodeId, UserNodeId, WeightedNode } from '../graph/graphTypes';
 import { getRelated } from '../graph/query';
@@ -122,14 +122,17 @@ export function processLogEntry(data: LogEntry, id?: UserNodeId, noEvent?: boole
         case 'share_public':
             affinityBoost(aid, cid, 0.5);
             boostTopics(aid, 'shared_topic', cid);
+            addContentShare(cid);
             break;
         case 'share_private':
             affinityBoost(aid, cid, 0.1);
             boostTopics(aid, 'shared_topic', cid);
+            addContentShare(cid);
             break;
         case 'share_friends':
             affinityBoost(aid, cid, 0.3);
             boostTopics(aid, 'shared_topic', cid);
+            addContentShare(cid);
             break;
         case 'dwell':
             affinityBoost(aid, cid, normDwell(data.value || 0) * 0.3);

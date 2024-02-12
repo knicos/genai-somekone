@@ -3,13 +3,14 @@ import style from './style.module.css';
 
 interface Props extends IconButtonProps {
     count: number;
+    position?: 'left' | 'right';
 }
 
-export default function IconButtonDot({ count, ...props }: Props) {
+export default function IconButtonDot({ count, position = 'right', ...props }: Props) {
     return (
         <div className={style.button}>
             <IconButton {...props} />
-            {count > 0 && <div className={style.dot}>{count}</div>}
+            {count > 0 && <div className={position === 'right' ? style.dot : style.leftDot}>{count}</div>}
         </div>
     );
 }

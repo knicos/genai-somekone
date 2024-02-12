@@ -146,6 +146,8 @@ export default function FeedImage({
         }
     }, [content, reqContent, id]);*/
 
+    const stats = getContentStats(id);
+
     return !visible || !contentData || !contentMeta ? null : (
         <div className={style.container}>
             <div className={active || noActions ? style.activeImageContainer : style.imageContainer}>
@@ -184,7 +186,7 @@ export default function FeedImage({
                 {active && !noActions && (
                     <div className={style.buttonRow}>
                         <IconButtonDot
-                            count={getContentStats(id)?.reactions || 0}
+                            count={stats.reactions}
                             className={liked !== 'none' ? style.liked : ''}
                             onClick={doShowPanel}
                             color="inherit"
@@ -210,7 +212,9 @@ export default function FeedImage({
                                 fontSize="large"
                             />
                         </IconButtonDot>
-                        <IconButton
+                        <IconButtonDot
+                            count={stats.shares}
+                            position="left"
                             color="inherit"
                             onClick={doShowSharePanel}
                             data-testid="feed-image-share-button"
@@ -220,7 +224,7 @@ export default function FeedImage({
                                 fontSize="large"
                                 style={{ transform: 'scaleX(-1)' }}
                             />
-                        </IconButton>
+                        </IconButtonDot>
                     </div>
                 )}
                 {active && showLabels && activePanel === 'none' && (
