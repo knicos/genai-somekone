@@ -1,9 +1,10 @@
 import { afterEach, beforeEach, describe, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import FeedImage from './FeedImage';
-import { addContent } from '@genaism/services/content/content';
+import { addComment, addContent, addContentReaction } from '@genaism/services/content/content';
 import { resetGraph } from '@genaism/services/graph/graph';
 import userEvent from '@testing-library/user-event';
+import { getCurrentUser } from '@genaism/services/profiler/state';
 
 const TEST_IMAGE =
     'https://images.pexels.com/photos/3030647/pexels-photo-3030647.jpeg?cs=srgb&dl=pexels-nextvoyage-3030647.jpg&fm=jpg';
@@ -11,6 +12,7 @@ const TEST_IMAGE =
 describe('FeedImage component', () => {
     beforeEach(() => {
         addContent(TEST_IMAGE, { id: 'xyz', author: 'TestAuthor', labels: [] });
+        addContent(TEST_IMAGE, { id: 'xyz2', author: 'TestAuthor', labels: [] });
     });
 
     afterEach(() => {
@@ -46,6 +48,19 @@ describe('FeedImage component', () => {
         await user.click(screen.getByTestId('feed-image-like-button'));
 
         expect(screen.getByTestId('feed-image-like-panel')).toBeVisible();
+    });
+
+    it('shows number of likes', async ({ expect }) => {
+        addContentReaction('content:xyz');
+        render(
+            <FeedImage
+                id="content:xyz"
+                active
+                visible
+            />
+        );
+
+        expect(screen.getByTestId('feed-image-like-button')).toHaveAttribute('data-count', '1');
     });
 
     it('calls like action on like click', async ({ expect }) => {
@@ -97,6 +112,19 @@ describe('FeedImage component', () => {
         expect(screen.getByTestId('feed-image-comment-panel')).toBeVisible();
     });
 
+    it('shows number of comments', async ({ expect }) => {
+        addComment('content:xyz2', getCurrentUser(), 'testcomment');
+        render(
+            <FeedImage
+                id="content:xyz2"
+                active
+                visible
+            />
+        );
+
+        expect(screen.getByTestId('feed-image-comment-button')).toHaveAttribute('data-count', '1');
+    });
+
     it('calls comment action on enter comment', async ({ expect }) => {
         const user = userEvent.setup();
         const commentfn = vi.fn();
@@ -114,6 +142,41 @@ describe('FeedImage component', () => {
         await user.keyboard('helloworld');
         await user.click(screen.getByTestId('comment-post-button'));
         expect(commentfn).toHaveBeenCalledWith('content:xyz', 'helloworld');
+    });
+
+    it('displays one comment', async ({ expect }) => {
+        const user = userEvent.setup();
+        addComment('content:xyz', getCurrentUser(), 'testcomment');
+        render(
+            <FeedImage
+                id="content:xyz"
+                active
+                visible
+            />
+        );
+
+        await user.click(screen.getByTestId('feed-image-comment-button'));
+
+        expect(screen.getByText('testcomment')).toBeVisible();
+    });
+
+    it('can display multiple comments', async ({ expect }) => {
+        const user = userEvent.setup();
+        addComment('content:xyz', getCurrentUser(), 'testcomment1');
+        addComment('content:xyz', getCurrentUser(), 'testcomment2');
+        render(
+            <FeedImage
+                id="content:xyz"
+                active
+                visible
+            />
+        );
+
+        await user.click(screen.getByTestId('feed-image-comment-button'));
+        await user.click(screen.getByTestId('moreComments-button'));
+
+        expect(screen.getByText('testcomment1')).toBeVisible();
+        expect(screen.getByText('testcomment2')).toBeVisible();
     });
 
     it('shows the share panel', async ({ expect }) => {

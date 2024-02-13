@@ -90,6 +90,7 @@ export default function CommentPanel({ onClose, onComment, id }: Props) {
                             {comments.length > 1 && !showMore && (
                                 <li>
                                     <Button
+                                        data-testid="moreComments-button"
                                         size="small"
                                         style={{ marginLeft: '0.5rem' }}
                                         onClick={() => setShowMore(true)}
