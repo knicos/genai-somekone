@@ -7,7 +7,13 @@ import { useCallback, useEffect, useRef } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { SMConfig } from '../Genagram/smConfig';
 import { appendActionLog, getActionLogSince } from '@genaism/services/profiler/logs';
-import { getUserName, getUserProfile, setUserName, updateProfile } from '@genaism/services/profiler/profiler';
+import {
+    getBestEngagement,
+    getUserName,
+    getUserProfile,
+    setUserName,
+    updateProfile,
+} from '@genaism/services/profiler/profiler';
 import { appendResearchLog } from '@genaism/services/research/research';
 import { makeUserGraphSnapshot } from '@genaism/services/users/users';
 import { addComment, getContentStats } from '@genaism/services/content/content';
@@ -87,8 +93,9 @@ export default function ServerProtocol({ onReady, code, content }: Props) {
             } else if (data.event === 'eter:recommendations') {
                 // Send some updated statistics for these new recommendations
                 conn.send({
-                    event: 'eter:content_stats',
-                    statistics: getContentStats(data.recommendations.map((r) => r.contentId)),
+                    event: 'eter:stats',
+                    content: getContentStats(data.recommendations.map((r) => r.contentId)),
+                    bestEngagement: getBestEngagement(),
                 });
             }
         },

@@ -8,6 +8,7 @@ import {
     getActionLogSince,
     getCurrentUser,
     getUserProfile,
+    setBestEngagement,
     setUserName,
     updateProfile,
 } from '@genaism/services/profiler/profiler';
@@ -83,8 +84,9 @@ export default function FeedProtocol({ content, server, mycode, setContent, chil
             } else if (data.event === 'eter:snapshot' && data.snapshot) {
                 addNodes(data.snapshot.nodes);
                 addEdges(data.snapshot.edges.map((e) => ({ ...e, timestamp: Date.now(), metadata: {} })));
-            } else if (data.event === 'eter:content_stats') {
-                updateContentStats(data.statistics);
+            } else if (data.event === 'eter:stats') {
+                updateContentStats(data.content);
+                setBestEngagement(data.bestEngagement);
             }
         },
         [config, username, content, server, setConfig, setAvailableUsers, setContent]

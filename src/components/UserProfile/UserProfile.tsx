@@ -11,6 +11,7 @@ import Card from '../DataCard/Card';
 import TopicDetail from './TopicDetail';
 import { getRelated } from '@genaism/services/graph/query';
 import { getTopicLabel } from '@genaism/services/concept/concept';
+import { getBestEngagement } from '@genaism/services/profiler/profiler';
 
 interface Props {
     id?: UserNodeId;
@@ -69,7 +70,7 @@ export default function Profile({ id }: Props) {
             <Cards>
                 <Card
                     title={t('profile.titles.engagement')}
-                    score={Math.min(1, profile.engagement / 10)}
+                    score={Math.min(1, profile.engagement / (getBestEngagement() || 1))}
                 />
                 {profile &&
                     profile.taste

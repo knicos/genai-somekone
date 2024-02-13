@@ -41,8 +41,9 @@ export interface RecommendationEvent extends PeerEvent {
 }
 
 export interface ContentStatsEvent extends PeerEvent {
-    event: 'eter:content_stats';
-    statistics: ContentStatsId[];
+    event: 'eter:stats';
+    content: ContentStatsId[];
+    bestEngagement: number;
 }
 
 export interface ActionLogEvent extends PeerEvent {

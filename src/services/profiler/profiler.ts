@@ -30,6 +30,10 @@ const TIME_WINDOW = 10 * 60 * 1000;
 const TIME_DECAY = 0.2;
 const PROFILE_COUNTS = 10;
 
+const globalScore = {
+    engagement: 0,
+};
+
 function triggerProfileEvent(id: UserNodeId) {
     const wasOOD = outOfDate.has(id);
     outOfDate.add(id);
@@ -151,6 +155,10 @@ export function updateProfile(id: UserNodeId, profile: UserProfile | ProfileSumm
         addEdge('topic', getTopicId(t.label), id, t.weight);
     });
 
+    if ('engagement' in profile) {
+        globalScore.engagement = Math.max(globalScore.engagement, profile.engagement);
+    }
+
     emitProfileEvent(id);
 }
 
@@ -212,7 +220,7 @@ export function recreateUserProfile(id?: UserNodeId): UserProfile {
     const data = getNodeData<UserData>(aid);
     if (data && !data?.featureWeights) data.featureWeights = [...defaultWeights];
 
-    return {
+    const newProfile = {
         ...summary,
         name: state?.name || data?.name || 'NoName',
         id: aid,
@@ -224,6 +232,10 @@ export function recreateUserProfile(id?: UserNodeId): UserProfile {
         positiveRecommendations: state?.positiveRecommendations || 0,
         negativeRecommendations: state?.negativeRecommendations || 0,
     };
+
+    globalScore.engagement = Math.max(globalScore.engagement, newProfile.engagement);
+
+    return newProfile;
 }
 
 export function getAllUsers(): string[] {
@@ -305,4 +317,12 @@ export function updateEngagement(recommendation: ScoredRecommendation) {
     if (profile) {
         trainProfile(recommendation, profile, weight);
     }
+}
+
+export function getBestEngagement() {
+    return globalScore.engagement;
+}
+
+export function setBestEngagement(e: number) {
+    globalScore.engagement = Math.max(globalScore.engagement, e);
 }
