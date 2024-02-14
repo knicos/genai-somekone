@@ -32,6 +32,7 @@ export default function SocialMenu() {
 
     return (
         <IconMenu
+            title={t('dashboard.aria.socialMenu')}
             placement="top"
             selected={!!selectedUser}
             label={
@@ -45,6 +46,7 @@ export default function SocialMenu() {
                     color={nodeMode === 'image' ? 'secondary' : 'inherit'}
                     onClick={() => setNodeMode('image')}
                     data-testid="social-menu-images"
+                    aria-label={t('dashboard.labels.engagedImages')}
                 >
                     <CollectionsIcon />
                 </IconButton>
@@ -53,6 +55,7 @@ export default function SocialMenu() {
                 <IconButton
                     color={nodeMode === 'word' ? 'secondary' : 'inherit'}
                     onClick={() => setNodeMode('word')}
+                    aria-label={t('dashboard.labels.topicCloud')}
                 >
                     <TextFieldsIcon />
                 </IconButton>
@@ -67,6 +70,7 @@ export default function SocialMenu() {
                             data-testid="social-menu-feed-button"
                             color={panel === 'feed' ? 'secondary' : 'inherit'}
                             onClick={() => setPanel('feed')}
+                            aria-label={t('dashboard.labels.showFeed')}
                         >
                             <PhoneAndroidIcon />
                         </IconButton>
@@ -76,6 +80,7 @@ export default function SocialMenu() {
                             data-testid="social-menu-data-button"
                             color={panel === 'data' ? 'secondary' : 'inherit'}
                             onClick={() => setPanel('data')}
+                            aria-label={t('dashboard.labels.showData')}
                         >
                             <QueryStatsIcon />
                         </IconButton>
@@ -85,6 +90,7 @@ export default function SocialMenu() {
                             data-testid="social-menu-profile-button"
                             color={panel === 'profile' ? 'secondary' : 'inherit'}
                             onClick={() => setPanel('profile')}
+                            aria-label={t('dashboard.labels.showProfile')}
                         >
                             <PersonIcon />
                         </IconButton>
@@ -94,6 +100,7 @@ export default function SocialMenu() {
                             data-testid="social-menu-recom-button"
                             color={panel === 'recommendations' ? 'secondary' : 'inherit'}
                             onClick={() => setPanel('recommendations')}
+                            aria-label={t('dashboard.labels.showRecommendations')}
                         >
                             <ImageSearchIcon />
                         </IconButton>
@@ -103,6 +110,7 @@ export default function SocialMenu() {
                         <IconButton
                             color="inherit"
                             onClick={() => setShowDelete(true)}
+                            aria-label={t('dashboard.labels.deleteUser')}
                         >
                             <DeleteForeverIcon />
                         </IconButton>

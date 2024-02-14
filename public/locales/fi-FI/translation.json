@@ -82,6 +82,15 @@
         "labels": {
             "enterUsername": "Anna käyttäjänimesi",
             "enterFullname": "Anna oikea nimesi"
+        },
+        "aria": {
+            "followUser": "Follow user",
+            "unfollowUser": "Unfollow user",
+            "showLikeOptions": "Show like options",
+            "showComments": "Show comments",
+            "showShareOptions": "Show share options",
+            "shareLink": "Link to open the feed app",
+            "restoreUser": "Restore a previous session"
         }
     },
     "dashboard": {
@@ -163,7 +172,8 @@
             "storageOptions": "Load and save data",
             "viewOptions": "Graph to display",
             "appOptions": "Feed app options",
-            "none": "none"
+            "none": "none",
+            "showSettings": "Show application settings"
         },
         "messages": {
             "connection": "Mene allaolevaan www-osoitteeseen ja syötä koodi <Code>{{codeText}}</Code>, tai käytä QR -koodia.",
@@ -190,6 +200,11 @@
             "peer_no_peer": "Yhdistettävää laitetta ei löytynyt",
             "peer_nowebcam": "Web-kameran käyttö pitää sallia jotta monen käyttäjän yhteys onnistuu",
             "missing_dependency": "Tämän tiedoston tarvitsemaa sisältöä ei löydy"
+        },
+        "aria": {
+            "linkForFeed": "Link for a new user feed",
+            "appMenu": "Main application menu",
+            "socialMenu": "Social graph menu"
         }
     },
     "profile": {

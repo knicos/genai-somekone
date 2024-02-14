@@ -91,8 +91,14 @@ export default function SocialGraphSettings() {
                 }
                 label={t('dashboard.labels.shrinkOffline')}
             />
-            <div className={style.label}>{t('dashboard.labels.clusterColouring')}</div>
+            <div
+                id="cluster-colouring-label"
+                className={style.label}
+            >
+                {t('dashboard.labels.clusterColouring')}
+            </div>
             <Slider
+                aria-labelledby="cluster-colouring-label"
                 value={clusterColouring}
                 onChange={(_, value) => setClusterColouring(value as number)}
                 min={0}
@@ -160,32 +166,56 @@ export default function SocialGraphSettings() {
                     />
                 </RadioGroup>
             </FormControl>
-            <div className={style.label}>{t('dashboard.labels.edgeScaling')}</div>
+            <div
+                id="social-edge-scaling-label"
+                className={style.label}
+            >
+                {t('dashboard.labels.edgeScaling')}
+            </div>
             <Slider
+                aria-labelledby="social-edge-scaling-label"
                 value={edgeScale}
                 onChange={doEdgeScale}
                 min={1}
                 max={20}
                 step={1}
             />
-            <div className={style.label}>{t('dashboard.labels.similarPercent')}</div>
+            <div
+                id="social-similar-percent-label"
+                className={style.label}
+            >
+                {t('dashboard.labels.similarPercent')}
+            </div>
             <Slider
+                aria-labelledby="social-similar-percent-label"
                 value={similarPercent}
                 onChange={doSimilarPercent}
                 min={0}
                 max={1}
                 step={0.1}
             />
-            <div className={style.label}>{t('dashboard.labels.nodeCharge')}</div>
+            <div
+                id="social-node-charge-label"
+                className={style.label}
+            >
+                {t('dashboard.labels.nodeCharge')}
+            </div>
             <Slider
+                aria-labelledby="social-node-charge-label"
                 value={nodeCharge}
                 onChange={doNodeCharge}
                 min={0}
                 max={10}
                 step={0.5}
             />
-            <div className={style.label}>{t('dashboard.labels.topicThreshold')}</div>
+            <div
+                id="social-topic-threshold-label"
+                className={style.label}
+            >
+                {t('dashboard.labels.topicThreshold')}
+            </div>
             <Slider
+                aria-labelledby="social-topic-threshold-label"
                 value={topicThreshold}
                 onChange={doTopicThreshold}
                 min={0}

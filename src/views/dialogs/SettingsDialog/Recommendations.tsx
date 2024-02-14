@@ -24,8 +24,14 @@ export default function RecommendationSettings() {
         <div className={style.column}>
             <FormControl sx={{ marginTop: '1rem' }}>
                 <FormLabel id="demo-radio-buttons-group-label">{t('dashboard.labels.candidates')}</FormLabel>
-                <div className={style.label}>{t('dashboard.labels.useTopicCandidates')}</div>
+                <div
+                    id="topic-candidates-label"
+                    className={style.label}
+                >
+                    {t('dashboard.labels.useTopicCandidates')}
+                </div>
                 <Slider
+                    aria-labelledby="topic-candidates-label"
                     value={localConfig?.recommendations.taste || 0}
                     onChange={(_, value) =>
                         setLocalConfig((old) => ({
@@ -37,8 +43,14 @@ export default function RecommendationSettings() {
                     max={5}
                     step={0.1}
                 />
-                <div className={style.label}>{t('dashboard.labels.useRandomCandidates')}</div>
+                <div
+                    id="random-candidates-label"
+                    className={style.label}
+                >
+                    {t('dashboard.labels.useRandomCandidates')}
+                </div>
                 <Slider
+                    aria-labelledby="random-candidates-label"
                     value={localConfig?.recommendations.random || 0}
                     onChange={(_, value) =>
                         setLocalConfig((old) => ({
@@ -50,8 +62,14 @@ export default function RecommendationSettings() {
                     max={5}
                     step={0.1}
                 />
-                <div className={style.label}>{t('dashboard.labels.useCoengagedCandidates')}</div>
+                <div
+                    id="coengaged-candidates-label"
+                    className={style.label}
+                >
+                    {t('dashboard.labels.useCoengagedCandidates')}
+                </div>
                 <Slider
+                    aria-labelledby="coengaged-candidates-label"
                     value={localConfig?.recommendations.coengaged || 0}
                     onChange={(_, value) =>
                         setLocalConfig((old) => ({
@@ -63,8 +81,14 @@ export default function RecommendationSettings() {
                     max={5}
                     step={0.1}
                 />
-                <div className={style.label}>{t('dashboard.labels.useSimilarUserCandidates')}</div>
+                <div
+                    id="similar-user-candidates-label"
+                    className={style.label}
+                >
+                    {t('dashboard.labels.useSimilarUserCandidates')}
+                </div>
                 <Slider
+                    aria-labelledby="similar-user-candidates-label"
                     value={localConfig?.recommendations.similarUsers || 0}
                     onChange={(_, value) =>
                         setLocalConfig((old) => ({

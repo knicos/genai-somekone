@@ -2,6 +2,7 @@ import { PropsWithChildren, useEffect, useState } from 'react';
 import style from './style.module.css';
 import { IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import { useTranslation } from 'react-i18next';
 
 interface Props extends PropsWithChildren {
     title?: string;
@@ -9,6 +10,7 @@ interface Props extends PropsWithChildren {
 }
 
 export default function AppPanel({ title, onClose, children, ...props }: Props) {
+    const { t } = useTranslation();
     const [visible, setVisible] = useState(true);
 
     useEffect(() => {
@@ -30,6 +32,7 @@ export default function AppPanel({ title, onClose, children, ...props }: Props) 
                             onClick={() => setVisible(false)}
                             color="inherit"
                             data-testid="panel-close-button"
+                            aria-label={t('dashboard.actions.close')}
                         >
                             <CloseIcon />
                         </IconButton>

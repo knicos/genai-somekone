@@ -41,24 +41,42 @@ export default function TopicGraphSettings() {
                 }
                 label={t('dashboard.labels.showLines')}
             />
-            <div className={style.label}>{t('dashboard.labels.edgeScaling')}</div>
+            <div
+                id="topic-edge-scaling-label"
+                className={style.label}
+            >
+                {t('dashboard.labels.edgeScaling')}
+            </div>
             <Slider
+                aria-labelledby="topic-edge-scaling-label"
                 value={edgeScale}
                 onChange={doEdgeScale}
                 min={1}
                 max={20}
                 step={1}
             />
-            <div className={style.label}>{t('dashboard.labels.similarPercent')}</div>
+            <div
+                id="topic-similar-percent-label"
+                className={style.label}
+            >
+                {t('dashboard.labels.similarPercent')}
+            </div>
             <Slider
+                aria-labelledby="topic-similar-percent-label"
                 value={similarPercent}
                 onChange={doSimilarPercent}
                 min={0}
                 max={1}
                 step={0.1}
             />
-            <div className={style.label}>{t('dashboard.labels.nodeCharge')}</div>
+            <div
+                id="topic-node-charge-label"
+                className={style.label}
+            >
+                {t('dashboard.labels.nodeCharge')}
+            </div>
             <Slider
+                aria-labelledby="topic-node-charge-label"
                 value={nodeCharge}
                 onChange={doNodeCharge}
                 min={0}

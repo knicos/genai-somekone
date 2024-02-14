@@ -28,6 +28,7 @@ import ProfilePanel from './ProfilePanel';
 import { menuSelectedUser } from '@genaism/state/menuState';
 import RecommendationsPanel from './RecommendationsPanel';
 import { colourLabel } from './colourise';
+import { getUserName } from '@genaism/services/profiler/profiler';
 
 const LINE_THICKNESS_UNSELECTED = 40;
 const LINE_THICKNESS_SELECTED = 60;
@@ -106,7 +107,7 @@ export default function SocialGraph({ liveUsers }: Props) {
                     ? colourLabel(topicData?.label || '')
                     : liveSet.has(u)
                     ? '#008297'
-                    : '#707070';
+                    : '#5f7377';
 
                 const old = oldMap.get(u);
                 if (old && old.size === newSize && old.data?.colour === newColour) {
@@ -114,6 +115,7 @@ export default function SocialGraph({ liveUsers }: Props) {
                 } else {
                     return {
                         id: u,
+                        label: getUserName(u),
                         size: newSize,
                         strength: similar.similar.get(u)?.length || 0,
                         data: {

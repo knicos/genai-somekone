@@ -43,6 +43,7 @@ export default function MenuPanel({ onOpen, onRefresh }: Props) {
 
     return (
         <IconMenu
+            title={t('dashboard.aria.appMenu')}
             placement="left"
             label={
                 <div className={style.logo}>
@@ -50,6 +51,7 @@ export default function MenuPanel({ onOpen, onRefresh }: Props) {
                         src="/logo48_bw_invert.png"
                         width="48"
                         height="48"
+                        alt="Somekone logo"
                     />
                 </div>
             }
@@ -58,6 +60,7 @@ export default function MenuPanel({ onOpen, onRefresh }: Props) {
                 <IconButton
                     color={showShare ? 'secondary' : 'inherit'}
                     onClick={doShowShare}
+                    aria-label={t('dashboard.labels.shareTip')}
                 >
                     <QrCode2Icon />
                 </IconButton>
@@ -66,6 +69,7 @@ export default function MenuPanel({ onOpen, onRefresh }: Props) {
                 <IconButton
                     color={config?.disableFeedApp ? 'secondary' : 'inherit'}
                     onClick={() => setConfig((old) => ({ ...old, disableFeedApp: !old.disableFeedApp }))}
+                    aria-label={t('dashboard.labels.disableFeedApp')}
                 >
                     {config?.disableFeedApp ? <PlayCircleIcon /> : <PauseIcon />}
                 </IconButton>
@@ -78,14 +82,16 @@ export default function MenuPanel({ onOpen, onRefresh }: Props) {
                 <IconButton
                     color={'inherit'}
                     onClick={onRefresh}
+                    aria-label={t('dashboard.labels.refreshGraph')}
                 >
                     <RefreshIcon />
                 </IconButton>
             </IconMenuItem>
-            <IconMenuItem tooltip="">
+            <IconMenuItem tooltip={t('dashboard.labels.showSettings')}>
                 <IconButton
                     color={showSettings ? 'secondary' : 'inherit'}
                     onClick={doShowSettings}
+                    aria-label={t('dashboard.labels.showSettings')}
                 >
                     <SettingsIcon />
                 </IconButton>

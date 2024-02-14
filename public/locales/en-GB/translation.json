@@ -82,6 +82,15 @@
         "labels": {
             "enterUsername": "Enter Username",
             "enterFullname": "Enter Fullname"
+        },
+        "aria": {
+            "followUser": "Follow user",
+            "unfollowUser": "Unfollow user",
+            "showLikeOptions": "Show like options",
+            "showComments": "Show comments",
+            "showShareOptions": "Show share options",
+            "shareLink": "Link to open the feed app",
+            "restoreUser": "Restore a previous session"
         }
     },
     "dashboard": {
@@ -163,7 +172,8 @@
             "storageOptions": "Load and save data",
             "viewOptions": "Graph to display",
             "appOptions": "Feed app options",
-            "none": "none"
+            "none": "none",
+            "showSettings": "Show application settings"
         },
         "messages": {
             "connection": "Go to the address below and enter the code <Code>{{codeText}}</Code>, or use the QR code.",
@@ -190,6 +200,11 @@
             "peer_no_peer": "The peer was not found",
             "peer_nowebcam": "You must allow use of the webcam to create the conference call",
             "missing_dependency": "This file depends on missing content"
+        },
+        "aria": {
+            "linkForFeed": "Link for a new user feed",
+            "appMenu": "Main application menu",
+            "socialMenu": "Social graph menu"
         }
     },
     "profile": {

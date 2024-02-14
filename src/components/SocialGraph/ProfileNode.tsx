@@ -76,10 +76,11 @@ const ProfileNode = memo(function ProfileNode({ id, onResize, live, selected, di
                 r={selected ? asize + 20 : asize}
             />
             <circle
+                data-nodeitem
                 data-testid="profile-circle"
                 r={asize}
                 fill={'white'}
-                stroke={(node.data?.colour as string) || '#707070'}
+                stroke={(node.data?.colour as string) || '#5f7377'}
                 strokeWidth={reduced ? 5 : 15}
             />
             {!reduced && nodeMode === 'image' && profile.engagedContent.length > 0 && (
@@ -106,7 +107,7 @@ const ProfileNode = memo(function ProfileNode({ id, onResize, live, selected, di
                     x={0}
                     y={5}
                     fontSize={Math.floor(50 + profile.engagement * 10)}
-                    color={'#707070'}
+                    color={'#5f7377'}
                     fill={'white'}
                     padding={0}
                     onResize={doResize}

@@ -20,7 +20,10 @@ export default function Profile({ id }: Props) {
     }, []);
 
     return (
-        <div className={style.container}>
+        <div
+            className={style.container}
+            tabIndex={0}
+        >
             <div>
                 <svg
                     width="100%"

@@ -2,6 +2,7 @@ import { NodeID } from '@genaism/services/graph/graphTypes';
 
 export interface GraphNode<T extends NodeID> {
     size: number;
+    label?: string;
     strength?: number;
     id: T;
     x?: number;

@@ -15,11 +15,9 @@ export default function LogBatch({ batch }: Props) {
     const message = generateMessage(batch[0], t);
 
     const image = batch[0].id || 'content:unknown';
-    const time = batch[0].timestamp;
 
     return (
         <Card
-            time={time}
             message={message}
             image={image}
         >

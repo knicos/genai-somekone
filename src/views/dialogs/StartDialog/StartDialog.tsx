@@ -31,6 +31,7 @@ export default function StartDialog({ users, code }: Props) {
                     <QRCode
                         url={`${window.location.origin}/feed/${code}`}
                         size="large"
+                        label={t('dashboard.aria.linkForFeed')}
                     />
                     <div className={style.column}>
                         <div style={{ textAlign: 'center' }}>

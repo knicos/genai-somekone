@@ -30,6 +30,7 @@ export default function ContentNode({ id, selected, disabled, size }: Props) {
                 fill="white"
                 stroke={'#0A869A'}
                 strokeWidth={10}
+                data-nodeitem
             />
             <image
                 href={getContentData(id)}

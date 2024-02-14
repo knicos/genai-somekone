@@ -39,6 +39,7 @@ export default function TopicNode({ id, selected, onResize }: Props) {
                 r={selected ? asize + 20 : asize}
             />
             <circle
+                data-nodeitem
                 data-testid="profile-circle"
                 r={asize}
                 fill="white"

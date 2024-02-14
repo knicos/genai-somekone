@@ -6,9 +6,10 @@ interface Props {
     url: string;
     size?: 'small' | 'large';
     code?: string;
+    label?: string;
 }
 
-export default function QRCode({ url, size, code }: Props) {
+export default function QRCode({ url, size, code, label }: Props) {
     const canvas = useRef<HTMLCanvasElement>(null);
 
     useEffect(() => {
@@ -23,6 +24,7 @@ export default function QRCode({ url, size, code }: Props) {
             target="_blank"
             rel="noreferrer"
             className={style.link}
+            aria-label={label}
         >
             <canvas
                 data-testid="qr-code-canvas"

@@ -31,7 +31,10 @@ export default function RecommendationsProfile({ id, generate }: Props) {
     }, [generate, more]);
 
     return (
-        <div className={style.container}>
+        <div
+            className={style.container}
+            tabIndex={0}
+        >
             <div>
                 <svg
                     width="100%"

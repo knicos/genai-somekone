@@ -36,7 +36,7 @@ export default function ImageFeed({ images, onView, onMore, onLog, noActions, sh
     const durationRef = useRef<number>(0);
     const active = useTabActive();
     const [focus, setFocus] = useState(false);
-    const ref = useRef<HTMLDivElement>(null);
+    //const ref = useRef<HTMLDivElement>(null);
 
     viewedRef.current = images[viewed];
 
@@ -46,8 +46,8 @@ export default function ImageFeed({ images, onView, onMore, onLog, noActions, sh
             durationRef.current = now;
             startRef.current = now;
             onLog({ activity: 'begin', timestamp: now });
-            if (ref.current) {
-                ref.current.focus();
+            if (containerRef.current) {
+                containerRef.current.focus();
             }
         } else if (viewedRef.current) {
             onLog({
@@ -100,8 +100,8 @@ export default function ImageFeed({ images, onView, onMore, onLog, noActions, sh
         }
         lastRef.current = now;
 
-        if (ref.current && !focus) {
-            ref.current.focus();
+        if (containerRef.current && !focus) {
+            containerRef.current.focus();
         }
     }, [focus]);
 
@@ -132,8 +132,8 @@ export default function ImageFeed({ images, onView, onMore, onLog, noActions, sh
                 canMoreRef.current = false;
             }
 
-            if (ref.current && !focus) {
-                ref.current.focus();
+            if (containerRef.current && !focus) {
+                containerRef.current.focus();
             }
         },
         [images, setViewed, onMore, focus, onLog]
@@ -184,31 +184,28 @@ export default function ImageFeed({ images, onView, onMore, onLog, noActions, sh
     );
 
     return (
-        <div
-            className={style.outer}
-            ref={ref}
-            onMouseMove={doInteraction}
-            onKeyDown={doInteraction}
-            onTouchStart={doInteraction}
-            onMouseDown={doInteraction}
-            tabIndex={0}
-            onFocus={() => setFocus(true)}
-            onBlur={(e: FocusEvent) => {
-                const ischild = e.currentTarget.contains(e.relatedTarget);
-                if (!ischild) setFocus(false);
-            }}
-        >
+        <div className={style.outer}>
             <div
                 ref={containerRef}
                 className={style.container}
                 onScroll={doScroll}
+                onMouseMove={doInteraction}
+                onKeyDown={doInteraction}
+                onTouchStart={doInteraction}
+                onMouseDown={doInteraction}
+                tabIndex={0}
+                onFocus={() => setFocus(true)}
+                onBlur={(e: FocusEvent) => {
+                    const ischild = e.currentTarget.contains(e.relatedTarget);
+                    if (!ischild) setFocus(false);
+                }}
             >
                 <div
                     className={style.titleOuter}
                     style={{ minHeight: noActions ? '40px' : undefined }}
                 >
                     {!noActions && (
-                        <div className={style.title}>
+                        <header className={style.title}>
                             <img
                                 src="/logo48_bw.png"
                                 alt="GenAIMedia Logo"
@@ -219,7 +216,7 @@ export default function ImageFeed({ images, onView, onMore, onLog, noActions, sh
                             <div className={style.language}>
                                 <LangSelect />
                             </div>
-                        </div>
+                        </header>
                     )}
                 </div>
 

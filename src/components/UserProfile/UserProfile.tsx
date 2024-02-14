@@ -52,7 +52,10 @@ export default function Profile({ id }: Props) {
     const tasteSum = profile.taste.reduce((sum, t) => sum + t.weight, 0);
 
     return (
-        <div className={style.container}>
+        <div
+            className={style.container}
+            tabIndex={0}
+        >
             <div>
                 <svg
                     width="100%"

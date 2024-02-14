@@ -14,6 +14,7 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import LabelsPanel from './LabelsPanel';
 import IconButtonDot from '../IconButtonDot/IconButtonDot';
+import { useTranslation } from 'react-i18next';
 
 type ActionPanel = 'none' | 'like' | 'comment' | 'share' | 'discard' | 'author';
 
@@ -79,6 +80,7 @@ export default function FeedImage({
     noActions,
     showLabels,
 }: Props) {
+    const { t } = useTranslation();
     const contentData = getContentData(id); //useRecoilValue(contentCache(id));
     const contentMeta = getContentMetadata(id);
     const [liked, setLiked] = useState<LikeKind>('none');
@@ -160,6 +162,8 @@ export default function FeedImage({
                                 color="inherit"
                                 onClick={doFollow}
                                 data-testid="feed-image-follow-button"
+                                aria-label={t('feed.aria.followUser')}
+                                aria-pressed={followed}
                             >
                                 {followed ? (
                                     <PersonRemoveIcon
@@ -191,6 +195,7 @@ export default function FeedImage({
                             onClick={doShowPanel}
                             color="inherit"
                             data-testid="feed-image-like-button"
+                            aria-label={t('feed.aria.showLikeOptions')}
                         >
                             {liked !== 'none' ? (
                                 <div className={style.iconContainer}>{LIKEMAP[liked]}</div>
@@ -206,6 +211,7 @@ export default function FeedImage({
                             color="inherit"
                             onClick={doShowComments}
                             data-testid="feed-image-comment-button"
+                            aria-label={t('feed.aria.showComments')}
                         >
                             <ChatBubbleOutlineIcon
                                 color="inherit"
@@ -218,6 +224,7 @@ export default function FeedImage({
                             color="inherit"
                             onClick={doShowSharePanel}
                             data-testid="feed-image-share-button"
+                            aria-label={t('feed.aria.showShareOptions')}
                         >
                             <ReplyIcon
                                 color="inherit"

@@ -29,14 +29,16 @@ export default function ViewMenu() {
                     onClick={handleClick}
                     color={'inherit'}
                     id="view-menu-button"
+                    aria-label={t('dashboard.labels.viewOptions')}
+                    aria-haspopup={true}
+                    aria-expanded={open}
                 >
                     <BubbleChartIcon />
                 </IconButton>
             </IconMenuItem>
             <Menu
-                MenuListProps={{
-                    'aria-labelledby': 'view-menu-button',
-                }}
+                role="dialog"
+                aria-labelledby="view-menu-button"
                 id={`view-menu`}
                 anchorEl={anchorEl}
                 open={open}

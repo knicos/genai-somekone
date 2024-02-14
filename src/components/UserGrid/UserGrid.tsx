@@ -1,7 +1,17 @@
 import { UserNodeId } from '@genaism/services/graph/graphTypes';
 import style from './style.module.css';
 import ProfileNode from '../SocialGraph/ProfileNode';
-import { MouseEvent, PointerEvent, WheelEvent, useCallback, useEffect, useRef, useState } from 'react';
+import {
+    KeyboardEvent,
+    MouseEvent,
+    PointerEvent,
+    WheelEvent,
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from 'react';
 import UserLabel from '../SocialGraph/UserLabel';
 import { ZoomState, pointerMove, wheelZoom } from '../Graph/controls';
 import gsap from 'gsap';
@@ -13,6 +23,7 @@ import GridMenu from './GridMenu';
 import { menuSelectedUser } from '@genaism/state/menuState';
 import { useRecoilState } from 'recoil';
 import { useNodeType } from '@genaism/services/graph/hooks';
+import { getUserName } from '@genaism/services/profiler/profiler';
 
 interface Props {
     users?: UserNodeId[];
@@ -82,12 +93,19 @@ export default function UserGrid({ users }: Props) {
     const size = maxSize + SPACING;
     const ysize = maxSize + YSPACING;
 
-    const nodes = ausers.map((user, ix) => ({
-        id: user,
-        size: sizes.get(user) || SIZE,
-        x: -Math.floor(COLS / 2) * size * 2 + (ix % COLS) * size * 2,
-        y: -Math.floor(ROWS / 2) * ysize * 2 + Math.floor(ix / COLS) * ysize * 2,
-    }));
+    const nodes = useMemo(
+        () =>
+            ausers
+                .map((user, ix) => ({
+                    id: user,
+                    label: getUserName(user),
+                    size: sizes.get(user) || SIZE,
+                    x: -Math.floor(COLS / 2) * size * 2 + (ix % COLS) * size * 2,
+                    y: -Math.floor(ROWS / 2) * ysize * 2 + Math.floor(ix / COLS) * ysize * 2,
+                }))
+                .filter((f) => f.label),
+        [ausers, COLS, ROWS, size, ysize, sizes]
+    );
 
     // Animate camera motion
     useEffect(() => {
@@ -160,9 +178,22 @@ export default function UserGrid({ users }: Props) {
                 <g>
                     {nodes.map((node) => (
                         <g
+                            className={style.node}
                             key={node.id}
                             transform={`translate(${node.x},${node.y})`}
-                            onClick={() => setFocusNode(node.id)}
+                            onClick={(e: MouseEvent<SVGGElement>) => {
+                                setFocusNode(node.id);
+                                e.currentTarget.blur();
+                            }}
+                            role="button"
+                            tabIndex={0}
+                            onKeyDown={(e: KeyboardEvent<SVGGElement>) => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                    setFocusNode(node.id);
+                                    e.currentTarget.blur();
+                                }
+                            }}
+                            aria-label={node.label}
                         >
                             <ProfileNode
                                 id={node.id}

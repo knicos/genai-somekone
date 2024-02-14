@@ -43,6 +43,7 @@ export default function RecommendationPage({ onClose }: Props) {
                                 setShow(false);
                                 if (onClose) onClose();
                             }}
+                            aria-label={t('dashboard.actions.close')}
                         >
                             <CloseIcon fontSize="large" />
                         </IconButton>

@@ -7,6 +7,7 @@ import LogBatch from './LogBatch';
 import { UserNodeId } from '@genaism/services/graph/graphTypes';
 import { getEdgeWeights } from '@genaism/services/graph/edges';
 import { getCurrentUser } from '@genaism/services/profiler/state';
+import style from './style.module.css';
 
 interface Props {
     user?: UserNodeId;
@@ -61,13 +62,15 @@ export default function ActionLogTable({ user, log }: Props) {
                     key={logLimited.length - ix}
                 />
             ))}
-            <Button
-                variant="outlined"
-                onClick={() => setSize((s) => s + 5)}
-                sx={{ margin: '1rem 0.5rem' }}
-            >
-                {t('profile.actions.more')}
-            </Button>
+            <li className={style.buttonListItem}>
+                <Button
+                    variant="outlined"
+                    onClick={() => setSize((s) => s + 5)}
+                    sx={{ margin: '1rem 0.5rem' }}
+                >
+                    {t('profile.actions.more')}
+                </Button>
+            </li>
         </Cards>
     );
 }

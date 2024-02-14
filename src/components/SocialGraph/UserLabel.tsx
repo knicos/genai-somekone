@@ -39,8 +39,8 @@ export default function UserLabel({ node, scale }: Props) {
             label={name}
             x={node.x || 0}
             y={(node.y || 0) - node.size - 10 - 15 * scale}
-            fill={colour || '#707070'}
-            color={isLight(colour || '#707070') ? 'black' : 'white'}
+            fill={colour || '#5f7377'}
+            color={isLight(colour || '#5f7377') ? 'black' : 'white'}
             padding={5}
             scale={scale}
         />

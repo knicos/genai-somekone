@@ -50,6 +50,7 @@ export default function ContentGraph() {
 
         const newNodes = filteredTopics.map((u) => ({
             id: u,
+            label: u,
             size: calculateNodeSize(u),
         }));
 

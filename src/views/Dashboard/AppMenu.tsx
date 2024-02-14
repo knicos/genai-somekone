@@ -26,14 +26,16 @@ export default function AppMenu() {
                     onClick={handleClick}
                     color={'inherit'}
                     id="app-menu-button"
+                    aria-label={t('dashboard.labels.appOptions')}
+                    aria-haspopup={true}
+                    aria-expanded={open}
                 >
                     <PhoneAndroidIcon />
                 </IconButton>
             </IconMenuItem>
             <Menu
-                MenuListProps={{
-                    'aria-labelledby': 'app-menu-button',
-                }}
+                role="dialog"
+                aria-labelledby="app-menu-button"
                 id={`app-menu`}
                 anchorEl={anchorEl}
                 open={open}

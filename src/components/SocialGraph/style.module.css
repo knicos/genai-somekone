@@ -115,6 +115,10 @@
     padding: 0 1rem;
 }
 
+.clusterContainer {
+    margin: 1rem;
+}
+
 .label {
     font-family: Andika;
 }

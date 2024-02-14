@@ -33,14 +33,16 @@ export default function StorageMenu() {
                     onClick={handleClick}
                     color={'inherit'}
                     id="storage-menu-button"
+                    aria-label={t('dashboard.labels.storageOptions')}
+                    aria-haspopup={true}
+                    aria-expanded={open}
                 >
                     <StorageIcon />
                 </IconButton>
             </IconMenuItem>
             <Menu
-                MenuListProps={{
-                    'aria-labelledby': 'storage-menu-button',
-                }}
+                aria-labelledby="storage-menu-button"
+                role="dialog"
                 id={`storage-menu`}
                 anchorEl={anchorEl}
                 open={open}

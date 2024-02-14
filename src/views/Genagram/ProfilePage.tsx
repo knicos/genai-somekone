@@ -43,6 +43,7 @@ export default function ProfilePage({ onClose }: Props) {
                                 setShowProfile(false);
                                 if (onClose) onClose();
                             }}
+                            aria-label={t('dashboard.actions.close')}
                         >
                             <CloseIcon fontSize="large" />
                         </IconButton>

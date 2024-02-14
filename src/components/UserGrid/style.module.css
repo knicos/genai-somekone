@@ -1,3 +1,5 @@
+@value secondary from "../../style/colours.module.css";
+
 .svg {
     position: absolute;
     top: 0;
@@ -14,4 +16,13 @@
     display: flex;
     align-items: center;
     font-size: 1.1rem;
+}
+
+.node {
+    cursor: pointer;
+    outline: none;
+}
+
+.node:focus circle[data-nodeitem] {
+    stroke: secondary;
 }

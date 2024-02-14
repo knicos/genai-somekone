@@ -7,11 +7,15 @@ interface Props extends PropsWithChildren {
     label?: JSX.Element;
     anchor?: HTMLElement;
     selected?: boolean;
+    title?: string;
 }
 
-export default function IconMenu({ placement, label, children, selected }: Props) {
+export default function IconMenu({ placement, label, children, selected, title }: Props) {
     return (
-        <nav className={style[placement || 'left']}>
+        <nav
+            className={style[placement || 'left']}
+            aria-label={title}
+        >
             <IconMenuContext.Provider value={placement || 'left'}>
                 <div
                     className={`${placement === 'top' || placement === 'bottom' ? style.logoColumn : style.logoRow} ${

@@ -87,6 +87,7 @@ export function Component() {
                                 src="/logo64_bw.png"
                                 width={64}
                                 height={64}
+                                alt="Somekone logo"
                             />
                             <h1>Somekone</h1>
                         </div>

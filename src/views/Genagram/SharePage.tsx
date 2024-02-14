@@ -44,6 +44,7 @@ export default function SharePage({ code, onClose }: Props) {
                                 setShowShareProfile(false);
                                 if (onClose) onClose();
                             }}
+                            aria-label={t('dashboard.actions.close')}
                         >
                             <CloseIcon fontSize="large" />
                         </IconButton>
@@ -51,6 +52,7 @@ export default function SharePage({ code, onClose }: Props) {
                     <QRCode
                         url={`${window.location.origin}/profile/${code}`}
                         size="large"
+                        label={t('feed.aria.shareLink')}
                     />
                     <div className={style.shareMessage}>
                         <Trans

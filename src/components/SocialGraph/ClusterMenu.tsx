@@ -1,5 +1,5 @@
 import IconMenuItem from '@genaism/components/IconMenu/Item';
-import { IconButton, ListItem, Menu, Slider } from '@mui/material';
+import { IconButton, Popover, Slider } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import { useRecoilState } from 'recoil';
@@ -26,15 +26,15 @@ export default function ClusterMenu() {
                     onClick={handleClick}
                     id="cluster-menu-button"
                     color={colouring > 0 ? 'secondary' : 'inherit'}
+                    aria-label={t('dashboard.labels.clusterColouring')}
                 >
                     <WorkspacesIcon />
                 </IconButton>
             </IconMenuItem>
-            <Menu
+            <Popover
+                role="dialog"
+                aria-labelledby="cluster-menu-button"
                 className={style.clusterMenu}
-                MenuListProps={{
-                    'aria-labelledby': 'cluster-menu-button',
-                }}
                 id={`cluster-menu`}
                 anchorEl={anchorEl}
                 open={open}
@@ -42,9 +42,15 @@ export default function ClusterMenu() {
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
                 transformOrigin={{ vertical: 'top', horizontal: 'center' }}
             >
-                <ListItem style={{ flexDirection: 'column', gap: '1rem' }}>
-                    <div className={style.label}>{t('dashboard.labels.clusterColouring')}</div>
+                <div className={style.clusterContainer}>
+                    <div
+                        id="cluster-colouring-label"
+                        className={style.label}
+                    >
+                        {t('dashboard.labels.clusterColouring')}
+                    </div>
                     <Slider
+                        aria-labelledby="cluster-colouring-label"
                         value={colouring}
                         onChange={(_, value) => setColouring(value as number)}
                         min={0}
@@ -60,8 +66,8 @@ export default function ClusterMenu() {
                         ]}
                         style={{ width: '200px' }}
                     />
-                </ListItem>
-            </Menu>
+                </div>
+            </Popover>
         </>
     );
 }

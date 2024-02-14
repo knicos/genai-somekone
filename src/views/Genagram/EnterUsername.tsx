@@ -99,7 +99,10 @@ export default function EnterUsername({ onUsername }: Props) {
             </LargeButton>
             {!showRestore && (
                 <div>
-                    <IconButton onClick={() => setShowRestore(true)}>
+                    <IconButton
+                        onClick={() => setShowRestore(true)}
+                        aria-label={t('feed.aria.restoreUser')}
+                    >
                         <RestoreIcon />
                     </IconButton>
                 </div>

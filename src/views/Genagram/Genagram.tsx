@@ -48,7 +48,7 @@ export function Component() {
                 server={code}
                 mycode={MYCODE}
             >
-                <div className={style.page}>
+                <main className={style.page}>
                     {config && !username && (
                         <div className={style.language}>
                             <LangSelect />
@@ -59,9 +59,9 @@ export function Component() {
                         <>
                             <FeedWrapper content={content} />
                             {showFeedActions && !config.hideActionsButton && (
-                                <div className={style.speedContainer}>
+                                <nav className={style.speedContainer}>
                                     <SpeedMenu />
-                                </div>
+                                </nav>
                             )}
                         </>
                     )}
@@ -70,7 +70,7 @@ export function Component() {
                     <ProfilePage />
                     <RecommendationPage />
                     <BlockDialog />
-                </div>
+                </main>
             </FeedProtocol>
             <ErrorDialog />
         </>
