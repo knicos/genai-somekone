@@ -40,3 +40,8 @@ export function getCurrentUser(): UserNodeId {
     }
     return userID;
 }
+
+export function removeProfile(id: UserNodeId) {
+    users.delete(id);
+    logs.delete(id);
+}

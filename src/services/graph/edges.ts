@@ -2,6 +2,8 @@ import { emitNodeEdgeTypeEvent } from './events';
 import { DestinationFor, Edge, EdgeType, NodeID, NodeType, SourceFor } from './graphTypes';
 import { edgeSrcIndex, edgeStore, edgeTypeSrcIndex, nodeStore } from './state';
 
+const ACCUMEDGES = new Set<EdgeType>(['coengaged', 'last_engaged', 'seen', 'engaged']);
+
 export function addEdge<T extends EdgeType, S extends SourceFor<T>, D extends DestinationFor<T, S>>(
     type: T,
     src: S,
@@ -40,6 +42,15 @@ export function addEdge<T extends EdgeType, S extends SourceFor<T>, D extends De
 export function addEdges(edges: Edge<NodeID>[]) {
     edges.forEach((edge) => {
         const id = `${edge.destination}:${edge.type}:${edge.source}`;
+
+        // Some edge types will accumulate on load.
+        if (ACCUMEDGES.has(edge.type) && edgeStore.has(id)) {
+            const e = edgeStore.get(id);
+            if (e) {
+                edge.weight += e.weight;
+            }
+        }
+
         edgeStore.set(id, edge);
         const oldSrcIndex = edgeSrcIndex.get(edge.source);
         if (oldSrcIndex) {

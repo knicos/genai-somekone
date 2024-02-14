@@ -62,10 +62,14 @@ interface LogItem {
 export async function loadFile(file: File | Blob): Promise<void> {
     const zip = await JSZip.loadAsync(file);
 
-    console.log('Loading file');
-
     const images = new Map<string, string>();
-    const store: { meta: ContentMetadata[]; users: UserProfile[]; logs: LogItem[]; graph?: GraphExport } = {
+    const store: {
+        meta: ContentMetadata[];
+        users: UserProfile[];
+        logs: LogItem[];
+        graph?: GraphExport;
+        project?: ProjectMeta;
+    } = {
         meta: [],
         users: [],
         logs: [],
@@ -102,15 +106,7 @@ export async function loadFile(file: File | Blob): Promise<void> {
             promises.push(
                 data.async('string').then((r) => {
                     const meta = JSON.parse(r) as ProjectMeta;
-                    if (meta.id) dependencies.add(meta.id);
-                    meta.dependencies.forEach((dep) => {
-                        if (!dependencies.has(dep)) {
-                            throw new Error('missing_dependency');
-                        }
-                    });
-                    if (meta.version > VERSION) {
-                        throw new Error('bad_version');
-                    }
+                    store.project = meta;
                 })
             );
         } else {
@@ -129,6 +125,18 @@ export async function loadFile(file: File | Blob): Promise<void> {
     });
 
     await Promise.all(promises);
+
+    if (store.project) {
+        if (store.project.id && store.meta.length > 0) dependencies.add(store.project.id);
+        store.project.dependencies.forEach((dep) => {
+            if (!dependencies.has(dep)) {
+                throw new Error('missing_dependency');
+            }
+        });
+        if (store.project.version > VERSION) {
+            throw new Error('bad_version');
+        }
+    }
 
     if (store.graph) {
         // Patch to fix old data
@@ -153,7 +161,6 @@ export async function loadFile(file: File | Blob): Promise<void> {
 
         addNodes(store.graph.nodes);
         addEdges(store.graph.edges);
-        console.log('Graph loaded');
     }
 
     store.meta.forEach((v) => {

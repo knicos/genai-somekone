@@ -1,4 +1,4 @@
-import { addEdge, getNodesByType, getNodesSince, getRelated } from '@genaism/services/graph/graph';
+import { addEdge, getNodesByType, getNodesSince, getRelated, removeNode } from '@genaism/services/graph/graph';
 import { getTopicId } from '@genaism/services/concept/concept';
 import {
     ContentNodeId,
@@ -13,6 +13,10 @@ import { getUserProfile } from '../profiler/profiler';
 import { useMemo } from 'react';
 import { UserProfile } from '../profiler/profilerTypes';
 import { WeightedLabel } from '../content/contentTypes';
+import { removeCommentsBy } from '../content/content';
+import { removeProfile } from '../profiler/state';
+import { removeRecommendations } from '../recommender/recommender';
+import { removeResearchData } from '../research/research';
 
 function identifyCandidateUsers(users: Set<UserNodeId>, candidates: WeightedNode<UserNodeId>[]) {
     candidates.forEach((c) => {
@@ -188,4 +192,12 @@ export function makeUserGraphSnapshot(id: UserNodeId, period: number): Snapshot 
     });
 
     return { edges: results, nodes: getNodesSince('user', Date.now() - period).filter((u) => u.id !== id) };
+}
+
+export function removeUser(id: UserNodeId) {
+    removeCommentsBy(id);
+    removeProfile(id);
+    removeRecommendations(id);
+    removeResearchData(id);
+    removeNode(id);
 }

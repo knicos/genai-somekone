@@ -40,3 +40,7 @@ export function appendRecommendations(id: UserNodeId, recommendations: ScoredRec
     store.set(id, [...recommendations, ...old]);
     emitRecommendationEvent(id, recommendations);
 }
+
+export function removeRecommendations(id: UserNodeId) {
+    store.delete(id);
+}

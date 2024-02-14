@@ -85,6 +85,15 @@ export function addComment(id: ContentNodeId, user: UserNodeId, comment: string)
     commentStore.set(id, comments);
 }
 
+export function removeCommentsBy(id: UserNodeId) {
+    commentStore.forEach((comment, key) => {
+        commentStore.set(
+            key,
+            comment.filter((c) => c.userId !== id)
+        );
+    });
+}
+
 export function getComments(id: ContentNodeId): CommentEntry[] {
     return commentStore.get(id) || [];
 }

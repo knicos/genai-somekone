@@ -11,13 +11,14 @@ import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid';
 import Spacer from '../IconMenu/Spacer';
 import style from './style.module.css';
 import { useTranslation } from 'react-i18next';
-import { getNodeData, removeNode } from '@genaism/services/graph/nodes';
+import { getNodeData } from '@genaism/services/graph/nodes';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { settingNodeMode } from '@genaism/state/settingsState';
 import { useState } from 'react';
 import DeleteDialog from './DeleteDialog';
 import { menuSelectedUser, menuShowUserPanel } from '@genaism/state/menuState';
 import ClusterMenu from './ClusterMenu';
+import { removeUser } from '@genaism/services/users/users';
 
 interface UserData {
     name: string;
@@ -120,7 +121,7 @@ export default function SocialMenu() {
                         open={showDelete}
                         onClose={() => setShowDelete(false)}
                         onDelete={() => {
-                            removeNode(selectedUser);
+                            removeUser(selectedUser);
                             setShowDelete(false);
                         }}
                     />

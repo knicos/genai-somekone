@@ -7,7 +7,7 @@ interface ResearchLogData {
     userId: UserNodeId;
 }
 
-const log: ResearchLogData[] = [];
+let log: ResearchLogData[] = [];
 
 export function appendResearchLog(data: ResearchLogData) {
     log.push(data);
@@ -15,4 +15,8 @@ export function appendResearchLog(data: ResearchLogData) {
 
 export function getResearchLog() {
     return log;
+}
+
+export function removeResearchData(id: UserNodeId) {
+    log = log.filter((l) => l.userId !== id);
 }
