@@ -55,7 +55,9 @@
             "noComments": "Kommentteja ei vielä ole.",
             "loading": "Kuvia ladataan...",
             "usernameError": {
-                "missing": "Käyttäjänimi puuttuu"
+                "missing": "Käyttäjänimi puuttuu",
+                "long": "The username is too long",
+                "short": "The username must be 3 or more characters"
             },
             "fullnameError": {
                 "missing": "Oikea nimi puuttuu"

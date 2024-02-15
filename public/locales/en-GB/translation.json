@@ -55,7 +55,9 @@
             "noComments": "No comments yet.",
             "loading": "Loading your feed...",
             "usernameError": {
-                "missing": "A username is required"
+                "missing": "A username is required",
+                "long": "The username is too long",
+                "short": "The username must be 3 or more characters"
             },
             "fullnameError": {
                 "missing": "Your full name is required"

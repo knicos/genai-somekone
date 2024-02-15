@@ -15,7 +15,7 @@ interface Props {
 }
 
 interface FormErrors {
-    username?: 'missing' | 'bad';
+    username?: 'missing' | 'bad' | 'long' | 'short';
     fullname?: 'missing' | 'bad';
 }
 
@@ -81,6 +81,14 @@ export default function EnterUsername({ onUsername }: Props) {
                     if (ref.current) {
                         if (!ref.current.value) {
                             setErrors({ username: 'missing' });
+                            return;
+                        }
+                        if (ref.current.value.length > 30) {
+                            setErrors({ username: 'long' });
+                            return;
+                        }
+                        if (ref.current.value.length < 3) {
+                            setErrors({ username: 'short' });
                             return;
                         }
                         if (logger && nameref.current) {
