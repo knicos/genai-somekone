@@ -8,6 +8,7 @@ import {
     PointerEvent,
     MouseEvent,
     FunctionComponent,
+    KeyboardEvent,
 } from 'react';
 import * as d3 from 'd3';
 import style from './style.module.css';
@@ -80,6 +81,7 @@ const DEFAULT_LINK_STYLE = {
 const MOVE_THRESHOLD = 10;
 const CAMERA_DURATION = 0.3;
 const REFRESH_COUNT = 30;
+const MOVE_SPEED = 20;
 
 export default function Graph<T extends NodeID>({
     nodes,
@@ -209,6 +211,40 @@ export default function Graph<T extends NodeID>({
             height="100%"
             viewBox="-500 -500 1000 1000"
             data-testid="graph-svg"
+            tabIndex={0}
+            onKeyDown={(e: KeyboardEvent<SVGSVGElement>) => {
+                if (e.key === '+' || e.key === '=') {
+                    setActualZoom((oldZoom) => ({
+                        ...oldZoom,
+                        zoom: Math.max(0.5, oldZoom.zoom - 0.2 * oldZoom.zoom),
+                    }));
+                } else if (e.key === '-') {
+                    setActualZoom((oldZoom) => ({
+                        ...oldZoom,
+                        zoom: Math.max(0.5, oldZoom.zoom + 0.2 * oldZoom.zoom),
+                    }));
+                } else if (e.key === 'ArrowLeft') {
+                    setActualZoom((oldZoom) => ({
+                        ...oldZoom,
+                        cx: oldZoom.cx - MOVE_SPEED * oldZoom.zoom,
+                    }));
+                } else if (e.key === 'ArrowRight') {
+                    setActualZoom((oldZoom) => ({
+                        ...oldZoom,
+                        cx: oldZoom.cx + MOVE_SPEED * oldZoom.zoom,
+                    }));
+                } else if (e.key === 'ArrowUp') {
+                    setActualZoom((oldZoom) => ({
+                        ...oldZoom,
+                        cy: oldZoom.cy - MOVE_SPEED * oldZoom.zoom,
+                    }));
+                } else if (e.key === 'ArrowDown') {
+                    setActualZoom((oldZoom) => ({
+                        ...oldZoom,
+                        cy: oldZoom.cy + MOVE_SPEED * oldZoom.zoom,
+                    }));
+                }
+            }}
             onClickCapture={(e: MouseEvent<SVGSVGElement>) => {
                 if (Math.max(movement.current[0], movement.current[1]) > MOVE_THRESHOLD) {
                     movement.current = [0, 0];

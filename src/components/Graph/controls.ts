@@ -27,7 +27,7 @@ export function pointerMove(
     pointerCache: Map<number, PointerEvent<SVGSVGElement>>,
     movement: [number, number]
 ): ZoomState {
-    pointerCache.set(e.pointerId, e);
+    if (e.pointerType === 'touch' || e.buttons === 1) pointerCache.set(e.pointerId, e);
 
     if (pointerCache.size === 2) {
         const ps = Array.from(pointerCache.values());
