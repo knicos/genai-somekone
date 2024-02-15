@@ -20,3 +20,7 @@ export function getResearchLog() {
 export function removeResearchData(id: UserNodeId) {
     log = log.filter((l) => l.userId !== id);
 }
+
+export function clearResearchData() {
+    log = [];
+}

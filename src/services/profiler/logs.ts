@@ -1,3 +1,4 @@
+import { anonString } from '@genaism/util/anon';
 import { addContentReaction, addContentShare } from '../content/content';
 import { addEdge, addOrAccumulateEdge, getEdge } from '../graph/edges';
 import { ContentNodeId, UserNodeId, WeightedNode } from '../graph/graphTypes';
@@ -195,4 +196,16 @@ export function getActionLogSince(timestamp: number, id?: UserNodeId): LogEntry[
         }
     }
     return result.reverse();
+}
+
+export function anonLogs() {
+    logs.forEach((entry) => {
+        entry.forEach((log) => {
+            if (log.activity === 'comment') {
+                if (log.content) {
+                    log.content = anonString(log.content);
+                }
+            }
+        });
+    });
 }

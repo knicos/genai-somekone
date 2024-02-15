@@ -67,3 +67,8 @@ export const menuAllowFeedActions = atom<boolean>({
     key: 'menuallowfeedactions',
     default: false,
 });
+
+export const menuShowTools = atom<boolean>({
+    key: 'menushowtools',
+    default: false,
+});

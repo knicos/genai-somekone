@@ -3,6 +3,7 @@ import { addNode, addEdge, removeNode } from '@genaism/services/graph/graph';
 import { getTopicId } from '@genaism/services/concept/concept';
 import { ContentNodeId, UserNodeId } from '../graph/graphTypes';
 import { isDisallowedTopic } from './disallowed';
+import { anonString } from '@genaism/util/anon';
 
 const dataStore = new Map<ContentNodeId, string>();
 const metaStore = new Map<ContentNodeId, ContentMetadata>();
@@ -92,6 +93,14 @@ export function removeCommentsBy(id: UserNodeId) {
             key,
             comment.filter((c) => c.userId !== id)
         );
+    });
+}
+
+export function anonComments() {
+    commentStore.forEach((item) => {
+        item.forEach((comment) => {
+            comment.comment = anonString(comment.comment);
+        });
     });
 }
 

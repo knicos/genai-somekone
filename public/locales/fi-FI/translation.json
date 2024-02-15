@@ -175,7 +175,10 @@
             "viewOptions": "Graph to display",
             "appOptions": "Feed app options",
             "none": "none",
-            "showSettings": "Show application settings"
+            "showSettings": "Show application settings",
+            "showTools": "Show advanced tools menu",
+            "toolsMenu": "Advanced Tools",
+            "toolAnonymise": "Anonymise all data"
         },
         "messages": {
             "connection": "Mene allaolevaan www-osoitteeseen ja syötä koodi <Code>{{codeText}}</Code>, tai käytä QR -koodia.",

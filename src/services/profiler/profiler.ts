@@ -19,6 +19,7 @@ import { ScoredRecommendation } from '../recommender/recommenderTypes';
 import { trainProfile } from './training';
 import { getCurrentUser, outOfDate, users, resetProfiles } from './state';
 import { appendActionLog, addLogEntry, getActionLog, getActionLogSince } from './logs';
+import { anonUsername } from '@genaism/util/anon';
 
 export { appendActionLog, addLogEntry, getCurrentUser, resetProfiles, getActionLog, getActionLogSince };
 
@@ -325,4 +326,14 @@ export function getBestEngagement() {
 
 export function setBestEngagement(e: number) {
     globalScore.engagement = Math.max(globalScore.engagement, e);
+}
+
+export function anonProfiles() {
+    users.forEach((user) => {
+        user.name = anonUsername();
+        const data = getNodeData<UserData>(user.id);
+        if (data) {
+            data.name = user.name;
+        }
+    });
 }
