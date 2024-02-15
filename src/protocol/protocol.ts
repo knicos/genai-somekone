@@ -57,6 +57,7 @@ export interface CommentEvent extends PeerEvent {
     id: UserNodeId;
     contentId: ContentNodeId;
     comment: string;
+    timestamp: number;
 }
 
 export interface ResearchLogEvent extends PeerEvent {

@@ -44,6 +44,7 @@ export interface ImageEntity {
 export interface CommentEntry {
     userId: UserNodeId;
     comment: string;
+    timestamp: number;
 }
 
 export interface ContentStats {

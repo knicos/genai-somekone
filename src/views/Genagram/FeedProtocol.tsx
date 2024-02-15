@@ -72,7 +72,7 @@ export default function FeedProtocol({ content, server, mycode, setContent, chil
                 hasBeenConnected.current = true;
                 appendActionLog(data.log, data.id);
             } else if (data.event === 'eter:comment') {
-                addComment(data.contentId, data.id, data.comment);
+                addComment(data.contentId, data.id, data.comment, data.timestamp);
             } else if (data.event === 'eter:join') {
                 const profile = getUserProfile();
                 const logs = getActionLogSince(Date.now() - DATA_LOG_TIME).filter((a) => a.timestamp <= logRef.current);

@@ -113,7 +113,7 @@ describe('FeedImage component', () => {
     });
 
     it('shows number of comments', async ({ expect }) => {
-        addComment('content:xyz2', getCurrentUser(), 'testcomment');
+        addComment('content:xyz2', getCurrentUser(), 'testcomment', 100);
         render(
             <FeedImage
                 id="content:xyz2"
@@ -146,7 +146,7 @@ describe('FeedImage component', () => {
 
     it('displays one comment', async ({ expect }) => {
         const user = userEvent.setup();
-        addComment('content:xyz', getCurrentUser(), 'testcomment');
+        addComment('content:xyz', getCurrentUser(), 'testcomment', 199);
         render(
             <FeedImage
                 id="content:xyz"
@@ -162,8 +162,8 @@ describe('FeedImage component', () => {
 
     it('can display multiple comments', async ({ expect }) => {
         const user = userEvent.setup();
-        addComment('content:xyz', getCurrentUser(), 'testcomment1');
-        addComment('content:xyz', getCurrentUser(), 'testcomment2');
+        addComment('content:xyz', getCurrentUser(), 'testcomment1', 100);
+        addComment('content:xyz', getCurrentUser(), 'testcomment2', 200);
         render(
             <FeedImage
                 id="content:xyz"

@@ -79,9 +79,10 @@ export function removeContent(id: ContentNodeId) {
     removeNode(id);
 }
 
-export function addComment(id: ContentNodeId, user: UserNodeId, comment: string) {
+export function addComment(id: ContentNodeId, user: UserNodeId, comment: string, ts: number) {
     const comments = commentStore.get(id) || [];
-    comments.push({ userId: user, comment });
+    comments.push({ userId: user, comment, timestamp: ts });
+    comments.sort((a, b) => b.timestamp - a.timestamp);
     commentStore.set(id, comments);
 }
 

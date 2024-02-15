@@ -74,8 +74,8 @@ export default function CommentPanel({ onClose, onComment, id }: Props) {
                         <>
                             {!showMore && (
                                 <Comment
-                                    comment={comments[comments.length - 1].comment}
-                                    user={comments[comments.length - 1].userId}
+                                    comment={comments[0].comment}
+                                    user={comments[0].userId}
                                 />
                             )}
                             {showMore &&

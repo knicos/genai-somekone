@@ -72,9 +72,10 @@ export default function ServerProtocol({ onReady, code, content }: Props) {
                                 id: data.id,
                                 comment: l.content || '',
                                 contentId: l.id || 'content:none',
+                                timestamp: l.timestamp,
                             });
                         }
-                        addComment(l.id || 'content:none', data.id, l.content || '');
+                        addComment(l.id || 'content:none', data.id, l.content || '', l.timestamp);
                     }
                 });
             } else if (data.event === 'researchlog') {
