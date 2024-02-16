@@ -37,7 +37,7 @@ export function Component() {
     const [ready, setReady] = useState(false);
     const showReplay = useRecoilValue(menuShowReplay);
     const setSelectedNode = useSetRecoilState(menuSelectedUser);
-    const [fileToOpen, setFileToOpen] = useState<ArrayBuffer[] | undefined>();
+    const [fileToOpen, setFileToOpen] = useState<(ArrayBuffer | string)[] | undefined>();
 
     useEffect(() => {
         if (!ready) return;
@@ -104,6 +104,9 @@ export function Component() {
                         <StartDialog
                             users={users}
                             code={MYCODE}
+                            onDemo={() => {
+                                setFileToOpen(['https://tmstore.blob.core.windows.net/projects/sm_demo1b.zip']);
+                            }}
                         />
                     </section>
                     <MenuPanel

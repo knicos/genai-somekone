@@ -11,9 +11,10 @@ import { Dialog, DialogContent, DialogTitle } from '@mui/material';
 interface Props {
     users: UserInfo[];
     code: string;
+    onDemo?: () => void;
 }
 
-export default function StartDialog({ users, code }: Props) {
+export default function StartDialog({ users, code, onDemo }: Props) {
     const { t } = useTranslation();
     const [showDialog, setShowDialog] = useRecoilState(menuShowShare);
 
@@ -56,14 +57,29 @@ export default function StartDialog({ users, code }: Props) {
                     {users.length === 0 && <div>{t('dashboard.messages.waitingPeople')}</div>}
                     {users.length === 1 && <div>{t('dashboard.messages.onePerson', { count: users.length })}</div>}
                     {users.length > 1 && <div>{t('dashboard.messages.manyPeople', { count: users.length })}</div>}
-                    <LargeButton
-                        variant="contained"
-                        color="secondary"
-                        data-testid="dashboard-start-button"
-                        onClick={doClose}
-                    >
-                        {t('dashboard.actions.start')}
-                    </LargeButton>
+                    <div className={style.buttonGroup}>
+                        {onDemo && (
+                            <LargeButton
+                                variant="outlined"
+                                color="secondary"
+                                data-testid="dashboard-demo-button"
+                                onClick={() => {
+                                    onDemo();
+                                    doClose();
+                                }}
+                            >
+                                {t('dashboard.actions.demo')}
+                            </LargeButton>
+                        )}
+                        <LargeButton
+                            variant="contained"
+                            color="secondary"
+                            data-testid="dashboard-start-button"
+                            onClick={doClose}
+                        >
+                            {t('dashboard.actions.start')}
+                        </LargeButton>
+                    </div>
                 </div>
             </DialogContent>
         </Dialog>

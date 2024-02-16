@@ -194,7 +194,8 @@
             "save": "Download",
             "cancel": "Cancel",
             "close": "Close",
-            "delete": "Delete"
+            "delete": "Delete",
+            "demo": "Demo"
         },
         "errors": {
             "unknown": "There was a problem, please try again.",

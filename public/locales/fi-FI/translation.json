@@ -194,7 +194,8 @@
             "save": "Tallenna",
             "cancel": "Peruuta",
             "close": "Sulje",
-            "delete": "Poista"
+            "delete": "Poista",
+            "demo": "Demo"
         },
         "errors": {
             "unknown": "Sovelluksessa tuli virhe.  Yritä uudelleen.",
