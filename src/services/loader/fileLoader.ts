@@ -4,13 +4,15 @@ import { ContentMetadata } from '@genaism/services/content/contentTypes';
 import { addContent } from '@genaism/services/content/content';
 import { LogEntry, UserProfile } from '@genaism/services/profiler/profilerTypes';
 import { addUserProfile, appendActionLog, getActionLog, getCurrentUser } from '@genaism/services/profiler/profiler';
-import { TopicNodeId, UserNodeId, isTopicID } from '../graph/graphTypes';
+import { TopicNodeId, isTopicID } from '../graph/graphTypes';
 import { GraphExport, dump } from '../graph/state';
 import { addNodes } from '../graph/nodes';
 import { addEdges } from '../graph/edges';
 import { getTopicId } from '../concept/concept';
 import { ProjectMeta, VERSION } from '../saver/types';
 import { dependencies } from './tracker';
+import { LogItem } from './loaderTypes';
+import { findLargestEdgeTimestamp, findLargestLogTimestamp, rebaseEdges, rebaseLog } from './rebase';
 
 interface TopicData {
     label: string;
@@ -52,11 +54,6 @@ export async function getZipBlob(content: string | ArrayBuffer, progress?: (perc
         if (progress) progress(100);
         return new Blob([content]);
     }
-}
-
-interface LogItem {
-    id: UserNodeId;
-    log: LogEntry[];
 }
 
 export async function loadFile(file: File | Blob): Promise<void> {
@@ -138,6 +135,12 @@ export async function loadFile(file: File | Blob): Promise<void> {
         }
     }
 
+    const maxTimestamp = Math.max(
+        findLargestLogTimestamp(store.logs),
+        store.graph ? findLargestEdgeTimestamp(store.graph.edges) : 0
+    );
+    const timeOffset = Date.now() - maxTimestamp;
+
     if (store.graph) {
         // Patch to fix old data
         const topicSet = new Map<TopicNodeId, string>();
@@ -159,6 +162,8 @@ export async function loadFile(file: File | Blob): Promise<void> {
             }
         });
 
+        rebaseEdges(store.graph.edges, timeOffset);
+
         addNodes(store.graph.nodes);
         addEdges(store.graph.edges);
     }
@@ -175,6 +180,7 @@ export async function loadFile(file: File | Blob): Promise<void> {
         }
     });
 
+    rebaseLog(store.logs, timeOffset);
     store.logs.forEach((l) => {
         appendActionLog(l.log, l.id, !!store.graph);
     });
