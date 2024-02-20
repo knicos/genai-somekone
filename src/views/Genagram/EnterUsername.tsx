@@ -1,5 +1,5 @@
 import { LargeButton } from '@genaism/components/Button/Button';
-import { IconButton, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
+import { Alert, IconButton, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
 import { useCallback, useRef, useState } from 'react';
 import style from './style.module.css';
 import { useTranslation } from 'react-i18next';
@@ -9,6 +9,7 @@ import { availableUsers } from '@genaism/state/sessionState';
 import { setUser } from '@genaism/services/profiler/state';
 import { UserNodeId } from '@genaism/services/graph/graphTypes';
 import RestoreIcon from '@mui/icons-material/Restore';
+import { useDuplicateTabCheck } from '@genaism/hooks/duplicateTab';
 
 interface Props {
     onUsername: (name: string) => void;
@@ -27,6 +28,7 @@ export default function EnterUsername({ onUsername }: Props) {
     const [errors, setErrors] = useState<FormErrors>({});
     const users = useRecoilValue(availableUsers);
     const [showRestore, setShowRestore] = useState(false);
+    const foundTab = useDuplicateTabCheck();
 
     const doUsernameKey = useCallback(
         (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -58,6 +60,7 @@ export default function EnterUsername({ onUsername }: Props) {
 
     return (
         <div className={style.userContainer}>
+            {foundTab && <Alert severity="warning">{t('feed.messages.alreadyOpen')}</Alert>}
             <TextField
                 inputRef={ref}
                 label={t('feed.labels.enterUsername')}

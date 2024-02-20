@@ -18,6 +18,7 @@ import BlockDialog from '../dialogs/BlockDialog/BlockDialog';
 import LangSelect from '@genaism/components/LangSelect/LangSelect';
 import { currentUserName } from '@genaism/state/sessionState';
 import FeedProtocol, { useFeedProtocol } from './FeedProtocol';
+import { TabBlocker } from '@genaism/hooks/duplicateTab';
 
 function FeedWrapper({ content }: { content?: (string | ArrayBuffer)[] }) {
     const { doProfile, doRecommend, doLog } = useFeedProtocol();
@@ -73,6 +74,7 @@ export function Component() {
                 </main>
             </FeedProtocol>
             <ErrorDialog />
+            <TabBlocker />
         </>
     );
 }

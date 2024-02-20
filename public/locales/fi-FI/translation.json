@@ -61,7 +61,8 @@
             },
             "fullnameError": {
                 "missing": "Oikea nimi puuttuu"
-            }
+            },
+            "alreadyOpen": "You already have the app open in another tab."
         },
         "actionlog": {
             "dwell": "Katsoi kuvaa {{time}} sekuntia",
