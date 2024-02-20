@@ -8,6 +8,7 @@ import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import { Button } from '@genaism/components/Button/Button';
 import { saveFile } from '@genaism/services/saver/fileSaver';
 import { appConfiguration } from '@genaism/state/settingsState';
+import { useSettingSerialise } from '@genaism/hooks/settings';
 
 export default function SaveDialog() {
     const { t } = useTranslation();
@@ -16,20 +17,23 @@ export default function SaveDialog() {
     const [saveProfiles, setSaveProfiles] = useState(false);
     const [saveLogs, setSaveLogs] = useState(true);
     const [saveGraph, setSaveGraph] = useState(true);
+    const [saveSettings, setSaveSettings] = useState(false);
     const appConfig = useRecoilValue(appConfiguration);
+    const serial = useSettingSerialise();
 
     const doClose = useCallback(() => setShowDialog(false), [setShowDialog]);
 
-    const doSave = useCallback(() => {
+    const doSave = useCallback(async () => {
+        setShowDialog(false);
         saveFile({
             includeContent: saveContent,
             includeProfiles: saveProfiles,
             includeLogs: saveLogs,
             includeGraph: saveGraph,
             configuration: appConfig,
+            settings: saveSettings ? await serial() : undefined,
         });
-        setShowDialog(false);
-    }, [setShowDialog, saveContent, saveProfiles, saveLogs, saveGraph, appConfig]);
+    }, [setShowDialog, saveContent, saveProfiles, saveLogs, saveGraph, appConfig, serial, saveSettings]);
 
     return (
         <Dialog
@@ -74,6 +78,15 @@ export default function SaveDialog() {
                             />
                         }
                         label={t('dashboard.labels.saveGraph')}
+                    />
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={saveSettings}
+                                onChange={(_, checked) => setSaveSettings(checked)}
+                            />
+                        }
+                        label={t('dashboard.labels.saveSettings')}
                     />
                 </div>
             </DialogContent>

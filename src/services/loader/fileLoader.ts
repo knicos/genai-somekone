@@ -4,7 +4,7 @@ import { ContentMetadata } from '@genaism/services/content/contentTypes';
 import { addContent } from '@genaism/services/content/content';
 import { LogEntry, UserProfile } from '@genaism/services/profiler/profilerTypes';
 import { addUserProfile, appendActionLog, getActionLog, getCurrentUser } from '@genaism/services/profiler/profiler';
-import { TopicNodeId, isTopicID } from '../graph/graphTypes';
+import { NodeID, TopicNodeId, isTopicID } from '../graph/graphTypes';
 import { GraphExport, dump } from '../graph/state';
 import { addNodes } from '../graph/nodes';
 import { addEdges } from '../graph/edges';
@@ -13,6 +13,7 @@ import { ProjectMeta, VERSION } from '../saver/types';
 import { dependencies } from './tracker';
 import { LogItem } from './loaderTypes';
 import { findLargestEdgeTimestamp, findLargestLogTimestamp, rebaseEdges, rebaseLog } from './rebase';
+import { SomekoneSettings } from '@genaism/hooks/settings';
 
 interface TopicData {
     label: string;
@@ -56,7 +57,7 @@ export async function getZipBlob(content: string | ArrayBuffer, progress?: (perc
     }
 }
 
-export async function loadFile(file: File | Blob): Promise<void> {
+export async function loadFile(file: File | Blob): Promise<SomekoneSettings | undefined> {
     const zip = await JSZip.loadAsync(file);
 
     const images = new Map<string, string>();
@@ -66,6 +67,7 @@ export async function loadFile(file: File | Blob): Promise<void> {
         logs: LogItem[];
         graph?: GraphExport;
         project?: ProjectMeta;
+        settings?: SomekoneSettings;
     } = {
         meta: [],
         users: [],
@@ -104,6 +106,12 @@ export async function loadFile(file: File | Blob): Promise<void> {
                 data.async('string').then((r) => {
                     const meta = JSON.parse(r) as ProjectMeta;
                     store.project = meta;
+                })
+            );
+        } else if (data.name === 'settings.json') {
+            promises.push(
+                data.async('string').then((r) => {
+                    store.settings = JSON.parse(r) as SomekoneSettings;
                 })
             );
         } else {
@@ -164,8 +172,11 @@ export async function loadFile(file: File | Blob): Promise<void> {
 
         rebaseEdges(store.graph.edges, timeOffset);
 
-        addNodes(store.graph.nodes);
-        addEdges(store.graph.edges);
+        // Remove users who do not have valid names
+        const badUsers = new Set<NodeID>(store.graph.nodes.filter((n) => !n.data).map((n) => n.id));
+
+        addNodes(store.graph.nodes.filter((n) => !!n.data));
+        addEdges(store.graph.edges.filter((e) => !badUsers.has(e.destination) && !badUsers.has(e.source)));
     }
 
     store.meta.forEach((v) => {
@@ -174,7 +185,7 @@ export async function loadFile(file: File | Blob): Promise<void> {
 
     store.users.forEach((u) => {
         try {
-            addUserProfile(u);
+            if (u.name !== 'NoName') addUserProfile(u);
         } catch (e) {
             console.warn('User already exists');
         }
@@ -184,6 +195,8 @@ export async function loadFile(file: File | Blob): Promise<void> {
     store.logs.forEach((l) => {
         appendActionLog(l.log, l.id, !!store.graph);
     });
+
+    return store.settings;
 }
 
 const GRAPH_KEY = 'genai_somekone_graph';

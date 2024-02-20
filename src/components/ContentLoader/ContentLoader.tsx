@@ -2,6 +2,7 @@ import { getZipBlob, loadFile } from '@genaism/services/loader/fileLoader';
 import { useEffect, useRef, useState } from 'react';
 import ContentError from './ContentError';
 import ContentProgress from './ContentProgress';
+import { useSettingDeserialise } from '@genaism/hooks/settings';
 
 type LoadingStatus = 'waiting' | 'downloading' | 'loading' | 'failed-download' | 'failed-load' | 'done';
 
@@ -14,6 +15,7 @@ export default function ContentLoader({ content, onLoaded }: Props) {
     const contentRef = useRef(new Set<string>());
     const [status, setStatus] = useState<LoadingStatus>('waiting');
     const [progress, setProgress] = useState<number | undefined>();
+    const deserial = useSettingDeserialise();
 
     useEffect(() => {
         if (content && content.length > 0) {
@@ -45,7 +47,10 @@ export default function ContentLoader({ content, onLoaded }: Props) {
 
                     const loadPromises = blobs.map((blob) => loadFile(blob));
                     Promise.all(loadPromises)
-                        .then(() => {
+                        .then((r) => {
+                            r.forEach((setting) => {
+                                if (setting) deserial(setting);
+                            });
                             setStatus('done');
                             if (onLoaded) onLoaded();
                         })
@@ -61,7 +66,7 @@ export default function ContentLoader({ content, onLoaded }: Props) {
         } else {
             setStatus('waiting');
         }
-    }, [content, onLoaded]);
+    }, [content, onLoaded, deserial]);
 
     return (
         <>

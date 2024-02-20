@@ -41,7 +41,7 @@ export const menuShowFeedActions = atom<boolean>({
     default: true,
 });
 
-type GraphTypes = 'social' | 'topic' | 'content' | 'ego' | 'grid';
+export type GraphTypes = 'social' | 'topic' | 'content' | 'ego' | 'grid';
 export const menuGraphType = atom<GraphTypes>({
     key: 'menugraphtype',
     default: 'social',

@@ -178,7 +178,8 @@
             "showSettings": "Show application settings",
             "showTools": "Show advanced tools menu",
             "toolsMenu": "Advanced Tools",
-            "toolAnonymise": "Anonymise all data"
+            "toolAnonymise": "Anonymise all data",
+            "saveSettings": "Save app settings"
         },
         "messages": {
             "connection": "Mene allaolevaan www-osoitteeseen ja syötä koodi <Code>{{codeText}}</Code>, tai käytä QR -koodia.",

@@ -10,6 +10,7 @@ import { v4 as uuidv4 } from 'uuid';
 import appVersion from '@genaism/generatedGitInfo.json';
 import { SMConfig } from '@genaism/views/Genagram/smConfig';
 import { dependencies } from '../loader/tracker';
+import { SomekoneSettings } from '@genaism/hooks/settings';
 
 function makeMeta(configuration?: SMConfig, name?: string): ProjectMeta {
     return {
@@ -31,6 +32,7 @@ interface GenerateOptions {
     includeGraph?: boolean;
     configuration?: SMConfig;
     name?: string;
+    settings?: SomekoneSettings;
 }
 
 async function generateBlob({
@@ -39,6 +41,7 @@ async function generateBlob({
     includeLogs,
     includeGraph,
     configuration,
+    settings,
 }: GenerateOptions) {
     const zip = new JSZip();
 
@@ -73,6 +76,10 @@ async function generateBlob({
 
     if (includeGraph) {
         zip.file('graph.json', dumpJSON());
+    }
+
+    if (settings) {
+        zip.file('settings.json', JSON.stringify(settings, undefined, 4));
     }
 
     zip.file('metadata.json', JSON.stringify(makeMeta(configuration), undefined, 4));
