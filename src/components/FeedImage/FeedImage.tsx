@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useReducer, useState } from 'react';
 import style from './style.module.css';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import IconButton from '@mui/material/IconButton';
@@ -15,6 +15,8 @@ import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import LabelsPanel from './LabelsPanel';
 import IconButtonDot from '../IconButtonDot/IconButtonDot';
 import { useTranslation } from 'react-i18next';
+
+const MAX_COMMENTS = 10;
 
 type ActionPanel = 'none' | 'like' | 'comment' | 'share' | 'discard' | 'author';
 
@@ -89,6 +91,7 @@ export default function FeedImage({
     const [activePanel, setActivePanel] = useState<ActionPanel>('none');
     const [followed, setFollowed] = useState(false);
     const [shareState, setShareState] = useState(new Set<ShareKind>());
+    const [commentCount, incComment] = useReducer((v) => ++v, 0);
     const doClick = useCallback(() => {
         if (onClick) onClick(id);
         setActivePanel('none');
@@ -118,6 +121,7 @@ export default function FeedImage({
         (l: string) => {
             if (onComment) {
                 onComment(id, l);
+                incComment();
             }
         },
         [onComment, id]
@@ -269,6 +273,7 @@ export default function FeedImage({
                         id={id}
                         onClose={doCloseLike}
                         onComment={doComment}
+                        disabled={commentCount >= MAX_COMMENTS}
                     />
                 )}
             </div>
