@@ -1,4 +1,5 @@
 import { IconButton, Slide } from '@mui/material';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import CloseIcon from '@mui/icons-material/Close';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { menuShowFeedActions, menuShowShareProfile } from '@genaism/state/menuState';
@@ -7,6 +8,7 @@ import { useEffect } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import QRCode from '@genaism/components/QRCode/QRCode';
 import { useLogger } from '@genaism/hooks/logger';
+import { Button } from '@genaism/components/Button/Button';
 
 interface Props {
     code: string;
@@ -46,7 +48,10 @@ export default function SharePage({ code, onClose }: Props) {
                             }}
                             aria-label={t('dashboard.actions.close')}
                         >
-                            <CloseIcon fontSize="large" />
+                            <HighlightOffIcon
+                                fontSize="large"
+                                color="secondary"
+                            />
                         </IconButton>
                     </header>
                     <QRCode
@@ -64,6 +69,18 @@ export default function SharePage({ code, onClose }: Props) {
                         />
                     </div>
                     <div className={style.link}>{window.location.host}</div>
+                    <div className={style.shareMessage}>
+                        <Button
+                            onClick={() => {
+                                setShowShareProfile(false);
+                                if (onClose) onClose();
+                            }}
+                            variant="contained"
+                            startIcon={<CloseIcon />}
+                        >
+                            {t('dashboard.actions.close')}
+                        </Button>
+                    </div>
                 </div>
             </section>
         </Slide>

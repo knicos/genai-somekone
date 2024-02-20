@@ -1,6 +1,6 @@
 import Profile from '@genaism/components/UserProfile/UserProfile';
 import { IconButton, Slide } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { menuShowFeedActions, menuShowProfile } from '@genaism/state/menuState';
 import style from './style.module.css';
@@ -45,7 +45,10 @@ export default function ProfilePage({ onClose }: Props) {
                             }}
                             aria-label={t('dashboard.actions.close')}
                         >
-                            <CloseIcon fontSize="large" />
+                            <HighlightOffIcon
+                                fontSize="large"
+                                color="secondary"
+                            />
                         </IconButton>
                     </header>
                     <Profile />
