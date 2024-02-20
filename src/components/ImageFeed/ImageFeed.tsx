@@ -143,6 +143,8 @@ export default function ImageFeed({ images, onView, onMore, onLog, noActions, sh
         (id: ContentNodeId, kind: LikeKind) => {
             if (kind !== 'none') {
                 onLog({ activity: kind, id, timestamp: Date.now() });
+            } else {
+                onLog({ activity: 'unreact', id, timestamp: Date.now() });
             }
         },
         [onLog]
@@ -172,6 +174,13 @@ export default function ImageFeed({ images, onView, onMore, onLog, noActions, sh
     const doFollow = useCallback(
         (id: ContentNodeId) => {
             onLog({ activity: 'follow', id, timestamp: Date.now() });
+        },
+        [onLog]
+    );
+
+    const doUnfollow = useCallback(
+        (id: ContentNodeId) => {
+            onLog({ activity: 'unfollow', id, timestamp: Date.now() });
         },
         [onLog]
     );
@@ -229,6 +238,7 @@ export default function ImageFeed({ images, onView, onMore, onLog, noActions, sh
                         id={img.contentId}
                         onLike={doLike}
                         onFollow={doFollow}
+                        onUnfollow={doUnfollow}
                         onShare={doShare}
                         onComment={doComment}
                         active={focus && active && (ix === viewed || (ix === 0 && viewed === -1))}

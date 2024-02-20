@@ -29,6 +29,7 @@ interface Props {
     onShare?: (id: ContentNodeId, kind: ShareKind) => void;
     onComment?: (id: ContentNodeId, comment: string) => void;
     onFollow?: (id: ContentNodeId) => void;
+    onUnfollow?: (id: ContentNodeId) => void;
 }
 
 const LIKEMAP = {
@@ -73,6 +74,7 @@ export default function FeedImage({
     onClick,
     onLike,
     onFollow,
+    onUnfollow,
     onShare,
     onComment,
     active,
@@ -86,6 +88,7 @@ export default function FeedImage({
     const [liked, setLiked] = useState<LikeKind>('none');
     const [activePanel, setActivePanel] = useState<ActionPanel>('none');
     const [followed, setFollowed] = useState(false);
+    const [shareState, setShareState] = useState(new Set<ShareKind>());
     const doClick = useCallback(() => {
         if (onClick) onClick(id);
         setActivePanel('none');
@@ -101,6 +104,11 @@ export default function FeedImage({
 
     const doShare = useCallback(
         (kind: ShareKind) => {
+            setShareState((old) => {
+                const n = new Set(old);
+                n.add(kind);
+                return n;
+            });
             if (onShare) onShare(id, kind);
         },
         [onShare, id]
@@ -116,8 +124,13 @@ export default function FeedImage({
     );
 
     const doShowPanel = useCallback(() => {
-        setActivePanel('like');
-    }, [setActivePanel]);
+        if (liked === 'none') {
+            setActivePanel('like');
+        } else {
+            setLiked('none');
+            if (onLike) onLike(id, 'none');
+        }
+    }, [setActivePanel, liked, onLike, id]);
 
     const doShowSharePanel = useCallback(() => {
         setActivePanel('share');
@@ -130,9 +143,10 @@ export default function FeedImage({
     const doFollow = useCallback(() => {
         setFollowed((v) => {
             if (onFollow && !v) onFollow(id);
+            if (onUnfollow && v) onUnfollow(id);
             return !v;
         });
-    }, [onFollow, id]);
+    }, [onFollow, id, onUnfollow]);
 
     const doCloseLike = useCallback(() => {
         setActivePanel('none');
@@ -247,6 +261,7 @@ export default function FeedImage({
                     <SharePanel
                         onClose={doCloseLike}
                         onChange={doShare}
+                        state={shareState}
                     />
                 )}
                 {active && activePanel === 'comment' && (

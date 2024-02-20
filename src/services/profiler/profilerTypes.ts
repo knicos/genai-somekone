@@ -4,7 +4,7 @@ import defaults from './defaultWeights.json';
 
 export type Features = typeof defaults;
 
-export type ReactionType = 'like' | 'love' | 'wow' | 'laugh' | 'anger' | 'sad';
+export type ReactionType = 'like' | 'love' | 'wow' | 'laugh' | 'anger' | 'sad' | 'unreact';
 
 export type LogActivity =
     | ReactionType
@@ -16,6 +16,7 @@ export type LogActivity =
     | 'comment'
     | 'dwell'
     | 'follow'
+    | 'unfollow'
     | 'begin'
     | 'end'
     | 'seen'

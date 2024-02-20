@@ -12,9 +12,10 @@ export type ShareKind = 'none' | 'individual' | 'friends' | 'public';
 interface Props {
     onClose?: () => void;
     onChange?: (kind: ShareKind) => void;
+    state: Set<ShareKind>;
 }
 
-export default function SharePanel({ onClose, onChange }: Props) {
+export default function SharePanel({ onClose, onChange, state }: Props) {
     const { t } = useTranslation();
     const doClick = useCallback(
         (e: React.MouseEvent) => {
@@ -37,9 +38,10 @@ export default function SharePanel({ onClose, onChange }: Props) {
             >
                 <div className={style.shareLabel}>{t('feed.titles.shareWith')}</div>
                 <Button
-                    date-type="individual"
+                    data-type="individual"
                     onClick={doClick}
                     startIcon={<PersonIcon />}
+                    disabled={state.has('individual')}
                 >
                     {t('feed.actions.share.private')}
                 </Button>
@@ -47,11 +49,13 @@ export default function SharePanel({ onClose, onChange }: Props) {
                     data-type="friends"
                     onClick={doClick}
                     startIcon={<PeopleIcon />}
+                    disabled={state.has('friends')}
                     data-testid="share-friends-button"
                 >
                     {t('feed.actions.share.friends')}
                 </Button>
                 <Button
+                    disabled={state.has('public')}
                     data-type="public"
                     onClick={doClick}
                     startIcon={<PublicIcon />}

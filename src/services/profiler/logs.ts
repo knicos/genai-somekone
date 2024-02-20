@@ -1,5 +1,5 @@
 import { anonString } from '@genaism/util/anon';
-import { addContentReaction, addContentShare } from '../content/content';
+import { addContentReaction, addContentShare, removeContentReaction } from '../content/content';
 import { addEdge, addOrAccumulateEdge, getEdge } from '../graph/edges';
 import { ContentNodeId, UserNodeId, WeightedNode } from '../graph/graphTypes';
 import { getRelated } from '../graph/query';
@@ -120,6 +120,10 @@ export function processLogEntry(data: LogEntry, id?: UserNodeId, noEvent?: boole
             boostTopics(aid, 'reacted_topic', cid);
             addContentReaction(cid);
             break;
+        case 'unreact':
+            affinityBoost(aid, cid, -0.1);
+            removeContentReaction(cid);
+            break;
         case 'share_public':
             affinityBoost(aid, cid, 0.5);
             boostTopics(aid, 'shared_topic', cid);
@@ -142,6 +146,9 @@ export function processLogEntry(data: LogEntry, id?: UserNodeId, noEvent?: boole
         case 'follow':
             affinityBoost(aid, cid, 0.5);
             boostTopics(aid, 'followed_topic', cid);
+            break;
+        case 'unfollow':
+            affinityBoost(aid, cid, -0.5);
             break;
         case 'comment':
             affinityBoost(aid, cid, Math.min(1, (data.value || 0) / 80) * 0.6);
