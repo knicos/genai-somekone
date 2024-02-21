@@ -1,0 +1,127 @@
+{
+    "name": "Classroom Intervention",
+    "steps": [
+        {
+            "title": "1. Connect",
+            "action": "sharecode",
+            "settings": {
+                "socialGraph": {
+                    "nodeDisplay": "image"
+                },
+                "ui": {
+                    "showShareCode": true,
+                    "showGraph": "grid",
+                    "showMainMenu": false,
+                    "showGridMenu": false,
+                    "nodeSelectAction": "feed"
+                },
+                "applicationConfig": {
+                    "hideActionsButton": true,
+                    "disableFeedApp": false
+                }
+            }
+        },
+        {
+            "title": "2. Data",
+            "action": "pause",
+            "settings": {
+                "socialGraph": {
+                    "nodeDisplay": "image"
+                },
+                "ui": {
+                    "showShareCode": false,
+                    "showGraph": "grid",
+                    "showMainMenu": false,
+                    "showGridMenu": false,
+                    "nodeSelectAction": "data"
+                },
+                "applicationConfig": {
+                    "disableFeedApp": true,
+                    "hideActionsButton": false,
+                    "hideShareProfile": false,
+                    "hideProfileView": true,
+                    "hideRecommendationsView": true,
+                    "hideDataView": false
+                }
+            }
+        },
+        {
+            "title": "3. Profiling",
+            "action": "pause",
+            "settings": {
+                "socialGraph": {
+                    "nodeDisplay": "word"
+                },
+                "ui": {
+                    "showGraph": "grid",
+                    "showMainMenu": false,
+                    "showGridMenu": false,
+                    "nodeSelectAction": "profile"
+                },
+                "applicationConfig": {
+                    "disableFeedApp": true,
+                    "hideActionsButton": false,
+                    "hideShareProfile": false,
+                    "hideProfileView": false,
+                    "hideRecommendationsView": true,
+                    "hideDataView": false,
+                    "showTopicLabels": true
+                }
+            }
+        },
+        {
+            "title": "4. Similarity",
+            "action": "pause",
+            "settings": {
+                "socialGraph": {
+                    "nodeDisplay": "word",
+                    "clusterColouring": 5
+                },
+                "ui": {
+                    "showGraph": "social",
+                    "showMainMenu": false,
+                    "showSocialMenu": true,
+                    "nodeSelectAction": "none"
+                },
+                "applicationConfig": {
+                    "disableFeedApp": true
+                }
+            }
+        },
+        {
+            "title": "5. Recommending",
+            "action": "pause",
+            "settings": {
+                "socialGraph": {
+                    "nodeDisplay": "word",
+                    "clusterColouring": 5
+                },
+                "ui": {
+                    "showGraph": "social",
+                    "showMainMenu": false,
+                    "showSocialMenu": false,
+                    "nodeSelectAction": "recommendations"
+                },
+                "applicationConfig": {
+                    "disableFeedApp": true,
+                    "hideActionsButton": false,
+                    "hideShareProfile": false,
+                    "hideProfileView": false,
+                    "hideRecommendationsView": false,
+                    "hideDataView": false
+                }
+            }
+        },
+        {
+            "title": "6. Finish",
+            "settings": {
+                "ui": {
+                    "showSaveDialog": true
+                },
+                "applicationConfig": {
+                    "disableFeedApp": true
+                }
+            }
+        }
+    ]
+}

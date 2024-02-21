@@ -11,3 +11,14 @@ export interface SMConfig {
     collectResearchData?: boolean;
     showTopicLabels?: boolean;
 }
+
+export function mergeConfiguration(a: SMConfig, b: Partial<SMConfig>): SMConfig {
+    return {
+        ...a,
+        ...b,
+        recommendations: {
+            ...a.recommendations,
+            ...b.recommendations,
+        },
+    };
+}

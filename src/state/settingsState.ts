@@ -72,6 +72,11 @@ export const settingEgoOnSelect = atom<boolean>({
     default: true,
 });
 
+export const settingSocialSelectAction = atom<boolean>({
+    key: 'settingegoonselect',
+    default: true,
+});
+
 /* === Topic Graph === */
 
 export const settingTopicDisplayLines = atom<boolean>({

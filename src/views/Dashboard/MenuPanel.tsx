@@ -5,7 +5,7 @@ import QrCode2Icon from '@mui/icons-material/QrCode2';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { useCallback } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { menuShowSettings, menuShowShare, menuShowTools } from '@genaism/state/menuState';
+import { menuMainMenu, menuShowSettings, menuShowShare, menuShowTools } from '@genaism/state/menuState';
 import { useTranslation } from 'react-i18next';
 import IconMenu from '@genaism/components/IconMenu/IconMenu';
 import IconMenuItem from '@genaism/components/IconMenu/Item';
@@ -29,6 +29,7 @@ export default function MenuPanel({ onOpen, onRefresh }: Props) {
     const [showSettings, setShowSettings] = useRecoilState(menuShowSettings);
     const [config, setConfig] = useRecoilState(appConfiguration);
     const showTools = useRecoilValue(menuShowTools);
+    const showMainMenu = useRecoilValue(menuMainMenu);
 
     const doShowShare = useCallback(() => setShowShare((s) => !s), [setShowShare]);
     const doShowSettings = useCallback(() => setShowSettings((s) => !s), [setShowSettings]);
@@ -42,6 +43,8 @@ export default function MenuPanel({ onOpen, onRefresh }: Props) {
         },
         [onOpen]
     );
+
+    if (!showMainMenu) return null;
 
     return (
         <IconMenu

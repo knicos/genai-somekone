@@ -58,6 +58,11 @@ export const menuShowUserPanel = atom<UserPanel>({
     default: 'none',
 });
 
+export const menuNodeSelectAction = atom<UserPanel>({
+    key: 'menuselectaction',
+    default: 'none',
+});
+
 export const menuShowReplay = atom<boolean>({
     key: 'menushowreplay',
     default: false,
@@ -71,4 +76,19 @@ export const menuAllowFeedActions = atom<boolean>({
 export const menuShowTools = atom<boolean>({
     key: 'menushowtools',
     default: false,
+});
+
+export const menuMainMenu = atom<boolean>({
+    key: 'menumainmenu',
+    default: true,
+});
+
+export const menuShowSocialMenu = atom<boolean>({
+    key: 'menusocialmenu',
+    default: true,
+});
+
+export const menuShowGridMenu = atom<boolean>({
+    key: 'menugridmenu',
+    default: true,
 });

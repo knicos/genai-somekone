@@ -79,6 +79,10 @@ const router = createBrowserRouter(
                 lazy={() => import('./views/Dashboard/Dashboard')}
             />
             <Route
+                path="guided/:guide"
+                lazy={() => import('./views/Guided/Guided')}
+            />
+            <Route
                 path="content"
                 lazy={() => import('./views/ContentTool/ContentTool')}
             />

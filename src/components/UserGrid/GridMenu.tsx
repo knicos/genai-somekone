@@ -14,9 +14,10 @@ import { useTranslation } from 'react-i18next';
 import { getNodeData, removeNode } from '@genaism/services/graph/nodes';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { settingNodeMode } from '@genaism/state/settingsState';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import DeleteDialog from '../SocialGraph/DeleteDialog';
-import { menuSelectedUser, menuShowUserPanel } from '@genaism/state/menuState';
+import { menuNodeSelectAction, menuSelectedUser, menuShowGridMenu, menuShowUserPanel } from '@genaism/state/menuState';
+import { UserNodeId } from '@genaism/services/graph/graphTypes';
 
 interface UserData {
     name: string;
@@ -28,6 +29,18 @@ export default function GridMenu() {
     const [showDelete, setShowDelete] = useState(false);
     const [panel, setPanel] = useRecoilState(menuShowUserPanel);
     const selectedUser = useRecoilValue(menuSelectedUser);
+    const showMenu = useRecoilValue(menuShowGridMenu);
+    const selectAction = useRecoilValue(menuNodeSelectAction);
+    const userRef = useRef<UserNodeId | undefined>();
+
+    useEffect(() => {
+        if (selectedUser && selectedUser !== userRef.current && selectAction !== 'none') {
+            setPanel(selectAction);
+        }
+        userRef.current = selectedUser;
+    }, [selectedUser, selectAction, setPanel]);
+
+    if (!showMenu) return null;
 
     return (
         <IconMenu

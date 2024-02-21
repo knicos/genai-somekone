@@ -14,11 +14,17 @@ import { useTranslation } from 'react-i18next';
 import { getNodeData } from '@genaism/services/graph/nodes';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { settingNodeMode } from '@genaism/state/settingsState';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import DeleteDialog from './DeleteDialog';
-import { menuSelectedUser, menuShowUserPanel } from '@genaism/state/menuState';
+import {
+    menuNodeSelectAction,
+    menuSelectedUser,
+    menuShowSocialMenu,
+    menuShowUserPanel,
+} from '@genaism/state/menuState';
 import ClusterMenu from './ClusterMenu';
 import { removeUser } from '@genaism/services/users/users';
+import { UserNodeId } from '@genaism/services/graph/graphTypes';
 
 interface UserData {
     name: string;
@@ -30,6 +36,18 @@ export default function SocialMenu() {
     const [showDelete, setShowDelete] = useState(false);
     const [panel, setPanel] = useRecoilState(menuShowUserPanel);
     const selectedUser = useRecoilValue(menuSelectedUser);
+    const showMenu = useRecoilValue(menuShowSocialMenu);
+    const selectAction = useRecoilValue(menuNodeSelectAction);
+    const userRef = useRef<UserNodeId | undefined>();
+
+    useEffect(() => {
+        if (selectedUser && selectedUser !== userRef.current && selectAction !== 'none') {
+            setPanel(selectAction);
+        }
+        userRef.current = selectedUser;
+    }, [selectedUser, selectAction, setPanel]);
+
+    if (!showMenu) return null;
 
     return (
         <IconMenu

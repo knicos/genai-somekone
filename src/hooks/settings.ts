@@ -2,8 +2,12 @@ import {
     GraphTypes,
     UserPanel,
     menuGraphType,
+    menuMainMenu,
+    menuNodeSelectAction,
+    menuShowGridMenu,
     menuShowSave,
     menuShowShare,
+    menuShowSocialMenu,
     menuShowUserPanel,
 } from '@genaism/state/menuState';
 import {
@@ -18,7 +22,7 @@ import {
     settingSimilarPercent,
     settingTopicThreshold,
 } from '@genaism/state/settingsState';
-import { SMConfig } from '@genaism/views/Genagram/smConfig';
+import { SMConfig, mergeConfiguration } from '@genaism/views/Genagram/smConfig';
 import { useRecoilCallback } from 'recoil';
 
 export interface SomekoneSocialSettings {
@@ -41,17 +45,21 @@ export interface SomekoneUISettings {
     showShareCode?: boolean;
     showSaveDialog?: boolean;
     showGraph?: GraphTypes;
+    showMainMenu?: boolean;
+    showGridMenu?: boolean;
+    showSocialMenu?: boolean;
+    nodeSelectAction?: UserPanel;
 }
 
 export interface SomekoneSettings {
     socialGraph?: SomekoneSocialSettings;
-    applicationConfig?: SMConfig;
+    applicationConfig?: Partial<SMConfig>;
     ui?: SomekoneUISettings;
 }
 
 export function useSettingDeserialise() {
     const deserializer = useRecoilCallback(
-        ({ set }) =>
+        ({ set, snapshot }) =>
             (data: SomekoneSettings) => {
                 if (data.socialGraph) {
                     if (data.socialGraph.displayLabels !== undefined) {
@@ -80,7 +88,11 @@ export function useSettingDeserialise() {
                     }
                 }
                 if (data.applicationConfig) {
-                    set(appConfiguration, data.applicationConfig);
+                    snapshot.getPromise(appConfiguration).then((cfg) => {
+                        if (data.applicationConfig) {
+                            set(appConfiguration, mergeConfiguration(cfg, data.applicationConfig));
+                        }
+                    });
                 }
                 if (data.ui) {
                     if (data.ui.showUserPanel !== undefined) {
@@ -94,6 +106,18 @@ export function useSettingDeserialise() {
                     }
                     if (data.ui.showSaveDialog !== undefined) {
                         set(menuShowSave, data.ui.showSaveDialog);
+                    }
+                    if (data.ui.showMainMenu !== undefined) {
+                        set(menuMainMenu, data.ui.showMainMenu);
+                    }
+                    if (data.ui.showSocialMenu !== undefined) {
+                        set(menuShowSocialMenu, data.ui.showSocialMenu);
+                    }
+                    if (data.ui.showGridMenu !== undefined) {
+                        set(menuShowGridMenu, data.ui.showGridMenu);
+                    }
+                    if (data.ui.nodeSelectAction !== undefined) {
+                        set(menuNodeSelectAction, data.ui.nodeSelectAction);
                     }
                 }
             },
@@ -124,6 +148,9 @@ export function useSettingSerialise() {
                         showGraph: await snapshot.getPromise(menuGraphType),
                         showSaveDialog: await snapshot.getPromise(menuShowSave),
                         showShareCode: await snapshot.getPromise(menuShowShare),
+                        showSocialMenu: await snapshot.getPromise(menuShowSocialMenu),
+                        showGridMenu: await snapshot.getPromise(menuShowGridMenu),
+                        nodeSelectAction: await snapshot.getPromise(menuNodeSelectAction),
                     },
                 };
             },
