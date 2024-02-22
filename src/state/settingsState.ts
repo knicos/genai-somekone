@@ -73,7 +73,7 @@ export const settingEgoOnSelect = atom<boolean>({
 });
 
 export const settingSocialSelectAction = atom<boolean>({
-    key: 'settingegoonselect',
+    key: 'settingselectaction',
     default: true,
 });
 

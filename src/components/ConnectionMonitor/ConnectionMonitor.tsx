@@ -1,12 +1,13 @@
-import { iceConfig, webrtcActive } from '@genaism/state/webrtcState';
+import { iceConfig, webrtcActive, webrtcCandidate } from '@genaism/state/webrtcState';
 import { useEffect, useRef } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import PermissionDialog from './PermissionDialog';
 import { getRTConfig } from './ice';
 import IceDialog from './IceDialog';
 import ConnectionError from './ConnectionError';
 import { PeerErrorType, PeerStatus } from '@genaism/hooks/peer';
 import ProgressDialog from './ProgressDialog';
+import CandidateDialog from './CandidateDialog';
 
 interface Props {
     ready?: boolean;
@@ -17,6 +18,7 @@ interface Props {
 export default function ConnectionMonitor({ ready, status, error }: Props) {
     const [ice, setIce] = useRecoilState(iceConfig);
     const [webrtc, setWebRTC] = useRecoilState(webrtcActive);
+    const candidate = useRecoilValue(webrtcCandidate);
     const streamRef = useRef<MediaStream | undefined>();
 
     // Get ICE servers
@@ -58,6 +60,7 @@ export default function ConnectionMonitor({ ready, status, error }: Props) {
             <IceDialog open={!ice} />
             <PermissionDialog open={ice && webrtc === 'unset'} />
             <ProgressDialog status={status} />
+            <CandidateDialog relay={candidate === 'relay'} />
             <ConnectionError
                 error={error}
                 hasError={status === 'failed'}

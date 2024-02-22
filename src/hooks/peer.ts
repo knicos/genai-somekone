@@ -1,7 +1,11 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, useReducer } from 'react';
 import { Peer as P2P, DataConnection, PeerError } from 'peerjs';
-import { iceConfig, webrtcActive } from '@genaism/state/webrtcState';
-import { useRecoilValue } from 'recoil';
+import { iceConfig, webrtcActive, webrtcCandidate } from '@genaism/state/webrtcState';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+
+// Peerjs sends every 5000ms
+// Assume server responds within 2s.
+const HEARTBEAT_TIMEOUT = 7000;
 
 export type PeerStatus = 'starting' | 'disconnected' | 'connecting' | 'failed' | 'signaling' | 'ready' | 'retry';
 export type PeerErrorType =
@@ -61,6 +65,11 @@ interface PeerState<T> {
     connections: Map<string, DataConnection>;
     peers: Set<string>;
     sender?: SenderType<T>;
+    timeout: number;
+}
+
+interface PeerJSMessage {
+    type: string;
 }
 
 interface PeerReturn<T> {
@@ -89,6 +98,8 @@ export default function usePeer<T extends PeerEvent>({
     //const setError = useSetRecoilState(errorNotification);
     const [status, setStatus] = useState<PeerStatus>('starting');
     const [error, setError] = useState<PeerErrorType>('none');
+    const [trigger, retry] = useReducer((v) => v + 1, 0);
+    const setCandidate = useSetRecoilState(webrtcCandidate);
 
     useEffect(() => {
         cbRef.current.onClose = onClose;
@@ -134,6 +145,7 @@ export default function usePeer<T extends PeerEvent>({
         connRef.current = {
             connections: new Map<string, DataConnection>(),
             peers: new Set<string>(),
+            timeout: -1,
         };
 
         const createPeer = (code: string) => {
@@ -145,8 +157,7 @@ export default function usePeer<T extends PeerEvent>({
                         if (v.type === 'candidate-pair' && v.state === 'succeeded') {
                             const remote = stats.get(v.remoteCandidateId);
                             if (remote) {
-                                //setCandidateType(remote.candidateType === 'relay' ? 'relay' : 'other');
-                                console.log('REMOTE', remote);
+                                setCandidate(remote.candidateType === 'relay' ? 'relay' : 'other');
                             }
                         }
                     });
@@ -156,9 +167,6 @@ export default function usePeer<T extends PeerEvent>({
                 connRef.current?.peers.add(conn.peer);
                 conn.send({ event: 'eter:join' });
                 if (cbRef.current.onConnect) cbRef.current.onConnect(conn);
-                /*setSender(() => (s: T) => {
-                        conn.send(s);
-                    });*/
                 setStatus('ready');
                 setError('none');
             });
@@ -198,6 +206,18 @@ export default function usePeer<T extends PeerEvent>({
         };
 
         npeer.on('open', () => {
+            npeer.socket.addListener('message', (d: PeerJSMessage) => {
+                if (d.type === 'HEARTBEAT') {
+                    if (connRef.current) {
+                        if (connRef.current.timeout >= 0) clearTimeout(connRef.current.timeout);
+                        connRef.current.timeout = window.setTimeout(() => {
+                            setStatus('retry');
+                            retry();
+                        }, HEARTBEAT_TIMEOUT);
+                    }
+                }
+            });
+
             if (cbRef.current.onOpen) {
                 cbRef.current.onOpen();
             }
@@ -262,17 +282,12 @@ export default function usePeer<T extends PeerEvent>({
         });
 
         npeer.on('disconnected', () => {
-            /*const conn = connRef.current?.connections.get(id);
-            if (conn) {
-                connRef.current?.peers.delete(conn.peer);
-                connRef.current?.connections.delete(id);
-            }*/
             console.log('Peer discon');
             setStatus('failed');
         });
 
         npeer.on('close', () => {
-            console.log('Peer close');
+            // console.log('Peer close');
         });
 
         npeer.on('error', (err) => {
@@ -316,10 +331,13 @@ export default function usePeer<T extends PeerEvent>({
         return () => {
             if (connRef.current) {
                 connRef.current.connections.forEach((c) => c.close());
+                if (connRef.current.timeout >= 0) {
+                    clearTimeout(connRef.current.timeout);
+                }
             }
             npeer.destroy();
         };
-    }, [code, server, webrtc, ice, setError]);
+    }, [code, server, webrtc, ice, setError, trigger, setCandidate]);
 
     useEffect(() => {
         const tabClose = () => {

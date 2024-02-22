@@ -1,34 +1,34 @@
 {
     "loader": {
         "messages": {
-            "getIceConfig": "Retrieving network configuration",
-            "cameraPermission": "To allow direct connections between devices you need to allow temporary access to the camera.",
-            "connecting": "Trying to connect...",
-            "signaling": "Finding other devices",
-            "disconnected": "Disconnected from the other device",
-            "retry": "Retrying connection...",
-            "content_load": "Loading the content",
-            "content_download": "Downloading the content",
-            "ready": "Connection ready",
-            "content_none": "Content ready"
+            "getIceConfig": "Selvitän verkkoyhteyden asetuksia",
+            "cameraPermission": "Lupa kameran käyttöön tarvitaan suoran yhteyden muodostamiseksi laitteiden välille.",
+            "connecting": "Yritän yhdistää...",
+            "signaling": "Etsin muita laitteita",
+            "disconnected": "Yhteys toiseen laitteeseen katkesi",
+            "retry": "Yritän yhdistää uudelleen...",
+            "content_load": "Avaan sisältöä",
+            "content_download": "Lataan sisältöä",
+            "ready": "Yhteys valmis",
+            "content_none": "Sisältö valmis"
         },
         "errors": {
-            "unknown": "A connection problem occurred",
-            "id-in-use": "Someone is already using this code",
-            "peer-not-found": "The code could not be found",
-            "missing-ice": "Configuration is missing",
-            "no-signaling": "Our server isn't responding",
-            "bad-browser": "Your device doesn't support this app",
-            "unknownContent": "There is a problem with the media content",
-            "load": "Could not load the media content",
-            "download": "Could not download the media content"
+            "unknown": "Ongelma laitteiden välisessä viestinnässä",
+            "id-in-use": "Jollakulla toisella on jo tämä koodi käytössä",
+            "peer-not-found": "Koodia tai QR-koodia ei löytynyt",
+            "missing-ice": "Asetuksia ei löydy",
+            "no-signaling": "Palvelimeen ei saada yhteyttä",
+            "bad-browser": "Tätä appia ei voi käyttää laitteellasi",
+            "unknownContent": "Ongelma kuvasisällössä",
+            "load": "Ongelma kuvien lataamisessa",
+            "download": "Ongelma kuvien hakemisessa"
         },
         "titles": {
-            "iceConfig": "Configuring",
-            "permission": "Permissions",
-            "connecting": "Connection",
-            "error": "Problem",
-            "contentLoad": "Media Content"
+            "iceConfig": "Asetukset",
+            "permission": "Oikeudet",
+            "connecting": "Yhteys",
+            "error": "Ongelma",
+            "contentLoad": "Kuvasisältö"
         }
     },
     "feed": {
@@ -41,7 +41,7 @@
                 "everyone": "Kaikille"
             },
             "enterUser": "Aloita",
-            "moreComments": "More Comments",
+            "moreComments": "Lisää",
             "post": "Lähetä"
         },
         "titles": {
@@ -56,13 +56,13 @@
             "loading": "Kuvia ladataan...",
             "usernameError": {
                 "missing": "Käyttäjänimi puuttuu",
-                "long": "The username is too long",
-                "short": "The username must be 3 or more characters"
+                "long": "Käyttäjänimi on liian pitkä",
+                "short": "Käyttäjänimen pitää olla ainakin 3 merkkiä"
             },
             "fullnameError": {
                 "missing": "Oikea nimi puuttuu"
             },
-            "alreadyOpen": "You already have the app open in another tab."
+            "alreadyOpen": "Tämä appi on jo auki toisessa välilehdessä."
         },
         "actionlog": {
             "dwell": "Katsoi kuvaa {{time}} sekuntia",
@@ -87,13 +87,13 @@
             "enterFullname": "Anna oikea nimesi"
         },
         "aria": {
-            "followUser": "Follow user",
-            "unfollowUser": "Unfollow user",
-            "showLikeOptions": "Show like options",
-            "showComments": "Show comments",
-            "showShareOptions": "Show share options",
-            "shareLink": "Link to open the feed app",
-            "restoreUser": "Restore a previous session"
+            "followUser": "Seuraa käyttäjää",
+            "unfollowUser": "Älä seuraa käyttäjää",
+            "showLikeOptions": "Näytä tykkäysvalinnat",
+            "showComments": "Näytä kommentit",
+            "showShareOptions": "Näytä jakamisvalinnat",
+            "shareLink": "Linkki kuva-appiin",
+            "restoreUser": "Palauta aiempi sessio"
         }
     },
     "dashboard": {
@@ -168,19 +168,19 @@
             "collectResearch": "Kerää tutkimusdataa",
             "showFeedImageLabels": "Näytä #hashtagit kuvavirrassa",
             "topicThreshold": "#hashtagien määrä per käyttäjä",
-            "allLinks": "Show all links on select",
-            "showReplay": "Show replay controls",
-            "stop": "Stop",
-            "play": "Play",
-            "storageOptions": "Load and save data",
-            "viewOptions": "Graph to display",
-            "appOptions": "Feed app options",
-            "none": "none",
-            "showSettings": "Show application settings",
-            "showTools": "Show advanced tools menu",
-            "toolsMenu": "Advanced Tools",
-            "toolAnonymise": "Anonymise all data",
-            "saveSettings": "Save app settings"
+            "allLinks": "Näytä valittaessa kaikki linkit",
+            "showReplay": "Näytä replay-työkalut",
+            "stop": "Pysäytä",
+            "play": "Toista",
+            "storageOptions": "Lataa ja tallenna dataa",
+            "viewOptions": "Näytettävä näkymä",
+            "appOptions": "Kuva-appin asetukset",
+            "none": "ei mitään",
+            "showSettings": "Opettajan appin asetukset",
+            "showTools": "Näytä lisätyökalut -menu",
+            "toolsMenu": "Lisätyökalut",
+            "toolAnonymise": "Anonymisoi kaikki data",
+            "saveSettings": "Tallenna appin asetukset"
         },
         "messages": {
             "connection": "Mene allaolevaan www-osoitteeseen ja syötä koodi <Code>{{codeText}}</Code>, tai käytä QR -koodia.",
@@ -241,8 +241,8 @@
     "recommendations": {
         "labels": {
             "topicCandidate": "koska olet tykännyt aiheesta #{{topic}}.",
-            "random": "sattumanvaraisesti valittu kuva.",
-            "coengagedCandidate": "koska muutkin ovat tykänneet tästä.",
+            "random": "valittu sinulle sattumanvaraisesti.",
+            "coengagedCandidate": "koska muut allaolevasta kuvasta kiinnostuneet ovat tykänneet myös tästä.",
             "similarUserCandidate": "koska kaltaisesi käyttäjä \"{{userName}}\" piti tästä.",
             "tasteSimilarity": "Suositeltu samanlaisten mieltymysten takia",
             "sharingTopicLikelihood": "Suositeltu koska vaikutat jakavan muille tämänkaltaisia kuvia.",
@@ -254,17 +254,17 @@
             "randomness": "Suosittelu tehty sattumanvaraisesti",
             "lastSeen": "Tätä ei ole nähty lähiaikoina",
             "noReason": "Ei syytä (sattumanvarainen)",
-            "engagedWith": "Olet reagoinut"
+            "engagedWith": "Suositus perustuu tälle sinua kiinnostaneelle kuvalle"
         },
         "features": {
-            "tasteSimilarity": "Mieltymysten perusteella",
-            "coengagementOverlap": "Aktiivisuuden perusteella",
+            "tasteSimilarity": "Mieltymyksesi",
+            "coengagementOverlap": "Aktiivisuutesi",
             "sharingTopicLikelihood": "Jaat todennäköisesti",
-            "commentingTopicLikelihood": "Kommentoit todennäköisesti",
-            "followingTopicLikelihood": "Seuraat todennäköisesti",
-            "reactingTopicLikelihood": "Tykkäät todennäköisesti",
-            "viewingTopicLikelihood": "Katsot todennäköisesti",
-            "lastSeen": "Et ole nähnyt vähään aikaan"
+            "commentingTopicLikelihood": "Kommentointisi",
+            "followingTopicLikelihood": "Mitä seuraat",
+            "reactingTopicLikelihood": "Tykkäyksesi",
+            "viewingTopicLikelihood": "Katselet pitkään",
+            "lastSeen": "Näkemisestä on kauan"
         }
     },
     "creator": {

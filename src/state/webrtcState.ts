@@ -12,3 +12,8 @@ export const iceConfig = atom<CommunicationRelayConfiguration | undefined>({
     key: 'iceConfig',
     default: undefined,
 });
+
+export const webrtcCandidate = atom<'unset' | 'relay' | 'other'>({
+    key: 'webrtccandidate',
+    default: 'unset',
+});
