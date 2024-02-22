@@ -1,4 +1,4 @@
-@value secondary, bgColourful1 from "../../style/colours.module.css";
+@value secondary, bgColourful1, textDark from "../../style/colours.module.css";
 
 .container {
     background: bgColourful1;
@@ -7,13 +7,8 @@
     min-width: 200px;
     display: flex;
     flex-direction: column;
-}
-
-.container :global .MuiList-root {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
     justify-content: center;
+    gap: 2rem;
 }
 
 .container :global .MuiMenuItem-root {
@@ -32,23 +27,18 @@
     background: rgba(0, 0, 0, 0.2);
 }
 
-.spacer {
-    flex-grow: 1;
-}
-
 .advanced {
-    padding: 1rem;
-    opacity: 0.8;
-}
-
-.advanced:hover {
-    opacity: 1;
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    color: textDark;
+    z-index: 5;
 }
 
 .actionContainer {
     display: flex;
     justify-content: center;
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
 }
 
 .actionContainer :global .MuiIconButton-root {

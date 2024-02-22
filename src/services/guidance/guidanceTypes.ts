@@ -10,5 +10,6 @@ export interface GuidanceStep {
 
 export interface GuidanceData {
     name: string;
+    locale: string;
     steps: GuidanceStep[];
 }

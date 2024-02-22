@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { Button } from '../Button/Button';
 import { useRecoilValue } from 'recoil';
 import { webrtcActive } from '@genaism/state/webrtcState';
+import { useOnlyOnce } from '@genaism/hooks/onlyOnce';
 
 interface Props {
     relay?: boolean;
@@ -13,11 +14,13 @@ interface Props {
 export default function CandidateDialog({ relay }: Props) {
     const { t } = useTranslation();
     const [open, setOpen] = useState(false);
+    const [seen, setSeen] = useState(false);
     const perm = useRecoilValue(webrtcActive);
+    const block = useOnlyOnce('genai-wifi-warning', seen);
 
     useEffect(() => {
-        if (relay) setOpen(true);
-    }, [relay]);
+        if (relay && !block) setOpen(true);
+    }, [relay, block]);
 
     return (
         <Dialog
@@ -30,7 +33,10 @@ export default function CandidateDialog({ relay }: Props) {
             </DialogContent>
             <DialogActions>
                 <Button
-                    onClick={() => setOpen(false)}
+                    onClick={() => {
+                        setOpen(false);
+                        setSeen(true);
+                    }}
                     variant="contained"
                 >
                     {t('loader.actions.close')}
