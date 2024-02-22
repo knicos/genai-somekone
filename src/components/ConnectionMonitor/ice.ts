@@ -13,7 +13,7 @@ export interface CommunicationRelayConfiguration {
 }
 
 export function getRTConfig(resolve: (value: CommunicationRelayConfiguration) => void) {
-    fetch(`${import.meta.env.VITE_APP_APIURL}/rtcconfig`)
+    fetch(`${import.meta.env.VITE_APP_APIURL}/rtcconfig?appName=somekone`)
         .then((response) => {
             if (response.ok) response.json().then(resolve);
             else setTimeout(() => getRTConfig(resolve), 1000);
