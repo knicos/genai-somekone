@@ -101,6 +101,7 @@ export default function RecommendationSettings() {
                     step={0.1}
                 />
             </FormControl>
+            <div className={style.spacer} />
             <FormControl sx={{ marginTop: '1rem' }}>
                 <FormLabel id="demo-radio-buttons-group-label">{t('dashboard.labels.scoring')}</FormLabel>
                 <FormControlLabel
@@ -216,6 +217,7 @@ export default function RecommendationSettings() {
                     label={t('dashboard.labels.viewingScore')}
                 />
             </FormControl>
+            <div className={style.spacer} />
             <FormControl sx={{ marginTop: '1rem' }}>
                 <FormLabel id="demo-radio-buttons-group-label">{t('dashboard.labels.selectionMechanism')}</FormLabel>
                 <RadioGroup

@@ -18,7 +18,7 @@ import {
     settingSimilarPercent,
     settingTopicThreshold,
 } from '@genaism/state/settingsState';
-import { menuAllowFeedActions } from '@genaism/state/menuState';
+import { UserPanel, menuAllowFeedActions, menuNodeSelectAction } from '@genaism/state/menuState';
 
 export default function SocialGraphSettings() {
     const { t } = useTranslation();
@@ -35,6 +35,7 @@ export default function SocialGraphSettings() {
     const [topicThreshold, setTopicThreshold] = useRecoilState(settingTopicThreshold);
     const [allLinks, setAllLinks] = useRecoilState(settingIncludeAllLinks);
     const [allowActions, setAllowActions] = useRecoilState(menuAllowFeedActions);
+    const [selectMode, setSelectMode] = useRecoilState(menuNodeSelectAction);
 
     const doEdgeScale = useCallback(
         (_: unknown, value: number | number[]) => setEdgeScale(value as number),
@@ -91,28 +92,6 @@ export default function SocialGraphSettings() {
                 }
                 label={t('dashboard.labels.shrinkOffline')}
             />
-            <div
-                id="cluster-colouring-label"
-                className={style.label}
-            >
-                {t('dashboard.labels.clusterColouring')}
-            </div>
-            <Slider
-                aria-labelledby="cluster-colouring-label"
-                value={clusterColouring}
-                onChange={(_, value) => setClusterColouring(value as number)}
-                min={0}
-                max={6}
-                step={null}
-                marks={[
-                    { value: 0, label: t('dashboard.labels.none') },
-                    { value: 2, label: '2' },
-                    { value: 3, label: '3' },
-                    { value: 4, label: '4' },
-                    { value: 5, label: '5' },
-                    { value: 6, label: '6' },
-                ]}
-            />
             <FormControlLabel
                 control={
                     <Checkbox
@@ -140,6 +119,31 @@ export default function SocialGraphSettings() {
                 }
                 label={t('dashboard.labels.allowFeedActions')}
             />
+            <div className={style.spacer} />
+            <div
+                id="cluster-colouring-label"
+                className={style.label}
+            >
+                {t('dashboard.labels.clusterColouring')}
+            </div>
+            <Slider
+                aria-labelledby="cluster-colouring-label"
+                value={clusterColouring}
+                onChange={(_, value) => setClusterColouring(value as number)}
+                style={{ marginBottom: '40px' }}
+                min={0}
+                max={6}
+                step={null}
+                marks={[
+                    { value: 0, label: t('dashboard.labels.none') },
+                    { value: 2, label: '2' },
+                    { value: 3, label: '3' },
+                    { value: 4, label: '4' },
+                    { value: 5, label: '5' },
+                    { value: 6, label: '6' },
+                ]}
+            />
+            <div className={style.spacer} />
             <FormControl sx={{ marginTop: '1rem' }}>
                 <FormLabel id="demo-radio-buttons-group-label">{t('dashboard.labels.nodeContents')}</FormLabel>
                 <RadioGroup
@@ -166,6 +170,44 @@ export default function SocialGraphSettings() {
                     />
                 </RadioGroup>
             </FormControl>
+            <div className={style.spacer} />
+            <FormControl sx={{ marginTop: '1rem' }}>
+                <FormLabel id="node-select-group-label">{t('dashboard.labels.nodeSelect')}</FormLabel>
+                <RadioGroup
+                    aria-labelledby="node-select-group-label"
+                    defaultValue="none"
+                    name="node-select-group"
+                    value={selectMode}
+                    onChange={(_, value) => setSelectMode(value as UserPanel)}
+                >
+                    <FormControlLabel
+                        value="none"
+                        control={<Radio />}
+                        label={t('dashboard.labels.noActionOnSelect')}
+                    />
+                    <FormControlLabel
+                        value="feed"
+                        control={<Radio />}
+                        label={t('dashboard.labels.showFeed')}
+                    />
+                    <FormControlLabel
+                        value="data"
+                        control={<Radio />}
+                        label={t('dashboard.labels.showData')}
+                    />
+                    <FormControlLabel
+                        value="profile"
+                        control={<Radio />}
+                        label={t('dashboard.labels.showProfile')}
+                    />
+                    <FormControlLabel
+                        value="recommendations"
+                        control={<Radio />}
+                        label={t('dashboard.labels.showRecommendations')}
+                    />
+                </RadioGroup>
+            </FormControl>
+            <div className={style.spacer} />
             <div
                 id="social-edge-scaling-label"
                 className={style.label}

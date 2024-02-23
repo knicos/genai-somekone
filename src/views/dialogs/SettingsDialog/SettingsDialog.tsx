@@ -27,7 +27,7 @@ export default function SettingsDialog() {
             fullWidth
         >
             <DialogTitle>{t('dashboard.titles.settings')}</DialogTitle>
-            <DialogContent sx={{ display: 'flex', padding: 0 }}>
+            <DialogContent sx={{ display: 'flex', padding: 0, maxHeight: '600px' }}>
                 <Tabs
                     value={tabNumber}
                     onChange={(_, value) => setTabNumber(value)}

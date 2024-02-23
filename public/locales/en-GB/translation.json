@@ -187,7 +187,10 @@
             "toolsMenu": "Advanced Tools",
             "toolAnonymise": "Anonymise all data",
             "saveSettings": "Save app settings",
-            "showMainMenu": "Show main app menu"
+            "showMainMenu": "Show main app menu",
+            "nodeSelect": "Action on node select",
+            "noActionOnSelect": "None",
+            "allowFeedActions": "Allow actions in dashboard feed"
         },
         "messages": {
             "connection": "Go to the address below and enter the code <Code>{{codeText}}</Code>, or use the QR code.",
