@@ -19,7 +19,8 @@
                     },
                     "applicationConfig": {
                         "hideActionsButton": true,
-                        "disableFeedApp": false
+                        "disableFeedApp": false,
+                        "showTopicLabels": false
                     }
                 }
             },
@@ -43,7 +44,8 @@
                         "hideShareProfile": false,
                         "hideProfileView": true,
                         "hideRecommendationsView": true,
-                        "hideDataView": false
+                        "hideDataView": false,
+                        "showTopicLabels": false
                     }
                 }
             },
@@ -77,7 +79,8 @@
                 "settings": {
                     "socialGraph": {
                         "nodeDisplay": "word",
-                        "clusterColouring": 5
+                        "clusterColouring": 5,
+                        "topicThreshold": 0.2
                     },
                     "ui": {
                         "showGraph": "social",
@@ -96,7 +99,8 @@
                 "settings": {
                     "socialGraph": {
                         "nodeDisplay": "word",
-                        "clusterColouring": 5
+                        "clusterColouring": 5,
+                        "topicThreshold": 0.4
                     },
                     "ui": {
                         "showGraph": "social",

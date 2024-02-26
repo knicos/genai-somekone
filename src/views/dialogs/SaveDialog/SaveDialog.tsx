@@ -14,7 +14,7 @@ export default function SaveDialog() {
     const { t } = useTranslation();
     const [showDialog, setShowDialog] = useRecoilState(menuShowSave);
     const [saveContent, setSaveContent] = useState(false);
-    const [saveProfiles, setSaveProfiles] = useState(false);
+    const [saveProfiles, setSaveProfiles] = useState(true);
     const [saveLogs, setSaveLogs] = useState(true);
     const [saveGraph, setSaveGraph] = useState(true);
     const [saveSettings, setSaveSettings] = useState(false);
