@@ -22,6 +22,7 @@ import { SMConfig } from './smConfig';
 import { appConfiguration } from '@genaism/state/settingsState';
 import ConnectionMonitor from '@genaism/components/ConnectionMonitor/ConnectionMonitor';
 import { LogProvider } from '@genaism/hooks/logger';
+import { getRecommendations } from '@genaism/services/recommender/recommender';
 
 const DATA_LOG_TIME = 15 * 60 * 1000;
 const USERNAME_KEY = 'genai_somekone_username';
@@ -76,10 +77,12 @@ export default function FeedProtocol({ content, server, mycode, setContent, chil
             } else if (data.event === 'eter:join') {
                 const profile = getUserProfile();
                 const logs = getActionLogSince(Date.now() - DATA_LOG_TIME).filter((a) => a.timestamp <= logRef.current);
+                const recommendations = getRecommendations(getCurrentUser(), 5);
                 conn.send({ event: 'eter:config', configuration: config, content });
                 conn.send({ event: 'eter:reguser', username, id: getCurrentUser() });
                 conn.send({ event: 'eter:action_log', id: getCurrentUser(), log: logs });
                 conn.send({ event: 'eter:profile_data', profile, id: getCurrentUser() });
+                conn.send({ event: 'eter:recommendations', recommendations, id: getCurrentUser() });
                 conn.send({ event: 'eter:connect', code: `sm-${server}` });
             } else if (data.event === 'eter:snapshot' && data.snapshot) {
                 addNodes(data.snapshot.nodes);
