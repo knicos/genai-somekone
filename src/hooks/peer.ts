@@ -6,6 +6,11 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 // Peerjs sends every 5000ms
 // Assume server responds within 2s.
 const HEARTBEAT_TIMEOUT = 7000;
+const MAX_ID_RETRY = 4;
+const MAX_CONN_RETRY = 5;
+const MAX_BACKOFF = 4;
+const BASE_RETRY_TIME = 1000;
+const WAIT_TIME = 10000;
 
 export type PeerStatus = 'starting' | 'disconnected' | 'connecting' | 'failed' | 'signaling' | 'ready' | 'retry';
 export type PeerErrorType =
@@ -19,6 +24,10 @@ export type PeerErrorType =
 
 export interface PeerEvent {
     event: string;
+}
+
+function expBackoff(count: number) {
+    return Math.pow(2, Math.min(count, MAX_BACKOFF)) * BASE_RETRY_TIME;
 }
 
 interface Callbacks<T> {
@@ -66,6 +75,9 @@ interface PeerState<T> {
     peers: Set<string>;
     sender?: SenderType<T>;
     timeout: number;
+    idRetryCount: number;
+    peerRetryCount: number;
+    connRetryCount: number;
 }
 
 interface PeerJSMessage {
@@ -146,12 +158,31 @@ export default function usePeer<T extends PeerEvent>({
             connections: new Map<string, DataConnection>(),
             peers: new Set<string>(),
             timeout: -1,
+            peerRetryCount: connRef.current?.peerRetryCount || 0,
+            connRetryCount: connRef.current?.connRetryCount || 0,
+            idRetryCount: connRef.current?.idRetryCount || 0,
         };
 
         const createPeer = (code: string) => {
             const conn = npeer.connect(code, { reliable: true });
+            const waitTimer = window.setTimeout(() => {
+                if (!conn.open) {
+                    if (connRef.current?.connections.has(conn.connectionId)) {
+                        conn.close();
+                    } else {
+                        conn.close();
+                        setStatus('retry');
+                        // Retry
+                        setTimeout(() => {
+                            if (npeer.destroyed) return;
+                            createPeer(code);
+                        }, BASE_RETRY_TIME);
+                    }
+                }
+            }, WAIT_TIME);
 
             conn.on('open', () => {
+                clearTimeout(waitTimer);
                 conn.peerConnection.getStats().then((stats) => {
                     stats.forEach((v) => {
                         if (v.type === 'candidate-pair' && v.state === 'succeeded') {
@@ -186,18 +217,21 @@ export default function usePeer<T extends PeerEvent>({
                 setStatus('failed');
             });
             conn.on('close', () => {
+                clearTimeout(waitTimer);
                 connRef.current?.connections.delete(conn.connectionId);
                 connRef.current?.peers.delete(conn.peer); // TODO: Check no other connections from peer
 
                 if (cbRef.current.onClose) cbRef.current.onClose(conn);
-                setStatus('disconnected');
+                //setStatus('disconnected');
 
                 // Retry
+                setStatus('retry');
                 setTimeout(() => {
                     if (npeer.destroyed) return;
                     createPeer(code);
-                }, 1000);
+                }, BASE_RETRY_TIME);
             });
+
             conn.on('iceStateChanged', (state: RTCIceConnectionState) => {
                 if (state === 'disconnected') {
                     conn.close();
@@ -206,6 +240,10 @@ export default function usePeer<T extends PeerEvent>({
         };
 
         npeer.on('open', () => {
+            if (connRef.current) {
+                connRef.current.peerRetryCount = 0;
+                connRef.current.idRetryCount = 0;
+            }
             npeer.socket.addListener('message', (d: PeerJSMessage) => {
                 if (d.type === 'HEARTBEAT') {
                     if (connRef.current) {
@@ -261,6 +299,7 @@ export default function usePeer<T extends PeerEvent>({
                 connRef.current?.connections.set(conn.connectionId, conn);
                 connRef.current?.peers.add(conn.peer);
                 if (connRef.current) {
+                    connRef.current.connRetryCount = 0;
                     for (const conn of connRef.current.connections.values()) {
                         if (conn.open) conn.send({ event: 'peers', peers: Array.from(connRef.current.peers) });
                     }
@@ -283,7 +322,7 @@ export default function usePeer<T extends PeerEvent>({
 
         npeer.on('disconnected', () => {
             console.log('Peer discon');
-            setStatus('failed');
+            //setStatus('failed');
         });
 
         npeer.on('close', () => {
@@ -297,29 +336,47 @@ export default function usePeer<T extends PeerEvent>({
                 case 'disconnected':
                 case 'network':
                     setStatus('retry');
-                    setTimeout(() => npeer.reconnect(), 1000);
+                    if (connRef.current) {
+                        setTimeout(() => {
+                            npeer.reconnect();
+                        }, expBackoff(connRef.current.peerRetryCount++));
+                    }
                     break;
                 case 'server-error':
                     setStatus('retry');
-                    setTimeout(() => npeer.reconnect(), 5000);
+                    if (connRef.current) {
+                        setTimeout(() => {
+                            npeer.reconnect();
+                        }, expBackoff(connRef.current.peerRetryCount++));
+                    }
                     break;
                 case 'unavailable-id':
-                    // setCode(randomId(8));
-                    npeer.destroy();
-                    setStatus('failed');
-                    setError('id-in-use');
-                    setPeer(undefined);
+                    if (connRef.current && connRef.current.idRetryCount < MAX_ID_RETRY) {
+                        setStatus('retry');
+                        setTimeout(() => {
+                            retry();
+                        }, expBackoff(connRef.current.idRetryCount++));
+                    } else {
+                        npeer.destroy();
+                        setStatus('failed');
+                        setError('id-in-use');
+                        setPeer(undefined);
+                    }
                     break;
                 case 'browser-incompatible':
                     setStatus('failed');
                     setError('bad-browser');
                     break;
                 case 'peer-unavailable':
-                    setStatus('failed');
-                    setError('peer-not-found');
-                    setTimeout(() => {
-                        if (server && !npeer.destroyed) createPeer(server);
-                    }, 1000);
+                    if (connRef.current && connRef.current.connRetryCount < MAX_CONN_RETRY) {
+                        setStatus('retry');
+                        setTimeout(() => {
+                            if (server && !npeer.destroyed) createPeer(server);
+                        }, expBackoff(connRef.current.connRetryCount++));
+                    } else {
+                        setStatus('failed');
+                        setError('peer-not-found');
+                    }
                     break;
                 default:
                     npeer.destroy();
