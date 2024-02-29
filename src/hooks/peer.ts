@@ -72,7 +72,6 @@ export type SenderType<T> = (data: T | BuiltinEvent) => void;
 
 interface PeerState<T> {
     connections: Map<string, DataConnection>;
-    peers: Set<string>;
     sender?: SenderType<T>;
     timeout: number;
     idRetryCount: number;
@@ -102,7 +101,13 @@ export default function usePeer<T extends PeerEvent>({
     onConnect,
 }: Props<T>): PeerReturn<T> {
     const [peer, setPeer] = useState<P2P>();
-    const connRef = useRef<PeerState<T>>();
+    const connRef = useRef<PeerState<T>>({
+        connections: new Map<string, DataConnection>(),
+        timeout: -1,
+        peerRetryCount: 0,
+        connRetryCount: 0,
+        idRetryCount: 0,
+    });
     const cbRef = useRef<Callbacks<T>>({});
     const webrtc = useRecoilValue(webrtcActive);
     const ice = useRecoilValue(iceConfig);
@@ -154,30 +159,29 @@ export default function usePeer<T extends PeerEvent>({
         });
         setPeer(npeer);
 
-        connRef.current = {
-            connections: new Map<string, DataConnection>(),
-            peers: new Set<string>(),
-            timeout: -1,
-            peerRetryCount: connRef.current?.peerRetryCount || 0,
-            connRetryCount: connRef.current?.connRetryCount || 0,
-            idRetryCount: connRef.current?.idRetryCount || 0,
+        const state = connRef.current;
+        state.timeout = -1;
+        state.connections.clear();
+        state.sender = undefined;
+
+        const retryConnection = (peer: string) => {
+            const oldConn = state.connections.get(peer);
+            state.connections.delete(peer);
+            if (oldConn) {
+                oldConn.close();
+            }
+            setStatus('retry');
+            setTimeout(() => {
+                if (npeer.destroyed) return;
+                createPeer(code);
+            }, expBackoff(state.connRetryCount++));
         };
 
         const createPeer = (code: string) => {
             const conn = npeer.connect(code, { reliable: true });
             const waitTimer = window.setTimeout(() => {
                 if (!conn.open) {
-                    if (connRef.current?.connections.has(conn.connectionId)) {
-                        conn.close();
-                    } else {
-                        conn.close();
-                        setStatus('retry');
-                        // Retry
-                        setTimeout(() => {
-                            if (npeer.destroyed) return;
-                            createPeer(code);
-                        }, BASE_RETRY_TIME);
-                    }
+                    retryConnection(conn.peer);
                 }
             }, WAIT_TIME);
 
@@ -194,8 +198,13 @@ export default function usePeer<T extends PeerEvent>({
                     });
                 });
 
-                connRef.current?.connections.set(conn.connectionId, conn);
-                connRef.current?.peers.add(conn.peer);
+                const oldConn = state.connections.get(conn.peer);
+                if (oldConn) {
+                    console.warn('Connection already existed', conn.peer);
+                    oldConn.close();
+                }
+
+                state.connections.set(conn.peer, conn);
                 conn.send({ event: 'eter:join' });
                 if (cbRef.current.onConnect) cbRef.current.onConnect(conn);
                 setStatus('ready');
@@ -218,18 +227,12 @@ export default function usePeer<T extends PeerEvent>({
             });
             conn.on('close', () => {
                 clearTimeout(waitTimer);
-                connRef.current?.connections.delete(conn.connectionId);
-                connRef.current?.peers.delete(conn.peer); // TODO: Check no other connections from peer
+                state.connections.delete(conn.peer);
 
                 if (cbRef.current.onClose) cbRef.current.onClose(conn);
                 //setStatus('disconnected');
 
-                // Retry
-                setStatus('retry');
-                setTimeout(() => {
-                    if (npeer.destroyed) return;
-                    createPeer(code);
-                }, BASE_RETRY_TIME);
+                retryConnection(conn.peer);
             });
 
             conn.on('iceStateChanged', (state: RTCIceConnectionState) => {
@@ -240,19 +243,15 @@ export default function usePeer<T extends PeerEvent>({
         };
 
         npeer.on('open', () => {
-            if (connRef.current) {
-                connRef.current.peerRetryCount = 0;
-                connRef.current.idRetryCount = 0;
-            }
+            state.peerRetryCount = 0;
+            state.idRetryCount = 0;
             npeer.socket.addListener('message', (d: PeerJSMessage) => {
                 if (d.type === 'HEARTBEAT') {
-                    if (connRef.current) {
-                        if (connRef.current.timeout >= 0) clearTimeout(connRef.current.timeout);
-                        connRef.current.timeout = window.setTimeout(() => {
-                            setStatus('retry');
-                            retry();
-                        }, HEARTBEAT_TIMEOUT);
-                    }
+                    if (state.timeout >= 0) clearTimeout(state.timeout);
+                    state.timeout = window.setTimeout(() => {
+                        setStatus('retry');
+                        retry();
+                    }, HEARTBEAT_TIMEOUT);
                 }
             });
 
@@ -261,10 +260,8 @@ export default function usePeer<T extends PeerEvent>({
             }
 
             setSender(() => (data: T) => {
-                if (connRef.current) {
-                    for (const conn of connRef.current.connections.values()) {
-                        if (conn.open) conn.send(data);
-                    }
+                for (const conn of state.connections.values()) {
+                    if (conn.open) conn.send(data);
                 }
             });
             if (server) {
@@ -296,14 +293,15 @@ export default function usePeer<T extends PeerEvent>({
             });
 
             conn.on('open', () => {
-                connRef.current?.connections.set(conn.connectionId, conn);
-                connRef.current?.peers.add(conn.peer);
-                if (connRef.current) {
-                    connRef.current.connRetryCount = 0;
-                    for (const conn of connRef.current.connections.values()) {
-                        if (conn.open) conn.send({ event: 'peers', peers: Array.from(connRef.current.peers) });
+                if (state.connections.has(conn.peer)) {
+                    const oldConn = state.connections.get(conn.peer);
+                    if (oldConn) {
+                        console.warn('Connection already existed', conn.peer);
+                        oldConn.close();
                     }
                 }
+                state.connections.set(conn.peer, conn);
+                state.connRetryCount = 0;
                 conn.send({ event: 'eter:welcome' });
             });
 
@@ -314,8 +312,7 @@ export default function usePeer<T extends PeerEvent>({
             });
 
             conn.on('close', () => {
-                connRef.current?.connections.delete(conn.connectionId);
-                connRef.current?.peers.delete(conn.peer);
+                state.connections.delete(conn.peer);
                 if (cbRef.current.onClose) cbRef.current.onClose(conn);
             });
         });
@@ -336,26 +333,22 @@ export default function usePeer<T extends PeerEvent>({
                 case 'disconnected':
                 case 'network':
                     setStatus('retry');
-                    if (connRef.current) {
-                        setTimeout(() => {
-                            npeer.reconnect();
-                        }, expBackoff(connRef.current.peerRetryCount++));
-                    }
+                    setTimeout(() => {
+                        npeer.reconnect();
+                    }, expBackoff(state.peerRetryCount++));
                     break;
                 case 'server-error':
                     setStatus('retry');
-                    if (connRef.current) {
-                        setTimeout(() => {
-                            npeer.reconnect();
-                        }, expBackoff(connRef.current.peerRetryCount++));
-                    }
+                    setTimeout(() => {
+                        npeer.reconnect();
+                    }, expBackoff(state.peerRetryCount++));
                     break;
                 case 'unavailable-id':
-                    if (connRef.current && connRef.current.idRetryCount < MAX_ID_RETRY) {
+                    if (state.idRetryCount < MAX_ID_RETRY) {
                         setStatus('retry');
                         setTimeout(() => {
                             retry();
-                        }, expBackoff(connRef.current.idRetryCount++));
+                        }, expBackoff(state.idRetryCount++));
                     } else {
                         npeer.destroy();
                         setStatus('failed');
@@ -368,29 +361,27 @@ export default function usePeer<T extends PeerEvent>({
                     setError('bad-browser');
                     break;
                 case 'peer-unavailable':
-                    if (connRef.current && connRef.current.connRetryCount < MAX_CONN_RETRY) {
-                        setStatus('retry');
-                        setTimeout(() => {
-                            if (server && !npeer.destroyed) createPeer(server);
-                        }, expBackoff(connRef.current.connRetryCount++));
+                    if (server && state.connRetryCount < MAX_CONN_RETRY) {
+                        retryConnection(server);
                     } else {
                         setStatus('failed');
                         setError('peer-not-found');
                     }
                     break;
+                case 'webrtc':
+                    break;
                 default:
-                    npeer.destroy();
-                    setStatus('failed');
-                    setError('unknown');
-                    setPeer(undefined);
+                    setStatus('retry');
+                    setTimeout(() => {
+                        retry();
+                    }, expBackoff(state.peerRetryCount++));
             }
         });
         return () => {
-            if (connRef.current) {
-                connRef.current.connections.forEach((c) => c.close());
-                if (connRef.current.timeout >= 0) {
-                    clearTimeout(connRef.current.timeout);
-                }
+            state.connections.forEach((c) => c.close());
+            state.connections.clear();
+            if (state.timeout >= 0) {
+                clearTimeout(state.timeout);
             }
             npeer.destroy();
         };
@@ -398,7 +389,6 @@ export default function usePeer<T extends PeerEvent>({
 
     useEffect(() => {
         const tabClose = () => {
-            // e.preventDefault();
             if (connRef.current?.sender) connRef.current?.sender({ event: 'eter:close' });
         };
         window.addEventListener('beforeunload', tabClose);
