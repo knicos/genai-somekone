@@ -173,7 +173,7 @@ export default function usePeer<T extends PeerEvent>({
             setStatus('retry');
             setTimeout(() => {
                 if (npeer.destroyed) return;
-                createPeer(code);
+                createPeer(peer);
             }, expBackoff(state.connRetryCount++));
         };
 
@@ -181,11 +181,19 @@ export default function usePeer<T extends PeerEvent>({
             const conn = npeer.connect(code, { reliable: true });
             const waitTimer = window.setTimeout(() => {
                 if (!conn.open) {
+                    console.warn('Connect timeout', conn);
+                    conn.close();
                     retryConnection(conn.peer);
                 }
             }, WAIT_TIME);
 
             conn.on('open', () => {
+                const oldConn = state.connections.get(code);
+                if (oldConn) {
+                    console.warn('Connection already existed', code);
+                    oldConn.close();
+                }
+
                 clearTimeout(waitTimer);
                 conn.peerConnection.getStats().then((stats) => {
                     stats.forEach((v) => {
@@ -197,12 +205,6 @@ export default function usePeer<T extends PeerEvent>({
                         }
                     });
                 });
-
-                const oldConn = state.connections.get(conn.peer);
-                if (oldConn) {
-                    console.warn('Connection already existed', conn.peer);
-                    oldConn.close();
-                }
 
                 state.connections.set(conn.peer, conn);
                 conn.send({ event: 'eter:join' });
