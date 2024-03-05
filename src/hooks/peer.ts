@@ -4,8 +4,8 @@ import { iceConfig, webrtcActive, webrtcCandidate } from '@genaism/state/webrtcS
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 // Peerjs sends every 5000ms
-// Assume server responds within 2s.
-const HEARTBEAT_TIMEOUT = 7000;
+// Assume server responds within 5s.
+const HEARTBEAT_TIMEOUT = 10000;
 const MAX_ID_RETRY = 4;
 const MAX_CONN_RETRY = 5;
 const MAX_BACKOFF = 4;
@@ -164,6 +164,19 @@ export default function usePeer<T extends PeerEvent>({
         state.connections.clear();
         state.sender = undefined;
 
+        const doRetry = () => {
+            state.timeout = window.setTimeout(() => {
+                if (!document.hidden) {
+                    state.timeout = -1;
+                    setStatus('retry');
+                    retry();
+                } else {
+                    // Hidden page so try again later.
+                    doRetry();
+                }
+            }, HEARTBEAT_TIMEOUT);
+        };
+
         const retryConnection = (peer: string) => {
             const oldConn = state.connections.get(peer);
             state.connections.delete(peer);
@@ -250,10 +263,7 @@ export default function usePeer<T extends PeerEvent>({
             npeer.socket.addListener('message', (d: PeerJSMessage) => {
                 if (d.type === 'HEARTBEAT') {
                     if (state.timeout >= 0) clearTimeout(state.timeout);
-                    state.timeout = window.setTimeout(() => {
-                        setStatus('retry');
-                        retry();
-                    }, HEARTBEAT_TIMEOUT);
+                    doRetry();
                 }
             });
 
