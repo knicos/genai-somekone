@@ -5,11 +5,12 @@ export function anonString(text: string): string {
     return LOREM.slice(0, text.length);
 }
 
-const ALLOWED = 'abcdefghijklmnopqrstuvwxyz';
+import names from './names.json';
+
+let nameix = 0;
 
 export function anonUsername() {
-    const array = new Uint32Array(5);
-    crypto.getRandomValues(array);
-    const strarray = Array.from(array).map((v) => ALLOWED.charAt(v % ALLOWED.length));
-    return strarray.join('');
+    const name = names[nameix];
+    nameix = (nameix + 1) % names.length;
+    return name;
 }
