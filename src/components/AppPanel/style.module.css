@@ -1,8 +1,8 @@
 .panel {
     position: absolute;
     aspect-ratio: 9/16;
-    max-width: calc(0.6 * 75vh);
-    max-height: 75vh;
+    max-width: calc(0.6 * 80vh);
+    max-height: 80vh;
     box-sizing: border-box;
     width: 500px;
     top: 0;

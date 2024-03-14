@@ -9,14 +9,27 @@
     flex-direction: column;
     justify-content: center;
     gap: 2rem;
+    font-size: 1rem;
+}
+
+@media screen and (min-width: 2000px) {
+    .container {
+        font-size: 1.2rem;
+    }
+}
+
+@media screen and (min-width: 3000px) {
+    .container {
+        font-size: 1.4rem;
+    }
 }
 
 .container :global .MuiMenuItem-root {
-    font-size: 1.2rem;
-    padding-top: 0.8rem;
-    padding-bottom: 0.8rem;
-    padding-left: 2rem;
-    padding-right: 2rem;
+    font-size: 1.2em;
+    padding-top: 0.8em;
+    padding-bottom: 0.8em;
+    padding-left: 2em;
+    padding-right: rem;
 }
 
 .container :global .Mui-selected {
@@ -38,13 +51,13 @@
 .actionContainer {
     display: flex;
     justify-content: center;
-    margin-bottom: 2rem;
+    margin-bottom: 2em;
 }
 
 .actionContainer :global .MuiIconButton-root {
     background: white;
-    font-size: 2rem;
-    padding: 1rem;
+    font-size: 2em;
+    padding: 0.5em;
     box-shadow: 0 0 15px #666;
 }
 
@@ -53,5 +66,5 @@
 }
 
 .actionContainer :global .MuiSvgIcon-root {
-    font-size: 3rem;
+    font-size: 2em;
 }
