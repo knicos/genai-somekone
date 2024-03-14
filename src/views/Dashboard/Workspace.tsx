@@ -125,7 +125,9 @@ export function Workspace({ contentUrls, cfg, guide }: Props) {
                 </main>
             </Loading>
             <ServerProtocol
-                onReady={setReady}
+                onReady={(r: boolean) => {
+                    if (r) setReady(true);
+                }}
                 content={content}
                 code={MYCODE}
             />
