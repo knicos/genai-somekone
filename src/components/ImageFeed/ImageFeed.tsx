@@ -109,8 +109,10 @@ export default function ImageFeed({ images, onView, onMore, onLog, noActions, sh
         (e: React.MouseEvent<HTMLDivElement>) => {
             const scrollHeight = e.currentTarget.scrollHeight;
             const imageHeight = Math.floor((scrollHeight - 50 - 80) / images.length);
+            console.log('imgheight', imageHeight);
             const scrollTop = e.currentTarget.scrollTop + imageHeight / 2 - 50 - 80;
-            const imgIndex = Math.round(scrollTop / imageHeight);
+            console.log('scrolltop', scrollTop, e.currentTarget.scrollTop);
+            const imgIndex = Math.floor(scrollTop / imageHeight + 0.2);
 
             const now = Date.now();
             if (now - lastRef.current > INTERACTION_TIMEOUT) {
