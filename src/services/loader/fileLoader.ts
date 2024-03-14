@@ -15,6 +15,8 @@ import { LogItem } from './loaderTypes';
 import { findLargestEdgeTimestamp, findLargestLogTimestamp, rebaseEdges, rebaseLog } from './rebase';
 import { SomekoneSettings } from '@genaism/hooks/settings';
 
+const STATIC_PATH = 'https://store.gen-ai.fi/somekone/images';
+
 interface TopicData {
     label: string;
 }
@@ -180,7 +182,7 @@ export async function loadFile(file: File | Blob): Promise<SomekoneSettings | un
     }
 
     store.meta.forEach((v) => {
-        addContent(images.get(v.id) || '', v);
+        addContent(images.get(v.id) || `${STATIC_PATH}/${v.id}.jpg`, v);
     });
 
     store.users.forEach((u) => {
