@@ -80,7 +80,8 @@
             "share_public": "Jakoi kaikille",
             "comment": "Lisäsi {{length}} merkin pituisen kommentin",
             "engagement": "Aktiivisuus: {{score}}/10",
-            "end": "Lopetti appin käytön"
+            "end": "Lopetti appin käytön",
+            "unreact": "Unreacted"
         },
         "labels": {
             "enterUsername": "Anna käyttäjänimesi",

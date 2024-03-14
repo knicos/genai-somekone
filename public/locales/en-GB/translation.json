@@ -86,7 +86,8 @@
             "share_public": "Shared with everyone",
             "comment": "Comment of length {{length}}",
             "engagement": "Engagement {{score}}/10",
-            "end": "Stopped using the app"
+            "end": "Stopped using the app",
+            "unreact": "Unreacted"
         },
         "labels": {
             "enterUsername": "Enter Username",

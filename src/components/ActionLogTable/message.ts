@@ -4,7 +4,9 @@ import { TFunction } from 'i18next';
 export function generateMessage(log: LogEntry, t: TFunction) {
     switch (log.activity) {
         case 'engagement':
-            return t('feed.actionlog.engagement', { score: Math.min(10, (log.value || 0) * 10).toFixed() });
+            return t('feed.actionlog.engagement', {
+                score: Math.min(10, Math.max(0, (log.value || 0) * 10)).toFixed(),
+            });
 
         case 'inactive':
             return t('feed.actionlog.inactive', { time: ((log.value || 0) / 1000).toFixed(1) });
