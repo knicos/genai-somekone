@@ -6,7 +6,8 @@ import { LargeButton } from '@genaism/components/Button/Button';
 import { useRecoilState } from 'recoil';
 import { menuShowShare } from '@genaism/state/menuState';
 import { useCallback } from 'react';
-import { Dialog, DialogContent, DialogTitle } from '@mui/material';
+import { Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
+import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 
 interface Props {
     users: UserInfo[];
@@ -19,6 +20,11 @@ export default function StartDialog({ users, code, onDemo }: Props) {
     const [showDialog, setShowDialog] = useRecoilState(menuShowShare);
 
     const doClose = useCallback(() => setShowDialog(false), [setShowDialog]);
+
+    const openFile = useCallback(() => {
+        document.getElementById('openfile')?.click();
+        setShowDialog(false);
+    }, [setShowDialog]);
 
     return (
         <Dialog
@@ -58,6 +64,15 @@ export default function StartDialog({ users, code, onDemo }: Props) {
                     {users.length === 1 && <div>{t('dashboard.messages.onePerson', { count: users.length })}</div>}
                     {users.length > 1 && <div>{t('dashboard.messages.manyPeople', { count: users.length })}</div>}
                     <div className={style.buttonGroup}>
+                        <IconButton
+                            onClick={openFile}
+                            color="secondary"
+                            size="large"
+                            style={{ border: '1px solid rgb(174, 37, 174)' }}
+                            aria-label={t('dashboard.labels.openTip')}
+                        >
+                            <FolderOpenIcon fontSize="medium" />
+                        </IconButton>
                         {onDemo && (
                             <LargeButton
                                 variant="outlined"
