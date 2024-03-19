@@ -22,9 +22,10 @@ interface Props {
     onView?: (index: number, time: number) => void;
     onMore?: () => void;
     onLog: (e: LogEntry) => void;
+    alwaysActive?: boolean;
 }
 
-export default function ImageFeed({ images, onView, onMore, onLog, noActions, showLabels }: Props) {
+export default function ImageFeed({ images, onView, onMore, onLog, noActions, showLabels, alwaysActive }: Props) {
     const { t } = useTranslation();
     const containerRef = useRef<HTMLDivElement>(null);
     const [viewed, setViewed] = useState(0);
@@ -39,6 +40,8 @@ export default function ImageFeed({ images, onView, onMore, onLog, noActions, sh
     //const ref = useRef<HTMLDivElement>(null);
 
     viewedRef.current = images[viewed];
+
+    const activeState = alwaysActive || (focus && active);
 
     useEffect(() => {
         const now = Date.now();
@@ -109,9 +112,7 @@ export default function ImageFeed({ images, onView, onMore, onLog, noActions, sh
         (e: React.MouseEvent<HTMLDivElement>) => {
             const scrollHeight = e.currentTarget.scrollHeight;
             const imageHeight = Math.floor((scrollHeight - 50 - 80) / images.length);
-            console.log('imgheight', imageHeight);
             const scrollTop = e.currentTarget.scrollTop + imageHeight / 2 - 50 - 80;
-            console.log('scrolltop', scrollTop, e.currentTarget.scrollTop);
             const imgIndex = Math.floor(scrollTop / imageHeight + 0.2);
 
             const now = Date.now();
@@ -243,7 +244,7 @@ export default function ImageFeed({ images, onView, onMore, onLog, noActions, sh
                         onUnfollow={doUnfollow}
                         onShare={doShare}
                         onComment={doComment}
-                        active={focus && active && (ix === viewed || (ix === 0 && viewed === -1))}
+                        active={activeState && (ix === viewed || (ix === 0 && viewed === -1))}
                         visible={Math.abs(ix - viewed) < 5}
                         noActions={noActions}
                         showLabels={showLabels}

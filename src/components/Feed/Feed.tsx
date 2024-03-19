@@ -65,6 +65,7 @@ export default function Feed({
                 onLog={doLog}
                 noActions={noActions}
                 showLabels={appConfig?.showTopicLabels}
+                alwaysActive={appConfig?.alwaysActive}
             />
 
             <div className={style.footerOuter}></div>

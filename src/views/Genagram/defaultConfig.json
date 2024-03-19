@@ -10,7 +10,8 @@
         "hideProfileView": true,
         "hideActionsButton": true,
         "hideRecommendationsView": true,
-        "collectResearchData": true
+        "collectResearchData": true,
+        "alwaysActive": false
     },
     "content": ["https://store.gen-ai.fi/somekone/imageSet1b.zip"]
 }

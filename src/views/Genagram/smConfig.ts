@@ -10,6 +10,7 @@ export interface SMConfig {
     recommendations: RecommendationOptions;
     collectResearchData?: boolean;
     showTopicLabels?: boolean;
+    alwaysActive?: boolean;
 }
 
 export function mergeConfiguration(a: SMConfig, b: Partial<SMConfig>): SMConfig {

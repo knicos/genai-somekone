@@ -64,6 +64,15 @@ export default function FeedSettings() {
                 }
                 label={t('dashboard.labels.showFeedImageLabels')}
             />
+            <FormControlLabel
+                control={
+                    <Checkbox
+                        checked={config?.alwaysActive || false}
+                        onChange={(_, checked) => setConfig((old) => ({ ...old, alwaysActive: checked }))}
+                    />
+                }
+                label={t('dashboard.labels.alwaysActive')}
+            />
         </div>
     );
 }

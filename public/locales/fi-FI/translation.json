@@ -185,7 +185,8 @@
             "showMainMenu": "Show main app menu",
             "nodeSelect": "Action on node select",
             "noActionOnSelect": "Ei mitään",
-            "allowFeedActions": "Allow actions in dashboard feed"
+            "allowFeedActions": "Allow actions in dashboard feed",
+            "alwaysActive": "Keep current image active"
         },
         "messages": {
             "connection": "Mene allaolevaan www-osoitteeseen ja syötä koodi <Code>{{codeText}}</Code>, tai käytä QR -koodia.",
