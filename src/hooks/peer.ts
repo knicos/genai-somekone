@@ -373,12 +373,15 @@ export default function usePeer<T extends PeerEvent>({
                     setError('bad-browser');
                     break;
                 case 'peer-unavailable':
-                    if (server && state.connRetryCount < MAX_CONN_RETRY) {
-                        retryConnection(server);
-                    } else {
-                        setStatus('failed');
-                        setError('peer-not-found');
+                    if (server) {
+                        if (state.connRetryCount < MAX_CONN_RETRY) {
+                            retryConnection(server);
+                        } else {
+                            setStatus('failed');
+                            setError('peer-not-found');
+                        }
                     }
+                    // If this machine is the server, silent ignore
                     break;
                 case 'webrtc':
                     break;
