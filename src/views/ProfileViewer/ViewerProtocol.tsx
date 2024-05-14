@@ -42,7 +42,11 @@ export default function ViewerProtocol({ server, mycode, children, onID }: Props
                 }
                 onID(data.id);
             } else if (data.event === 'eter:profile_data') {
-                replaceProfile(data.id, data.profile);
+                try {
+                    replaceProfile(data.id, data.profile);
+                } catch (e) {
+                    // Ignore
+                }
             } else if (data.event === 'eter:action_log') {
                 appendActionLog(data.log, data.id);
             } else if (data.event === 'eter:recommendations') {
@@ -65,7 +69,11 @@ export default function ViewerProtocol({ server, mycode, children, onID }: Props
 
     useEffect(() => {
         if (username && send && ready) {
-            window.sessionStorage.setItem(USERNAME_KEY, username);
+            try {
+                window.sessionStorage.setItem(USERNAME_KEY, username);
+            } catch (e) {
+                // Ignore this
+            }
             setUserName(getCurrentUser(), username);
             send({ event: 'eter:reguser', username, id: getCurrentUser() });
         }

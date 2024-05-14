@@ -157,6 +157,9 @@ export default function usePeer<T extends PeerEvent>({
                 iceTransportPolicy: webrtc === 'relay' ? 'relay' : undefined,
             },
         });
+
+        if (!npeer) return;
+
         setPeer(npeer);
 
         const state = connRef.current;
@@ -346,13 +349,23 @@ export default function usePeer<T extends PeerEvent>({
                 case 'network':
                     setStatus('retry');
                     setTimeout(() => {
-                        npeer.reconnect();
+                        try {
+                            npeer.reconnect();
+                        } catch (e) {
+                            setStatus('failed');
+                            setError('peer-not-found');
+                        }
                     }, expBackoff(state.peerRetryCount++));
                     break;
                 case 'server-error':
                     setStatus('retry');
                     setTimeout(() => {
-                        npeer.reconnect();
+                        try {
+                            npeer.reconnect();
+                        } catch (e) {
+                            setStatus('failed');
+                            setError('peer-not-found');
+                        }
                     }, expBackoff(state.peerRetryCount++));
                     break;
                 case 'unavailable-id':

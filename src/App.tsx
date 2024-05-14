@@ -28,13 +28,16 @@ function ErrorComponent() {
         );
     }
 
+    const json = JSON.stringify(error);
+    const str = json === '{}' && 'toString' in (error as Error) ? (error as Error).toString() : 'Unknown';
+
     return (
         <section className="errorView">
             <h1>Something went wrong</h1>
             <p>
                 Please report this issue to{' '}
                 <a
-                    href="https://github.com/knicos/genai-tm/issues"
+                    href="https://github.com/knicos/genai-somekone/issues"
                     target="_blank"
                     rel="noreferrer"
                 >
@@ -42,7 +45,7 @@ function ErrorComponent() {
                 </a>{' '}
                 if you have time, including the information below. Refresh the page to try again.
             </p>
-            <p className="code">{JSON.stringify(error)}</p>
+            <p className="code">{str}</p>
         </section>
     );
 }
