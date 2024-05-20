@@ -12,6 +12,8 @@ import './App.css';
 import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 import { theme } from './style/theme';
 import Loading from './components/Loading/Loading';
+import About from './views/About/About';
+import Privacy from './components/Privacy/Privacy';
 
 interface RouterError {
     status: number;
@@ -78,6 +80,10 @@ const router = createBrowserRouter(
                 lazy={() => import('./views/Start/Start')}
             />
             <Route
+                path="about"
+                element={<About />}
+            />
+            <Route
                 path="dashboard"
                 lazy={() => import('./views/Dashboard/Dashboard')}
             />
@@ -107,6 +113,7 @@ function App() {
                         }
                     >
                         <RouterProvider router={router} />
+                        <Privacy />
                     </React.Suspense>
                 </RecoilRoot>
             </ThemeProvider>

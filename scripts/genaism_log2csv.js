@@ -1,27 +1,63 @@
 import fs from 'fs';
+import path from 'path';
 
-const inputFile = process.argv[2];
+const inputFolder = process.argv[2];
 const outputFile = process.argv[3];
+const outputUserFile = process.argv[4];
 
-async function processFile() {
-    try {
-        const rawdata = await fs.promises.readFile(inputFile, 'utf8');
-        const data = JSON.parse(rawdata);
+async function processSchool(logCSV, userCSV, school) {
+    const p = path.join(inputFolder, school);
 
-        const csv = [];
+    const rawlogdata = await fs.promises.readFile(path.join(p, 'logs.json'), 'utf8');
+    const logdata = JSON.parse(rawlogdata);
 
-        csv.push('User,Activity,Timestamp,Content,Value');
+    const seen = new Set();
 
-        data.forEach((userLogs) => {
-            userLogs.log.forEach((log) => {
-                csv.push(`${userLogs.id},${log.activity},${log.timestamp},${log.id || ''},${log.value || ''}`);
-            });
+    logdata.forEach((userLogs) => {
+        seen.add(userLogs.id);
+        userLogs.log.forEach((log) => {
+            logCSV.push(`${userLogs.id},${log.activity},${log.timestamp},${log.id || ''},${log.value || ''}`);
         });
+    });
 
-        await fs.promises.writeFile(outputFile, csv.join('\n'));
+    const rawuserdata = await fs.promises.readFile(path.join(p, 'research.json'), 'utf8');
+    const userdata = JSON.parse(rawuserdata);
+
+    userdata.forEach((userLogs) => {
+        if (userLogs.action === 'enter_username') {
+            seen.delete(userLogs.userId);
+            userCSV.push(`${userLogs.userId},"${userLogs.details.fullname}",${school}`);
+        }
+    });
+
+    seen.forEach((s) => {
+        userCSV.push(`${s},,${school}`);
+    });
+}
+
+async function processAll() {
+    try {
+        const logCSV = [];
+        const userCSV = [];
+
+        logCSV.push('User,Activity,Timestamp,Content,Value');
+        userCSV.push('UserID,Name,School');
+
+        const dirs = await fs.promises.readdir(inputFolder);
+        for (const school of dirs) {
+            const p = path.join(inputFolder, school);
+            const stat = await fs.promises.stat(p);
+
+            if (stat.isDirectory()) {
+                await processSchool(logCSV, userCSV, school);
+            }
+        }
+
+        await fs.promises.writeFile(outputFile, logCSV.join('\n'));
+        await fs.promises.writeFile(outputUserFile, userCSV.join('\n'));
     } catch (e) {
         console.error(e);
     }
 }
 
-processFile();
+processAll();
