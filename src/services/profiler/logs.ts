@@ -111,15 +111,6 @@ export function processLogEntry(data: LogEntry, id?: UserNodeId, noEvent?: boole
             boostTopics(aid, 'reacted_topic', cid);
             addContentReaction(cid);
             break;
-        case 'laugh':
-        case 'anger':
-        case 'sad':
-        case 'wow':
-        case 'love':
-            affinityBoost(aid, cid, 0.2);
-            boostTopics(aid, 'reacted_topic', cid);
-            addContentReaction(cid);
-            break;
         case 'unreact':
             affinityBoost(aid, cid, -0.1);
             removeContentReaction(cid);

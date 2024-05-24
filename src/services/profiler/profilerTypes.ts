@@ -4,7 +4,7 @@ import defaults from './defaultWeights.json';
 
 export type Features = typeof defaults;
 
-export type ReactionType = 'like' | 'love' | 'wow' | 'laugh' | 'anger' | 'sad' | 'unreact';
+export type ReactionType = 'like' | 'unreact';
 
 export type LogActivity =
     | ReactionType
@@ -26,11 +26,6 @@ export type LogActivity =
 export function isReaction(act: LogActivity) {
     switch (act) {
         case 'like':
-        case 'love':
-        case 'wow':
-        case 'laugh':
-        case 'anger':
-        case 'sad':
             return true;
         default:
             return false;

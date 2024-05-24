@@ -2,8 +2,8 @@ import { useCallback, useEffect, useReducer, useState } from 'react';
 import style from './style.module.css';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import IconButton from '@mui/material/IconButton';
-import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
-import LikePanel, { LikeKind } from './LikePanel';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ReplyIcon from '@mui/icons-material/Reply';
 import Avatar from '@mui/material/Avatar';
 import SharePanel, { ShareKind } from './SharePanel';
@@ -34,15 +34,6 @@ interface Props {
     onUnfollow?: (id: ContentNodeId) => void;
 }
 
-const LIKEMAP = {
-    like: '👍',
-    laugh: '😂',
-    love: '😍',
-    sad: '😢',
-    anger: '😡',
-    wow: '😯',
-};
-
 function stringToColor(string: string) {
     let hash = 0;
     let i;
@@ -71,6 +62,8 @@ function stringAvatar(name: string) {
     };
 }
 
+export type LikeKind = 'none' | 'like';
+
 export default function FeedImage({
     id,
     onClick,
@@ -97,13 +90,13 @@ export default function FeedImage({
         setActivePanel('none');
     }, [onClick, id]);
 
-    const doLike = useCallback(
-        (kind: LikeKind) => {
-            setLiked(kind);
+    const doLike = useCallback(() => {
+        setLiked((old) => {
+            const kind = old === 'none' ? 'like' : 'none';
             if (onLike) onLike(id, kind);
-        },
-        [onLike, id]
-    );
+            return kind;
+        });
+    }, [onLike, id]);
 
     const doShare = useCallback(
         (kind: ShareKind) => {
@@ -126,15 +119,6 @@ export default function FeedImage({
         },
         [onComment, id]
     );
-
-    const doShowPanel = useCallback(() => {
-        if (liked === 'none') {
-            setActivePanel('like');
-        } else {
-            setLiked('none');
-            if (onLike) onLike(id, 'none');
-        }
-    }, [setActivePanel, liked, onLike, id]);
 
     const doShowSharePanel = useCallback(() => {
         setActivePanel('share');
@@ -210,15 +194,18 @@ export default function FeedImage({
                         <IconButtonDot
                             count={stats.reactions}
                             className={liked !== 'none' ? style.liked : ''}
-                            onClick={doShowPanel}
+                            onClick={() => doLike()}
                             color="inherit"
                             data-testid="feed-image-like-button"
                             aria-label={t('feed.aria.showLikeOptions')}
                         >
                             {liked !== 'none' ? (
-                                <div className={style.iconContainer}>{LIKEMAP[liked]}</div>
+                                <FavoriteIcon
+                                    color="inherit"
+                                    fontSize="large"
+                                />
                             ) : (
-                                <ThumbUpOffAltIcon
+                                <FavoriteBorderIcon
                                     color="inherit"
                                     fontSize="large"
                                 />
@@ -254,12 +241,6 @@ export default function FeedImage({
                 )}
                 {active && showLabels && activePanel === 'none' && (
                     <LabelsPanel labels={contentMeta.labels.filter((l) => l.weight > 0).map((l) => l.label)} />
-                )}
-                {active && activePanel === 'like' && (
-                    <LikePanel
-                        onClose={doCloseLike}
-                        onChange={doLike}
-                    />
                 )}
                 {active && activePanel === 'share' && (
                     <SharePanel

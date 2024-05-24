@@ -55,7 +55,7 @@ describe('ImageFeed component', () => {
         );
 
         await user.click(screen.getByTestId('feed-image-like-button'));
-        await user.click(screen.getByTestId('like-button'));
+        //await user.click(screen.getByTestId('like-button'));
 
         expect(logfn).toHaveBeenCalledWith({ activity: 'like', id: 'content:xyz', timestamp: expect.any(Number) });
     });

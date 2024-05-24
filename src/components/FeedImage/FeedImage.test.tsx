@@ -35,21 +35,6 @@ describe('FeedImage component', () => {
         expect(screen.getByTestId('feed-image-share-button')).toBeInTheDocument();
     });
 
-    it('shows the like panel', async ({ expect }) => {
-        const user = userEvent.setup();
-        render(
-            <FeedImage
-                id="content:xyz"
-                active
-                visible
-            />
-        );
-
-        await user.click(screen.getByTestId('feed-image-like-button'));
-
-        expect(screen.getByTestId('feed-image-like-panel')).toBeVisible();
-    });
-
     it('shows number of likes', async ({ expect }) => {
         addContentReaction('content:xyz');
         render(
@@ -76,25 +61,7 @@ describe('FeedImage component', () => {
         );
 
         await user.click(screen.getByTestId('feed-image-like-button'));
-        await user.click(screen.getByTestId('like-button'));
         expect(likefn).toHaveBeenCalledWith('content:xyz', 'like');
-    });
-
-    it('calls like action on wow click', async ({ expect }) => {
-        const user = userEvent.setup();
-        const likefn = vi.fn();
-        render(
-            <FeedImage
-                id="content:xyz"
-                active
-                visible
-                onLike={likefn}
-            />
-        );
-
-        await user.click(screen.getByTestId('feed-image-like-button'));
-        await user.click(screen.getByTestId('wow-button'));
-        expect(likefn).toHaveBeenCalledWith('content:xyz', 'wow');
     });
 
     it('shows the comment panel', async ({ expect }) => {

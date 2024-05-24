@@ -70,7 +70,7 @@ describe('User hooks.useActionLog', () => {
 
         render(<LogComponent action={action} />);
         expect(action).toHaveBeenCalledTimes(1);
-        act(() => appendActionLog([{ activity: 'love', id: 'content:fff', timestamp: Date.now() }], 'user:xyz'));
+        act(() => appendActionLog([{ activity: 'like', id: 'content:ffd', timestamp: Date.now() }], 'user:xyz'));
         expect(action).toHaveBeenCalledTimes(2);
         expect(action).toHaveBeenCalledWith([{ activity: 'like', id: 'content:fff', timestamp: expect.any(Number) }]);
     });
@@ -137,20 +137,6 @@ describe('Profiler.addLogEntry', () => {
         //expect(getEdgeWeights('topic', getCurrentUser(), 'topic:topic1')[0]).toBe(0.5);
         //expect(getEdgeWeights('engaged_topic', getCurrentUser(), 'topic:topic1')[0]).toBe(0.5);
         expect(getEdgeWeights('followed_topic', getCurrentUser(), 'topic:topic1')[0]).toBe(1);
-    });
-
-    it('updates profile on love', async ({ expect }) => {
-        addNode('content', 'content:content1');
-        addNode('topic', 'topic:topic1');
-        addEdge('topic', 'content:content1', 'topic:topic1', 1);
-
-        addLogEntry({ activity: 'love', timestamp: Date.now(), id: 'content:content1' });
-
-        expect(getEdgeWeights('last_engaged', getCurrentUser(), 'content:content1')[0]).toBe(0.2);
-
-        //expect(getEdgeWeights('topic', getCurrentUser(), 'topic:topic1')[0]).toBe(0.2);
-        //expect(getEdgeWeights('engaged_topic', getCurrentUser(), 'topic:topic1')[0]).toBe(0.2);
-        expect(getEdgeWeights('reacted_topic', getCurrentUser(), 'topic:topic1')[0]).toBe(1);
     });
 
     it('records seen actions', async ({ expect }) => {

@@ -2,7 +2,7 @@ import React, { useRef, useCallback, useState, useEffect, FocusEvent } from 'rea
 import IImage from '../FeedImage/FeedImage';
 import style from './style.module.css';
 import { LogActivity, LogEntry } from '@genaism/services/profiler/profilerTypes';
-import { LikeKind } from '@genaism/components/FeedImage/LikePanel';
+import { LikeKind } from '@genaism/components/FeedImage/FeedImage';
 import { ShareKind } from '@genaism/components/FeedImage/SharePanel';
 import FeedSpacer from './FeedSpacer';
 import { useTabActive } from '@genaism/hooks/interaction';

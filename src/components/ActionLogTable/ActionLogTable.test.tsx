@@ -23,7 +23,6 @@ describe('ActionLogTable component', () => {
             <ActionLogTable
                 log={[
                     { activity: 'like', timestamp: Date.now() },
-                    { activity: 'love', timestamp: Date.now() },
                     { activity: 'dwell', timestamp: Date.now(), value: 3 },
                 ]}
             />
@@ -31,9 +30,8 @@ describe('ActionLogTable component', () => {
 
         expect(screen.getByTestId('data-cards')).toBeInTheDocument();
         expect(screen.getByTestId('data-card')).toBeInTheDocument();
-        expect(screen.getAllByTestId('log-item')).toHaveLength(3);
+        expect(screen.getAllByTestId('log-item')).toHaveLength(2);
         expect(screen.getByText('feed.actionlog.like')).toBeVisible();
-        expect(screen.getByText('feed.actionlog.love')).toBeVisible();
         expect(screen.getByText('feed.actionlog.dwell')).toBeVisible();
     });
 

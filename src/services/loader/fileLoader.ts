@@ -59,6 +59,30 @@ export async function getZipBlob(content: string | ArrayBuffer, progress?: (perc
     }
 }
 
+interface OldLogEntry {
+    activity: string;
+}
+
+interface OldLogItem {
+    log: OldLogEntry[];
+}
+
+function patchLogs(logs: OldLogItem[]) {
+    logs.forEach((l) => {
+        l.log.forEach((item) => {
+            switch (item.activity) {
+                case 'love':
+                case 'wow':
+                case 'laugh':
+                case 'anger':
+                case 'sad':
+                    item.activity = 'like';
+            }
+        });
+    });
+    return logs as LogItem[];
+}
+
 export async function loadFile(file: File | Blob): Promise<SomekoneSettings | undefined> {
     const zip = await JSZip.loadAsync(file);
 
@@ -94,7 +118,7 @@ export async function loadFile(file: File | Blob): Promise<SomekoneSettings | un
         } else if (data.name === 'logs.json') {
             promises.push(
                 data.async('string').then((r) => {
-                    store.logs = JSON.parse(r);
+                    store.logs = patchLogs(JSON.parse(r));
                 })
             );
         } else if (data.name === 'graph.json') {
