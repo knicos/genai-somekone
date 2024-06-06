@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import style from './style.module.css';
 import ImageFeed from '@genaism/components/ImageFeed/ImageFeed';
 import { LogEntry, UserProfile } from '@genaism/services/profiler/profilerTypes';
@@ -31,12 +31,16 @@ export default function Feed({
 }: Props) {
     const [feedList, setFeedList] = useState<ScoredRecommendation[]>([]);
     const appConfig = useRecoilValue(appConfiguration);
+    const moreState = useRef(true);
     const { recommendations, more } = useRecommendations(5, id, appConfig?.recommendations);
 
     useEffect(() => {
-        setFeedList((old) => [...old, ...recommendations]);
-        if (onRecommend) onRecommend(recommendations);
-        if (onProfile) onProfile(getUserProfile());
+        if (moreState.current && recommendations.length > 0) {
+            setFeedList((old) => [...old, ...recommendations]);
+            moreState.current = false;
+            if (onRecommend) onRecommend(recommendations);
+            if (onProfile) onProfile(getUserProfile());
+        }
     }, [recommendations, onProfile, onRecommend]);
 
     const doLog = useCallback(
@@ -61,7 +65,10 @@ export default function Feed({
         <section className={style.feedView}>
             <ImageFeed
                 images={feedList}
-                onMore={more}
+                onMore={() => {
+                    moreState.current = true;
+                    more();
+                }}
                 onLog={doLog}
                 noActions={noActions}
                 showLabels={appConfig?.showTopicLabels}

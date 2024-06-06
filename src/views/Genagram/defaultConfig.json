@@ -6,12 +6,17 @@
             "coengaged": 2,
             "random": 2
         },
-        "hideDataView": true,
-        "hideProfileView": true,
-        "hideActionsButton": true,
-        "hideRecommendationsView": true,
-        "collectResearchData": true,
-        "alwaysActive": false
+        "hideDataView": false,
+        "hideProfileView": false,
+        "hideActionsButton": false,
+        "hideRecommendationsView": false,
+        "collectResearchData": false,
+        "alwaysActive": false,
+        "experimental": false,
+        "showRecommendationWizard": true,
+        "showScoringWizard": true,
+        "showCandidateWizard": true,
+        "showCandidateRefinementWizard": true
     },
     "content": ["https://store.gen-ai.fi/somekone/imageSet1b.zip"]
 }

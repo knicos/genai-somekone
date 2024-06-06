@@ -10,7 +10,7 @@ import {
 import { currentUserName } from '@genaism/state/sessionState';
 import { PropsWithChildren, useCallback, useEffect, useState } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { SMConfig } from '../Genagram/smConfig';
+import { SMConfig } from '../../state/smConfig';
 import { appConfiguration } from '@genaism/state/settingsState';
 import ConnectionMonitor from '@genaism/components/ConnectionMonitor/ConnectionMonitor';
 import { LogProvider } from '@genaism/hooks/logger';

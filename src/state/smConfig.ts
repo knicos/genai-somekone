@@ -11,6 +11,11 @@ export interface SMConfig {
     collectResearchData?: boolean;
     showTopicLabels?: boolean;
     alwaysActive?: boolean;
+    experimental?: boolean;
+    showRecommendationWizard?: boolean;
+    showScoringWizard?: boolean;
+    showCandidateWizard?: boolean;
+    showCandidateRefinementWizard?: boolean;
 }
 
 export function mergeConfiguration(a: SMConfig, b: Partial<SMConfig>): SMConfig {

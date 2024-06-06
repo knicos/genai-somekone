@@ -1,0 +1,43 @@
+@value backgroundDark, textDark from "../../style/colours.module.css";
+
+.container {
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+}
+
+.page {
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+
+.slideControls {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+.stepper {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-grow: 1;
+}
+
+.step {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: 1px solid textDark;
+}
+
+.activeStep {
+    composes: step;
+    background: textDark;
+}
+
+.inactiveStep {
+    composes: step;
+    background: transparent;
+}

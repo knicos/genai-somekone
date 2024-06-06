@@ -1,4 +1,4 @@
-import { SMConfig } from '@genaism/views/Genagram/smConfig';
+import { SMConfig } from '@genaism/state/smConfig';
 
 export const VERSION = 1;
 

@@ -1,4 +1,4 @@
-@value borderGrey, textDark from "../../style/colours.module.css";
+@value borderGrey, textDark, primary from "../../style/colours.module.css";
 
 .page {
     display: flex;
@@ -41,13 +41,15 @@
     /*top: 0;
     left: 0;*/
     width: 100%;
-    height: 100%;
+    /*height: 100%;*/
     background: white;
     z-index: 2000; /* To go above the speed menu */
     display: flex;
     align-items: center;
     justify-content: center;
-    max-height: 1000px;
+    /*max-height: 1000px;*/
+    top: 0;
+    bottom: 0;
 }
 
 .dataInner {
@@ -63,6 +65,13 @@
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid borderGrey;
+    background: primary;
+    color: white;
+}
+
+.dataInner h1 {
+    color: white;
+    margin-left: 1rem;
 }
 
 .link {
@@ -84,10 +93,4 @@
 .shareMessage em {
     font-style: normal;
     font-weight: bold;
-}
-
-@media screen and (max-width: 600px) {
-    .dataInner h1 {
-        margin-left: 1rem;
-    }
 }

@@ -2,7 +2,7 @@ import style from './style.module.css';
 import { useParams } from 'react-router-dom';
 import Feed from '../../components/Feed/Feed';
 import { useState } from 'react';
-import { SMConfig } from './smConfig';
+import { SMConfig } from '../../state/smConfig';
 import EnterUsername from './EnterUsername';
 import ErrorDialog from '../dialogs/ErrorDialog/ErrorDialog';
 import SpeedMenu from './SpeedMenu';

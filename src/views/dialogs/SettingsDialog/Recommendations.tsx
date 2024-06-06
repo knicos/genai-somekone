@@ -4,7 +4,7 @@ import { useRecoilState } from 'recoil';
 import style from './style.module.css';
 import { appConfiguration } from '@genaism/state/settingsState';
 import { useEffect, useRef, useState } from 'react';
-import { SMConfig } from '@genaism/views/Genagram/smConfig';
+import { SMConfig } from '@genaism/state/smConfig';
 
 export default function RecommendationSettings() {
     const { t } = useTranslation();

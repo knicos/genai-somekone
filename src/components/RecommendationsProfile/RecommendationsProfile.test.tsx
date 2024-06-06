@@ -3,6 +3,8 @@ import { render, screen } from '@testing-library/react';
 import { ScoredRecommendation } from '@genaism/services/recommender/recommenderTypes';
 import RecommendationsProfile from './RecommendationsProfile';
 import TestWrapper from '@genaism/util/TestWrapper';
+import { appConfiguration } from '@genaism/state/settingsState';
+import userEvent from '@testing-library/user-event';
 
 interface RecReturn {
     more: () => void;
@@ -19,8 +21,17 @@ vi.mock('@genaism/services/recommender/hooks', () => ({
 
 describe('RecommendationsProfile component', () => {
     it('works with no content', async ({ expect }) => {
-        render(<RecommendationsProfile />, { wrapper: TestWrapper });
-        expect(await screen.findByTestId('cloud-group')).toBeInTheDocument();
+        render(
+            <TestWrapper
+                initializeState={(snap) => {
+                    snap.set(appConfiguration, (p) => ({ ...p, showRecommendationWizard: true, experimental: true }));
+                }}
+            >
+                <RecommendationsProfile />
+            </TestWrapper>
+        );
+        expect(await screen.findByTestId('recom-image-grid')).toBeInTheDocument();
+        expect(await screen.findByTestId('recom-wizard')).toBeInTheDocument();
     });
 
     it('works with a topic candidate', async ({ expect }) => {
@@ -38,9 +49,41 @@ describe('RecommendationsProfile component', () => {
             },
         ];
         mockRecommendations.mockImplementation(() => ({ more: () => {}, recommendations }));
-        render(<RecommendationsProfile />, { wrapper: TestWrapper });
+        render(
+            <TestWrapper
+                initializeState={(snap) => {
+                    snap.set(appConfiguration, (p) => ({ ...p, showRecommendationWizard: true, experimental: true }));
+                }}
+            >
+                <RecommendationsProfile />
+            </TestWrapper>
+        );
 
-        expect(await screen.findByTestId('cloud-image')).toBeInTheDocument();
+        expect(await screen.findByTestId('recom-image-grid')).toBeInTheDocument();
         expect(screen.getByText(/recommendations.labels.topicCandidate/)).toBeInTheDocument();
+    });
+
+    it('can open the wizard', async ({ expect }) => {
+        const user = userEvent.setup();
+
+        render(
+            <TestWrapper
+                initializeState={(snap) => {
+                    snap.set(appConfiguration, (p) => ({
+                        ...p,
+                        showRecommendationWizard: true,
+                        experimental: true,
+                        recommendations: { random: 1, taste: 1, similarUsers: 1, coengaged: 1 },
+                    }));
+                }}
+            >
+                <RecommendationsProfile />
+            </TestWrapper>
+        );
+
+        const start = await screen.findByTestId('start-recom-wizard');
+        expect(start).toBeInTheDocument();
+        user.click(start);
+        expect(await screen.findByTestId('recom-candidate-options')).toBeVisible();
     });
 });

@@ -59,6 +59,8 @@
     /*border-radius: 10px;*/
     overflow: hidden;
     line-height: 0;
+    background: #ddd;
+    aspect-ratio: 1/1;
 }
 
 .activeImageContainer {

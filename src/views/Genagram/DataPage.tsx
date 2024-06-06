@@ -1,12 +1,12 @@
 import Profile from '@genaism/components/DataProfile/DataProfile';
 import { IconButton, Slide } from '@mui/material';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { menuShowData, menuShowFeedActions } from '@genaism/state/menuState';
 import style from './style.module.css';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLogger } from '@genaism/hooks/logger';
+import CloseIcon from '@mui/icons-material/Close';
 
 interface Props {
     onClose?: () => void;
@@ -39,15 +39,16 @@ export default function DataPage({ onClose }: Props) {
                         <h1>{t('profile.titles.yourData')}</h1>
                         <IconButton
                             size="large"
+                            color="inherit"
                             onClick={() => {
                                 setShowData(false);
                                 if (onClose) onClose();
                             }}
                             aria-label={t('dashboard.actions.close')}
                         >
-                            <HighlightOffIcon
+                            <CloseIcon
                                 fontSize="large"
-                                color="secondary"
+                                color="inherit"
                             />
                         </IconButton>
                     </header>

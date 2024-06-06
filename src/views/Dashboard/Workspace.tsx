@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useReducer } from 'react';
-import { SMConfig } from '../Genagram/smConfig';
+import { SMConfig } from '../../state/smConfig';
 import { decompressFromEncodedURIComponent } from 'lz-string';
 import style from './style.module.css';
 import StartDialog from '../dialogs/StartDialog/StartDialog';
@@ -28,9 +28,10 @@ interface Props {
     contentUrls?: string;
     cfg?: string;
     guide?: string;
+    experimental?: boolean;
 }
 
-export function Workspace({ contentUrls, cfg, guide }: Props) {
+export function Workspace({ contentUrls, cfg, guide, experimental }: Props) {
     const setConfig = useSetRecoilState<SMConfig>(appConfiguration);
     const [content, setContent] = useState<(ArrayBuffer | string)[]>();
     const users = useRecoilValue(onlineUsers);
@@ -46,13 +47,18 @@ export function Workspace({ contentUrls, cfg, guide }: Props) {
 
     useEffect(() => {
         if (!ready) return;
-        let configObj: SMConfig = DEFAULT_CONFIG.configuration;
+        let configObj: SMConfig = { ...DEFAULT_CONFIG.configuration };
         let contentObj: (ArrayBuffer | string)[] = DEFAULT_CONFIG.content;
         const configParam = cfg;
         if (configParam) {
             const component = decompressFromEncodedURIComponent(configParam);
             configObj = { ...configObj, ...(JSON.parse(component) as SMConfig) };
             // TODO: Validate the config
+        }
+
+        if (experimental !== undefined) {
+            configObj.experimental = experimental;
+            console.warn('Experimental mode');
         }
 
         const contentParam = contentUrls;
@@ -65,7 +71,7 @@ export function Workspace({ contentUrls, cfg, guide }: Props) {
 
         setContent(contentObj);
         setConfig(configObj);
-    }, [contentUrls, cfg, ready, setConfig, setError]);
+    }, [contentUrls, cfg, ready, setConfig, setError, experimental]);
 
     const doOpenFile = useCallback((data: Blob) => {
         data.arrayBuffer().then((c) => {

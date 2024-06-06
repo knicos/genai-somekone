@@ -8,6 +8,7 @@ export function Component() {
         <Workspace
             contentUrls={params.get('content') || undefined}
             cfg={params.get('cfg') || undefined}
+            experimental={!!params.get('experimental')}
         />
     );
 }

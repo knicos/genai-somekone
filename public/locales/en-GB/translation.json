@@ -294,6 +294,12 @@
         }
     },
     "recommendations": {
+        "actions": {
+            "back": "Back",
+            "continue": "Continue",
+            "close": "Close",
+            "change": "Change these recommendations"
+        },
         "labels": {
             "topicCandidate": "because you like #{{topic}}.",
             "random": "randomly selected.",
@@ -309,7 +315,44 @@
             "randomness": "Randomly ranked",
             "lastSeen": "It hasn't been seen recently",
             "noReason": "No reason, just random",
-            "engagedWith": "You engaged with"
+            "engagedWith": "You engaged with",
+            "candidateAll": "All of these (default)",
+            "candidateLabels": "Using your favorite hashtags",
+            "candidateUsers": "From similar people",
+            "candidateCoengaged": "From your recent interactions",
+            "candidateRandom": "Any images",
+            "candidatePersonal": "Personalised",
+            "candidatePopular": "Popular",
+            "candidateRecent": "Recently posted",
+            "candidateNonPersonal": "Non-personalised",
+            "candidatePersonalAndNon": "Both (default)",
+            "scoringPredict": "Predict engagement",
+            "scoringGeneral": "Content only score",
+            "scoringRandom": "Any image at random",
+            "scoringAll": "Combine all scores (default)"
+        },
+        "titles": {
+            "candidateDiscovery": "How are candidates discovered?",
+            "scoringOptions": "How can we rank the images?",
+            "candidatesPersonal": "Which personal candidates?",
+            "candidatesNonPersonal": "How to select non-personal candidates?"
+        },
+        "descriptions": {
+            "selectHint": "Select an image to see why it is suggested",
+            "scoringPredict": "Predict if you might engage with the image",
+            "scoringGeneral": "Only consider popularity",
+            "scoringRandom": "Choose any order without scoring",
+            "scoringAll": "Use a combination of everything",
+            "candidateAll": "",
+            "candidateUsers": "Images liked by people in the same cluster as you",
+            "candidateLabels": "Look for images that match your interests",
+            "candidateCoengaged": "What others liked when they saw the same images",
+            "candidateRandom": "Choose anything from all images",
+            "candidatePopular": "From the most popular images",
+            "candidateRecent": "Anything recent that has not been seen much",
+            "candidatePersonal": "Use only your profile to find images",
+            "candidateNonPersonal": "Look for images without your profile",
+            "candidatePersonalAndNon": "Use a mix of personal and non-personal"
         },
         "features": {
             "tasteSimilarity": "Taste Similarity",
@@ -320,6 +363,10 @@
             "reactingTopicLikelihood": "Likely to react",
             "viewingTopicLikelihood": "Likely to view",
             "lastSeen": "Not seen recently"
+        },
+        "aria": {
+            "imageSelect": "Select recommendation number {{number}}",
+            "refresh": "Refresh recommendations"
         }
     },
     "creator": {

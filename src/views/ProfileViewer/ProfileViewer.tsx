@@ -12,7 +12,7 @@ import ImageSearchIcon from '@mui/icons-material/ImageSearch';
 import UserProfile from '@genaism/components/UserProfile/UserProfile';
 import style from './style.module.css';
 import { appConfiguration } from '@genaism/state/settingsState';
-import { SMConfig } from '../Genagram/smConfig';
+import { SMConfig } from '../../state/smConfig';
 import { UserNodeId } from '@genaism/services/graph/graphTypes';
 import RecommendationsProfile from '@genaism/components/RecommendationsProfile/RecommendationsProfile';
 import BlockDialog from '../dialogs/BlockDialog/BlockDialog';

@@ -1,5 +1,5 @@
 import { PeerEvent, BuiltinEvent } from '@genaism/hooks/peer';
-import { SMConfig } from '@genaism/views/Genagram/smConfig';
+import { SMConfig } from '@genaism/state/smConfig';
 import { LogEntry, UserProfile } from '@genaism/services/profiler/profilerTypes';
 import { ContentNodeId, UserNodeId } from '@genaism/services/graph/graphTypes';
 import { ScoredRecommendation } from '@genaism/services/recommender/recommenderTypes';

@@ -22,7 +22,7 @@ import {
     settingSimilarPercent,
     settingTopicThreshold,
 } from '@genaism/state/settingsState';
-import { SMConfig, mergeConfiguration } from '@genaism/views/Genagram/smConfig';
+import { SMConfig, mergeConfiguration } from '@genaism/state/smConfig';
 import { useRecoilCallback } from 'recoil';
 
 export interface SomekoneSocialSettings {

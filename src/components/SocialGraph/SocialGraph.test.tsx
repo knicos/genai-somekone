@@ -5,7 +5,7 @@ import SocialGraph from './SocialGraph';
 import { render, screen, waitFor } from '@testing-library/react';
 import TestWrapper from '@genaism/util/TestWrapper';
 import userEvent from '@testing-library/user-event';
-import { settingDisplayLabel } from '@genaism/state/settingsState';
+import { appConfiguration, settingDisplayLabel } from '@genaism/state/settingsState';
 
 describe('SocialGraph Component', () => {
     beforeEach(() => {
@@ -106,7 +106,11 @@ describe('SocialGraph Component', () => {
         const user = userEvent.setup();
 
         render(
-            <TestWrapper>
+            <TestWrapper
+                initializeState={(snap) => {
+                    snap.set(appConfiguration, (p) => ({ ...p, showRecommendationWizard: true, experimental: true }));
+                }}
+            >
                 <SocialGraph />
             </TestWrapper>
         );

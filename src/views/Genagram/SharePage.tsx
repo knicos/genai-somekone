@@ -1,6 +1,4 @@
 import { IconButton, Slide } from '@mui/material';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import CloseIcon from '@mui/icons-material/Close';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { menuShowFeedActions, menuShowShareProfile } from '@genaism/state/menuState';
 import style from './style.module.css';
@@ -9,6 +7,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import QRCode from '@genaism/components/QRCode/QRCode';
 import { useLogger } from '@genaism/hooks/logger';
 import { Button } from '@genaism/components/Button/Button';
+import CloseIcon from '@mui/icons-material/Close';
 
 interface Props {
     code: string;
@@ -42,15 +41,16 @@ export default function SharePage({ code, onClose }: Props) {
                         <h1>{t('profile.titles.shareProfile')}</h1>
                         <IconButton
                             size="large"
+                            color="inherit"
                             onClick={() => {
                                 setShowShareProfile(false);
                                 if (onClose) onClose();
                             }}
                             aria-label={t('dashboard.actions.close')}
                         >
-                            <HighlightOffIcon
+                            <CloseIcon
                                 fontSize="large"
-                                color="secondary"
+                                color="inherit"
                             />
                         </IconButton>
                     </header>

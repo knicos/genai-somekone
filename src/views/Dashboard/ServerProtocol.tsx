@@ -5,7 +5,7 @@ import { appConfiguration } from '@genaism/state/settingsState';
 import { DataConnection } from 'peerjs';
 import { useCallback, useEffect, useRef } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { SMConfig } from '../Genagram/smConfig';
+import { SMConfig } from '../../state/smConfig';
 import { appendActionLog, getActionLogSince } from '@genaism/services/profiler/logs';
 import {
     getBestEngagement,

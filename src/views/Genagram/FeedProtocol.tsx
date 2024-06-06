@@ -18,7 +18,7 @@ import { availableUsers, currentUserName } from '@genaism/state/sessionState';
 import { DataConnection } from 'peerjs';
 import { PropsWithChildren, createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { SMConfig } from './smConfig';
+import { SMConfig } from '../../state/smConfig';
 import { appConfiguration } from '@genaism/state/settingsState';
 import ConnectionMonitor from '@genaism/components/ConnectionMonitor/ConnectionMonitor';
 import { LogProvider } from '@genaism/hooks/logger';
@@ -77,7 +77,7 @@ export default function FeedProtocol({ content, server, mycode, setContent, chil
             } else if (data.event === 'eter:join') {
                 const profile = getUserProfile();
                 const logs = getActionLogSince(Date.now() - DATA_LOG_TIME).filter((a) => a.timestamp <= logRef.current);
-                const recommendations = getRecommendations(getCurrentUser(), 5);
+                const recommendations = getRecommendations(getCurrentUser(), 5, config.recommendations);
                 conn.send({ event: 'eter:config', configuration: config, content });
                 conn.send({ event: 'eter:reguser', username, id: getCurrentUser() });
                 conn.send({ event: 'eter:action_log', id: getCurrentUser(), log: logs });
