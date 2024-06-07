@@ -298,13 +298,13 @@
             "back": "Back",
             "continue": "Continue",
             "close": "Close",
-            "change": "Change these recommendations"
+            "change": "Change"
         },
         "labels": {
-            "topicCandidate": "because you like #{{topic}}.",
-            "random": "randomly selected.",
-            "coengagedCandidate": "because people also liked this.",
-            "similarUserCandidate": "because \"{{userName}}\" is similar to you and liked this.",
+            "topicCandidate": "Found from #{{topic}}.",
+            "random": "Found randomly from all images.",
+            "coengagedCandidate": "Found from another image you interacted with.",
+            "similarUserCandidate": "From from similar user \"{{userName}}\".",
             "tasteSimilarity": "Ranked high for taste similarity",
             "sharingTopicLikelihood": "Ranked high for sharing probability",
             "commentingTopicLikelihood": "Ranked high for commenting probability",
@@ -339,6 +339,7 @@
         },
         "descriptions": {
             "selectHint": "Select an image to see why it is suggested",
+            "explainHint": "See some reasons for this recommendation below.",
             "scoringPredict": "Predict if you might engage with the image",
             "scoringGeneral": "Only consider popularity",
             "scoringRandom": "Choose any order without scoring",

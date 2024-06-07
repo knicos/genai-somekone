@@ -1,7 +1,6 @@
 import { Button } from '../Button/Button';
 import style from './style.module.css';
-import DesignServicesIcon from '@mui/icons-material/DesignServices';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import SlideShow from '../SlideShow/SlideShow';
 import CandidateOptions from './CandidateOptions';
 import ScoringOptions from './ScoringOptions';
@@ -15,23 +14,33 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import CloseIcon from '@mui/icons-material/Close';
 import { useTranslation } from 'react-i18next';
 
-export default function RecomWizard() {
+interface Props {
+    active?: boolean;
+    onClose: () => void;
+}
+
+export default function RecomWizard({ active, onClose }: Props) {
     const { t } = useTranslation();
     const [page, setPage] = useState(0);
     const [height, setHeight] = useState(0);
     const [nextPage, setNextPage] = useState(1);
     const prevPage = useRef([0]);
 
+    useEffect(() => {
+        if (active) setPage(1);
+    }, [active]);
+
     const doSetPage = (p: number) => {
         if (p > page) {
             prevPage.current.push(page);
         }
         setPage(p);
+        if (p === 0) onClose();
     };
 
     return (
         <section
-            className={page === 0 ? style.wizardClosed : style.wizard}
+            className={!active ? style.wizardClosed : style.wizard}
             style={{ height: `${height}px` }}
             data-testid="recom-wizard"
         >
@@ -70,17 +79,7 @@ export default function RecomWizard() {
                     ) : null
                 }
             >
-                <div className={style.wizardStartPage}>
-                    <Button
-                        onClick={() => setPage(1)}
-                        variant="outlined"
-                        color="secondary"
-                        startIcon={<DesignServicesIcon />}
-                        data-testid="start-recom-wizard"
-                    >
-                        {t('recommendations.actions.change')}
-                    </Button>
-                </div>
+                <div className={style.wizardStartPage}></div>
                 <CandidateOptions changePage={setNextPage} />
                 <PersonalCandidates changePage={setNextPage} />
                 <NonPersonalCandidates changePage={setNextPage} />

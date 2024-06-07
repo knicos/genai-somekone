@@ -1,20 +1,19 @@
-import Item from './Item';
 import { ScoredRecommendation } from '@genaism/services/recommender/recommenderTypes';
-import Cards from '../DataCard/Cards';
+import CandidateItem from './CandidateItem';
+import style from './style.module.css';
+import ScoresItem from './ScoresItem';
 
 interface Props {
-    recommendations: ScoredRecommendation[];
+    recommendation: ScoredRecommendation;
 }
 
-export default function RecommendationsTable({ recommendations }: Props) {
+export default function RecommendationsTable({ recommendation }: Props) {
     return (
-        <Cards>
-            {recommendations.map((l, ix) => (
-                <Item
-                    key={recommendations.length - ix}
-                    item={l}
-                />
-            ))}
-        </Cards>
+        <div>
+            <ul className={style.tableList}>
+                <CandidateItem item={recommendation} />
+                <ScoresItem item={recommendation} />
+            </ul>
+        </div>
     );
 }

@@ -35,6 +35,8 @@ describe('RecommendationsProfile component', () => {
     });
 
     it('works with a topic candidate', async ({ expect }) => {
+        const user = userEvent.setup();
+
         const recommendations: ScoredRecommendation[] = [
             {
                 candidateOrigin: 'topic_affinity',
@@ -60,6 +62,7 @@ describe('RecommendationsProfile component', () => {
         );
 
         expect(await screen.findByTestId('recom-image-grid')).toBeInTheDocument();
+        await user.click(screen.getByLabelText('recommendations.aria.imageSelect'));
         expect(screen.getByText(/recommendations.labels.topicCandidate/)).toBeInTheDocument();
     });
 

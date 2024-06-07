@@ -11,6 +11,8 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import InfoIcon from '@mui/icons-material/Info';
 import { IconButton } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { Button } from '../Button/Button';
+import DesignServicesIcon from '@mui/icons-material/DesignServices';
 
 interface Props {
     id?: UserNodeId;
@@ -22,7 +24,8 @@ export default function RecommendationsProfile({ id, generate, noWizard }: Props
     const { t } = useTranslation();
     const appConfig = useRecoilValue(appConfiguration);
     const { recommendations, more } = useRecommendations(9, id, appConfig?.recommendations);
-    const [selected, setSelected] = useState(0);
+    const [selected, setSelected] = useState(-1);
+    const [wizard, setWizard] = useState(false);
 
     const recomNodes: WeightedNode<ContentNodeId>[] = recommendations.map((r) => ({
         id: r.contentId,
@@ -33,7 +36,7 @@ export default function RecommendationsProfile({ id, generate, noWizard }: Props
         if (generate) more();
     }, [generate, more]);
 
-    const selectedRecom = recommendations[selected];
+    const selectedRecom = selected >= 0 && recommendations[selected];
 
     return (
         <div className={style.outerContainer}>
@@ -41,7 +44,12 @@ export default function RecommendationsProfile({ id, generate, noWizard }: Props
                 className={style.container}
                 tabIndex={0}
             >
-                {appConfig.showRecommendationWizard && appConfig.experimental && !noWizard && <RecomWizard />}
+                {appConfig.showRecommendationWizard && appConfig.experimental && !noWizard && (
+                    <RecomWizard
+                        active={wizard}
+                        onClose={() => setWizard(false)}
+                    />
+                )}
                 <div className={style.buttonBar}>
                     <IconButton
                         color="inherit"
@@ -50,17 +58,32 @@ export default function RecommendationsProfile({ id, generate, noWizard }: Props
                     >
                         <RefreshIcon />
                     </IconButton>
+                    <div style={{ flexGrow: 1 }} />
+                    <Button
+                        onClick={() => setWizard(true)}
+                        variant="contained"
+                        color="secondary"
+                        startIcon={<DesignServicesIcon />}
+                        data-testid="start-recom-wizard"
+                        sx={{ marginRight: '1rem' }}
+                        disabled={wizard}
+                    >
+                        {t('recommendations.actions.change')}
+                    </Button>
                 </div>
                 <ImageGrid
                     selected={selected}
-                    onSelect={setSelected}
+                    onSelect={(ix: number) => setSelected((old) => (old === ix ? -1 : ix))}
                     images={recomNodes.map((n) => n.id)}
                 />
-                <div className={style.infoBar}>
-                    <InfoIcon />
-                    <span>{t('recommendations.descriptions.selectHint')}</span>
-                </div>
-                <RecommendationsTable recommendations={selectedRecom ? [selectedRecom] : []} />
+                {!selectedRecom && (
+                    <div className={style.infoBar}>
+                        <InfoIcon />
+                        <span>{t('recommendations.descriptions.selectHint')}</span>
+                    </div>
+                )}
+                {selectedRecom && <RecommendationsTable recommendation={selectedRecom} />}
+                <div style={{ flexGrow: 5, flexShrink: 1 }} />
             </div>
         </div>
     );

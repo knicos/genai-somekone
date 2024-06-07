@@ -36,21 +36,23 @@ export default function RecommendationPage({ onClose }: Props) {
             <section className={style.dataContainer}>
                 <div className={style.dataInner}>
                     <header>
-                        <h1>{t('profile.titles.yourRecommendations')}</h1>
-                        <IconButton
-                            size="large"
-                            color="inherit"
-                            onClick={() => {
-                                setShow(false);
-                                if (onClose) onClose();
-                            }}
-                            aria-label={t('dashboard.actions.close')}
-                        >
-                            <CloseIcon
-                                fontSize="large"
+                        <div className={style.headerContainer}>
+                            <h1>{t('profile.titles.yourRecommendations')}</h1>
+                            <IconButton
+                                size="large"
                                 color="inherit"
-                            />
-                        </IconButton>
+                                onClick={() => {
+                                    setShow(false);
+                                    if (onClose) onClose();
+                                }}
+                                aria-label={t('dashboard.actions.close')}
+                            >
+                                <CloseIcon
+                                    fontSize="large"
+                                    color="inherit"
+                                />
+                            </IconButton>
+                        </div>
                     </header>
                     <RecommendationsProfile />
                 </div>

@@ -7,6 +7,7 @@ trigger:
     branches:
         include:
             - main
+            - mainv2
     tags:
         include:
             - 'v*'
@@ -138,3 +139,22 @@ stages:
                       skip_app_build: true
                       azure_static_web_apps_api_token: $(deployment_token)
                       deployment_environment: staging
+    - stage: DeployV2
+      displayName: Deploy Version 2
+      dependsOn: Test
+      condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/mainv2'))
+      jobs:
+          - job: AzureSWA
+            displayName: Deploy to static app
+            steps:
+                - download: current
+                  artifact: DistFolder
+                - task: AzureStaticWebApp@0
+                  inputs:
+                      app_location: 'DistFolder'
+                      output_location: 'DistFolder'
+                      cwd: $(Pipeline.Workspace)
+                      skip_api_build: true
+                      skip_app_build: true
+                      azure_static_web_apps_api_token: $(deployment_token)
+                      deployment_environment: nextVersion

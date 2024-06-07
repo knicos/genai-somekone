@@ -1,4 +1,4 @@
-@value bgSubdued1, textDark from "../../style/colours.module.css";
+@value bgSubdued1, textDark, primary from "../../style/colours.module.css";
 
 .content img {
     border-radius: 6px;
@@ -36,4 +36,70 @@
 
 .chart text {
     fill: textDark !important;
+}
+
+.tableList {
+    padding: 0;
+    margin: 0;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.tableList li {
+    list-style: none;
+    background: white;
+    margin-bottom: 0.5rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.scoreBox {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.scoreBox label {
+    font-size: 0.8rem;
+    font-style: italic;
+}
+
+.scoreValue {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.scoreList {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.listIcon {
+    background: primary;
+    color: white;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+}
+
+.listColumn {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    gap: 1rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
 }
