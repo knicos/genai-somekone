@@ -305,13 +305,13 @@
             "random": "Found randomly from all images.",
             "coengagedCandidate": "Found from another image you interacted with.",
             "similarUserCandidate": "From from similar user \"{{userName}}\".",
-            "tasteSimilarity": "Ranked high for taste similarity",
-            "sharingTopicLikelihood": "Ranked high for sharing probability",
-            "commentingTopicLikelihood": "Ranked high for commenting probability",
-            "followingTopicLikelihood": "Ranked high for follow probability",
-            "reactingTopicLikelihood": "Ranked high for reaction probability",
-            "viewingTopicLikelihood": "Ranked high for viewing time",
-            "coengagementOverlap": "Ranked high for engagement similarity",
+            "taste": "Ranked high for taste similarity",
+            "sharing": "Ranked high for sharing probability",
+            "commenting": "Ranked high for commenting probability",
+            "following": "Ranked high for follow probability",
+            "reacting": "Ranked high for reaction probability",
+            "viewing": "Ranked high for viewing time",
+            "coengagement": "Ranked high for engagement similarity",
             "randomness": "Randomly ranked",
             "lastSeen": "It hasn't been seen recently",
             "noReason": "No reason, just random",
@@ -329,7 +329,8 @@
             "scoringPredict": "Predict engagement",
             "scoringGeneral": "Content only score",
             "scoringRandom": "Any image at random",
-            "scoringAll": "Combine all scores (default)"
+            "scoringAll": "Combine all scores (default)",
+            "score": "Score"
         },
         "titles": {
             "candidateDiscovery": "How are candidates discovered?",
@@ -356,13 +357,13 @@
             "candidatePersonalAndNon": "Use a mix of personal and non-personal"
         },
         "features": {
-            "tasteSimilarity": "Taste Similarity",
-            "coengagementOverlap": "Common engagements",
-            "sharingTopicLikelihood": "Likely to share",
-            "commentingTopicLikelihood": "Likely to comment",
-            "followingTopicLikelihood": "Likely to follow",
-            "reactingTopicLikelihood": "Likely to react",
-            "viewingTopicLikelihood": "Likely to view",
+            "taste": "Taste Similarity",
+            "coengagement": "Common engagements",
+            "sharing": "Likely to share",
+            "commenting": "Likely to comment",
+            "following": "Likely to follow",
+            "reacting": "Likely to react",
+            "viewing": "Likely to view",
             "lastSeen": "Not seen recently"
         },
         "aria": {

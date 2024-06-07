@@ -10,7 +10,8 @@ describe('RecommendationsTable component', () => {
                     candidateOrigin: 'random',
                     score: 0.5,
                     contentId: 'content:xyz',
-                    scores: [],
+                    scores: {},
+                    significance: {},
                     features: [],
                     rank: 0,
                     rankScore: 0,
@@ -31,8 +32,8 @@ describe('RecommendationsTable component', () => {
                     candidateOrigin: 'random',
                     score: 0.5,
                     contentId: 'content:xyz',
-                    scores: [1],
-                    significance: [1],
+                    scores: { taste: 1 },
+                    significance: { taste: 1 },
                     features: [],
                     rank: 0,
                     rankScore: 0,
@@ -43,6 +44,6 @@ describe('RecommendationsTable component', () => {
 
         expect(screen.getByTestId('candidate-item')).toBeInTheDocument();
         expect(screen.getByTestId('score-item')).toBeInTheDocument();
-        expect(screen.getByText(/recommendations.features.tasteSimilarity/)).toBeVisible();
+        expect(screen.getByText(/recommendations.features.taste/)).toBeVisible();
     });
 });

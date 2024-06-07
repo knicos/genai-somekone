@@ -4,7 +4,7 @@ import { ContentNodeId, TopicNodeId, UserNodeId, WeightedNode } from '../graph/g
 import { getRelated } from '../graph/query';
 import { UserProfile } from '../profiler/profilerTypes';
 import { calculateSimilarity } from '../users/users';
-import { Recommendation, ScoringOptions } from './recommenderTypes';
+import { Recommendation, Scores, ScoringOptions } from './recommenderTypes';
 
 const COENGAGEMENT_MAX = 4;
 
@@ -120,11 +120,7 @@ function getLastSeenTime(userId: UserNodeId, contentId: ContentNodeId): number {
     return 0;
 }
 
-export function makeFeatureVectors(
-    candidates: Recommendation[],
-    profile: UserProfile,
-    options?: ScoringOptions
-): number[][] {
+export function makeFeatures(candidates: Recommendation[], profile: UserProfile, options?: ScoringOptions): Scores[] {
     const preferences = calculatePreferences(profile);
 
     return candidates.map((c) => {
@@ -150,16 +146,25 @@ export function makeFeatureVectors(
         // lastSeenTime (negative)
         // priorEngagements
 
-        return [
-            tasteSimilarityScore,
-            sharingPreferenceScore,
-            commentingPreferenceScore,
-            followingPreferenceScore,
-            reactionPreferenceScore,
-            viewingPreferenceScore,
-            0,
-            coengagementScore,
-            lastSeenTime,
-        ];
+        return {
+            taste: tasteSimilarityScore,
+            sharing: sharingPreferenceScore,
+            commenting: commentingPreferenceScore,
+            following: followingPreferenceScore,
+            reaction: reactionPreferenceScore,
+            viewing: viewingPreferenceScore,
+            random: 0,
+            coengagement: coengagementScore,
+            lastSeen: lastSeenTime,
+        };
     });
+}
+
+export function makeFeatureVectors(
+    candidates: Recommendation[],
+    profile: UserProfile,
+    options?: ScoringOptions
+): number[][] {
+    const features = makeFeatures(candidates, profile, options);
+    return features.map((i) => Object.values(i));
 }

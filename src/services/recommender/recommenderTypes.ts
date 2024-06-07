@@ -15,10 +15,27 @@ export interface Recommendation {
     timestamp: number;
 }
 
+export interface Scores {
+    taste?: number; // Label overlap
+    viewing?: number; // Viewing embedding
+    reaction?: number; // Reaction embedding
+    following?: number; // Follow embedding
+    coengagement?: number; // Number of common co-engagements
+    commenting?: number; // Comment embedding
+    sharing?: number; // Sharing embedding
+    lastSeen?: number; // Time since last seen
+    embedding?: number; // Similarity to engagement embedding
+    engagement?: number; // An engagement model output
+    trending?: number; // Overall trending score of content
+    popularity?: number; // Total popularity (relative)
+    quality?: number; // Assessed image quality score
+    random?: number; // Some random component
+}
+
 export interface ScoredRecommendation extends Recommendation {
     features: number[];
-    scores: number[];
-    significance?: number[];
+    scores: Scores;
+    significance: Scores;
     score: number;
     rank: number;
     rankScore: number;

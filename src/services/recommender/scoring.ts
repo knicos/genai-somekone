@@ -1,26 +1,28 @@
 import { UserProfile } from '../profiler/profilerTypes';
-import { makeFeatureVectors } from './features';
-import { Recommendation, ScoredRecommendation, ScoringOptions } from './recommenderTypes';
+import { makeFeatures } from './features';
+import { Recommendation, ScoredRecommendation, Scores, ScoringOptions } from './recommenderTypes';
 
 function calculateSignificance(items: ScoredRecommendation[]) {
     if (items.length < 1) return;
-    const means = new Array(items[0].scores.length);
+
+    const keys = Object.keys(items[0].scores) as (keyof Scores)[];
+    const means = new Array(keys.length);
     means.fill(0);
 
     items.forEach((item) => {
-        item.scores.forEach((score, ix) => {
-            means[ix] += score;
+        keys.forEach((k, ix) => {
+            means[ix] += item.scores[k];
         });
     });
     means.forEach((mean, ix) => {
         means[ix] = mean / items.length;
     });
 
-    const deviations = new Array(items[0].scores.length);
+    const deviations = new Array(means.length);
     deviations.fill(0);
     items.forEach((item) => {
-        item.scores.forEach((score, ix) => {
-            const diff = score - means[ix];
+        keys.forEach((k, ix) => {
+            const diff = (item.scores[k] || 0) - means[ix];
             deviations[ix] += diff * diff;
         });
     });
@@ -29,10 +31,10 @@ function calculateSignificance(items: ScoredRecommendation[]) {
     });
 
     items.forEach((item) => {
-        item.significance = item.scores.map((score, ix) => {
+        item.significance = keys.reduce((r, k, ix) => {
             const dev = deviations[ix];
-            return dev > 0 ? (score - means[ix]) / deviations[ix] : 0;
-        });
+            return { ...r, [k]: dev > 0 ? ((item.scores[k] || 0) - means[ix]) / deviations[ix] : 0 };
+        }, {});
     });
 }
 
@@ -42,12 +44,16 @@ export function scoreCandidates(
     options?: ScoringOptions
 ): ScoredRecommendation[] {
     // Could use Tensorflow here?
-    const featureVectors = makeFeatureVectors(candidates, profile, options);
+    const features = makeFeatures(candidates, profile, options);
+    const keys = features.length > 0 ? Object.keys(features[0]) : [];
+    const featureVectors = features.map((i) => Object.values(i));
     const scores = featureVectors.map((c) => c.map((f, ix) => f * (profile.featureWeights[ix] || 0)));
+    const namedScores = scores.map((s) => s.reduce((r, v, ix) => ({ ...r, [keys[ix]]: v }), {}));
     const results: ScoredRecommendation[] = candidates.map((c, ix) => ({
         ...c,
         features: featureVectors[ix],
-        scores: scores[ix],
+        scores: namedScores[ix],
+        significance: {},
         score: scores[ix].reduce((s, v) => s + v, 0),
         rank: 0,
         rankScore: 0,

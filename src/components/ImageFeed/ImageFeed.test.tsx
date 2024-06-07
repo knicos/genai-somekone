@@ -11,7 +11,8 @@ function makeRecommendation(id: ContentNodeId): ScoredRecommendation {
     return {
         contentId: id,
         score: 0,
-        scores: [],
+        scores: {},
+        significance: {},
         features: [],
         rank: 0,
         rankScore: 0,
