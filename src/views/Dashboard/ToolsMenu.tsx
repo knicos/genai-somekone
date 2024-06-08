@@ -6,6 +6,8 @@ import HandymanIcon from '@mui/icons-material/Handyman';
 import { anonComments } from '@genaism/services/content/content';
 import { anonLogs } from '@genaism/services/profiler/logs';
 import { anonProfiles } from '@genaism/services/profiler/profiler';
+import { useSetRecoilState } from 'recoil';
+import { menuShowContentTools } from '@genaism/state/menuState';
 
 export default function ToolsMenu() {
     const { t } = useTranslation();
@@ -17,6 +19,7 @@ export default function ToolsMenu() {
     const handleClose = () => {
         setAnchorEl(null);
     };
+    const setShowContentTools = useSetRecoilState(menuShowContentTools);
 
     return (
         <>
@@ -50,6 +53,13 @@ export default function ToolsMenu() {
                     }}
                 >
                     <ListItemText>{t('dashboard.labels.toolAnonymise')}</ListItemText>
+                </MenuItem>
+                <MenuItem
+                    onClick={() => {
+                        setShowContentTools(true);
+                    }}
+                >
+                    <ListItemText>{t('dashboard.labels.contentTools')}</ListItemText>
                 </MenuItem>
             </Menu>
         </>

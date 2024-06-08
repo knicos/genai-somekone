@@ -23,6 +23,7 @@ import { onlineUsers } from '@genaism/state/sessionState';
 import ServerProtocol from './ServerProtocol';
 import ContentLoader from '@genaism/components/ContentLoader/ContentLoader';
 import Guidance from '@genaism/components/Guidance/Guidance';
+import ContentToolsDialog from '../dialogs/ContentToolsDialog/ContentToolsDialog';
 
 interface Props {
     contentUrls?: string;
@@ -126,6 +127,7 @@ export function Workspace({ contentUrls, cfg, guide, experimental }: Props) {
                         />
                         <SaveDialog />
                         <SettingsDialog />
+                        <ContentToolsDialog />
                         {showReplay && <Replay />}
                     </section>
                 </main>

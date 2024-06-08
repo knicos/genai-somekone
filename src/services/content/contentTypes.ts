@@ -27,6 +27,8 @@ export interface ContentMetadata {
     disableShare?: boolean;
     sponsored?: boolean;
     labels: WeightedLabel[];
+    embedding?: number[];
+    point?: [number, number];
 }
 
 export interface ImageEntity {
