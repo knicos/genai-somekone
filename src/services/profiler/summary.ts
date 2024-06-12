@@ -4,7 +4,7 @@ import { getRelated } from '../graph/query';
 import { ProfileSummary } from './profilerTypes';
 import { getCurrentUser } from './state';
 
-const TIME_WINDOW = 10 * 60 * 1000;
+const TIME_WINDOW = 60 * 60 * 1000;
 const TIME_DECAY = 0.2;
 
 export function findTopicProfileById(id: UserNodeId, count?: number) {

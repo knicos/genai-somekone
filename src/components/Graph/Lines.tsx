@@ -1,6 +1,7 @@
 import { NodeID } from '@genaism/services/graph/graphTypes';
 import { InternalGraphLink, LinkStyle } from './types';
 import style from './style.module.css';
+import colours from '../../style/colours.module.css';
 
 interface Props<T extends NodeID> {
     linkList: InternalGraphLink<T, T>[];
@@ -28,6 +29,9 @@ export default function Lines<T extends NodeID>({ linkList, linkStyles, defaultL
                         y2={l.target.y}
                         opacity={typeof styles?.opacity === 'function' ? styles.opacity(l) : styles?.opacity}
                         strokeWidth={typeof styles?.width === 'function' ? styles.width(l) : styles?.width}
+                        stroke={
+                            typeof styles?.colour === 'function' ? styles.colour(l) : styles?.colour || colours.primary
+                        }
                         data-testid={`graph-link-${ix}`}
                     />
                 );

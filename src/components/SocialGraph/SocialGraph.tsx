@@ -31,6 +31,7 @@ import { colourLabel } from './colourise';
 import { getUserName } from '@genaism/services/profiler/profiler';
 
 const LINE_THICKNESS_UNSELECTED = 40;
+const MIN_LINE_THICKNESS = 10;
 const LINE_THICKNESS_SELECTED = 60;
 
 interface Props {
@@ -123,6 +124,7 @@ export default function SocialGraph({ liveUsers }: Props) {
                         data: {
                             topics: topicData || [],
                             colour: newColour,
+                            label: topicData?.label || false,
                         },
                     };
                 }
@@ -179,9 +181,17 @@ export default function SocialGraph({ liveUsers }: Props) {
                 defaultLinkStyle={{
                     className: style.link,
                     opacity: (l: InternalGraphLink<UserNodeId, UserNodeId>) =>
-                        egoSelect && linkStyles ? 0 : l.strength * l.strength * 0.9,
+                        egoSelect && linkStyles
+                            ? 0
+                            : l.source.data?.label && l.source.data?.label === l.target.data?.label
+                            ? 0.3
+                            : 0.05,
                     width: (l: InternalGraphLink<UserNodeId, UserNodeId>) =>
-                        1 + Math.floor(l.strength * LINE_THICKNESS_UNSELECTED),
+                        MIN_LINE_THICKNESS + Math.floor(l.strength * LINE_THICKNESS_UNSELECTED),
+                    colour: (l: InternalGraphLink<UserNodeId, UserNodeId>) =>
+                        l.source.data?.colour === l.target.data?.colour
+                            ? (l.source.data?.colour as string) || '#444'
+                            : '#444',
                 }}
                 charge={charge}
                 showLines={showLines}
