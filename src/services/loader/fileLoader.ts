@@ -14,11 +14,17 @@ import { dependencies } from './tracker';
 import { LogItem } from './loaderTypes';
 import { findLargestEdgeTimestamp, findLargestLogTimestamp, rebaseEdges, rebaseLog } from './rebase';
 import { SomekoneSettings } from '@genaism/hooks/settings';
+import { compress, decompress } from 'lz-string';
 
 const STATIC_PATH = 'https://store.gen-ai.fi/somekone/images';
 
 interface TopicData {
     label: string;
+}
+
+interface UserData {
+    name: string;
+    featureWeights: unknown;
 }
 
 export async function getZipBlob(content: string | ArrayBuffer, progress?: (percent: number) => void): Promise<Blob> {
@@ -161,7 +167,8 @@ export async function loadFile(file: File | Blob): Promise<SomekoneSettings | un
         if (store.project.id && store.meta.length > 0) dependencies.add(store.project.id);
         store.project.dependencies.forEach((dep) => {
             if (!dependencies.has(dep)) {
-                throw new Error('missing_dependency');
+                //throw new Error('missing_dependency');
+                console.warn('Missing dependency');
             }
         });
         if (store.project.version > VERSION) {
@@ -183,6 +190,9 @@ export async function loadFile(file: File | Blob): Promise<SomekoneSettings | un
                 const label = (node.data as TopicData).label;
                 topicSet.set(node.id as TopicNodeId, label);
                 node.id = getTopicId(label);
+            }
+            if (node.type === 'user' && Array.isArray((node.data as UserData)?.featureWeights)) {
+                (node.data as UserData).featureWeights = {};
             }
         });
         store.graph.edges.forEach((edge) => {
@@ -229,21 +239,30 @@ const GRAPH_KEY = 'genai_somekone_graph';
 const LOG_KEY = 'genai_somekone_logs';
 
 window.addEventListener('beforeunload', () => {
-    window.sessionStorage.setItem(GRAPH_KEY, JSON.stringify(dump()));
-    const logs = getActionLog(getCurrentUser());
-    window.sessionStorage.setItem(LOG_KEY, JSON.stringify(logs));
+    try {
+        window.sessionStorage.setItem(GRAPH_KEY, compress(JSON.stringify(dump())));
+        const logs = getActionLog(getCurrentUser());
+        window.sessionStorage.setItem(LOG_KEY, JSON.stringify(logs));
+    } catch (e) {
+        console.log('Save error', e);
+    }
 });
 
 const sessionGraph = window.sessionStorage.getItem(GRAPH_KEY);
+window.sessionStorage.removeItem(GRAPH_KEY);
 if (sessionGraph) {
-    const graph = JSON.parse(sessionGraph) as GraphExport;
+    const graph = JSON.parse(decompress(sessionGraph)) as GraphExport;
+    const maxTimestamp = findLargestEdgeTimestamp(graph.edges);
+    const timeOffset = Date.now() - maxTimestamp;
+    rebaseEdges(graph.edges, timeOffset);
     addNodes(graph.nodes);
     addEdges(graph.edges);
     console.log('Loaded session graph');
 }
 
 const sessionLogs = window.sessionStorage.getItem(LOG_KEY);
+window.sessionStorage.removeItem(LOG_KEY);
 if (sessionLogs) {
     const logs = JSON.parse(sessionLogs) as LogEntry[];
-    appendActionLog(logs);
+    appendActionLog(logs, undefined, true);
 }

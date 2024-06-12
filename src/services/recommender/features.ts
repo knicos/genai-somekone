@@ -1,12 +1,14 @@
+import { normCosinesim } from '@genaism/util/embedding';
 import { getTopicId } from '../concept/concept';
+import { getContentMetadata } from '../content/content';
 import { getEdge, getEdgeWeights } from '../graph/edges';
 import { ContentNodeId, TopicNodeId, UserNodeId, WeightedNode } from '../graph/graphTypes';
 import { getRelated } from '../graph/query';
 import { UserProfile } from '../profiler/profilerTypes';
-import { calculateSimilarity } from '../users/users';
 import { Recommendation, Scores, ScoringOptions } from './recommenderTypes';
 
 const COENGAGEMENT_MAX = 4;
+const BASE_EMBEDDING_SIMILARITY = 0.8;
 
 interface Preferences {
     viewing: WeightedNode<TopicNodeId>[];
@@ -46,16 +48,14 @@ function calculatePreferences(profile: UserProfile): Preferences {
     };
 }
 
-function similarityGuard(a: WeightedNode<TopicNodeId>[], b: WeightedNode<TopicNodeId>[]) {
-    return a.length > 0 && b.length > 0 ? calculateSimilarity(a, b) : 0;
-}
-
 function calculateTasteScore(profile: UserProfile, id: ContentNodeId): number {
-    const topics = getRelated('topic', id, { count: 10 });
-    return similarityGuard(
-        profile.taste.map((t) => ({ id: getTopicId(t.label), weight: t.weight })),
-        topics
-    );
+    if (profile.embedding.length === 0) console.warn('No profile embedding');
+    const meta = getContentMetadata(id);
+    if (meta && meta.embedding && profile.embedding.length > 0) {
+        const sim = normCosinesim(meta.embedding, profile.embedding);
+        return Math.max(0, (sim - BASE_EMBEDDING_SIMILARITY) / (1 - BASE_EMBEDDING_SIMILARITY));
+    }
+    return 0;
 }
 
 function sumTopicScores(topics: Map<TopicNodeId, number>, pref: WeightedNode<TopicNodeId>[]) {

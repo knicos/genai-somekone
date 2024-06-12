@@ -233,8 +233,8 @@ export default function SocialGraphSettings() {
                 value={similarPercent}
                 onChange={doSimilarPercent}
                 min={0}
-                max={1}
-                step={0.1}
+                max={0.05}
+                step={0.001}
             />
             <div
                 id="social-node-charge-label"

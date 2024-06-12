@@ -1,6 +1,7 @@
 import { ContentNodeId, UserNodeId, WeightedNode } from '@genaism/services/graph/graphTypes';
 import { WeightedLabel } from '../content/contentTypes';
 import defaults from './defaultWeights.json';
+import { Scores } from '../recommender/recommenderTypes';
 
 export type Features = typeof defaults;
 
@@ -41,7 +42,7 @@ export interface LogEntry {
 }
 
 export interface ProfileSummary {
-    taste: WeightedLabel[];
+    topics: WeightedLabel[];
     engagedContent: WeightedNode<ContentNodeId>[];
     seenTopics: WeightedLabel[];
     commentedTopics: WeightedLabel[];
@@ -56,9 +57,10 @@ export interface UserProfile extends ProfileSummary {
     name: string;
     engagement: number;
     attributes: Record<string, unknown>;
-    featureWeights: number[]; // For recommendation scoring.
+    featureWeights: Scores; // For recommendation scoring.
     seenItems: number;
     engagementTotal: number;
     positiveRecommendations: number;
     negativeRecommendations: number;
+    embedding: number[];
 }

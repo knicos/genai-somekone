@@ -1,4 +1,4 @@
-import { ScoredRecommendation } from '../recommender/recommenderTypes';
+import { ScoredRecommendation, Scores } from '../recommender/recommenderTypes';
 import { UserProfile } from './profilerTypes';
 
 const MAX_LEARNING_RATE = 0.3;
@@ -28,7 +28,9 @@ export function trainProfile(input: ScoredRecommendation, profile: UserProfile, 
 
     //console.log('TRAIN', profile, input, error * learningRate);
 
-    profile.featureWeights.forEach((w, ix) => {
-        profile.featureWeights[ix] = w + error * learningRate * input.features[ix];
+    const keys = Array.from(Object.keys(profile.featureWeights)) as (keyof Scores)[];
+    keys.forEach((k) => {
+        const w = profile.featureWeights[k] || 1;
+        profile.featureWeights[k] = w + error * learningRate * (input.features[k] || 0);
     });
 }

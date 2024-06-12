@@ -58,9 +58,9 @@ const ProfileNode = memo(function ProfileNode({ id, onResize, live, selected, di
         } else {
             return [];
         }*/
-        if (profile?.taste) {
+        if (profile?.topics) {
             return filterTaste(
-                profile.taste, // .filter((t) => !isDisallowedTopic(t.label)),
+                profile.topics, // .filter((t) => !isDisallowedTopic(t.label)),
                 topicThreshold
             );
         } else {

@@ -10,9 +10,18 @@ interface Props {
     showValue?: boolean;
     size?: number;
     color?: string;
+    valueFormat?: 'percent' | 'raw';
 }
 
-export default function ScorePie({ label, value, maxValue, size = 80, showValue, color = '#444444' }: Props) {
+export default function ScorePie({
+    label,
+    value,
+    maxValue,
+    size = 80,
+    showValue,
+    color = '#444444',
+    valueFormat = 'percent',
+}: Props) {
     //const { t } = useTranslation();
     /*const selectedScores: number[] = [];
     if (item.significance) {
@@ -52,9 +61,10 @@ export default function ScorePie({ label, value, maxValue, size = 80, showValue,
             {showValue && (
                 <div
                     className={style.scoreValue}
-                    style={{ height: `${size}px`, fontSize: `${Math.floor(size * 0.3)}px` }}
+                    style={{ height: `${size}px`, fontSize: `${Math.floor(size * 0.25)}px` }}
                 >
-                    {value.toFixed(1)}
+                    {valueFormat === 'percent' ? `${(value * 100).toFixed(0)}` : value.toFixed(1)}
+                    {valueFormat === 'percent' && <span className={style.units}>%</span>}
                 </div>
             )}
             {label && <label>{label}</label>}

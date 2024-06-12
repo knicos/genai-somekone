@@ -7,6 +7,8 @@ import { Button } from '@genaism/components/Button/Button';
 import RawEmbeddingTool from './RawEmbeddingTool';
 import EmbeddingTool from './EmbeddingTool';
 import MappingTool from './MappingTool';
+import SimilarityChecker from './SimilarityChecker';
+import ClusteringTool from './ClusteringTool';
 
 export default function ContentToolsDialog() {
     const { t } = useTranslation();
@@ -20,7 +22,7 @@ export default function ContentToolsDialog() {
             open={showDialog}
             onClose={doClose}
             scroll="paper"
-            maxWidth="sm"
+            maxWidth="lg"
             fullWidth
         >
             <DialogTitle>{t('dashboard.titles.contentTools')}</DialogTitle>
@@ -36,10 +38,14 @@ export default function ContentToolsDialog() {
                     <Tab label={t('dashboard.titles.rawEmbeddingTool')} />
                     <Tab label={t('dashboard.titles.embeddingTool')} />
                     <Tab label={t('dashboard.titles.mappingTool')} />
+                    <Tab label={t('dashboard.titles.similarityTool')} />
+                    <Tab label={t('dashboard.titles.clusteringTool')} />
                 </Tabs>
                 {tabNumber === 0 && <RawEmbeddingTool />}
                 {tabNumber === 1 && <EmbeddingTool />}
                 {tabNumber === 2 && <MappingTool />}
+                {tabNumber === 3 && <SimilarityChecker />}
+                {tabNumber === 4 && <ClusteringTool />}
             </DialogContent>
             <DialogActions>
                 <Button

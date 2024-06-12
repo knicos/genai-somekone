@@ -70,15 +70,17 @@ export default function SocialGraph({ liveUsers }: Props) {
 
     useEffect(() => {
         const newLinks: GraphLink<UserNodeId, UserNodeId>[] = [];
-        let globalMax = 0;
+        let globalMin = 1;
         similar.similar.forEach((s) => {
-            globalMax = Math.max(globalMax, s[0]?.weight || 0);
+            globalMin = Math.min(globalMin, s[0]?.weight || 1);
         });
+        globalMin = globalMin * (1 - similarPercent);
+        console.log(similar);
         similar.similar.forEach((s, id) => {
             const maxWeight = s[0]?.weight || 0;
             s.forEach((node) => {
                 if (allLinks || node.weight >= maxWeight * (1 - similarPercent)) {
-                    const astrength = node.weight / globalMax;
+                    const astrength = Math.max(0, (node.weight - globalMin) / (1 - globalMin));
                     newLinks.push({
                         source: id,
                         target: node.id,

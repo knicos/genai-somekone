@@ -11,7 +11,7 @@ const { mockProfile, mockSimilar } = vi.hoisted(() => ({
     mockProfile: vi.fn<unknown[], UserProfile>(() => ({
         ...createEmptyProfile('user:xyz', 'TestUser1'),
         engagedContent: [{ id: 'content:content1', weight: 1 }],
-        taste: [{ label: 'taste1', weight: 0.5 }],
+        topics: [{ label: 'taste1', weight: 0.5 }],
     })),
     mockSimilar: vi.fn(() => [] as WeightedNode<UserNodeId>[]),
 }));
@@ -58,7 +58,7 @@ describe('ProfileNode component', () => {
         mockProfile.mockImplementation(() => ({
             ...createEmptyProfile('user:xyz', 'TestUser1'),
             engagedContent: [{ id: 'content:content1' as ContentNodeId, weight: 1 }],
-            taste: [{ label: 'taste1', weight: 0.5 }],
+            topics: [{ label: 'taste1', weight: 0.5 }],
         }));
 
         render(

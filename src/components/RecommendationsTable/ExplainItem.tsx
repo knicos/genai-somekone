@@ -46,9 +46,9 @@ export default function ExplainItem({ item }: Props) {
                 <div className={style.scoreList}>
                     {SCORE_KEYS.map((k, ix) => (
                         <ScorePie
-                            value={item.scores[k] || 0}
+                            value={item.features[k] || 0}
                             key={k}
-                            maxValue={2}
+                            maxValue={1}
                             label={t(`recommendations.features.${k}`)}
                             showValue
                             color={gColors[ix % gColors.length]}

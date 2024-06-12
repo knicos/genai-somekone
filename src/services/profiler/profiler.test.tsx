@@ -156,7 +156,7 @@ describe('Profiler.updateProfile', () => {
         createUserProfile('user:xyz', 'TestUser5');
 
         updateProfile('user:xyz', {
-            taste: [{ label: 'fff', weight: 0.5 }],
+            topics: [{ label: 'fff', weight: 0.5 }],
             engagedContent: [{ id: 'content:zzz', weight: 0.5 }],
             reactedTopics: [],
             commentedTopics: [],
@@ -180,7 +180,7 @@ describe('Profiler.updateProfile', () => {
         expect(handler).toHaveBeenCalledTimes(0);
 
         updateProfile('user:xyz', {
-            taste: [{ label: 'ffg', weight: 0.5 }],
+            topics: [{ label: 'ffg', weight: 0.5 }],
             engagedContent: [{ id: 'content:zzz', weight: 0.5 }],
             reactedTopics: [],
             commentedTopics: [],

@@ -49,7 +49,7 @@ export default function Profile({ id }: Props) {
         setWCSize(size);
     }, []);
 
-    const tasteSum = profile.taste.reduce((sum, t) => sum + t.weight, 0);
+    const tasteSum = profile.topics.reduce((sum, t) => sum + t.weight, 0);
 
     return (
         <div
@@ -63,7 +63,7 @@ export default function Profile({ id }: Props) {
                     viewBox={`${-(wcSize * 1.67)} ${-wcSize} ${wcSize * 1.67 * 2} ${wcSize * 2}`}
                 >
                     <WordCloud
-                        content={profile.taste}
+                        content={profile.topics}
                         size={300}
                         className={style.word}
                         onSize={doResize}
@@ -76,7 +76,7 @@ export default function Profile({ id }: Props) {
                     score={Math.min(1, profile.engagement / (getBestEngagement() || 1))}
                 />
                 {profile &&
-                    profile.taste
+                    profile.topics
                         .filter((t) => t.weight > 0)
                         .map((t) => (
                             <TopicDetail

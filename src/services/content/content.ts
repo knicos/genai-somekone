@@ -4,6 +4,7 @@ import { getTopicId } from '@genaism/services/concept/concept';
 import { ContentNodeId, UserNodeId } from '../graph/graphTypes';
 import { isDisallowedTopic } from './disallowed';
 import { anonString } from '@genaism/util/anon';
+import { normalise } from '@genaism/util/embedding';
 
 const dataStore = new Map<ContentNodeId, string>();
 const metaStore = new Map<ContentNodeId, ContentMetadata>();
@@ -55,6 +56,11 @@ export function rebuildContent() {
 export function addContent(data: string, meta: ContentMetadata) {
     dataStore.set(`content:${meta.id}`, data);
     metaStore.set(`content:${meta.id}`, meta);
+
+    if (meta.embedding) {
+        // Ensure this since we rely on it.
+        meta.embedding = normalise(meta.embedding);
+    }
 
     try {
         const cid = addNode('content', `content:${meta.id}`, {

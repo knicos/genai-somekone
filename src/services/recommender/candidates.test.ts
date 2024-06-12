@@ -39,7 +39,7 @@ describe('Candidates.generateCandidates()', () => {
         const topicID = addTopic('topic1', 1.0);
         addEdge('content', topicID, 'content:ggg', 1.0);
         const profile = createUserProfile('user:xyz', 'TestUser');
-        profile.taste = [{ label: 'topic1', weight: 0.5 }];
+        profile.topics = [{ label: 'topic1', weight: 0.5 }];
         const candidates = generateCandidates(profile, 10, { ...DEFAULT_OPTIONS, random: 0 });
 
         expect(candidates).toHaveLength(1);

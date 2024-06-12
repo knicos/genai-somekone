@@ -103,3 +103,8 @@
     margin-top: 1rem;
     margin-bottom: 1rem;
 }
+
+.units {
+    font-size: 0.6em;
+    color: #666;
+}

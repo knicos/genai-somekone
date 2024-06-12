@@ -32,7 +32,7 @@ export const settingLinkDistanceScale = atom<number>({
 
 export const settingSimilarPercent = atom<number>({
     key: 'settingsimilarpercent',
-    default: 0.2,
+    default: 0.01,
 });
 
 export const settingNodeCharge = atom<number>({

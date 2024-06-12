@@ -11,7 +11,7 @@ const { mockProfile } = vi.hoisted(() => ({
     mockProfile: vi.fn<unknown[], UserProfile>(() => ({
         ...createEmptyProfile('user:xyz', 'TestUser'),
         engagedContent: [{ id: 'content:content1', weight: 1 }],
-        taste: [{ label: 'taste1', weight: 0.5 }],
+        topics: [{ label: 'taste1', weight: 0.5 }],
     })),
 }));
 
@@ -40,7 +40,7 @@ describe('UserProfile component', () => {
                 { label: 'topic2', weight: 0.3 },
                 { label: 'topic3', weight: 0.3 },
             ],
-            taste: [{ label: 'taste1', weight: 0.5 }],
+            topics: [{ label: 'taste1', weight: 0.5 }],
         }));
         render(<UserProfileComp id="user:xyz" />);
         expect(await screen.findAllByText('topic1')).toHaveLength(2);
@@ -50,7 +50,7 @@ describe('UserProfile component', () => {
         mockProfile.mockImplementation(() => ({
             ...createEmptyProfile('user:xyz', 'TestUser2'),
             engagedContent: [{ id: 'content:content1' as ContentNodeId, weight: 1 }],
-            taste: [{ label: 'taste1', weight: 0.5 }],
+            topics: [{ label: 'taste1', weight: 0.5 }],
         }));
 
         addEdge('engaged', 'user:xyz', 'content:content1', 1);

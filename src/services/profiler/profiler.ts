@@ -3,23 +3,24 @@ import {
     addNode,
     addNodeIfNotExists,
     getNodesByType,
-    getRelated,
     getEdgeWeights,
     addEdge,
     hasNode,
     getNodeData,
     updateNode,
 } from '@genaism/services/graph/graph';
-import { getTopicId, getTopicLabel } from '@genaism/services/concept/concept';
+import { getTopicId } from '@genaism/services/concept/concept';
 import { addEdgeTypeListener, addNodeTypeListener } from '../graph/events';
 import { emitProfileEvent } from '../profiler/events';
 import { ContentNodeId, UserNodeId, isContentID, isUserID } from '../graph/graphTypes';
 import defaults from './defaultWeights.json';
-import { ScoredRecommendation } from '../recommender/recommenderTypes';
+import { ScoredRecommendation, Scores } from '../recommender/recommenderTypes';
 import { trainProfile } from './training';
 import { getCurrentUser, outOfDate, users, resetProfiles } from './state';
 import { appendActionLog, addLogEntry, getActionLog, getActionLogSince } from './logs';
 import { anonUsername } from '@genaism/util/anon';
+import { generateEmbedding } from './userEmbedding';
+import { createProfileSummaryById } from './summary';
 
 export { appendActionLog, addLogEntry, getCurrentUser, resetProfiles, getActionLog, getActionLogSince };
 
@@ -27,8 +28,6 @@ const defaultWeights = Array.from(Object.values(defaults));
 const weightKeys = Array.from(Object.keys(defaults));
 export { defaultWeights, weightKeys };
 
-const TIME_WINDOW = 10 * 60 * 1000;
-const TIME_DECAY = 0.2;
 const PROFILE_COUNTS = 10;
 
 const globalScore = {
@@ -54,7 +53,7 @@ addEdgeTypeListener('topic', (id: UserNodeId) => {
 
 interface UserData {
     name: string;
-    featureWeights: number[];
+    featureWeights: Scores;
 }
 
 addNodeTypeListener('user', (id: UserNodeId) => {
@@ -65,7 +64,7 @@ addNodeTypeListener('user', (id: UserNodeId) => {
             name: data.name,
             engagement: -1,
             attributes: {},
-            taste: [],
+            topics: [],
             engagedContent: [],
             reactedTopics: [],
             commentedTopics: [],
@@ -73,11 +72,12 @@ addNodeTypeListener('user', (id: UserNodeId) => {
             sharedTopics: [],
             viewedTopics: [],
             followedTopics: [],
-            featureWeights: data.featureWeights || [...defaultWeights],
+            featureWeights: data?.featureWeights || { ...defaults },
             seenItems: 0,
             engagementTotal: 0,
             positiveRecommendations: 0,
             negativeRecommendations: 0,
+            embedding: [],
         };
         users.set(id, profile);
         outOfDate.add(id);
@@ -109,6 +109,7 @@ export function clearProfile(id: UserNodeId) {
     emitProfileEvent(id);
 }
 
+/** Used when initially creating a profile or loading from saved file. */
 export function addUserProfile(profile: UserProfile) {
     const uid = isUserID(profile.id) ? profile.id : (`user:${profile.id}` as UserNodeId);
     const hadNode = hasNode(uid);
@@ -131,6 +132,10 @@ export function addUserProfile(profile: UserProfile) {
     }
 }
 
+/** Updates a profile manually rather than re-generating it. For example,
+ *  another computer may have done the calculations to generate the profile and this
+ *  is just a manual replacement on other machines.
+ */
 export function updateProfile(id: UserNodeId, profile: UserProfile | ProfileSummary) {
     outOfDate.add(id);
 
@@ -140,9 +145,7 @@ export function updateProfile(id: UserNodeId, profile: UserProfile | ProfileSumm
     if ('featureWeights' in profile && profile.featureWeights) {
         const data = getNodeData<UserData>(id);
         if (data) {
-            profile.featureWeights.forEach((v, ix) => {
-                data.featureWeights[ix] = v;
-            });
+            data.featureWeights = { ...profile.featureWeights };
         }
     }
 
@@ -151,7 +154,7 @@ export function updateProfile(id: UserNodeId, profile: UserProfile | ProfileSumm
         addEdge('engaged', id, cid, c.weight);
         addEdge('engaged', cid, id, c.weight);
     });
-    profile.taste.forEach((t) => {
+    profile.topics.forEach((t) => {
         addEdge('topic', id, getTopicId(t.label), t.weight);
         addEdge('topic', getTopicId(t.label), id, t.weight);
     });
@@ -176,7 +179,7 @@ export function createEmptyProfile(id: UserNodeId, name: string): UserProfile {
         name: name,
         engagement: -1,
         attributes: {},
-        taste: [],
+        topics: [],
         engagedContent: [],
         reactedTopics: [],
         commentedTopics: [],
@@ -184,11 +187,12 @@ export function createEmptyProfile(id: UserNodeId, name: string): UserProfile {
         sharedTopics: [],
         viewedTopics: [],
         followedTopics: [],
-        featureWeights: [...defaultWeights],
+        featureWeights: { ...defaults },
         seenItems: 0,
         engagementTotal: 0,
         positiveRecommendations: 0,
         negativeRecommendations: 0,
+        embedding: [],
     };
 }
 
@@ -210,6 +214,7 @@ export function getUserProfile(id?: UserNodeId): UserProfile {
     return newProfile;
 }
 
+/** When a profile is flagged as out-of-date, rebuild the summary and embeddings. */
 export function recreateUserProfile(id?: UserNodeId): UserProfile {
     const aid = id || getCurrentUser();
     const summary = createProfileSummaryById(aid, PROFILE_COUNTS);
@@ -217,9 +222,12 @@ export function recreateUserProfile(id?: UserNodeId): UserProfile {
 
     // const seenItems = getRelated('seen', aid, { period: TIME_WINDOW });
 
+    // Update the embedding
+    const embedding = generateEmbedding(aid);
+
     // Attempt to find data
     const data = getNodeData<UserData>(aid);
-    if (data && !data?.featureWeights) data.featureWeights = [...defaultWeights];
+    if (data && !data?.featureWeights) data.featureWeights = { ...defaults };
 
     const newProfile = {
         ...summary,
@@ -227,11 +235,12 @@ export function recreateUserProfile(id?: UserNodeId): UserProfile {
         id: aid,
         engagement: summary.engagedContent.reduce((s, v) => s + v.weight, 0),
         attributes: {},
-        featureWeights: data?.featureWeights || [...defaultWeights],
+        featureWeights: data?.featureWeights || { ...defaults },
         seenItems: state?.seenItems || 0,
         engagementTotal: state?.engagementTotal || 0,
         positiveRecommendations: state?.positiveRecommendations || 0,
         negativeRecommendations: state?.negativeRecommendations || 0,
+        embedding,
     };
 
     globalScore.engagement = Math.max(globalScore.engagement, newProfile.engagement);
@@ -241,73 +250,6 @@ export function recreateUserProfile(id?: UserNodeId): UserProfile {
 
 export function getAllUsers(): string[] {
     return getNodesByType('user');
-}
-
-export function findTasteProfileById(id: UserNodeId, count?: number) {
-    return getRelated('topic', id, { count, period: TIME_WINDOW, timeDecay: TIME_DECAY }).map((v) => ({
-        label: getTopicLabel(v.id),
-        weight: v.weight,
-    }));
-}
-
-export function findTopContentById(id: UserNodeId, count?: number) {
-    return getRelated('engaged', id, { count, period: TIME_WINDOW, timeDecay: TIME_DECAY });
-}
-
-export function findTasteProfile(count?: number) {
-    return findTasteProfileById(getCurrentUser(), count);
-}
-
-export function findTopContent(count?: number) {
-    return findTopContentById(getCurrentUser(), count);
-}
-
-export function createProfileSummary(count?: number): ProfileSummary {
-    return createProfileSummaryById(getCurrentUser(), count);
-}
-
-export function createProfileSummaryById(id: UserNodeId, count?: number): ProfileSummary {
-    const taste = findTasteProfileById(id, count);
-    const engagedContent = findTopContentById(id, count);
-
-    return {
-        taste,
-        engagedContent,
-        commentedTopics: getRelated('commented_topic', id, { count, period: TIME_WINDOW, timeDecay: TIME_DECAY }).map(
-            (r) => ({
-                label: getTopicLabel(r.id),
-                weight: r.weight,
-            })
-        ),
-        seenTopics: getRelated('seen_topic', id, { period: TIME_WINDOW, timeDecay: TIME_DECAY }).map((r) => ({
-            label: getTopicLabel(r.id),
-            weight: r.weight,
-        })),
-        sharedTopics: getRelated('shared_topic', id, { count, period: TIME_WINDOW, timeDecay: TIME_DECAY }).map(
-            (r) => ({
-                label: getTopicLabel(r.id),
-                weight: r.weight,
-            })
-        ),
-        followedTopics: getRelated('followed_topic', id, { count, period: TIME_WINDOW, timeDecay: TIME_DECAY }).map(
-            (r) => ({
-                label: getTopicLabel(r.id),
-                weight: r.weight,
-            })
-        ),
-        reactedTopics: getRelated('reacted_topic', id, { count, period: TIME_WINDOW, timeDecay: TIME_DECAY }).map(
-            (r) => ({
-                label: getTopicLabel(r.id),
-                weight: r.weight,
-            })
-        ),
-        viewedTopics: getRelated('viewed_topic', id, { count, period: TIME_WINDOW, timeDecay: TIME_DECAY }).map(
-            (r) => ({
-                label: getTopicLabel(r.id),
-                weight: r.weight,
-            })
-        ),
-    };
 }
 
 export function updateEngagement(recommendation: ScoredRecommendation) {

@@ -1,11 +1,9 @@
 import { beforeEach, describe, it } from 'vitest';
 import { resetGraph } from '../graph/state';
 import { createUserProfile } from '../profiler/profiler';
-import { addNode } from '../graph/nodes';
-import { addEdge } from '../graph/edges';
-import { addTopic, getTopicId } from '../concept/concept';
 import { scoreCandidates } from './scoring';
 import { Recommendation } from './recommenderTypes';
+import { addContent } from '../content/content';
 
 describe('Scoring.scoreCandidates()', () => {
     beforeEach(() => {
@@ -28,12 +26,8 @@ describe('Scoring.scoreCandidates()', () => {
 
     it('calculates a taste score correctly', async ({ expect }) => {
         const profile = createUserProfile('user:xyz', 'TestUser');
-        addTopic('topic1', 1);
-        addTopic('topic2', 1);
-        addNode('content', 'content:xyz2');
-        addEdge('topic', 'content:xyz2', getTopicId('topic1'), 1.0);
-        addEdge('topic', 'content:xyz2', getTopicId('topic2'), 0.5);
-        profile.taste = [{ label: 'topic1', weight: 0.5 }];
+        addContent('xxx', { labels: [], id: 'xyz2', embedding: [0.9, 0.1] });
+        profile.embedding = [0.8, 0.2];
         const candidates: Recommendation[] = [
             {
                 contentId: 'content:xyz2',
@@ -44,5 +38,6 @@ describe('Scoring.scoreCandidates()', () => {
         const scored = scoreCandidates(candidates, profile);
         expect(scored).toHaveLength(1);
         expect(scored[0].score).toBeGreaterThan(0.0);
+        expect(scored[0].features.taste).toBeGreaterThan(0.01);
     });
 });

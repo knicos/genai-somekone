@@ -1,3 +1,4 @@
+import { normalise } from '@genaism/util/embedding';
 import { UserProfile } from '../profiler/profilerTypes';
 import { makeFeatures } from './features';
 import { Recommendation, ScoredRecommendation, Scores, ScoringOptions } from './recommenderTypes';
@@ -45,13 +46,14 @@ export function scoreCandidates(
 ): ScoredRecommendation[] {
     // Could use Tensorflow here?
     const features = makeFeatures(candidates, profile, options);
-    const keys = features.length > 0 ? Object.keys(features[0]) : [];
+    const keys = (features.length > 0 ? Object.keys(features[0]) : []) as (keyof Scores)[];
     const featureVectors = features.map((i) => Object.values(i));
-    const scores = featureVectors.map((c) => c.map((f, ix) => f * (profile.featureWeights[ix] || 0)));
+    const weights = normalise(keys.map((k) => profile.featureWeights[k] || 1));
+    const scores = featureVectors.map((c) => c.map((f, ix) => f * (weights[ix] || 0)));
     const namedScores = scores.map((s) => s.reduce((r, v, ix) => ({ ...r, [keys[ix]]: v }), {}));
     const results: ScoredRecommendation[] = candidates.map((c, ix) => ({
         ...c,
-        features: featureVectors[ix],
+        features: features[ix],
         scores: namedScores[ix],
         significance: {},
         score: scores[ix].reduce((s, v) => s + v, 0),

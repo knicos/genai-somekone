@@ -33,7 +33,7 @@ export interface Scores {
 }
 
 export interface ScoredRecommendation extends Recommendation {
-    features: number[];
+    features: Scores;
     scores: Scores;
     significance: Scores;
     score: number;
