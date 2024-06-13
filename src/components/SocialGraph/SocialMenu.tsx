@@ -25,6 +25,7 @@ import {
 import ClusterMenu from './ClusterMenu';
 import { removeUser } from '@genaism/services/users/users';
 import { UserNodeId } from '@genaism/services/graph/graphTypes';
+import ImageIcon from '@mui/icons-material/Image';
 
 interface UserData {
     name: string;
@@ -60,6 +61,16 @@ export default function SocialMenu() {
                 </div>
             }
         >
+            <IconMenuItem tooltip={t('dashboard.labels.profileImage')}>
+                <IconButton
+                    color={nodeMode === 'profileImage' ? 'secondary' : 'inherit'}
+                    onClick={() => setNodeMode('profileImage')}
+                    data-testid="social-menu-profileImage"
+                    aria-label={t('dashboard.labels.profileImage')}
+                >
+                    <ImageIcon />
+                </IconButton>
+            </IconMenuItem>
             <IconMenuItem tooltip={t('dashboard.labels.engagedImages')}>
                 <IconButton
                     color={nodeMode === 'image' ? 'secondary' : 'inherit'}

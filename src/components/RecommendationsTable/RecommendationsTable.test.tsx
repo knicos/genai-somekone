@@ -6,6 +6,7 @@ describe('RecommendationsTable component', () => {
     it('shows a single random item', async ({ expect }) => {
         render(
             <RecommendationsTable
+                userId="user:xyz"
                 recommendation={{
                     candidateOrigin: 'random',
                     score: 0.5,
@@ -28,6 +29,7 @@ describe('RecommendationsTable component', () => {
     it('shows taste score', async ({ expect }) => {
         render(
             <RecommendationsTable
+                userId="user:xyz"
                 recommendation={{
                     candidateOrigin: 'random',
                     score: 0.5,

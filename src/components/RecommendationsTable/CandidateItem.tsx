@@ -4,6 +4,8 @@ import { ScoredRecommendation } from '@genaism/services/recommender/recommenderT
 import { getNodeData } from '@genaism/services/graph/nodes';
 import ImageSearchIcon from '@mui/icons-material/ImageSearch';
 import style from './style.module.css';
+import MiniUserGraph from '../MiniUserGraph/MiniUserGraph';
+import { UserNodeId } from '@genaism/services/graph/graphTypes';
 
 interface UserData {
     name: string;
@@ -35,16 +37,28 @@ function generateCandidateMessage(item: ScoredRecommendation, t: TFunction) {
 
 interface Props {
     item: ScoredRecommendation;
+    userId: UserNodeId;
 }
 
-export default function CandidateItem({ item }: Props) {
+export default function CandidateItem({ item, userId }: Props) {
     const { t } = useTranslation();
     return (
         <li data-testid="candidate-item">
             <div className={style.listIcon}>
                 <ImageSearchIcon fontSize="large" />
             </div>
-            <div className={style.listColumn}>{generateCandidateMessage(item, t)}</div>
+            <div className={style.listColumn}>
+                {generateCandidateMessage(item, t)}
+                {item.candidateOrigin === 'similar_user' && (
+                    <div className={style.miniGraphBox}>
+                        <MiniUserGraph
+                            userId={userId}
+                            pairedId={item.similarUser || 'user:none'}
+                            contentId={item.contentId}
+                        />
+                    </div>
+                )}
+            </div>
         </li>
     );
 }

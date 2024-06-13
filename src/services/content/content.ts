@@ -1,10 +1,10 @@
 import { CommentEntry, ContentMetadata, ContentStats, ContentStatsId } from './contentTypes';
-import { addNode, addEdge, removeNode } from '@genaism/services/graph/graph';
+import { addNode, addEdge, removeNode, getNodesByType } from '@genaism/services/graph/graph';
 import { getTopicId } from '@genaism/services/concept/concept';
-import { ContentNodeId, UserNodeId } from '../graph/graphTypes';
+import { ContentNodeId, UserNodeId, WeightedNode } from '../graph/graphTypes';
 import { isDisallowedTopic } from './disallowed';
 import { anonString } from '@genaism/util/anon';
-import { normalise } from '@genaism/util/embedding';
+import { Embedding, embeddingSimilarity, normalise } from '@genaism/util/embedding';
 
 const dataStore = new Map<ContentNodeId, string>();
 const metaStore = new Map<ContentNodeId, ContentMetadata>();
@@ -162,4 +162,20 @@ export function getContentStats(id: ContentNodeId | ContentNodeId[]): ContentSta
     } else {
         return statsStore.get(id) || { reactions: 0, shares: 0, views: 0 };
     }
+}
+
+export function getSimilarContent(embedding: Embedding, count?: number, nodes?: ContentNodeId[]) {
+    const anodes = nodes || getNodesByType('content');
+
+    const sims: WeightedNode<ContentNodeId>[] = [];
+    anodes.forEach((n) => {
+        const meta = getContentMetadata(n);
+        if (meta && meta.embedding) {
+            const sim = embeddingSimilarity(embedding, meta.embedding);
+            sims.push({ id: n, weight: sim });
+        }
+    });
+
+    sims.sort((a, b) => b.weight - a.weight);
+    return count ? sims.slice(0, count) : sims;
 }

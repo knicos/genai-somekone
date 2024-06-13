@@ -4,9 +4,9 @@ import { Recommendation } from '../recommenderTypes';
 import { getRelated } from '@genaism/services/graph/query';
 import { biasedUniqueSubset } from '@genaism/util/subsets';
 
-const MIN20 = 20 * 60 * 1000;
+const MIN20 = 60 * 60 * 1000;
 const NUM_SIMILAR_USERS = 5;
-const IMAGES_PER_USER = 30;
+const IMAGES_PER_USER = 10;
 
 interface UserSuggestion extends WeightedNode<ContentNodeId> {
     user: UserNodeId;

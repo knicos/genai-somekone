@@ -168,6 +168,11 @@ export default function SocialGraphSettings() {
                         control={<Radio />}
                         label={t('dashboard.labels.engagementScore')}
                     />
+                    <FormControlLabel
+                        value="profileImage"
+                        control={<Radio />}
+                        label={t('dashboard.labels.profileImage')}
+                    />
                 </RadioGroup>
             </FormControl>
             <div className={style.spacer} />

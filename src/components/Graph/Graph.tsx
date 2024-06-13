@@ -59,6 +59,7 @@ interface Props<T extends NodeID> extends PropsWithChildren {
     defaultLinkStyle?: LinkStyle<T>;
     LabelComponent?: FunctionComponent<LabelProps<T>>;
     labelProps?: object;
+    disableControls?: boolean;
 }
 
 interface InternalState {
@@ -100,6 +101,7 @@ export default function Graph<T extends NodeID>({
     defaultLinkStyle = DEFAULT_LINK_STYLE,
     LabelComponent,
     labelProps,
+    disableControls,
 }: Props<T>) {
     const svgRef = useRef<SVGSVGElement>(null);
     const [redraw, trigger] = useReducer((a) => ++a, 0);
@@ -212,75 +214,95 @@ export default function Graph<T extends NodeID>({
             viewBox="-500 -500 1000 1000"
             data-testid="graph-svg"
             tabIndex={0}
-            onKeyDown={(e: KeyboardEvent<SVGSVGElement>) => {
-                if (e.key === '+' || e.key === '=') {
-                    setActualZoom((oldZoom) => ({
-                        ...oldZoom,
-                        zoom: Math.max(0.5, oldZoom.zoom - 0.2 * oldZoom.zoom),
-                    }));
-                } else if (e.key === '-') {
-                    setActualZoom((oldZoom) => ({
-                        ...oldZoom,
-                        zoom: Math.max(0.5, oldZoom.zoom + 0.2 * oldZoom.zoom),
-                    }));
-                } else if (e.key === 'ArrowLeft') {
-                    setActualZoom((oldZoom) => ({
-                        ...oldZoom,
-                        cx: oldZoom.cx - MOVE_SPEED * oldZoom.zoom,
-                    }));
-                } else if (e.key === 'ArrowRight') {
-                    setActualZoom((oldZoom) => ({
-                        ...oldZoom,
-                        cx: oldZoom.cx + MOVE_SPEED * oldZoom.zoom,
-                    }));
-                } else if (e.key === 'ArrowUp') {
-                    setActualZoom((oldZoom) => ({
-                        ...oldZoom,
-                        cy: oldZoom.cy - MOVE_SPEED * oldZoom.zoom,
-                    }));
-                } else if (e.key === 'ArrowDown') {
-                    setActualZoom((oldZoom) => ({
-                        ...oldZoom,
-                        cy: oldZoom.cy + MOVE_SPEED * oldZoom.zoom,
-                    }));
-                }
-            }}
-            onClickCapture={(e: MouseEvent<SVGSVGElement>) => {
-                if (Math.max(movement.current[0], movement.current[1]) > MOVE_THRESHOLD) {
-                    movement.current = [0, 0];
-                    e.stopPropagation();
-                    return;
-                }
-                if (onUnselect && focusNode) onUnselect();
-                movement.current = [0, 0];
-            }}
-            onPointerMove={(e: PointerEvent<SVGSVGElement>) => {
-                setActualZoom((oldZoom) => {
-                    if (svgRef.current) {
-                        return pointerMove(
-                            e,
-                            oldZoom,
-                            extents.current,
-                            svgRef.current,
-                            pointerCache.current,
-                            movement.current
-                        );
-                    }
-                    return oldZoom;
-                });
-            }}
-            onPointerUp={(e: PointerEvent<SVGSVGElement>) => {
-                pointerCache.current.clear();
-                if (e.pointerType === 'touch') movement.current = [0, 0];
-            }}
-            onWheel={(e: WheelEvent<SVGSVGElement>) => {
-                setActualZoom((oldZoom) => {
-                    if (svgRef.current) {
-                        return wheelZoom(e, svgRef.current, extents.current, oldZoom);
-                    }
-                    return oldZoom;
-                });
-            }}
+            onKeyDown={
+                !disableControls
+                    ? (e: KeyboardEvent<SVGSVGElement>) => {
+                          if (e.key === '+' || e.key === '=') {
+                              setActualZoom((oldZoom) => ({
+                                  ...oldZoom,
+                                  zoom: Math.max(0.5, oldZoom.zoom - 0.2 * oldZoom.zoom),
+                              }));
+                          } else if (e.key === '-') {
+                              setActualZoom((oldZoom) => ({
+                                  ...oldZoom,
+                                  zoom: Math.max(0.5, oldZoom.zoom + 0.2 * oldZoom.zoom),
+                              }));
+                          } else if (e.key === 'ArrowLeft') {
+                              setActualZoom((oldZoom) => ({
+                                  ...oldZoom,
+                                  cx: oldZoom.cx - MOVE_SPEED * oldZoom.zoom,
+                              }));
+                          } else if (e.key === 'ArrowRight') {
+                              setActualZoom((oldZoom) => ({
+                                  ...oldZoom,
+                                  cx: oldZoom.cx + MOVE_SPEED * oldZoom.zoom,
+                              }));
+                          } else if (e.key === 'ArrowUp') {
+                              setActualZoom((oldZoom) => ({
+                                  ...oldZoom,
+                                  cy: oldZoom.cy - MOVE_SPEED * oldZoom.zoom,
+                              }));
+                          } else if (e.key === 'ArrowDown') {
+                              setActualZoom((oldZoom) => ({
+                                  ...oldZoom,
+                                  cy: oldZoom.cy + MOVE_SPEED * oldZoom.zoom,
+                              }));
+                          }
+                      }
+                    : undefined
+            }
+            onClickCapture={
+                !disableControls
+                    ? (e: MouseEvent<SVGSVGElement>) => {
+                          if (Math.max(movement.current[0], movement.current[1]) > MOVE_THRESHOLD) {
+                              movement.current = [0, 0];
+                              e.stopPropagation();
+                              return;
+                          }
+                          if (onUnselect && focusNode) onUnselect();
+                          movement.current = [0, 0];
+                      }
+                    : undefined
+            }
+            onPointerMove={
+                !disableControls
+                    ? (e: PointerEvent<SVGSVGElement>) => {
+                          setActualZoom((oldZoom) => {
+                              if (svgRef.current) {
+                                  return pointerMove(
+                                      e,
+                                      oldZoom,
+                                      extents.current,
+                                      svgRef.current,
+                                      pointerCache.current,
+                                      movement.current
+                                  );
+                              }
+                              return oldZoom;
+                          });
+                      }
+                    : undefined
+            }
+            onPointerUp={
+                !disableControls
+                    ? (e: PointerEvent<SVGSVGElement>) => {
+                          pointerCache.current.clear();
+                          if (e.pointerType === 'touch') movement.current = [0, 0];
+                      }
+                    : undefined
+            }
+            onWheel={
+                !disableControls
+                    ? (e: WheelEvent<SVGSVGElement>) => {
+                          setActualZoom((oldZoom) => {
+                              if (svgRef.current) {
+                                  return wheelZoom(e, svgRef.current, extents.current, oldZoom);
+                              }
+                              return oldZoom;
+                          });
+                      }
+                    : undefined
+            }
         >
             <g>
                 {showLines && (

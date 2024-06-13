@@ -55,7 +55,7 @@ export const settingShowOfflineUsers = atom<boolean>({
     default: true,
 });
 
-export type NodeDisplayMode = 'image' | 'word' | 'score';
+export type NodeDisplayMode = 'image' | 'word' | 'score' | 'profileImage';
 
 export const settingNodeMode = atom<NodeDisplayMode>({
     key: 'settingnodemode',

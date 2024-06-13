@@ -21,6 +21,7 @@ import { appendActionLog, addLogEntry, getActionLog, getActionLogSince } from '.
 import { anonUsername } from '@genaism/util/anon';
 import { generateEmbedding } from './userEmbedding';
 import { createProfileSummaryById } from './summary';
+import { getSimilarContent } from '../content/content';
 
 export { appendActionLog, addLogEntry, getCurrentUser, resetProfiles, getActionLog, getActionLogSince };
 
@@ -225,6 +226,12 @@ export function recreateUserProfile(id?: UserNodeId): UserProfile {
     // Update the embedding
     const embedding = generateEmbedding(aid);
 
+    const image = getSimilarContent(
+        embedding,
+        1,
+        summary.engagedContent.map((e) => e.id)
+    )[0]?.id;
+
     // Attempt to find data
     const data = getNodeData<UserData>(aid);
     if (data && !data?.featureWeights) data.featureWeights = { ...defaults };
@@ -241,6 +248,7 @@ export function recreateUserProfile(id?: UserNodeId): UserProfile {
         positiveRecommendations: state?.positiveRecommendations || 0,
         negativeRecommendations: state?.negativeRecommendations || 0,
         embedding,
+        image,
     };
 
     globalScore.engagement = Math.max(globalScore.engagement, newProfile.engagement);

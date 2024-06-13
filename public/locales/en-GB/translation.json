@@ -240,7 +240,8 @@
             "noActionOnSelect": "None",
             "allowFeedActions": "Allow actions in dashboard feed",
             "alwaysActive": "Keep current image active",
-            "contentTools": "Content Tools"
+            "contentTools": "Content Tools",
+            "profileImage": "Profile Images"
         },
         "messages": {
             "connection": "Go to the address below and enter the code <Code>{{codeText}}</Code>, or use the QR code.",
@@ -309,7 +310,7 @@
             "topicCandidate": "Found from #{{topic}}.",
             "random": "Found randomly from all images.",
             "coengagedCandidate": "Found from another image you interacted with.",
-            "similarUserCandidate": "From from similar user \"{{userName}}\".",
+            "similarUserCandidate": "User \"{{userName}}\" is similar to you and engaged with this image.",
             "taste": "Ranked high for taste similarity",
             "sharing": "Ranked high for sharing probability",
             "commenting": "Ranked high for commenting probability",

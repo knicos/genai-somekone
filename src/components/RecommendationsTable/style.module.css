@@ -108,3 +108,9 @@
     font-size: 0.6em;
     color: #666;
 }
+
+.miniGraphBox {
+    position: relative;
+    width: calc(100% - 1rem);
+    height: 200px;
+}

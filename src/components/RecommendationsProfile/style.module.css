@@ -16,6 +16,7 @@
     flex-grow: 1;
     overflow-y: scroll;
     align-items: center;
+    height: 100%;
 }
 
 .wizard {

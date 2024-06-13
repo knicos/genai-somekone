@@ -1,7 +1,7 @@
 import ImageCloud from '../ImageCloud/ImageCloud';
-import { memo, useCallback, useMemo, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useUserProfile } from '@genaism/services/profiler/hooks';
-import { UserNodeId } from '@genaism/services/graph/graphTypes';
+import { ContentNodeId, UserNodeId } from '@genaism/services/graph/graphTypes';
 import { useRecoilValue } from 'recoil';
 import {
     //settingDisplayLabel,
@@ -14,6 +14,7 @@ import style from './style.module.css';
 import Label from './Label';
 import { GraphNode } from '../Graph/types';
 import { WeightedLabel } from '@genaism/services/content/contentTypes';
+import { getContentData } from '@genaism/services/content/content';
 
 interface Props {
     id: UserNodeId;
@@ -51,6 +52,7 @@ const ProfileNode = memo(function ProfileNode({ id, onResize, live, selected, di
 
     const reduced = shrinkOffline && !live;
     const asize = reduced ? size * 0.4 : size;
+    const image = profile.image;
 
     const ftaste = useMemo(() => {
         /*if (node.data?.topics) {
@@ -67,6 +69,12 @@ const ProfileNode = memo(function ProfileNode({ id, onResize, live, selected, di
             return [];
         }
     }, [profile, topicThreshold]);
+
+    useEffect(() => {
+        if (nodeMode === 'profileImage') {
+            doResize(Math.floor(profile.engagement * 2) + 50);
+        }
+    }, [doResize, nodeMode, profile]);
 
     return (
         <g className={disabled ? style.disabledGroup : style.group}>
@@ -111,6 +119,17 @@ const ProfileNode = memo(function ProfileNode({ id, onResize, live, selected, di
                     fill={'white'}
                     padding={0}
                     onResize={doResize}
+                />
+            )}
+            {!reduced && nodeMode === 'profileImage' && image && (
+                <image
+                    x={-asize}
+                    y={-asize}
+                    width={asize * 2}
+                    height={asize * 2}
+                    href={getContentData(image as ContentNodeId)}
+                    preserveAspectRatio="none"
+                    clipPath="circle() fill-box"
                 />
             )}
         </g>

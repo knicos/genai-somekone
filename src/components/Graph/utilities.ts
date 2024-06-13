@@ -27,8 +27,8 @@ export function makeNodes<T extends NodeID>(
             cur.fx = cur.x;
             cur.fy = cur.y;
         } else {
-            cur.fx = undefined;
-            cur.fy = undefined;
+            cur.fx = n.fx;
+            cur.fy = n.fy;
         }
         newNodeRef.set(n.id, cur);
     });

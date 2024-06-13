@@ -63,4 +63,5 @@ export interface UserProfile extends ProfileSummary {
     positiveRecommendations: number;
     negativeRecommendations: number;
     embedding: number[];
+    image?: ContentNodeId;
 }

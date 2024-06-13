@@ -13,6 +13,7 @@ import { IconButton } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { Button } from '../Button/Button';
 import DesignServicesIcon from '@mui/icons-material/DesignServices';
+import { getCurrentUser } from '@genaism/services/profiler/state';
 
 interface Props {
     id?: UserNodeId;
@@ -26,6 +27,8 @@ export default function RecommendationsProfile({ id, generate, noWizard }: Props
     const { recommendations, more } = useRecommendations(9, id, appConfig?.recommendations);
     const [selected, setSelected] = useState(-1);
     const [wizard, setWizard] = useState(false);
+
+    const aid = id || getCurrentUser();
 
     const recomNodes: WeightedNode<ContentNodeId>[] = recommendations.map((r) => ({
         id: r.contentId,
@@ -82,7 +85,12 @@ export default function RecommendationsProfile({ id, generate, noWizard }: Props
                         <span>{t('recommendations.descriptions.selectHint')}</span>
                     </div>
                 )}
-                {selectedRecom && <RecommendationsTable recommendation={selectedRecom} />}
+                {selectedRecom && (
+                    <RecommendationsTable
+                        userId={aid}
+                        recommendation={selectedRecom}
+                    />
+                )}
                 <div style={{ flexGrow: 5, flexShrink: 1 }} />
             </div>
         </div>
