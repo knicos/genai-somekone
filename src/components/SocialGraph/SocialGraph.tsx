@@ -76,7 +76,7 @@ export default function SocialGraph({ liveUsers }: Props) {
             globalMin = Math.min(globalMin, s[0]?.weight || 1);
         });
         globalMin = globalMin * (1 - similarPercent);
-        console.log(similar);
+
         similar.similar.forEach((s, id) => {
             const maxWeight = s[0]?.weight || 0;
             s.forEach((node) => {
@@ -184,14 +184,12 @@ export default function SocialGraph({ liveUsers }: Props) {
                         egoSelect && linkStyles
                             ? 0
                             : l.source.data?.label && l.source.data?.label === l.target.data?.label
-                            ? 0.3
-                            : 0.05,
+                            ? 0.5
+                            : 0.1,
                     width: (l: InternalGraphLink<UserNodeId, UserNodeId>) =>
                         MIN_LINE_THICKNESS + Math.floor(l.strength * LINE_THICKNESS_UNSELECTED),
                     colour: (l: InternalGraphLink<UserNodeId, UserNodeId>) =>
-                        l.source.data?.colour === l.target.data?.colour
-                            ? (l.source.data?.colour as string) || '#444'
-                            : '#444',
+                        l.source.data?.colour === l.target.data?.colour ? (l.source.data?.colour as string) : '#5f7377',
                 }}
                 charge={charge}
                 showLines={showLines}

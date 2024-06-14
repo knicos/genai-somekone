@@ -162,7 +162,7 @@ export default function Graph<T extends NodeID>({
         nodeRef.current = newNodeRef;
         const lnodes = Array.from(nodeRef.current).map((v) => v[1]);
 
-        const llinks = makeLinks<T>(nodes, nodeRef.current, links);
+        const llinks = makeLinks<T>(nodeRef.current, links);
 
         if (!simRef.current) {
             simRef.current = createSimulation<T>(charge, linkScale);

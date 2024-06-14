@@ -37,24 +37,27 @@ export function makeNodes<T extends NodeID>(
 }
 
 export function makeLinks<T extends NodeID>(
-    nodes: GraphNode<T>[],
     nodeMap: Map<string, GraphNode<T>>,
     links?: GraphLink<T, T>[]
 ): InternalGraphLink<T, T>[] {
-    return nodes.length > 0 && links
-        ? links
-              .map((l) => {
-                  const s = nodeMap.get(l.source);
-                  const t = nodeMap.get(l.target);
-                  return s && t
-                      ? {
-                            source: s,
-                            target: t,
-                            strength: l.strength,
-                            actualStrength: l.actualStrength,
-                        }
-                      : { source: nodes[0], target: nodes[0], strength: 0 };
-              })
-              .filter((l) => (l.actualStrength || 0) > 0)
-        : [];
+    const linkMap = new Map<string, InternalGraphLink<T, T>>();
+
+    links?.forEach((link) => {
+        if ((link.actualStrength || 0) <= 0) return;
+        if (linkMap.has(`${link.target}-${link.source}`)) return;
+
+        const s = nodeMap.get(link.source);
+        const t = nodeMap.get(link.target);
+
+        if (s && t) {
+            linkMap.set(`${link.source}-${link.target}`, {
+                source: s,
+                target: t,
+                strength: link.strength,
+                actualStrength: link.actualStrength,
+            });
+        }
+    });
+
+    return Array.from(linkMap.values());
 }

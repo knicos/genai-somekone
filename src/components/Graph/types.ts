@@ -28,7 +28,7 @@ export interface InternalGraphLink<A extends NodeID, B extends NodeID> {
 }
 
 type StyleMappingFn<T extends NodeID, R> = (l: InternalGraphLink<T, T>) => R;
-type StyleMapping<T extends NodeID, R> = R | StyleMappingFn<T, R>;
+type StyleMapping<T extends NodeID, R> = R | StyleMappingFn<T, R | undefined>;
 
 export interface LinkStyle<T extends NodeID> {
     className?: StyleMapping<T, string>;
