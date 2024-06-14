@@ -60,13 +60,12 @@ export function scoreCandidates(
         significance: {},
         score: scores[ix].reduce((s, v) => s + v, 0),
         rank: 0,
-        rankScore: 0,
+        diversity: 0,
     }));
 
     results.sort((a, b) => b.score - a.score);
     results.forEach((r, ix) => {
-        r.rank = ix + 1;
-        r.rankScore = 1 - ix / results.length;
+        r.rank = ix;
     });
 
     if (!options?.excludeSignificance) {

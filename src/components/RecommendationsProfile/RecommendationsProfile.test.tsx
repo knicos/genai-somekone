@@ -46,7 +46,7 @@ describe('RecommendationsProfile component', () => {
                 significance: {},
                 features: {},
                 rank: 0,
-                rankScore: 0,
+                diversity: 0,
                 timestamp: 0,
                 topic: 'testtopic',
             },

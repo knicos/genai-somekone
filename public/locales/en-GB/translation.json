@@ -336,7 +336,8 @@
             "scoringGeneral": "Content only score",
             "scoringRandom": "Any image at random",
             "scoringAll": "Combine all scores (default)",
-            "score": "Score"
+            "score": "Score",
+            "diversity": "Diversity"
         },
         "titles": {
             "candidateDiscovery": "How are candidates discovered?",

@@ -15,7 +15,7 @@ function makeRecommendation(id: ContentNodeId): ScoredRecommendation {
         significance: {},
         features: {},
         rank: 0,
-        rankScore: 0,
+        diversity: 0,
         timestamp: 0,
         candidateOrigin: 'random',
     };

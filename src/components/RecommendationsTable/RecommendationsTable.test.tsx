@@ -15,7 +15,7 @@ describe('RecommendationsTable component', () => {
                     significance: {},
                     features: {},
                     rank: 0,
-                    rankScore: 0,
+                    diversity: 0,
                     timestamp: 0,
                 }}
             />
@@ -38,7 +38,7 @@ describe('RecommendationsTable component', () => {
                     significance: { taste: 1 },
                     features: {},
                     rank: 0,
-                    rankScore: 0,
+                    diversity: 0,
                     timestamp: 0,
                 }}
             />

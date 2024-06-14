@@ -38,7 +38,7 @@ export interface ScoredRecommendation extends Recommendation {
     significance: Scores;
     score: number;
     rank: number;
-    rankScore: number;
+    diversity: number;
 }
 
 export interface CandidateOptions {

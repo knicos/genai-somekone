@@ -25,7 +25,15 @@ export default function ScoresItem({ item }: Props) {
                         label={t(`recommendations.labels.score`)}
                         showValue
                         color={sColors.secondary}
-                        size={80}
+                        size={100}
+                    />
+                    <ScorePie
+                        value={item.diversity || 0}
+                        maxValue={1}
+                        label={t(`recommendations.labels.diversity`)}
+                        showValue
+                        color={sColors.primary}
+                        size={70}
                     />
                 </div>
             </div>

@@ -27,6 +27,9 @@ export function generateNewRecommendations(
     } else {
         const subset = biasedUniqueSubset(scored, count, (v) => v.contentId);
         subset.sort((a, b) => b.score - a.score);
+        subset.forEach((s, ix) => {
+            s.diversity = Math.abs(ix - s.rank) / scored.length;
+        });
 
         store.set(id, [...subset, ...old]);
         if (events) emitRecommendationEvent(id, subset);
