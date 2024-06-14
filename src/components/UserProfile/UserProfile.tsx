@@ -11,7 +11,7 @@ import Card from '../DataCard/Card';
 import TopicDetail from './TopicDetail';
 import { getRelated } from '@genaism/services/graph/query';
 import { getTopicLabel } from '@genaism/services/concept/concept';
-import { getBestEngagement } from '@genaism/services/profiler/profiler';
+import { getBestEngagement, getCurrentUser } from '@genaism/services/profiler/profiler';
 
 interface Props {
     id?: UserNodeId;
@@ -20,7 +20,8 @@ interface Props {
 export default function Profile({ id }: Props) {
     const { t } = useTranslation();
     const [wcSize, setWCSize] = useState(300);
-    const profile = useUserProfile(id);
+    const aid = id || getCurrentUser();
+    const profile = useUserProfile(aid);
 
     const topics = useMemo(() => {
         return topicSummary(profile);
@@ -29,7 +30,7 @@ export default function Profile({ id }: Props) {
     const topicContent = useMemo(() => {
         const newMap = new Map<string, WeightedNode<ContentNodeId>[]>();
         let maxEngage = 0;
-        const engaged = getRelated('engaged', profile.id, { period: 20 * 60 * 1000 });
+        const engaged = getRelated('engaged', aid, { period: 20 * 60 * 1000 });
         engaged.forEach((e) => {
             if (e.weight === 0) return;
             maxEngage = Math.max(e.weight, maxEngage);
@@ -43,13 +44,13 @@ export default function Profile({ id }: Props) {
             });
         });
         return { map: newMap, max: maxEngage };
-    }, [profile]);
+    }, [aid]);
 
     const doResize = useCallback((size: number) => {
         setWCSize(size);
     }, []);
 
-    const tasteSum = profile.topics.reduce((sum, t) => sum + t.weight, 0);
+    const tasteSum = profile.affinities.topics.topics.reduce((sum, t) => sum + t.weight, 0);
 
     return (
         <div
@@ -63,7 +64,7 @@ export default function Profile({ id }: Props) {
                     viewBox={`${-(wcSize * 1.67)} ${-wcSize} ${wcSize * 1.67 * 2} ${wcSize * 2}`}
                 >
                     <WordCloud
-                        content={profile.topics}
+                        content={profile.affinities.topics.topics}
                         size={300}
                         className={style.word}
                         onSize={doResize}
@@ -76,12 +77,12 @@ export default function Profile({ id }: Props) {
                     score={Math.min(1, profile.engagement / (getBestEngagement() || 1))}
                 />
                 {profile &&
-                    profile.topics
+                    profile.affinities.topics.topics
                         .filter((t) => t.weight > 0)
                         .map((t) => (
                             <TopicDetail
                                 key={t.label}
-                                id={profile.id}
+                                id={aid}
                                 topic={t.label}
                                 score={t.weight / tasteSum}
                                 topicContent={topicContent.map}

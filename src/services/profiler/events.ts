@@ -27,15 +27,3 @@ export function removeAnyProfileListener(handler: (id: UserNodeId) => void) {
 export function emitAnyProfileEvent(id: UserNodeId) {
     ee.emit(`profile`, id);
 }
-
-export function addLogListener(id: UserNodeId, handler: () => void) {
-    ee.on(`log-${id}`, handler);
-}
-
-export function removeLogListener(id: UserNodeId, handler: () => void) {
-    ee.off(`log-${id}`, handler);
-}
-
-export function emitLogEvent(id: UserNodeId) {
-    ee.emit(`log-${id}`);
-}

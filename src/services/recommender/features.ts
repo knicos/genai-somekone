@@ -4,8 +4,8 @@ import { getContentMetadata } from '../content/content';
 import { getEdge, getEdgeWeights } from '../graph/edges';
 import { ContentNodeId, TopicNodeId, UserNodeId, WeightedNode } from '../graph/graphTypes';
 import { getRelated } from '../graph/query';
-import { UserProfile } from '../profiler/profilerTypes';
 import { Recommendation, Scores, ScoringOptions } from './recommenderTypes';
+import { UserNodeData } from '../users/userTypes';
 
 const COENGAGEMENT_MAX = 4;
 const BASE_EMBEDDING_SIMILARITY = 0.8;
@@ -18,41 +18,41 @@ interface Preferences {
     reacting: WeightedNode<TopicNodeId>[];
 }
 
-function calculatePreferences(profile: UserProfile): Preferences {
+function calculatePreferences(profile: UserNodeData): Preferences {
     const seenTopicMap = new Map<string, number>();
-    profile.seenTopics.forEach((s) => {
+    profile.affinities.topics.seenTopics.forEach((s) => {
         seenTopicMap.set(s.label, s.weight);
     });
 
     return {
-        viewing: profile.viewedTopics.map((t) => ({
+        viewing: profile.affinities.topics.viewedTopics.map((t) => ({
             id: getTopicId(t.label),
             weight: t.weight / (seenTopicMap.get(t.label) || 1),
         })),
-        commenting: profile.commentedTopics.map((t) => ({
+        commenting: profile.affinities.topics.commentedTopics.map((t) => ({
             id: getTopicId(t.label),
             weight: t.weight / (seenTopicMap.get(t.label) || 1),
         })),
-        sharing: profile.sharedTopics.map((t) => ({
+        sharing: profile.affinities.topics.sharedTopics.map((t) => ({
             id: getTopicId(t.label),
             weight: t.weight / (seenTopicMap.get(t.label) || 1),
         })),
-        following: profile.followedTopics.map((t) => ({
+        following: profile.affinities.topics.followedTopics.map((t) => ({
             id: getTopicId(t.label),
             weight: t.weight / (seenTopicMap.get(t.label) || 1),
         })),
-        reacting: profile.reactedTopics.map((t) => ({
+        reacting: profile.affinities.topics.reactedTopics.map((t) => ({
             id: getTopicId(t.label),
             weight: t.weight / (seenTopicMap.get(t.label) || 1),
         })),
     };
 }
 
-function calculateTasteScore(profile: UserProfile, id: ContentNodeId): number {
-    if (profile.embedding.length === 0) console.warn('No profile embedding');
+function calculateTasteScore(profile: UserNodeData, id: ContentNodeId): number {
+    if (profile.embeddings.taste.length === 0) console.warn('No profile embedding');
     const meta = getContentMetadata(id);
-    if (meta && meta.embedding && profile.embedding.length > 0) {
-        const sim = normCosinesim(meta.embedding, profile.embedding);
+    if (meta && meta.embedding && profile.embeddings.taste.length > 0) {
+        const sim = normCosinesim(meta.embedding, profile.embeddings.taste);
         return Math.max(0, (sim - BASE_EMBEDDING_SIMILARITY) / (1 - BASE_EMBEDDING_SIMILARITY));
     }
     return 0;
@@ -120,7 +120,12 @@ function getLastSeenTime(userId: UserNodeId, contentId: ContentNodeId): number {
     return 0;
 }
 
-export function makeFeatures(candidates: Recommendation[], profile: UserProfile, options?: ScoringOptions): Scores[] {
+export function makeFeatures(
+    userId: UserNodeId,
+    candidates: Recommendation[],
+    profile: UserNodeData,
+    options?: ScoringOptions
+): Scores[] {
     const preferences = calculatePreferences(profile);
 
     return candidates.map((c) => {
@@ -133,11 +138,9 @@ export function makeFeatures(candidates: Recommendation[], profile: UserProfile,
             followingPreferenceScore,
         } = calculatePreferenceScores(preferences, c.contentId, options);
 
-        const coengagementScore = options?.noCoengagementScore
-            ? 0
-            : calculateCoengagementScore(profile.id, c.contentId);
+        const coengagementScore = options?.noCoengagementScore ? 0 : calculateCoengagementScore(userId, c.contentId);
 
-        const lastSeenTime = options?.noLastSeenScore ? 0 : getLastSeenTime(profile.id, c.contentId);
+        const lastSeenTime = options?.noLastSeenScore ? 0 : getLastSeenTime(userId, c.contentId);
 
         // userTasteSimilarity
         // userEngagementsSimilarity
@@ -161,10 +164,11 @@ export function makeFeatures(candidates: Recommendation[], profile: UserProfile,
 }
 
 export function makeFeatureVectors(
+    userId: UserNodeId,
     candidates: Recommendation[],
-    profile: UserProfile,
+    profile: UserNodeData,
     options?: ScoringOptions
 ): number[][] {
-    const features = makeFeatures(candidates, profile, options);
+    const features = makeFeatures(userId, candidates, profile, options);
     return features.map((i) => Object.values(i));
 }

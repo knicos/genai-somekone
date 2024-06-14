@@ -6,13 +6,13 @@ import { DataConnection } from 'peerjs';
 import { useCallback, useEffect, useRef } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { SMConfig } from '../../state/smConfig';
-import { appendActionLog, getActionLogSince } from '@genaism/services/profiler/logs';
+import { appendActionLog, getActionLogSince } from '@genaism/services/users/logs';
 import {
     getBestEngagement,
     getUserName,
     getUserProfile,
+    reverseProfile,
     setUserName,
-    updateProfile,
 } from '@genaism/services/profiler/profiler';
 import { appendResearchLog } from '@genaism/services/research/research';
 import { makeUserGraphSnapshot } from '@genaism/services/users/users';
@@ -53,6 +53,7 @@ export default function ServerProtocol({ onReady, code, content }: Props) {
                 });
             } else if (data.event === 'eter:reguser') {
                 setUserName(data.id, data.username);
+                snapRef.current.delete(data.id);
                 setUsers((old) => [...old, { id: data.id, username: data.username, connection: conn }]);
                 const profile = getUserProfile(data.id);
                 conn.send({ event: 'eter:profile_data', profile, id: data.id });
@@ -61,7 +62,7 @@ export default function ServerProtocol({ onReady, code, content }: Props) {
             } else if (data.event === 'eter:close') {
                 setUsers((old) => old.filter((o) => o.connection !== conn));
             } else if (data.event === 'eter:profile_data') {
-                updateProfile(data.id, data.profile);
+                reverseProfile(data.id, data.profile);
             } else if (data.event === 'eter:action_log') {
                 appendActionLog(data.log, data.id);
                 data.log.forEach((l) => {

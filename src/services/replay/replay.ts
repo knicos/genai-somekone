@@ -2,16 +2,18 @@ import { useEffect, useRef, useState } from 'react';
 import { resetTopics } from '../concept/concept';
 import { rebuildContent } from '../content/content';
 import { UserNodeId } from '../graph/graphTypes';
-import { addNode, getNodeData, getNodesByType } from '../graph/nodes';
+import { addNode, getNodesByType } from '../graph/nodes';
 import { resetGraph } from '../graph/state';
-import { getActionLog, processLogEntry } from '../profiler/logs';
+import { getActionLog, processLogEntry } from '../users/logs';
 import { clearProfile, getUserProfile } from '../profiler/profiler';
-import { LogEntry } from '../profiler/profilerTypes';
+import { LogEntry } from '../users/userTypes';
 import { resetProfiles } from '../profiler/state';
 import { scoreCandidates } from '../recommender/scoring';
-import { trainProfile } from '../profiler/training';
+import { trainProfileById } from '../profiler/training';
 import { getEdgeWeights } from '../graph/edges';
 import { ScoredRecommendation } from '../recommender/recommenderTypes';
+import { UserNodeData } from '../users/userTypes';
+import { getUserData } from '../users/users';
 
 const cacheRecommendations = new Map<string, ScoredRecommendation>();
 
@@ -39,6 +41,7 @@ function replayEntry(id: UserNodeId, log: LogEntry) {
     if (log.activity === 'seen') {
         const profile = getUserProfile(id);
         const scores = scoreCandidates(
+            id,
             [
                 {
                     contentId: log.id || 'content:none',
@@ -53,11 +56,10 @@ function replayEntry(id: UserNodeId, log: LogEntry) {
     processLogEntry(log, id);
 
     if (log.activity === 'engagement') {
-        const profile = getUserProfile(id);
         const score = cacheRecommendations.get(id + log.id);
         if (score) {
             const weight = getEdgeWeights('last_engaged', id, score.contentId)[0] || 0;
-            trainProfile(score, profile, weight);
+            trainProfileById(id, score, weight);
         }
     }
 }
@@ -103,10 +105,6 @@ interface ReplayState {
     indexes: Map<UserNodeId, number>;
 }
 
-interface UserData {
-    name: string;
-}
-
 export function useLogReplay(speed: number) {
     const [active, setActive] = useState(false);
     const [paused, setPaused] = useState(false);
@@ -120,15 +118,15 @@ export function useLogReplay(speed: number) {
     useEffect(() => {
         if (active) {
             const users = getNodesByType('user');
-            const data = new Map<UserNodeId, UserData>();
+            const data = new Map<UserNodeId, UserNodeData>();
             users.forEach((user) => {
-                const d = getNodeData<UserData>(user);
+                const d = getUserData(user);
                 if (d) data.set(user, d);
             });
 
             resetGraph();
             resetTopics();
-            resetProfiles(true);
+            resetProfiles();
             rebuildContent();
             cacheRecommendations.clear();
 

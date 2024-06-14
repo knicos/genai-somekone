@@ -1,11 +1,11 @@
-import { UserProfile } from '@genaism/services/profiler/profilerTypes';
 import { CandidateOptions, Recommendation } from './recommenderTypes';
 import { fillWithRandom } from './candidates/random';
 import { generateSimilarUsers } from './candidates/similarUsers';
 import { generateCoengaged } from './candidates/coengaged';
 import { generateTasteBatch } from './candidates/taste';
+import { UserNodeData } from '../users/userTypes';
 
-function _generateCandidates(profile: UserProfile, count: number, options: CandidateOptions) {
+function _generateCandidates(profile: UserNodeData, count: number, options: CandidateOptions) {
     const nodes: Recommendation[] = [];
 
     if (options.taste > 0) generateTasteBatch(profile, nodes, count * options.taste);
@@ -16,7 +16,7 @@ function _generateCandidates(profile: UserProfile, count: number, options: Candi
     return nodes;
 }
 
-export function generateCandidates(profile: UserProfile, count: number, options: CandidateOptions): Recommendation[] {
+export function generateCandidates(profile: UserNodeData, count: number, options: CandidateOptions): Recommendation[] {
     const selected = new Map<string, Recommendation>();
 
     let maxLoop = 2;

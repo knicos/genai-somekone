@@ -1,12 +1,12 @@
-import { ProfileSummary } from '@genaism/services/profiler/profilerTypes';
 import { Recommendation } from '../recommenderTypes';
 import { calculateCount } from './common';
 import { getRelated } from '@genaism/services/graph/query';
 import { getTopicId } from '@genaism/services/concept/concept';
 import { uniformUniqueSubset } from '@genaism/util/subsets';
+import { UserNodeData } from '@genaism/services/users/userTypes';
 
-export function generateTasteBatch(profile: ProfileSummary, nodes: Recommendation[], count: number) {
-    const taste = profile.topics;
+export function generateTasteBatch(profile: UserNodeData, nodes: Recommendation[], count: number) {
+    const taste = profile.affinities.topics.topics;
 
     const high = taste[0]?.weight || 0;
     const low = taste[taste.length - 1]?.weight || 0;

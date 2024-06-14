@@ -1,4 +1,3 @@
-import { ProfileSummary, UserProfile } from '../profiler/profilerTypes';
 import {
     addNode,
     addNodeIfNotExists,
@@ -6,30 +5,29 @@ import {
     getEdgeWeights,
     addEdge,
     hasNode,
-    getNodeData,
     updateNode,
+    touchNode,
 } from '@genaism/services/graph/graph';
 import { getTopicId } from '@genaism/services/concept/concept';
 import { addEdgeTypeListener, addNodeTypeListener } from '../graph/events';
 import { emitProfileEvent } from '../profiler/events';
-import { ContentNodeId, UserNodeId, isContentID, isUserID } from '../graph/graphTypes';
+import { ContentNodeId, UserNodeId, isContentID } from '../graph/graphTypes';
 import defaults from './defaultWeights.json';
-import { ScoredRecommendation, Scores } from '../recommender/recommenderTypes';
+import { ScoredRecommendation } from '../recommender/recommenderTypes';
 import { trainProfile } from './training';
-import { getCurrentUser, outOfDate, users, resetProfiles } from './state';
-import { appendActionLog, addLogEntry, getActionLog, getActionLogSince } from './logs';
+import { getCurrentUser, outOfDate, internalProfiles, resetProfiles } from './state';
+import { appendActionLog, addLogEntry, getActionLog, getActionLogSince } from '../users/logs';
 import { anonUsername } from '@genaism/util/anon';
-import { generateEmbedding } from './userEmbedding';
-import { createProfileSummaryById } from './summary';
-import { getSimilarContent } from '../content/content';
+import { getUserData } from '../users/users';
+import { UserNodeData } from '../users/userTypes';
+import { buildUserProfile } from './builder';
+import { InternalUserProfile } from './profilerTypes';
 
 export { appendActionLog, addLogEntry, getCurrentUser, resetProfiles, getActionLog, getActionLogSince };
 
 const defaultWeights = Array.from(Object.values(defaults));
 const weightKeys = Array.from(Object.keys(defaults));
 export { defaultWeights, weightKeys };
-
-const PROFILE_COUNTS = 10;
 
 const globalScore = {
     engagement: 0,
@@ -42,67 +40,71 @@ function triggerProfileEvent(id: UserNodeId) {
 }
 
 addEdgeTypeListener('engaged', (id: UserNodeId) => {
-    if (users.has(id)) {
+    if (internalProfiles.has(id)) {
         triggerProfileEvent(id);
     }
 });
 addEdgeTypeListener('topic', (id: UserNodeId) => {
-    if (users.has(id)) {
+    if (internalProfiles.has(id)) {
         triggerProfileEvent(id);
     }
 });
 
-interface UserData {
-    name: string;
-    featureWeights: Scores;
-}
-
 addNodeTypeListener('user', (id: UserNodeId) => {
-    const data = getNodeData<UserData>(id);
+    const data = getUserData(id);
     if (data) {
-        const profile: UserProfile = {
-            id: id,
-            name: data.name,
-            engagement: -1,
-            attributes: {},
-            topics: [],
-            engagedContent: [],
-            reactedTopics: [],
-            commentedTopics: [],
-            seenTopics: [],
-            sharedTopics: [],
-            viewedTopics: [],
-            followedTopics: [],
-            featureWeights: data?.featureWeights || { ...defaults },
-            seenItems: 0,
-            engagementTotal: 0,
+        // Validate the data structure
+        if (!data.embeddings) {
+            const newData = { ...createEmptyProfile(id, 'NoName'), ...data };
+            outOfDate.add(id);
+            updateNode(id, newData);
+            return;
+        }
+
+        const hadProfile = internalProfiles.has(id);
+        const oldProfile = internalProfiles.get(id) || {
+            id,
             positiveRecommendations: 0,
             negativeRecommendations: 0,
-            embedding: [],
+            profile: data,
+            seenItems: 0,
+            engagementTotal: 0,
         };
-        users.set(id, profile);
+        const oldData = oldProfile.profile;
+        oldProfile.profile = data;
+        internalProfiles.set(id, oldProfile);
+
+        if (oldData !== data || !hadProfile) {
+            // Emit event, but it is not out-of-date.
+            emitProfileEvent(id);
+        }
+    } else {
+        const newProfile = createEmptyProfile(id, 'NoName');
         outOfDate.add(id);
-        emitProfileEvent(id);
+        updateNode(id, newProfile);
     }
 });
 
 export function getUserName(id: UserNodeId): string {
-    const d = getNodeData<UserData>(id);
+    const d = getUserData(id);
     return d ? d.name : '';
 }
 
 export function setUserName(id: UserNodeId, name: string) {
     if (!hasNode(id)) {
-        addNode('user', id, {
-            name: name,
-            featureWeights: [...defaultWeights],
-        });
+        addNode('user', id, createEmptyProfile(id, name));
     } else {
-        updateNode(id, {
-            name,
-            featureWeights: [...defaultWeights],
-        });
+        const data = getUserData(id);
+        if (data) {
+            data.name = name;
+        } else {
+            updateNode(id, createEmptyProfile(id, name));
+        }
     }
+}
+
+export function touchProfile(id: UserNodeId) {
+    emitProfileEvent(id);
 }
 
 export function clearProfile(id: UserNodeId) {
@@ -111,25 +113,20 @@ export function clearProfile(id: UserNodeId) {
 }
 
 /** Used when initially creating a profile or loading from saved file. */
-export function addUserProfile(profile: UserProfile) {
-    const uid = isUserID(profile.id) ? profile.id : (`user:${profile.id}` as UserNodeId);
-    const hadNode = hasNode(uid);
+export function addUserProfile(id: UserNodeId, profile: UserNodeData) {
+    const hadNode = hasNode(id);
 
-    if (!hadNode) {
-        users.delete(uid);
-    } else {
-        if (users.has(uid)) {
+    if (hadNode) {
+        if (internalProfiles.has(id)) {
             throw new Error('user_exists');
         }
     }
 
-    addNodeIfNotExists('user', uid, {
-        name: profile.name,
-        featureWeights: profile.featureWeights || [...defaultWeights],
-    });
+    addNodeIfNotExists('user', id, profile);
 
     if (!hadNode) {
-        updateProfile(uid, profile);
+        // Ensure all the graph edges are also added.
+        reverseProfile(id, profile);
     }
 }
 
@@ -137,25 +134,17 @@ export function addUserProfile(profile: UserProfile) {
  *  another computer may have done the calculations to generate the profile and this
  *  is just a manual replacement on other machines.
  */
-export function updateProfile(id: UserNodeId, profile: UserProfile | ProfileSummary) {
+export function reverseProfile(id: UserNodeId, profile: UserNodeData) {
     outOfDate.add(id);
 
-    addNodeIfNotExists('user', id);
+    addNodeIfNotExists('user', id, profile);
 
-    // Update node data
-    if ('featureWeights' in profile && profile.featureWeights) {
-        const data = getNodeData<UserData>(id);
-        if (data) {
-            data.featureWeights = { ...profile.featureWeights };
-        }
-    }
-
-    profile.engagedContent.forEach((c) => {
+    profile.affinities.contents.contents.forEach((c) => {
         const cid = isContentID(c.id) ? c.id : (`content:${c.id}` as ContentNodeId);
         addEdge('engaged', id, cid, c.weight);
         addEdge('engaged', cid, id, c.weight);
     });
-    profile.topics.forEach((t) => {
+    profile.affinities.topics.topics.forEach((t) => {
         addEdge('topic', id, getTopicId(t.label), t.weight);
         addEdge('topic', getTopicId(t.label), id, t.weight);
     });
@@ -164,95 +153,76 @@ export function updateProfile(id: UserNodeId, profile: UserProfile | ProfileSumm
         globalScore.engagement = Math.max(globalScore.engagement, profile.engagement);
     }
 
-    emitProfileEvent(id);
+    outOfDate.delete(id);
+    updateNode(id, profile);
+
+    //emitProfileEvent(id);
 }
 
-export function replaceProfile(id: UserNodeId, profile: ProfileSummary) {
-    const user = users.get(id) || createUserProfile(id, 'NoName');
-    users.set(id, { ...user, ...profile });
+export function replaceProfile(id: UserNodeId, profile: UserNodeData) {
+    const user: InternalUserProfile = internalProfiles.get(id) || {
+        profile,
+        id,
+        positiveRecommendations: 0,
+        negativeRecommendations: 0,
+        seenItems: 0,
+        engagementTotal: 0,
+    };
+    user.profile = profile;
+    internalProfiles.set(id, user);
     outOfDate.delete(id);
     emitProfileEvent(id);
 }
 
-export function createEmptyProfile(id: UserNodeId, name: string): UserProfile {
+export function createEmptyProfile(id: UserNodeId, name: string): UserNodeData {
     return {
-        id: id,
+        id,
         name: name,
         engagement: -1,
-        attributes: {},
-        topics: [],
-        engagedContent: [],
-        reactedTopics: [],
-        commentedTopics: [],
-        seenTopics: [],
-        sharedTopics: [],
-        viewedTopics: [],
-        followedTopics: [],
+        affinities: {
+            topics: {
+                topics: [],
+                seenTopics: [],
+                viewedTopics: [],
+                commentedTopics: [],
+                sharedTopics: [],
+                reactedTopics: [],
+                followedTopics: [],
+            },
+            contents: {
+                contents: [],
+            },
+            users: {
+                users: [],
+            },
+        },
         featureWeights: { ...defaults },
-        seenItems: 0,
-        engagementTotal: 0,
-        positiveRecommendations: 0,
-        negativeRecommendations: 0,
-        embedding: [],
+        embeddings: {
+            taste: new Array(20).fill(0),
+        },
+        lastUpdated: Date.now(),
     };
 }
 
-export function createUserProfile(id: UserNodeId, name: string): UserProfile {
-    const profile: UserProfile = createEmptyProfile(id, name);
-    addUserProfile(profile);
+export function createUserProfile(id: UserNodeId, name: string): UserNodeData {
+    const profile = createEmptyProfile(id, name);
+    addUserProfile(id, profile);
     return profile;
 }
 
-export function getUserProfile(id?: UserNodeId): UserProfile {
+export function getUserProfile(id?: UserNodeId): UserNodeData {
     const aid = id || getCurrentUser();
-    const profile = users.get(aid);
+    const profile = internalProfiles.get(aid);
 
-    if (profile && !outOfDate.has(aid)) return profile;
+    if (profile && !outOfDate.has(aid)) return profile.profile;
 
-    const newProfile = recreateUserProfile(aid);
-    users.set(aid, newProfile);
+    if (!profile) {
+        updateNode(aid, createEmptyProfile(aid, 'NoName'));
+    }
+
+    const newProfile = buildUserProfile(aid);
+    touchNode(aid);
     outOfDate.delete(aid);
-    return newProfile;
-}
-
-/** When a profile is flagged as out-of-date, rebuild the summary and embeddings. */
-export function recreateUserProfile(id?: UserNodeId): UserProfile {
-    const aid = id || getCurrentUser();
-    const summary = createProfileSummaryById(aid, PROFILE_COUNTS);
-    const state = users.get(aid);
-
-    // const seenItems = getRelated('seen', aid, { period: TIME_WINDOW });
-
-    // Update the embedding
-    const embedding = generateEmbedding(aid);
-
-    const image = getSimilarContent(
-        embedding,
-        1,
-        summary.engagedContent.map((e) => e.id)
-    )[0]?.id;
-
-    // Attempt to find data
-    const data = getNodeData<UserData>(aid);
-    if (data && !data?.featureWeights) data.featureWeights = { ...defaults };
-
-    const newProfile = {
-        ...summary,
-        name: state?.name || data?.name || 'NoName',
-        id: aid,
-        engagement: summary.engagedContent.reduce((s, v) => s + v.weight, 0),
-        attributes: {},
-        featureWeights: data?.featureWeights || { ...defaults },
-        seenItems: state?.seenItems || 0,
-        engagementTotal: state?.engagementTotal || 0,
-        positiveRecommendations: state?.positiveRecommendations || 0,
-        negativeRecommendations: state?.negativeRecommendations || 0,
-        embedding,
-        image,
-    };
-
-    globalScore.engagement = Math.max(globalScore.engagement, newProfile.engagement);
-
     return newProfile;
 }
 
@@ -264,7 +234,7 @@ export function updateEngagement(recommendation: ScoredRecommendation) {
     const weight = getEdgeWeights('last_engaged', getCurrentUser(), recommendation.contentId)[0] || 0;
     appendActionLog([{ activity: 'engagement', id: recommendation.contentId, value: weight, timestamp: Date.now() }]);
 
-    const profile = users.get(getCurrentUser());
+    const profile = internalProfiles.get(getCurrentUser());
     if (profile) {
         trainProfile(recommendation, profile, weight);
     }
@@ -279,11 +249,7 @@ export function setBestEngagement(e: number) {
 }
 
 export function anonProfiles() {
-    users.forEach((user) => {
-        user.name = anonUsername();
-        const data = getNodeData<UserData>(user.id);
-        if (data) {
-            data.name = user.name;
-        }
+    internalProfiles.forEach((user) => {
+        user.profile.name = anonUsername();
     });
 }

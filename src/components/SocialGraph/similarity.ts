@@ -9,7 +9,7 @@ function getSimilar(id: UserNodeId, similarities: Map<UserNodeId, WeightedNode<U
     const s = findSimilarUsers(id);
     similarities.set(
         id,
-        s.filter((ss) => ss.weight > 0)
+        s.filter((ss) => ss.weight > 0 && ss.id !== id)
     );
 }
 

@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import style from './style.module.css';
 import ImageFeed from '@genaism/components/ImageFeed/ImageFeed';
-import { LogEntry, UserProfile } from '@genaism/services/profiler/profilerTypes';
+import { LogEntry, UserNodeData } from '@genaism/services/users/userTypes';
 import { addLogEntry, getCurrentUser, getUserProfile } from '@genaism/services/profiler/profiler';
 import { ScoredRecommendation } from '@genaism/services/recommender/recommenderTypes';
 import { useRecommendations } from '@genaism/services/recommender/hooks';
@@ -13,7 +13,7 @@ import ContentLoader from '../ContentLoader/ContentLoader';
 interface Props {
     id?: UserNodeId;
     content?: (string | ArrayBuffer)[];
-    onProfile?: (profile: UserProfile) => void;
+    onProfile?: (profile: UserNodeData) => void;
     onRecommend?: (recommendations: ScoredRecommendation[]) => void;
     onLog?: () => void;
     noLog?: boolean;

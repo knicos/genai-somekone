@@ -1,18 +1,19 @@
 import { describe, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import ProfileNode from './ProfileNode';
-import { UserProfile } from '@genaism/services/profiler/profilerTypes';
 import TestWrapper from '@genaism/util/TestWrapper';
 import { settingDisplayLabel, settingShrinkOfflineUsers } from '@genaism/state/settingsState';
 import { ContentNodeId, UserNodeId, WeightedNode } from '@genaism/services/graph/graphTypes';
 import { createEmptyProfile } from '@genaism/services/profiler/profiler';
+import { UserNodeData } from '@genaism/services/users/userTypes';
 
 const { mockProfile, mockSimilar } = vi.hoisted(() => ({
-    mockProfile: vi.fn<unknown[], UserProfile>(() => ({
-        ...createEmptyProfile('user:xyz', 'TestUser1'),
-        engagedContent: [{ id: 'content:content1', weight: 1 }],
-        topics: [{ label: 'taste1', weight: 0.5 }],
-    })),
+    mockProfile: vi.fn<unknown[], UserNodeData>(() => {
+        const profile = createEmptyProfile('user:xyz', 'TestUser1');
+        profile.affinities.contents.contents = [{ id: 'content:content1', weight: 1 }];
+        profile.affinities.topics.topics = [{ label: 'taste1', weight: 0.5 }];
+        return profile;
+    }),
     mockSimilar: vi.fn(() => [] as WeightedNode<UserNodeId>[]),
 }));
 
@@ -55,11 +56,12 @@ describe('ProfileNode component', () => {
     it('shows a single content item', async ({ expect }) => {
         const resizeFn = vi.fn();
 
-        mockProfile.mockImplementation(() => ({
-            ...createEmptyProfile('user:xyz', 'TestUser1'),
-            engagedContent: [{ id: 'content:content1' as ContentNodeId, weight: 1 }],
-            topics: [{ label: 'taste1', weight: 0.5 }],
-        }));
+        mockProfile.mockImplementation(() => {
+            const profile = createEmptyProfile('user:xyz', 'TestUser1');
+            profile.affinities.contents.contents = [{ id: 'content:content1' as ContentNodeId, weight: 1 }];
+            profile.affinities.topics.topics = [{ label: 'taste1', weight: 0.5 }];
+            return profile;
+        });
 
         render(
             <TestWrapper

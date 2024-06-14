@@ -1,10 +1,12 @@
+import { UserNodeId } from '../graph/graphTypes';
 import { ScoredRecommendation, Scores } from '../recommender/recommenderTypes';
-import { UserProfile } from './profilerTypes';
+import { InternalUserProfile } from './profilerTypes';
+import { internalProfiles } from './state';
 
 const MAX_LEARNING_RATE = 0.3;
 const MIN_LEARNING_RATE = 0;
 
-export function trainProfile(input: ScoredRecommendation, profile: UserProfile, score: number) {
+export function trainProfile(input: ScoredRecommendation, profile: InternalUserProfile, score: number) {
     profile.seenItems++;
     profile.engagementTotal += score;
 
@@ -28,9 +30,16 @@ export function trainProfile(input: ScoredRecommendation, profile: UserProfile, 
 
     //console.log('TRAIN', profile, input, error * learningRate);
 
-    const keys = Array.from(Object.keys(profile.featureWeights)) as (keyof Scores)[];
+    const keys = Array.from(Object.keys(profile.profile.featureWeights)) as (keyof Scores)[];
     keys.forEach((k) => {
-        const w = profile.featureWeights[k] || 1;
-        profile.featureWeights[k] = w + error * learningRate * (input.features[k] || 0);
+        const w = profile.profile.featureWeights[k] || 1;
+        profile.profile.featureWeights[k] = w + error * learningRate * (input.features[k] || 0);
     });
+}
+
+export function trainProfileById(id: UserNodeId, input: ScoredRecommendation, score: number) {
+    const profile = internalProfiles.get(id);
+    if (profile) {
+        trainProfile(input, profile, score);
+    }
 }

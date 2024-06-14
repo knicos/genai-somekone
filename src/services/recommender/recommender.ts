@@ -16,19 +16,19 @@ export function generateNewRecommendations(
 ) {
     const profile = getUserProfile(id);
     const candidates = generateCandidates(profile, count, options);
-    const scored = scoreCandidates(candidates, profile, options);
+    const scored = scoreCandidates(id, candidates, profile, options);
 
-    const old = store.get(profile.id) || [];
+    const old = store.get(id) || [];
 
     if (options?.selection === 'rank') {
         const subset = scored.slice(0, count);
-        store.set(profile.id, [...subset, ...old]);
+        store.set(id, [...subset, ...old]);
         if (events) emitRecommendationEvent(id, subset);
     } else {
         const subset = biasedUniqueSubset(scored, count, (v) => v.contentId);
         subset.sort((a, b) => b.score - a.score);
 
-        store.set(profile.id, [...subset, ...old]);
+        store.set(id, [...subset, ...old]);
         if (events) emitRecommendationEvent(id, subset);
     }
 }

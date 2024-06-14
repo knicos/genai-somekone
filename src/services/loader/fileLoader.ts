@@ -2,9 +2,9 @@ import JSZip from 'jszip';
 
 import { ContentMetadata } from '@genaism/services/content/contentTypes';
 import { addContent } from '@genaism/services/content/content';
-import { LogEntry, UserProfile } from '@genaism/services/profiler/profilerTypes';
+import { LogEntry } from '../users/userTypes';
 import { addUserProfile, appendActionLog, getActionLog, getCurrentUser } from '@genaism/services/profiler/profiler';
-import { NodeID, TopicNodeId, isTopicID } from '../graph/graphTypes';
+import { NodeID, TopicNodeId, UserNodeId, isTopicID } from '../graph/graphTypes';
 import { GraphExport, dump } from '../graph/state';
 import { addNodes } from '../graph/nodes';
 import { addEdges } from '../graph/edges';
@@ -15,16 +15,16 @@ import { LogItem } from './loaderTypes';
 import { findLargestEdgeTimestamp, findLargestLogTimestamp, rebaseEdges, rebaseLog } from './rebase';
 import { SomekoneSettings } from '@genaism/hooks/settings';
 import { compress, decompress } from 'lz-string';
+import { UserNodeData } from '../users/userTypes';
 
 const STATIC_PATH = 'https://store.gen-ai.fi/somekone/images';
 
-interface TopicData {
-    label: string;
+interface SavedUserProfile extends UserNodeData {
+    id: UserNodeId;
 }
 
-interface UserData {
-    name: string;
-    featureWeights: unknown;
+interface TopicData {
+    label: string;
 }
 
 export async function getZipBlob(content: string | ArrayBuffer, progress?: (percent: number) => void): Promise<Blob> {
@@ -95,7 +95,7 @@ export async function loadFile(file: File | Blob): Promise<SomekoneSettings | un
     const images = new Map<string, string>();
     const store: {
         meta: ContentMetadata[];
-        users: UserProfile[];
+        users: SavedUserProfile[];
         logs: LogItem[];
         graph?: GraphExport;
         project?: ProjectMeta;
@@ -191,8 +191,8 @@ export async function loadFile(file: File | Blob): Promise<SomekoneSettings | un
                 topicSet.set(node.id as TopicNodeId, label);
                 node.id = getTopicId(label);
             }
-            if (node.type === 'user' && Array.isArray((node.data as UserData)?.featureWeights)) {
-                (node.data as UserData).featureWeights = {};
+            if (node.type === 'user' && Array.isArray((node.data as UserNodeData)?.featureWeights)) {
+                (node.data as UserNodeData).featureWeights = {};
             }
         });
         store.graph.edges.forEach((edge) => {
@@ -221,7 +221,7 @@ export async function loadFile(file: File | Blob): Promise<SomekoneSettings | un
 
     store.users.forEach((u) => {
         try {
-            if (u.name !== 'NoName') addUserProfile(u);
+            if (u.name !== 'NoName') addUserProfile(u.id, u);
         } catch (e) {
             console.warn('User already exists');
         }

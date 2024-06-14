@@ -1,7 +1,7 @@
 import React, { useRef, useCallback, useState, useEffect, FocusEvent } from 'react';
 import IImage from '../FeedImage/FeedImage';
 import style from './style.module.css';
-import { LogActivity, LogEntry } from '@genaism/services/profiler/profilerTypes';
+import { LogActivity, LogEntry } from '@genaism/services/users/userTypes';
 import { LikeKind } from '@genaism/components/FeedImage/FeedImage';
 import { ShareKind } from '@genaism/components/FeedImage/SharePanel';
 import FeedSpacer from './FeedSpacer';

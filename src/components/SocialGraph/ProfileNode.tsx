@@ -60,9 +60,9 @@ const ProfileNode = memo(function ProfileNode({ id, onResize, live, selected, di
         } else {
             return [];
         }*/
-        if (profile?.topics) {
+        if (profile?.affinities.topics.topics) {
             return filterTaste(
-                profile.topics, // .filter((t) => !isDisallowedTopic(t.label)),
+                profile.affinities.topics.topics, // .filter((t) => !isDisallowedTopic(t.label)),
                 topicThreshold
             );
         } else {
@@ -91,9 +91,9 @@ const ProfileNode = memo(function ProfileNode({ id, onResize, live, selected, di
                 stroke={(node.data?.colour as string) || '#5f7377'}
                 strokeWidth={reduced ? 5 : 15}
             />
-            {!reduced && nodeMode === 'image' && profile.engagedContent.length > 0 && (
+            {!reduced && nodeMode === 'image' && profile.affinities.contents.contents.length > 0 && (
                 <ImageCloud
-                    content={profile.engagedContent}
+                    content={profile.affinities.contents.contents}
                     size={300}
                     padding={3}
                     onSize={doResize}

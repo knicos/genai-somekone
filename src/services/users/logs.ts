@@ -4,8 +4,9 @@ import { addEdge, addOrAccumulateEdge, getEdge } from '../graph/edges';
 import { ContentNodeId, UserNodeId, WeightedNode } from '../graph/graphTypes';
 import { getRelated } from '../graph/query';
 import { emitLogEvent } from './events';
-import { LogEntry } from './profilerTypes';
-import { getCurrentUser, logs } from './state';
+import { LogEntry } from './userTypes';
+import { getCurrentUser } from '../profiler/state';
+import { logs } from './state';
 
 const MIN_DWELL_TIME = 2000;
 const MAX_DWELL_TIME = 10000;

@@ -1,6 +1,6 @@
 import { PeerEvent, BuiltinEvent } from '@genaism/hooks/peer';
 import { SMConfig } from '@genaism/state/smConfig';
-import { LogEntry, UserProfile } from '@genaism/services/profiler/profilerTypes';
+import { LogEntry, UserNodeData } from '@genaism/services/users/userTypes';
 import { ContentNodeId, UserNodeId } from '@genaism/services/graph/graphTypes';
 import { ScoredRecommendation } from '@genaism/services/recommender/recommenderTypes';
 import { Snapshot } from '@genaism/services/users/users';
@@ -31,7 +31,7 @@ export interface UserListEvent extends PeerEvent {
 export interface ProfileEvent extends PeerEvent {
     event: 'eter:profile_data';
     id: UserNodeId;
-    profile: UserProfile;
+    profile: UserNodeData;
 }
 
 export interface RecommendationEvent extends PeerEvent {

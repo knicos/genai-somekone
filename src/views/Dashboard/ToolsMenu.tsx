@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import HandymanIcon from '@mui/icons-material/Handyman';
 import { anonComments } from '@genaism/services/content/content';
-import { anonLogs } from '@genaism/services/profiler/logs';
+import { anonLogs } from '@genaism/services/users/logs';
 import { anonProfiles } from '@genaism/services/profiler/profiler';
 import { useSetRecoilState } from 'recoil';
 import { menuShowContentTools } from '@genaism/state/menuState';

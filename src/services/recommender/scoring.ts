@@ -1,7 +1,8 @@
 import { normalise } from '@genaism/util/embedding';
-import { UserProfile } from '../profiler/profilerTypes';
 import { makeFeatures } from './features';
 import { Recommendation, ScoredRecommendation, Scores, ScoringOptions } from './recommenderTypes';
+import { UserNodeId } from '../graph/graphTypes';
+import { UserNodeData } from '../users/userTypes';
 
 function calculateSignificance(items: ScoredRecommendation[]) {
     if (items.length < 1) return;
@@ -40,12 +41,13 @@ function calculateSignificance(items: ScoredRecommendation[]) {
 }
 
 export function scoreCandidates(
+    userId: UserNodeId,
     candidates: Recommendation[],
-    profile: UserProfile,
+    profile: UserNodeData,
     options?: ScoringOptions
 ): ScoredRecommendation[] {
     // Could use Tensorflow here?
-    const features = makeFeatures(candidates, profile, options);
+    const features = makeFeatures(userId, candidates, profile, options);
     const keys = (features.length > 0 ? Object.keys(features[0]) : []) as (keyof Scores)[];
     const featureVectors = features.map((i) => Object.values(i));
     const weights = normalise(keys.map((k) => profile.featureWeights[k] || 1));

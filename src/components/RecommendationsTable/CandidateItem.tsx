@@ -1,15 +1,11 @@
 import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { ScoredRecommendation } from '@genaism/services/recommender/recommenderTypes';
-import { getNodeData } from '@genaism/services/graph/nodes';
 import ImageSearchIcon from '@mui/icons-material/ImageSearch';
 import style from './style.module.css';
 import MiniUserGraph from '../MiniUserGraph/MiniUserGraph';
 import { UserNodeId } from '@genaism/services/graph/graphTypes';
-
-interface UserData {
-    name: string;
-}
+import { getUserData } from '@genaism/services/users/users';
 
 function generateCandidateMessage(item: ScoredRecommendation, t: TFunction) {
     let part1: string;
@@ -26,7 +22,7 @@ function generateCandidateMessage(item: ScoredRecommendation, t: TFunction) {
             break;
         case 'similar_user':
             part1 = t('recommendations.labels.similarUserCandidate', {
-                userName: item.similarUser ? getNodeData<UserData>(item.similarUser)?.name || '' : '',
+                userName: item.similarUser ? getUserData(item.similarUser)?.name || '' : '',
             });
             break;
         default:

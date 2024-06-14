@@ -1,7 +1,7 @@
 import { UserNodeId } from '@genaism/services/graph/graphTypes';
 import { GraphNode } from '../Graph/types';
 import Label from './Label';
-import { getNodeData } from '@genaism/services/graph/nodes';
+import { getUserData } from '@genaism/services/users/users';
 
 function hexToRgb(hex: string) {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -26,12 +26,8 @@ interface Props {
     scale: number;
 }
 
-interface UserData {
-    name: string;
-}
-
 export default function UserLabel({ node, scale }: Props) {
-    const name = getNodeData<UserData>(node.id)?.name;
+    const name = getUserData(node.id)?.name;
     const colour = node.data?.colour as string;
     if (!name) return null;
     return (

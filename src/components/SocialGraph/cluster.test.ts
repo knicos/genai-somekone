@@ -20,7 +20,7 @@ describe('clusterUsers()', () => {
     it('clusters one user', async ({ expect }) => {
         mockProfile.mockImplementationOnce(() => ({
             name: 'testuser',
-            embedding: normalise([0.2, 0.1]),
+            embeddings: { taste: normalise([0.2, 0.1]) },
         }));
         const result = clusterUsers(['user:xyz'], 4);
         expect(result).toBeInstanceOf(Map);
@@ -32,19 +32,19 @@ describe('clusterUsers()', () => {
         const profiles = {
             'user:test1': {
                 name: 'test1',
-                embedding: normalise([0.5, 0.1]),
+                embeddings: { taste: normalise([0.5, 0.1]) },
             },
             'user:test2': {
                 name: 'test2',
-                embedding: normalise([0.6, 0.2]),
+                embeddings: { taste: normalise([0.6, 0.2]) },
             },
             'user:test3': {
                 name: 'test3',
-                embedding: normalise([0.2, 0.5]),
+                embeddings: { taste: normalise([0.2, 0.5]) },
             },
             'user:test4': {
                 name: 'test4',
-                embedding: normalise([0.1, 0.4]),
+                embeddings: { taste: normalise([0.1, 0.4]) },
             },
         };
         mockProfile.mockImplementation((id: keyof typeof profiles) => profiles[id]);

@@ -1,12 +1,8 @@
 import { menuSelectedUser, menuShowUserPanel } from '@genaism/state/menuState';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import AppPanel from '../AppPanel/AppPanel';
-import { getNodeData } from '@genaism/services/graph/nodes';
 import Profile from '../DataProfile/DataProfile';
-
-interface UserData {
-    name: string;
-}
+import { getUserData } from '@genaism/services/users/users';
 
 export default function DataPanel() {
     const [panel, setPanel] = useRecoilState(menuShowUserPanel);
@@ -14,7 +10,7 @@ export default function DataPanel() {
 
     return panel === 'data' && selectedUser ? (
         <AppPanel
-            title={getNodeData<UserData>(selectedUser)?.name}
+            title={getUserData(selectedUser)?.name}
             onClose={() => setPanel('none')}
             data-testid="data-panel"
         >

@@ -1,6 +1,6 @@
 import { UserNodeId } from '@genaism/services/graph/graphTypes';
-import { getNodeData } from '@genaism/services/graph/nodes';
 import style from './style.module.css';
+import { getUserData } from '@genaism/services/users/users';
 
 const MAX_LENGTH = 100;
 
@@ -18,12 +18,8 @@ interface Props {
     noLimit?: boolean;
 }
 
-interface UserData {
-    name: string;
-}
-
 export default function Comment({ comment, user, noLimit }: Props) {
-    const username = getNodeData<UserData>(user)?.name;
+    const username = getUserData(user)?.name;
     return (
         <li className={style.commentItem}>
             <div className={style.commentText}>{noLimit ? comment : limitString(comment)}</div>

@@ -1,4 +1,5 @@
-import { useActionLog, useUserProfile } from '@genaism/services/profiler/hooks';
+import { useUserProfile } from '@genaism/services/profiler/hooks';
+import { useActionLog } from '@genaism/services/users/hooks';
 import ImageCloud from '../ImageCloud/ImageCloud';
 import { useCallback, useState } from 'react';
 import ActionLogTable from '../ActionLogTable/ActionLogTable';
@@ -31,7 +32,7 @@ export default function Profile({ id }: Props) {
                     viewBox={`${-(wcSize * 1.67)} ${-wcSize} ${wcSize * 1.67 * 2} ${wcSize * 2}`}
                 >
                     <ImageCloud
-                        content={profile.engagedContent}
+                        content={profile.affinities.contents.contents}
                         size={300}
                         onSize={doResize}
                     />

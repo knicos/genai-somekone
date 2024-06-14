@@ -1,42 +1,17 @@
 import { getTopicLabel } from '../concept/concept';
 import { UserNodeId } from '../graph/graphTypes';
 import { getRelated } from '../graph/query';
-import { ProfileSummary } from './profilerTypes';
-import { getCurrentUser } from './state';
+import { ContentAffinities, TopicAffinities, UserAffinities } from '../users/userTypes';
 
 const TIME_WINDOW = 60 * 60 * 1000;
 const TIME_DECAY = 0.2;
 
-export function findTopicProfileById(id: UserNodeId, count?: number) {
-    return getRelated('topic', id, { count, period: TIME_WINDOW, timeDecay: TIME_DECAY }).map((v) => ({
-        label: getTopicLabel(v.id),
-        weight: v.weight,
-    }));
-}
-
-export function findTopContentById(id: UserNodeId, count?: number) {
-    return getRelated('engaged', id, { count, period: TIME_WINDOW, timeDecay: TIME_DECAY });
-}
-
-export function findTopicProfile(count?: number) {
-    return findTopicProfileById(getCurrentUser(), count);
-}
-
-export function findTopContent(count?: number) {
-    return findTopContentById(getCurrentUser(), count);
-}
-
-export function createProfileSummary(count?: number): ProfileSummary {
-    return createProfileSummaryById(getCurrentUser(), count);
-}
-
-export function createProfileSummaryById(id: UserNodeId, count?: number): ProfileSummary {
-    const topics = findTopicProfileById(id, count);
-    const engagedContent = findTopContentById(id, count);
-
+export function getTopicAffinities(id: UserNodeId, count: number): TopicAffinities {
     return {
-        topics,
-        engagedContent,
+        topics: getRelated('topic', id, { count, period: TIME_WINDOW, timeDecay: TIME_DECAY }).map((v) => ({
+            label: getTopicLabel(v.id),
+            weight: v.weight,
+        })),
         commentedTopics: getRelated('commented_topic', id, { count, period: TIME_WINDOW, timeDecay: TIME_DECAY }).map(
             (r) => ({
                 label: getTopicLabel(r.id),
@@ -71,5 +46,17 @@ export function createProfileSummaryById(id: UserNodeId, count?: number): Profil
                 weight: r.weight,
             })
         ),
+    };
+}
+
+export function getContentAffinities(id: UserNodeId, count: number): ContentAffinities {
+    return {
+        contents: getRelated('engaged', id, { count, period: TIME_WINDOW, timeDecay: TIME_DECAY }),
+    };
+}
+
+export function getUserAffinities(): UserAffinities {
+    return {
+        users: [],
     };
 }

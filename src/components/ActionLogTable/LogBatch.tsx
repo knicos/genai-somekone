@@ -1,4 +1,4 @@
-import { LogEntry } from '@genaism/services/profiler/profilerTypes';
+import { LogEntry } from '@genaism/services/users/userTypes';
 import { generateMessage } from './message';
 import { useTranslation } from 'react-i18next';
 import Card from '../DataCard/Card';

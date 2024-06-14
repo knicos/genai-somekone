@@ -11,7 +11,6 @@ import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid';
 import Spacer from '../IconMenu/Spacer';
 import style from './style.module.css';
 import { useTranslation } from 'react-i18next';
-import { getNodeData } from '@genaism/services/graph/nodes';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { settingNodeMode } from '@genaism/state/settingsState';
 import { useEffect, useRef, useState } from 'react';
@@ -23,13 +22,9 @@ import {
     menuShowUserPanel,
 } from '@genaism/state/menuState';
 import ClusterMenu from './ClusterMenu';
-import { removeUser } from '@genaism/services/users/users';
+import { getUserData, removeUser } from '@genaism/services/users/users';
 import { UserNodeId } from '@genaism/services/graph/graphTypes';
 import ImageIcon from '@mui/icons-material/Image';
-
-interface UserData {
-    name: string;
-}
 
 export default function SocialMenu() {
     const { t } = useTranslation();
@@ -57,7 +52,7 @@ export default function SocialMenu() {
             selected={!!selectedUser}
             label={
                 <div className={style.menuLogo}>
-                    {selectedUser ? getNodeData<UserData>(selectedUser)?.name : t('dashboard.titles.people')}
+                    {selectedUser ? getUserData(selectedUser)?.name : t('dashboard.titles.people')}
                 </div>
             }
         >
@@ -146,7 +141,7 @@ export default function SocialMenu() {
                         </IconButton>
                     </IconMenuItem>
                     <DeleteDialog
-                        name={getNodeData<UserData>(selectedUser)?.name || 'No Name'}
+                        name={getUserData(selectedUser)?.name || 'No Name'}
                         open={showDelete}
                         onClose={() => setShowDelete(false)}
                         onDelete={() => {

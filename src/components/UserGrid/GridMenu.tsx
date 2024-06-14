@@ -11,17 +11,14 @@ import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid';
 import Spacer from '../IconMenu/Spacer';
 import style from './style.module.css';
 import { useTranslation } from 'react-i18next';
-import { getNodeData, removeNode } from '@genaism/services/graph/nodes';
+import { removeNode } from '@genaism/services/graph/nodes';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { settingNodeMode } from '@genaism/state/settingsState';
 import { useEffect, useRef, useState } from 'react';
 import DeleteDialog from '../SocialGraph/DeleteDialog';
 import { menuNodeSelectAction, menuSelectedUser, menuShowGridMenu, menuShowUserPanel } from '@genaism/state/menuState';
 import { UserNodeId } from '@genaism/services/graph/graphTypes';
-
-interface UserData {
-    name: string;
-}
+import { getUserData } from '@genaism/services/users/users';
 
 export default function GridMenu() {
     const { t } = useTranslation();
@@ -48,7 +45,7 @@ export default function GridMenu() {
             selected={!!selectedUser}
             label={
                 <div className={style.menuLogo}>
-                    {selectedUser ? getNodeData<UserData>(selectedUser)?.name : t('dashboard.titles.people')}
+                    {selectedUser ? getUserData(selectedUser)?.name : t('dashboard.titles.people')}
                 </div>
             }
         >
@@ -125,7 +122,7 @@ export default function GridMenu() {
                         </IconButton>
                     </IconMenuItem>
                     <DeleteDialog
-                        name={getNodeData<UserData>(selectedUser)?.name || 'No Name'}
+                        name={getUserData(selectedUser)?.name || 'No Name'}
                         open={showDelete}
                         onClose={() => setShowDelete(false)}
                         onDelete={() => {

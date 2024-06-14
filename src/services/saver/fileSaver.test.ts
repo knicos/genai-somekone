@@ -1,12 +1,12 @@
 import { describe, it, vi } from 'vitest';
-import { LogEntry, UserProfile } from '../profiler/profilerTypes';
+import { LogEntry, UserNodeData } from '../users/userTypes';
 import { saveFile } from './fileSaver';
 import JSZip from 'jszip';
 import { createEmptyProfile } from '@genaism/services/profiler/profiler';
 
 const { mockUsers, mockProfiles, mockSave, mockLog } = vi.hoisted(() => ({
     mockUsers: vi.fn(),
-    mockProfiles: vi.fn<unknown[], UserProfile>(),
+    mockProfiles: vi.fn<unknown[], UserNodeData>(),
     mockSave: vi.fn(),
     mockLog: vi.fn<unknown[], LogEntry[]>(),
 }));

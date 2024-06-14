@@ -1,6 +1,6 @@
 import { ContentNodeId, UserNodeId } from '@genaism/services/graph/graphTypes';
 import Graph from '../Graph/Graph';
-import { useSimilarUsers } from '@genaism/services/users/users';
+import { useSimilarUsers } from '@genaism/services/similarity/hooks';
 import { useUserProfile } from '@genaism/services/profiler/hooks';
 import { useEffect, useState } from 'react';
 import { GraphLink, GraphNode, InternalGraphLink } from '../Graph/types';
@@ -28,8 +28,8 @@ export default function MiniUserGraph({ userId, pairedId, contentId }: Props) {
         const maxS = similar.reduce((m, s) => Math.max(m, s.weight), 0);
         const dS = maxS - minS;
 
-        const minC = pairprofile.engagedContent.reduce((m, s) => Math.min(m, s.weight), 1);
-        const maxC = pairprofile.engagedContent.reduce((m, s) => Math.max(m, s.weight), 0);
+        const minC = pairprofile.affinities.contents.contents.reduce((m, s) => Math.min(m, s.weight), 1);
+        const maxC = pairprofile.affinities.contents.contents.reduce((m, s) => Math.max(m, s.weight), 0);
         const dC = maxC - minC;
 
         const newNodes = [
@@ -44,7 +44,7 @@ export default function MiniUserGraph({ userId, pairedId, contentId }: Props) {
                         },
                     };
                 }),
-            ...pairprofile.engagedContent
+            ...pairprofile.affinities.contents.contents
                 .filter((u) => u.id !== contentId)
                 .map((u) => {
                     return {
@@ -84,7 +84,7 @@ export default function MiniUserGraph({ userId, pairedId, contentId }: Props) {
             ...similar.map((u) => {
                 return { source: userId, target: u.id, strength: (u.weight - minS) / dS, actualStrength: u.weight };
             }),
-            ...pairprofile.engagedContent.map((c) => ({
+            ...pairprofile.affinities.contents.contents.map((c) => ({
                 source: pairedId,
                 target: c.id,
                 strength: (c.weight - minC) / dC,
@@ -93,8 +93,6 @@ export default function MiniUserGraph({ userId, pairedId, contentId }: Props) {
         ];
         setLinks(newLinks);
     }, [similar, profile, userId, pairedId, pairprofile, contentId]);
-
-    console.log(nodes, links);
 
     return (
         <Graph

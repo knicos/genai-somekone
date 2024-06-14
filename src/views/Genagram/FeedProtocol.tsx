@@ -8,11 +8,10 @@ import {
     getActionLogSince,
     getCurrentUser,
     getUserProfile,
+    reverseProfile,
     setBestEngagement,
     setUserName,
-    updateProfile,
 } from '@genaism/services/profiler/profiler';
-import { UserProfile } from '@genaism/services/profiler/profilerTypes';
 import { ScoredRecommendation } from '@genaism/services/recommender/recommenderTypes';
 import { availableUsers, currentUserName } from '@genaism/state/sessionState';
 import { DataConnection } from 'peerjs';
@@ -23,12 +22,13 @@ import { appConfiguration } from '@genaism/state/settingsState';
 import ConnectionMonitor from '@genaism/components/ConnectionMonitor/ConnectionMonitor';
 import { LogProvider } from '@genaism/hooks/logger';
 import { getRecommendations } from '@genaism/services/recommender/recommender';
+import { UserNodeData } from '@genaism/services/users/userTypes';
 
 const DATA_LOG_TIME = 15 * 60 * 1000;
 const USERNAME_KEY = 'genai_somekone_username';
 
 interface ProtocolContextType {
-    doProfile?: (profile: UserProfile) => void;
+    doProfile?: (profile: UserNodeData) => void;
     doRecommend?: (recommendations: ScoredRecommendation[]) => void;
     doLog?: () => void;
 }
@@ -67,7 +67,7 @@ export default function FeedProtocol({ content, server, mycode, setContent, chil
                     console.info('Skipping profile update');
                     return;
                 }
-                updateProfile(data.id, data.profile);
+                reverseProfile(data.id, data.profile);
             } else if (data.event === 'eter:action_log') {
                 if (hasBeenConnected.current) return;
                 hasBeenConnected.current = true;
@@ -121,7 +121,7 @@ export default function FeedProtocol({ content, server, mycode, setContent, chil
     }, [send]);
 
     const doProfile = useCallback(
-        (profile: UserProfile) => {
+        (profile: UserNodeData) => {
             if (send) {
                 send({ event: 'eter:profile_data', profile, id: getCurrentUser() });
             }

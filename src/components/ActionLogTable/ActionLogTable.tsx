@@ -1,4 +1,4 @@
-import { LogEntry } from '@genaism/services/profiler/profilerTypes';
+import { LogEntry } from '@genaism/services/users/userTypes';
 import { useMemo, useRef, useState } from 'react';
 import { Button } from '../Button/Button';
 import { useTranslation } from 'react-i18next';

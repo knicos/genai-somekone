@@ -29,11 +29,23 @@ export function removeNode<T extends NodeType>(id: NodeID<T>) {
     }
 }
 
+export function touchNode(id: NodeID) {
+    const existing = nodeStore.get(id);
+    if (existing) {
+        existing.timestamp = Date.now();
+        // emitNodeTypeEvent(existing.type, id);
+    }
+}
+
 export function updateNode(id: NodeID, data: unknown) {
     const existing = nodeStore.get(id);
     if (existing) {
+        //const old = existing.data;
         existing.data = data;
+        existing.timestamp = Date.now();
+        //if (old !== data) {
         emitNodeTypeEvent(existing.type, id);
+        //}
     }
 }
 
@@ -55,7 +67,15 @@ export function addNode<T extends NodeType>(type: T, id?: NodeID<T>, data?: unkn
 
 export function addNodeIfNotExists<T extends NodeType>(type: T, id: NodeID<T>, data?: unknown): NodeID<T> | undefined {
     const nid = id;
-    if (nodeStore.has(nid)) return;
+    if (nodeStore.has(nid)) {
+        if (data) {
+            const n = nodeStore.get(nid);
+            if (n && n.data !== data) {
+                updateNode(nid, data);
+            }
+        }
+        return;
+    }
     const node = { type, id: nid, data, timestamp: Date.now() };
     nodeStore.set(nid, node);
     if (!nodeTypeIndex.has(type)) {

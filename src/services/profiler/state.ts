@@ -1,6 +1,6 @@
 import { UserNodeId, isUserID } from '../graph/graphTypes';
 import { addNode } from '../graph/nodes';
-import { LogEntry, UserProfile } from './profilerTypes';
+import { InternalUserProfile } from './profilerTypes';
 
 const USER_KEY = 'genai_somekone_userID';
 
@@ -12,13 +12,11 @@ if (sessionUserID && isUserID(sessionUserID)) {
     addNode('user', userID);
 }
 
-export const users = new Map<UserNodeId, UserProfile>();
-export const logs = new Map<UserNodeId, LogEntry[]>();
+export const internalProfiles = new Map<UserNodeId, InternalUserProfile>();
 export const outOfDate = new Set<string>();
 
-export function resetProfiles(excludeLogs?: boolean) {
-    users.clear();
-    if (!excludeLogs) logs.clear();
+export function resetProfiles() {
+    internalProfiles.clear();
     outOfDate.clear();
     userID = undefined;
 }
@@ -42,6 +40,5 @@ export function getCurrentUser(): UserNodeId {
 }
 
 export function removeProfile(id: UserNodeId) {
-    users.delete(id);
-    logs.delete(id);
+    internalProfiles.delete(id);
 }
