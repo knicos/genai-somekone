@@ -118,7 +118,7 @@ export function Workspace({ contentUrls, cfg, guide, experimental }: Props) {
                             users={users}
                             code={MYCODE}
                             onDemo={() => {
-                                setFileToOpen(['https://tmstore.blob.core.windows.net/projects/sm_demo1b.zip']);
+                                setFileToOpen(['https://store.gen-ai.fi/somekone/sm_demo1c.zip']);
                             }}
                         />
                         <MenuPanel

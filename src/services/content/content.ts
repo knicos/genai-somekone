@@ -128,27 +128,37 @@ export function dumpComments(): CommentDataItem[] {
     return result;
 }
 
+function createEmptyStats() {
+    return { reactions: 0, shares: 0, views: 0, engagement: 0 };
+}
+
 export function addContentReaction(id: ContentNodeId) {
-    const stats = statsStore.get(id) || { reactions: 0, shares: 0, views: 0 };
+    const stats = statsStore.get(id) || createEmptyStats();
     stats.reactions += 1;
     statsStore.set(id, stats);
 }
 
+export function addContentEngagement(id: ContentNodeId, value: number) {
+    const stats = statsStore.get(id) || createEmptyStats();
+    stats.engagement += value;
+    statsStore.set(id, stats);
+}
+
 export function removeContentReaction(id: ContentNodeId) {
-    const stats = statsStore.get(id) || { reactions: 0, shares: 0, views: 0 };
+    const stats = statsStore.get(id) || createEmptyStats();
     stats.reactions -= 1;
     statsStore.set(id, stats);
 }
 
 export function addContentShare(id: ContentNodeId) {
-    const stats = statsStore.get(id) || { reactions: 0, shares: 0, views: 0 };
+    const stats = statsStore.get(id) || createEmptyStats();
     stats.shares += 1;
     statsStore.set(id, stats);
 }
 
 export function updateContentStats(stats: ContentStatsId[]) {
     stats.forEach((s) => {
-        const old = statsStore.get(s.id) || { reactions: 0, shares: 0, views: 0 };
+        const old = statsStore.get(s.id) || createEmptyStats();
         old.reactions = Math.max(old.reactions, s.reactions);
         statsStore.set(s.id, s);
     });
@@ -158,9 +168,9 @@ export function getContentStats(id: ContentNodeId[]): ContentStats[];
 export function getContentStats(id: ContentNodeId): ContentStats;
 export function getContentStats(id: ContentNodeId | ContentNodeId[]): ContentStats | ContentStats[] {
     if (Array.isArray(id)) {
-        return id.map((i) => ({ id: i, ...(statsStore.get(i) || { reactions: 0, shares: 0, views: 0 }) }));
+        return id.map((i) => ({ id: i, ...(statsStore.get(i) || createEmptyStats()) }));
     } else {
-        return statsStore.get(id) || { reactions: 0, shares: 0, views: 0 };
+        return statsStore.get(id) || createEmptyStats();
     }
 }
 

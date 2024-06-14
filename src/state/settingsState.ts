@@ -27,7 +27,7 @@ export const settingIncludeAllLinks = atom<boolean>({
 
 export const settingLinkDistanceScale = atom<number>({
     key: 'settinglinkdistscale',
-    default: 5,
+    default: 200,
 });
 
 export const settingSimilarPercent = atom<number>({

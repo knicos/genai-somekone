@@ -223,9 +223,9 @@ export default function SocialGraphSettings() {
                 aria-labelledby="social-edge-scaling-label"
                 value={edgeScale}
                 onChange={doEdgeScale}
-                min={1}
-                max={20}
-                step={1}
+                min={20}
+                max={400}
+                step={20}
             />
             <div
                 id="social-similar-percent-label"

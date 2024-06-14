@@ -129,7 +129,7 @@ const ProfileNode = memo(function ProfileNode({ id, onResize, live, selected, di
                     height={asize * 2}
                     href={getContentData(image as ContentNodeId)}
                     preserveAspectRatio="none"
-                    clipPath="circle() fill-box"
+                    clipPath={`circle(${Math.floor(asize - 15)}px)`}
                 />
             )}
         </g>

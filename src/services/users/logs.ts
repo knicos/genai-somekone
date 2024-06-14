@@ -1,5 +1,5 @@
 import { anonString } from '@genaism/util/anon';
-import { addContentReaction, addContentShare, removeContentReaction } from '../content/content';
+import { addContentEngagement, addContentReaction, addContentShare, removeContentReaction } from '../content/content';
 import { addEdge, addOrAccumulateEdge, getEdge } from '../graph/edges';
 import { ContentNodeId, UserNodeId, WeightedNode } from '../graph/graphTypes';
 import { getRelated } from '../graph/query';
@@ -148,6 +148,7 @@ export function processLogEntry(data: LogEntry, id?: UserNodeId, noEvent?: boole
             break;
         case 'engagement':
             processEngagement(aid, cid, data.value || 0);
+            addContentEngagement(cid, data.value || 0);
             break;
     }
 

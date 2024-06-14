@@ -53,6 +53,7 @@ export interface ContentStats {
     reactions: number;
     shares: number;
     views: number;
+    engagement: number;
 }
 
 export interface ContentStatsId extends ContentStats {

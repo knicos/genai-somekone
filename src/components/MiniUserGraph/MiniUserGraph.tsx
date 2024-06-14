@@ -112,6 +112,7 @@ export default function MiniUserGraph({ userId, pairedId, contentId }: Props) {
             zoom={1}
             center={[0, 0]}
             disableControls={true}
+            disableCenter={true}
         >
             {nodes.map((n) => (
                 <ProfileNode

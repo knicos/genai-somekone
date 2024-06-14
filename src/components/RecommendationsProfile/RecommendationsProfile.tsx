@@ -47,7 +47,7 @@ export default function RecommendationsProfile({ id, generate, noWizard }: Props
                 className={style.container}
                 tabIndex={0}
             >
-                {appConfig.showRecommendationWizard && appConfig.experimental && !noWizard && (
+                {appConfig.showRecommendationWizard && !noWizard && (
                     <RecomWizard
                         active={wizard}
                         onClose={() => setWizard(false)}

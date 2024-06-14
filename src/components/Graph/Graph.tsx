@@ -60,6 +60,7 @@ interface Props<T extends NodeID> extends PropsWithChildren {
     LabelComponent?: FunctionComponent<LabelProps<T>>;
     labelProps?: object;
     disableControls?: boolean;
+    disableCenter?: boolean;
 }
 
 interface InternalState {
@@ -102,6 +103,7 @@ export default function Graph<T extends NodeID>({
     LabelComponent,
     labelProps,
     disableControls,
+    disableCenter,
 }: Props<T>) {
     const svgRef = useRef<SVGSVGElement>(null);
     const [redraw, trigger] = useReducer((a) => ++a, 0);
@@ -165,7 +167,7 @@ export default function Graph<T extends NodeID>({
         const llinks = makeLinks<T>(nodeRef.current, links);
 
         if (!simRef.current) {
-            simRef.current = createSimulation<T>(charge, linkScale);
+            simRef.current = createSimulation<T>(charge, linkScale, disableCenter);
         }
 
         setNodeList(lnodes);
@@ -180,7 +182,7 @@ export default function Graph<T extends NodeID>({
         simRef.current.alpha(0.3).restart();
 
         setLinkList(llinks);
-    }, [nodes, links, redraw, charge, linkScale]);
+    }, [nodes, links, redraw, charge, linkScale, disableCenter]);
 
     // Animate camera motion
     useEffect(() => {

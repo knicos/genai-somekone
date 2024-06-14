@@ -2,10 +2,14 @@ import { NodeID } from '@genaism/services/graph/graphTypes';
 import { GraphNode, InternalGraphLink } from './types';
 import * as d3 from 'd3';
 
-export function createSimulation<T extends NodeID>(charge: number, linkScale: number) {
-    return d3
-        .forceSimulation<GraphNode<T>>()
-        .force('center', d3.forceCenter())
+export function createSimulation<T extends NodeID>(charge: number, linkScale: number, disableCenter?: boolean) {
+    let sim = d3.forceSimulation<GraphNode<T>>();
+
+    if (!disableCenter) {
+        sim = sim.force('center', d3.forceCenter());
+    }
+
+    sim = sim
         .force(
             'collide',
             d3.forceCollide<GraphNode<T>>((n) => {
@@ -25,14 +29,11 @@ export function createSimulation<T extends NodeID>(charge: number, linkScale: nu
             'link',
             d3
                 .forceLink<GraphNode<T>, InternalGraphLink<T, T>>()
-                .strength((d) => d.strength * 0.9 + 0.1)
-                .distance((d) =>
-                    Math.max(
-                        10,
-                        (1 - d.strength) * linkScale * (d.source.size + d.target.size) + (d.source.size + d.target.size)
-                    )
-                )
+                .strength((d) => d.strength * d.strength * 0.5 + 0.1)
+                .distance((d) => Math.max(0, (1 - d.strength) * linkScale + (d.source.size + d.target.size)) + 10)
         );
+
+    return sim;
     //.stop();
     //.force('attract', d3.forceManyBody().strength(20000).distanceMin(2000))
 }
