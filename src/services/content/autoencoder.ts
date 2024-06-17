@@ -4,6 +4,8 @@ export default class AutoEncoder {
     public model: tf.LayersModel;
     public encoder: tf.layers.Layer;
     public decoder: tf.layers.Layer;
+    private trained: boolean = false;
+    private trainingPromise?: Promise<tf.History>;
 
     constructor(dim: number, inDim = 1280) {
         // Now use an autoencoder to reduce it.
@@ -26,16 +28,29 @@ export default class AutoEncoder {
     }
 
     async train(data: number[][], epochs = 1000, onEpochEnd?: (e: number, logs?: tf.Logs) => void) {
-        const xs = tf.tensor2d(data);
-        const h = await this.model.fit(xs, xs, {
-            epochs,
-            batchSize: 32,
-            shuffle: true,
-            validationSplit: 0.1,
-            callbacks: { onEpochEnd: onEpochEnd },
-        });
-        xs.dispose();
-        return h;
+        if (!this.trainingPromise) {
+            this.trainingPromise = new Promise((resolve) => {
+                const xs = tf.tensor2d(data);
+                this.model
+                    .fit(xs, xs, {
+                        epochs,
+                        batchSize: 32,
+                        shuffle: true,
+                        validationSplit: 0.1,
+                        callbacks: { onEpochEnd: onEpochEnd },
+                    })
+                    .then((h) => {
+                        xs.dispose();
+                        this.trained = true;
+                        resolve(h);
+                    });
+            });
+        }
+        return await this.trainingPromise;
+    }
+
+    isTrained() {
+        return this.trained;
     }
 
     generate(data: number[][]): number[][] {

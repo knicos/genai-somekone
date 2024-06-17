@@ -1,9 +1,9 @@
 import { WeightedLabel } from '@genaism/services/content/contentTypes';
 import { UserNodeId, WeightedNode } from '@genaism/services/graph/graphTypes';
 import { addAnyProfileListener, removeAnyProfileListener } from '@genaism/services/profiler/events';
+import { clusterUsers } from '@genaism/services/similarity/user';
 import { findSimilarUsers } from '@genaism/services/users/users';
 import { useEffect, useRef, useState } from 'react';
-import { clusterUsers } from './cluster';
 
 function getSimilar(id: UserNodeId, similarities: Map<UserNodeId, WeightedNode<UserNodeId>[]>) {
     const s = findSimilarUsers(id);

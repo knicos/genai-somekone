@@ -1,11 +1,16 @@
 import { addNode } from '@genaism/services/graph/nodes';
 import { resetGraph } from '@genaism/services/graph/state';
-import { beforeEach, describe, it } from 'vitest';
+import { beforeEach, describe, it, vi } from 'vitest';
 import SocialGraph from './SocialGraph';
 import { render, screen, waitFor } from '@testing-library/react';
 import TestWrapper from '@genaism/util/TestWrapper';
 import userEvent from '@testing-library/user-event';
 import { appConfiguration, settingDisplayLabel } from '@genaism/state/settingsState';
+import { Embedding } from '@genaism/util/embedding';
+
+vi.mock('@genaism/services/content/mapping', () => ({
+    mapEmbeddingsToPoints: (e: Embedding[]) => e.map(() => ({ x: 0, y: 0 })),
+}));
 
 describe('SocialGraph Component', () => {
     beforeEach(() => {
@@ -21,7 +26,7 @@ describe('SocialGraph Component', () => {
             </TestWrapper>
         );
 
-        const nodes = screen.getAllByTestId('profile-circle');
+        const nodes = await screen.findAllByTestId('profile-circle');
         expect(nodes).toHaveLength(2);
         expect(screen.getByTestId('social-menu-images')).toBeVisible();
     });
@@ -49,7 +54,7 @@ describe('SocialGraph Component', () => {
             </TestWrapper>
         );
 
-        const nodes = screen.getAllByTestId('profile-circle');
+        const nodes = await screen.findAllByTestId('profile-circle');
         await user.click(nodes[0]);
         expect(screen.getByTestId('social-menu-feed-button')).toBeVisible();
     });
@@ -63,7 +68,7 @@ describe('SocialGraph Component', () => {
             </TestWrapper>
         );
 
-        const nodes = screen.getAllByTestId('profile-circle');
+        const nodes = await screen.findAllByTestId('profile-circle');
         await user.click(nodes[0]);
         expect(screen.getByTestId('social-menu-feed-button')).toBeVisible();
         await user.click(screen.getByTestId('social-menu-feed-button'));
@@ -79,7 +84,7 @@ describe('SocialGraph Component', () => {
             </TestWrapper>
         );
 
-        const nodes = screen.getAllByTestId('profile-circle');
+        const nodes = await screen.findAllByTestId('profile-circle');
         await user.click(nodes[0]);
         expect(screen.getByTestId('social-menu-data-button')).toBeVisible();
         await user.click(screen.getByTestId('social-menu-data-button'));
@@ -95,7 +100,7 @@ describe('SocialGraph Component', () => {
             </TestWrapper>
         );
 
-        const nodes = screen.getAllByTestId('profile-circle');
+        const nodes = await screen.findAllByTestId('profile-circle');
         await user.click(nodes[0]);
         expect(screen.getByTestId('social-menu-profile-button')).toBeVisible();
         await user.click(screen.getByTestId('social-menu-profile-button'));
@@ -115,7 +120,7 @@ describe('SocialGraph Component', () => {
             </TestWrapper>
         );
 
-        const nodes = screen.getAllByTestId('profile-circle');
+        const nodes = await screen.findAllByTestId('profile-circle');
         await user.click(nodes[0]);
         expect(screen.getByTestId('social-menu-recom-button')).toBeVisible();
         await user.click(screen.getByTestId('social-menu-recom-button'));

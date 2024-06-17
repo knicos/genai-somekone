@@ -29,6 +29,7 @@ import { menuSelectedUser } from '@genaism/state/menuState';
 import RecommendationsPanel from './RecommendationsPanel';
 import { colourLabel } from './colourise';
 import { getUserName } from '@genaism/services/profiler/profiler';
+import { Point } from '@genaism/services/content/mapping';
 
 const LINE_THICKNESS_UNSELECTED = 40;
 const MIN_LINE_THICKNESS = 10;
@@ -68,6 +69,7 @@ export default function SocialGraph({ liveUsers }: Props) {
         clusterColouring > 0,
         clusterColouring > 0 ? clusterColouring : undefined
     );
+    const pointMap = useRef(new Map<UserNodeId, Point>());
 
     useEffect(() => {
         const newLinks: GraphLink<UserNodeId, UserNodeId>[] = [];
@@ -94,7 +96,18 @@ export default function SocialGraph({ liveUsers }: Props) {
         setLinks(newLinks);
     }, [similar, similarPercent, allLinks]);
 
-    const doRedrawNodes = useCallback(() => {
+    const doRedrawNodes = useCallback(async () => {
+        // Initialising using an autoencoder is of limited value
+        /*const usersWithoutPoints = users.filter((u) => !pointMap.current.get(u));
+
+        if (usersWithoutPoints.length > 0) {
+            await mapUsersToPoints(usersWithoutPoints).then((points) => {
+                points.forEach((p) => {
+                    pointMap.current.set(p.id, p.point);
+                });
+            });
+        }*/
+
         setNodes((oldNodes) => {
             const filteredUsers = showOfflineUsers
                 ? users.filter((u) => u !== getCurrentUser())
@@ -116,8 +129,11 @@ export default function SocialGraph({ liveUsers }: Props) {
                 if (old && old.size === newSize && old.data?.colour === newColour) {
                     return old;
                 } else {
+                    const p = pointMap.current.get(u);
                     return {
                         id: u,
+                        x: p ? p.x * 4000 - 2000 : undefined,
+                        y: p ? p.y * 4000 - 2000 : undefined,
                         label: getUserName(u),
                         size: newSize,
                         strength: similar.similar.get(u)?.length || 0,

@@ -16,8 +16,8 @@ export function makeNodes<T extends NodeID>(
 
     nodes.forEach((n, ix) => {
         const cur = nodeMap.get(n.id) || {
-            ...n,
             ...defaultNodePosition(),
+            ...n,
         };
         cur.strength = n.strength;
         cur.size = n.size;

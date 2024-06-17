@@ -1,5 +1,5 @@
 import { describe, it, vi } from 'vitest';
-import { clusterUsers } from './cluster';
+import { clusterUsers } from './user';
 import { normalise } from '@genaism/util/embedding';
 
 const { mockProfile } = vi.hoisted(() => ({

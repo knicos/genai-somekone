@@ -6,6 +6,7 @@ import { PeerEvent, PeerProps } from '@genaism/hooks/peer';
 import { EventProtocol } from '@genaism/protocol/protocol';
 import { DataConnection } from 'peerjs';
 import TestWrapper from '@genaism/util/TestWrapper';
+import { Embedding } from '@genaism/util/embedding';
 
 const { mockPeer } = vi.hoisted(() => ({
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -17,6 +18,10 @@ const { mockPeer } = vi.hoisted(() => ({
 
 vi.mock('@genaism/hooks/peer', () => ({
     default: mockPeer,
+}));
+
+vi.mock('@genaism/services/content/mapping', () => ({
+    mapEmbeddingsToPoints: (e: Embedding[]) => e.map(() => ({ x: 0, y: 0 })),
 }));
 
 vi.mock('qrcode', () => ({
