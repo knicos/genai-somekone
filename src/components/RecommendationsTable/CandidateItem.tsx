@@ -7,6 +7,7 @@ import MiniUserGraph from '../MiniUserGraph/MiniUserGraph';
 import { UserNodeId } from '@genaism/services/graph/graphTypes';
 import { getUserData } from '@genaism/services/users/users';
 import MiniTopicGraph from '../MiniTopicGraph/MiniTopicGraph';
+import MiniCoengGraph from '../MiniCoengGraph/MiniCoengGraph';
 
 function generateCandidateMessage(item: ScoredRecommendation, t: TFunction) {
     let part1: string;
@@ -60,6 +61,15 @@ export default function CandidateItem({ item, userId }: Props) {
                         <MiniTopicGraph
                             userId={userId}
                             topic={item.topic || ''}
+                            contentId={item.contentId}
+                        />
+                    </div>
+                )}
+                {item.candidateOrigin === 'coengagement' && (
+                    <div className={style.miniGraphBox}>
+                        <MiniCoengGraph
+                            userId={userId}
+                            originId={item.engagedItem || 'content:x'}
                             contentId={item.contentId}
                         />
                     </div>

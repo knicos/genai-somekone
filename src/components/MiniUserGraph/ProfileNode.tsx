@@ -22,15 +22,10 @@ const ProfileNode = memo(function ProfileNode({ disabled, node }: Props) {
     return (
         <g className={disabled ? style.disabledGroup : style.group}>
             <circle
-                className={style.outerCircle}
-                data-testid="profile-selected"
-                r={asize}
-            />
-            <circle
                 data-nodeitem
                 data-testid="profile-circle"
                 r={asize}
-                fill={(node.data?.colour as string) || '#5f7377'}
+                fill={image.length > 0 ? 'white' : (node.data?.colour as string) || '#5f7377'}
                 stroke={(node.data?.colour as string) || '#5f7377'}
                 strokeWidth={15}
             />
@@ -42,7 +37,7 @@ const ProfileNode = memo(function ProfileNode({ disabled, node }: Props) {
                     height={asize * 2}
                     href={getContentData(image as ContentNodeId)}
                     preserveAspectRatio="none"
-                    clipPath="circle() fill-box"
+                    clipPath={`circle(${asize - 15}px)`}
                 />
             )}
             {name && (

@@ -1,19 +1,19 @@
 import { memo } from 'react';
-import { ContentNodeId, TopicNodeId, UserNodeId, isTopicID } from '@genaism/services/graph/graphTypes';
+import { ContentNodeId, UserNodeId } from '@genaism/services/graph/graphTypes';
 import style from './style.module.css';
 import { GraphNode } from '../Graph/types';
 import { getContentData } from '@genaism/services/content/content';
 import Label from '../SocialGraph/Label';
 
 interface Props {
-    id: UserNodeId | ContentNodeId | TopicNodeId;
+    id: UserNodeId | ContentNodeId;
     disabled?: boolean;
-    onResize: (id: UserNodeId | ContentNodeId | TopicNodeId, size: number) => void;
-    node: GraphNode<UserNodeId | ContentNodeId | TopicNodeId>;
+    onResize: (id: UserNodeId | ContentNodeId, size: number) => void;
+    node: GraphNode<UserNodeId | ContentNodeId>;
     fixedSize?: boolean;
 }
 
-const TopicNode = memo(function TopicNode({ disabled, node, id, onResize }: Props) {
+const ContentNode = memo(function ContentNode({ disabled, node }: Props) {
     const asize = node.size;
 
     const image = (node.data?.image as string) || '';
@@ -21,16 +21,14 @@ const TopicNode = memo(function TopicNode({ disabled, node, id, onResize }: Prop
 
     return (
         <g className={disabled ? style.disabledGroup : style.group}>
-            {!isTopicID(id) && (
-                <circle
-                    data-nodeitem
-                    data-testid="profile-circle"
-                    r={asize}
-                    fill={image.length > 0 ? 'white' : (node.data?.colour as string) || '#5f7377'}
-                    stroke={(node.data?.colour as string) || '#5f7377'}
-                    strokeWidth={15}
-                />
-            )}
+            <circle
+                data-nodeitem
+                data-testid="profile-circle"
+                r={asize}
+                fill={(image.length > 0 ? 'white' : (node.data?.colour as string)) || '#5f7377'}
+                stroke={(node.data?.colour as string) || '#5f7377'}
+                strokeWidth={15}
+            />
             {image.length > 0 && (
                 <image
                     x={-asize}
@@ -53,20 +51,8 @@ const TopicNode = memo(function TopicNode({ disabled, node, id, onResize }: Prop
                     color="white"
                 />
             )}
-            {isTopicID(id) && (
-                <Label
-                    label={(node.data?.label as string | undefined) || 'NoLabel'}
-                    x={0}
-                    y={0}
-                    scale={2.5}
-                    padding={5}
-                    fill={(node.data?.colour as string) || '#5f7377'}
-                    color="white"
-                    onResize={(size) => onResize(id, Math.ceil(size))}
-                />
-            )}
         </g>
     );
 });
 
-export default TopicNode;
+export default ContentNode;
