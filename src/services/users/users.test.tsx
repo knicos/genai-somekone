@@ -3,7 +3,7 @@ import { act, render } from '@testing-library/react';
 import { resetGraph } from '../graph/state';
 import { addNode } from '../graph/nodes';
 import { addEdge, getEdgeWeights } from '../graph/edges';
-import { makeUserGraphSnapshot } from './users';
+import { makeUserSnapshot } from './users';
 import { useActionLog } from './hooks';
 import { LogEntry } from './userTypes';
 import { addLogEntry, appendActionLog, getActionLogSince } from './logs';
@@ -15,7 +15,7 @@ function LogComponent({ action }: { action: (e: LogEntry[]) => void }) {
     return 'test';
 }
 
-describe('Users makeUserGraphSnapshot()', () => {
+describe('Users makeUserSnapshot()', () => {
     beforeEach(() => {
         resetGraph();
     });
@@ -26,8 +26,64 @@ describe('Users makeUserGraphSnapshot()', () => {
         addNode('user', 'user:3');
         addNode('user', 'user:4');
 
-        const results = makeUserGraphSnapshot('user:1', 5000);
+        const results = makeUserSnapshot('user:1', 5000, true);
         expect(results.nodes).toHaveLength(3);
+    });
+
+    it('captures new logs', async ({ expect }) => {
+        appendActionLog(
+            [
+                { timestamp: 10, activity: 'engagement', value: 1 },
+                { timestamp: 11, activity: 'engagement', value: 1 },
+                { timestamp: 12, activity: 'engagement', value: 1 },
+                { timestamp: 13, activity: 'engagement', value: 1 },
+                { timestamp: 14, activity: 'engagement', value: 1 },
+            ],
+            'user:xyz'
+        );
+        appendActionLog(
+            [
+                { timestamp: 15, activity: 'engagement', value: 1 },
+                { timestamp: 16, activity: 'engagement', value: 1 },
+                { timestamp: 17, activity: 'engagement', value: 1 },
+                { timestamp: 18, activity: 'engagement', value: 1 },
+                { timestamp: 19, activity: 'engagement', value: 1 },
+            ],
+            'user:xyz2'
+        );
+
+        const results = makeUserSnapshot('user:xyz', 12, true);
+        expect(results.logs).toHaveLength(7);
+        expect(results.logs[0].user).toBe('user:xyz');
+        expect(results.logs[0].entry.timestamp).toBe(13);
+    });
+
+    it('captures new logs without user', async ({ expect }) => {
+        appendActionLog(
+            [
+                { timestamp: 10, activity: 'engagement', value: 1 },
+                { timestamp: 11, activity: 'engagement', value: 1 },
+                { timestamp: 12, activity: 'engagement', value: 1 },
+                { timestamp: 13, activity: 'engagement', value: 1 },
+                { timestamp: 14, activity: 'engagement', value: 1 },
+            ],
+            'user:xyz'
+        );
+        appendActionLog(
+            [
+                { timestamp: 15, activity: 'engagement', value: 1 },
+                { timestamp: 16, activity: 'engagement', value: 1 },
+                { timestamp: 17, activity: 'engagement', value: 1 },
+                { timestamp: 18, activity: 'engagement', value: 1 },
+                { timestamp: 19, activity: 'engagement', value: 1 },
+            ],
+            'user:xyz2'
+        );
+
+        const results = makeUserSnapshot('user:xyz', 12, false);
+        expect(results.logs).toHaveLength(5);
+        expect(results.logs[0].user).toBe('user:xyz2');
+        expect(results.logs[0].entry.timestamp).toBe(15);
     });
 });
 

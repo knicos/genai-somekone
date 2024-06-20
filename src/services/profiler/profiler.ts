@@ -137,7 +137,7 @@ export function addUserProfile(id: UserNodeId, profile: UserNodeData) {
 export function reverseProfile(id: UserNodeId, profile: UserNodeData) {
     outOfDate.add(id);
 
-    addNodeIfNotExists('user', id, profile);
+    addNodeIfNotExists('user', id);
 
     profile.affinities.contents.contents.forEach((c) => {
         const cid = isContentID(c.id) ? c.id : (`content:${c.id}` as ContentNodeId);

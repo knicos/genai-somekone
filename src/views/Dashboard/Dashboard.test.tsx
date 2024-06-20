@@ -20,6 +20,10 @@ vi.mock('@genaism/hooks/peer', () => ({
     default: mockPeer,
 }));
 
+vi.mock('@genaism/services/loader/session', () => ({
+    loadSession: () => {},
+}));
+
 vi.mock('@genaism/services/content/mapping', () => ({
     mapEmbeddingsToPoints: (e: Embedding[]) => e.map(() => ({ x: 0, y: 0 })),
 }));

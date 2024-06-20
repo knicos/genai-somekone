@@ -7,6 +7,7 @@ import { useCallback, useEffect, useRef } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { SMConfig } from '../../state/smConfig';
 import { appendActionLog, getActionLogSince } from '@genaism/services/users/logs';
+import { compressToUTF16 } from 'lz-string';
 import {
     getBestEngagement,
     getUserName,
@@ -15,7 +16,7 @@ import {
     setUserName,
 } from '@genaism/services/profiler/profiler';
 import { appendResearchLog } from '@genaism/services/research/research';
-import { makeUserGraphSnapshot } from '@genaism/services/users/users';
+import { makeUserSnapshot } from '@genaism/services/users/users';
 import { addComment, getContentStats } from '@genaism/services/content/content';
 import { getNodesByType } from '@genaism/services/graph/nodes';
 import { onlineUsers } from '@genaism/state/sessionState';
@@ -88,10 +89,17 @@ export default function ServerProtocol({ onReady, code, content }: Props) {
                 });
             } else if (data.event === 'eter:snapshot') {
                 const now = Date.now();
-                const time = snapRef.current.get(data.id) || now - MAX_AGE;
-                const snap = makeUserGraphSnapshot(data.id, now - time);
+                const timeEntry = snapRef.current.get(data.id);
+                const time = timeEntry || now - MAX_AGE;
+                const snap = makeUserSnapshot(data.id, time, !timeEntry);
                 snapRef.current.set(data.id, now);
-                conn.send({ event: 'eter:snapshot', id: data.id, snapshot: snap });
+                const compressed = now - time > 5 * 60 * 1000;
+                conn.send({
+                    event: 'eter:snapshot',
+                    id: data.id,
+                    snapshot: compressed ? compressToUTF16(JSON.stringify(snap)) : snap,
+                    compressed,
+                });
             } else if (data.event === 'eter:recommendations') {
                 // Send some updated statistics for these new recommendations
                 conn.send({

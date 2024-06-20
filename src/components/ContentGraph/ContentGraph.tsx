@@ -14,6 +14,7 @@ import {
 import { useRecoilValue } from 'recoil';
 import style from './style.module.css';
 import { getRelated } from '@genaism/services/graph/query';
+import { getContentStats } from '@genaism/services/content/content';
 
 const MIN_WEIGHT = 0.02;
 const MIN_SIZE = 50;
@@ -48,7 +49,9 @@ export default function ContentGraph() {
             return (s?.maxSimilarity || 0) > MIN_WEIGHT;
         });
 
-        const newNodes = filteredTopics.map((u) => ({
+        filteredTopics.sort((a, b) => (getContentStats(b)?.engagement || 0) - (getContentStats(a)?.engagement || 0));
+
+        const newNodes = filteredTopics.slice(0, Math.max(20, Math.floor(0.4 * filteredTopics.length))).map((u) => ({
             id: u,
             label: u,
             size: calculateNodeSize(u),

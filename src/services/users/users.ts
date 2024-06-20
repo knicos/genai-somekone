@@ -7,6 +7,8 @@ import { removeRecommendations } from '../recommender/recommender';
 import { removeResearchData } from '../research/research';
 import { UserNodeData } from './userTypes';
 import { getSimilarUsers } from '../similarity/user';
+import { UserLogEntry } from './state';
+import { getActionLogTypeSince } from './logs';
 
 export function getUserData(id: UserNodeId): UserNodeData | undefined {
     return getNodeData<UserNodeData>(id);
@@ -27,11 +29,13 @@ export function findSimilarUsers(id: UserNodeId): WeightedNode<UserNodeId>[] {
 export interface Snapshot {
     edges: PartialEdge[];
     nodes: GNode<NodeType>[];
+    logs: UserLogEntry[];
 }
 
-export function makeUserGraphSnapshot(id: UserNodeId, period: number): Snapshot {
-    const nodes = getNodesSince('user', Date.now() - period).filter((u) => u.id !== id);
-    return { edges: [], nodes };
+export function makeUserSnapshot(id: UserNodeId, since: number, first: boolean): Snapshot {
+    const nodes = getNodesSince('user', since).filter((u) => u.id !== id);
+    const logs = getActionLogTypeSince(since, 'engagement').filter((l) => (l.entry.value || 0) > 0);
+    return { edges: [], nodes, logs: first ? logs : logs.filter((l) => l.user !== id) };
 }
 
 export function removeUser(id: UserNodeId) {

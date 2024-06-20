@@ -4,6 +4,7 @@ import { addComment, updateContentStats } from '@genaism/services/content/conten
 import { addEdges } from '@genaism/services/graph/edges';
 import { addNodes } from '@genaism/services/graph/nodes';
 import {
+    addLogEntry,
     appendActionLog,
     getActionLogSince,
     getCurrentUser,
@@ -23,6 +24,8 @@ import ConnectionMonitor from '@genaism/components/ConnectionMonitor/ConnectionM
 import { LogProvider } from '@genaism/hooks/logger';
 import { getRecommendations } from '@genaism/services/recommender/recommender';
 import { UserNodeData } from '@genaism/services/users/userTypes';
+import { decompressFromUTF16 } from 'lz-string';
+import { Snapshot } from '@genaism/services/users/users';
 
 const DATA_LOG_TIME = 15 * 60 * 1000;
 const USERNAME_KEY = 'genai_somekone_username';
@@ -47,7 +50,7 @@ export function useFeedProtocol() {
 }
 
 export default function FeedProtocol({ content, server, mycode, setContent, children }: Props) {
-    const logRef = useRef(0);
+    const logRef = useRef(Date.now());
     const logTimer = useRef(-1);
     const setAvailableUsers = useSetRecoilState(availableUsers);
     const [config, setConfig] = useRecoilState<SMConfig>(appConfiguration);
@@ -85,8 +88,16 @@ export default function FeedProtocol({ content, server, mycode, setContent, chil
                 conn.send({ event: 'eter:recommendations', recommendations, id: getCurrentUser() });
                 conn.send({ event: 'eter:connect', code: `sm-${server}` });
             } else if (data.event === 'eter:snapshot' && data.snapshot) {
-                addNodes(data.snapshot.nodes);
-                addEdges(data.snapshot.edges.map((e) => ({ ...e, timestamp: Date.now(), metadata: {} })));
+                const snap = data.compressed
+                    ? (JSON.parse(decompressFromUTF16(data.snapshot as string)) as Snapshot)
+                    : (data.snapshot as Snapshot);
+                // console.log('SNAP', getCurrentUser(), snap);
+                addNodes(snap.nodes);
+                addEdges(snap.edges.map((e) => ({ ...e, timestamp: Date.now(), metadata: {} })));
+                snap.logs?.forEach((log) => {
+                    // if (log.user !== getCurrentUser())
+                    addLogEntry(log.entry, log.user);
+                });
             } else if (data.event === 'eter:stats') {
                 updateContentStats(data.content);
                 setBestEngagement(data.bestEngagement);

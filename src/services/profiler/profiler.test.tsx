@@ -59,6 +59,8 @@ describe('Profiler.updateProfile', () => {
         testProfile.affinities.topics.topics = [{ label: 'fff', weight: 0.5 }];
         testProfile.affinities.contents.contents = [{ id: 'content:zzz', weight: 0.5 }];
 
+        console.log('TEST', testProfile);
+
         reverseProfile('user:xyz', testProfile);
 
         console.log(dumpJSON());

@@ -5,9 +5,9 @@ import ImageSearchIcon from '@mui/icons-material/ImageSearch';
 import style from './style.module.css';
 import MiniUserGraph from '../MiniUserGraph/MiniUserGraph';
 import { UserNodeId } from '@genaism/services/graph/graphTypes';
-import { getUserData } from '@genaism/services/users/users';
 import MiniTopicGraph from '../MiniTopicGraph/MiniTopicGraph';
 import MiniCoengGraph from '../MiniCoengGraph/MiniCoengGraph';
+import { getUserData } from '@genaism/services/users/users';
 
 function generateCandidateMessage(item: ScoredRecommendation, t: TFunction) {
     let part1: string;

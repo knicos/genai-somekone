@@ -75,12 +75,13 @@ export function addOrAccumulateEdge<T extends EdgeType, S extends SourceFor<T>, 
     type: T,
     src: S,
     dest: D,
-    weight: number
+    weight: number,
+    timestamp?: number
 ) {
     const id = `${dest}:${type}:${src}`;
     const oldEdge = edgeStore.get(id);
     const edge = oldEdge || { type, source: src, destination: dest, weight: 0, metadata: {}, timestamp: 0 };
-    edge.timestamp = Date.now();
+    edge.timestamp = timestamp || Date.now();
     edge.weight += weight;
 
     if (!oldEdge) {

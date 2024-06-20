@@ -2,20 +2,19 @@ import JSZip from 'jszip';
 
 import { ContentMetadata } from '@genaism/services/content/contentTypes';
 import { addContent } from '@genaism/services/content/content';
-import { LogEntry } from '../users/userTypes';
-import { addUserProfile, appendActionLog, getActionLog, getCurrentUser } from '@genaism/services/profiler/profiler';
-import { NodeID, TopicNodeId, UserNodeId, isTopicID } from '../graph/graphTypes';
-import { GraphExport, dump } from '../graph/state';
+import { appendActionLog } from '@genaism/services/profiler/profiler';
+import { TopicNodeId, UserNodeId } from '../graph/graphTypes';
+import { GraphExport } from '../graph/state';
 import { addNodes } from '../graph/nodes';
-import { addEdges } from '../graph/edges';
 import { getTopicId } from '../concept/concept';
 import { ProjectMeta, VERSION } from '../saver/types';
 import { dependencies } from './tracker';
 import { LogItem } from './loaderTypes';
-import { findLargestEdgeTimestamp, findLargestLogTimestamp, rebaseEdges, rebaseLog } from './rebase';
+import { findLargestEdgeTimestamp, findLargestLogTimestamp, rebaseLog } from './rebase';
 import { SomekoneSettings } from '@genaism/hooks/settings';
-import { compress, decompress } from 'lz-string';
 import { UserNodeData } from '../users/userTypes';
+import './session';
+import { sortLogs } from '../users/logs';
 
 const STATIC_PATH = 'https://store.gen-ai.fi/somekone/images';
 
@@ -195,7 +194,7 @@ export async function loadFile(file: File | Blob): Promise<SomekoneSettings | un
                 (node.data as UserNodeData).featureWeights = {};
             }
         });
-        store.graph.edges.forEach((edge) => {
+        /*store.graph.edges.forEach((edge) => {
             if (isTopicID(edge.source)) {
                 const label = topicSet.get(edge.source) || '';
                 edge.source = getTopicId(label);
@@ -204,65 +203,34 @@ export async function loadFile(file: File | Blob): Promise<SomekoneSettings | un
                 const label = topicSet.get(edge.destination) || '';
                 edge.destination = getTopicId(label);
             }
-        });
+        });*/
 
-        rebaseEdges(store.graph.edges, timeOffset);
+        //rebaseEdges(store.graph.edges, timeOffset);
 
         // Remove users who do not have valid names
-        const badUsers = new Set<NodeID>(store.graph.nodes.filter((n) => !n.data).map((n) => n.id));
+        // const badUsers = new Set<NodeID>(store.graph.nodes.filter((n) => !n.data).map((n) => n.id));
 
         addNodes(store.graph.nodes.filter((n) => !!n.data));
-        addEdges(store.graph.edges.filter((e) => !badUsers.has(e.destination) && !badUsers.has(e.source)));
+        // addEdges(store.graph.edges.filter((e) => !badUsers.has(e.destination) && !badUsers.has(e.source)));
     }
 
     store.meta.forEach((v) => {
         addContent(images.get(v.id) || `${STATIC_PATH}/${v.id}.jpg`, v);
     });
 
-    store.users.forEach((u) => {
+    /*store.users.forEach((u) => {
         try {
             if (u.name !== 'NoName') addUserProfile(u.id, u);
         } catch (e) {
             console.warn('User already exists');
         }
-    });
+    });*/
 
     rebaseLog(store.logs, timeOffset);
     store.logs.forEach((l) => {
-        appendActionLog(l.log, l.id, !!store.graph);
+        appendActionLog(l.log, l.id);
     });
+    sortLogs();
 
     return store.settings;
-}
-
-const GRAPH_KEY = 'genai_somekone_graph';
-const LOG_KEY = 'genai_somekone_logs';
-
-window.addEventListener('beforeunload', () => {
-    try {
-        window.sessionStorage.setItem(GRAPH_KEY, compress(JSON.stringify(dump())));
-        const logs = getActionLog(getCurrentUser());
-        window.sessionStorage.setItem(LOG_KEY, JSON.stringify(logs));
-    } catch (e) {
-        console.log('Save error', e);
-    }
-});
-
-const sessionGraph = window.sessionStorage.getItem(GRAPH_KEY);
-window.sessionStorage.removeItem(GRAPH_KEY);
-if (sessionGraph) {
-    const graph = JSON.parse(decompress(sessionGraph)) as GraphExport;
-    const maxTimestamp = findLargestEdgeTimestamp(graph.edges);
-    const timeOffset = Date.now() - maxTimestamp;
-    rebaseEdges(graph.edges, timeOffset);
-    addNodes(graph.nodes);
-    addEdges(graph.edges);
-    console.log('Loaded session graph');
-}
-
-const sessionLogs = window.sessionStorage.getItem(LOG_KEY);
-window.sessionStorage.removeItem(LOG_KEY);
-if (sessionLogs) {
-    const logs = JSON.parse(sessionLogs) as LogEntry[];
-    appendActionLog(logs, undefined, true);
 }

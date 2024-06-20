@@ -3,7 +3,7 @@ import { Recommendation } from '../recommenderTypes';
 import { biasedUniqueSubset } from '@genaism/util/subsets';
 import { UserNodeData } from '@genaism/services/users/userTypes';
 import { getSimilarUsers } from '@genaism/services/similarity/user';
-import { getUserData } from '@genaism/services/users/users';
+import { getUserProfile } from '@genaism/services/profiler/profiler';
 
 const NUM_SIMILAR_USERS = 5;
 
@@ -26,7 +26,7 @@ export function generateSimilarUsers(profile: UserNodeData, nodes: Recommendatio
     // For each similar user, get their favourite images.
     let results: UserSuggestion[] = [];
     similar.forEach((user) => {
-        const best = getUserData(user.id)?.affinities.contents.contents || [];
+        const best = getUserProfile(user.id)?.affinities.contents.contents || [];
         const wbest = best.map((b) => ({
             id: b.id,
             weight: b.weight * user.weight,

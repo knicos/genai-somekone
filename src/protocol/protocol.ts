@@ -71,7 +71,8 @@ export interface ResearchLogEvent extends PeerEvent {
 export interface SnapshotEvent extends PeerEvent {
     event: 'eter:snapshot';
     id: UserNodeId;
-    snapshot?: Snapshot;
+    snapshot?: Snapshot | string;
+    compressed?: boolean;
 }
 
 export type EventProtocol =

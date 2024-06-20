@@ -22,6 +22,10 @@ export function dump() {
     };
 }
 
+export function dumpNodes() {
+    return Array.from(nodeStore.values());
+}
+
 export function dumpJSON() {
     return JSON.stringify(dump(), undefined, 4);
 }

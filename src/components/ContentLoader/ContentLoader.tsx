@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import ContentError from './ContentError';
 import ContentProgress from './ContentProgress';
 import { useSettingDeserialise } from '@genaism/hooks/settings';
+import { loadSession } from '@genaism/services/loader/session';
 
 type LoadingStatus = 'waiting' | 'downloading' | 'loading' | 'failed-download' | 'failed-load' | 'done';
 
@@ -52,6 +53,7 @@ export default function ContentLoader({ content, onLoaded }: Props) {
                                 if (setting) deserial(setting);
                             });
                             setStatus('done');
+                            loadSession();
                             if (onLoaded) onLoaded();
                         })
                         .catch((e) => {
