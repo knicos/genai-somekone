@@ -1,6 +1,6 @@
 import { LogEntry } from '@genaism/services/users/userTypes';
 import { useMemo, useRef, useState } from 'react';
-import { Button } from '../Button/Button';
+import { Button } from '@knicos/genai-base';
 import { useTranslation } from 'react-i18next';
 import Cards from '../DataCard/Cards';
 import LogBatch from './LogBatch';

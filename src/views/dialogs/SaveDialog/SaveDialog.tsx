@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import style from './style.module.css';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
-import { Button } from '@genaism/components/Button/Button';
+import { Button } from '@knicos/genai-base';
 import { saveFile } from '@genaism/services/saver/fileSaver';
 import { appConfiguration } from '@genaism/state/settingsState';
 import { useSettingSerialise } from '@genaism/hooks/settings';

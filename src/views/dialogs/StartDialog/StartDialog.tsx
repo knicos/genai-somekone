@@ -1,8 +1,8 @@
 import { UserInfo } from '../../Dashboard/userInfo';
 import style from './style.module.css';
-import QRCode from '@genaism/components/QRCode/QRCode';
+import { QRCode } from '@knicos/genai-base';
 import { useTranslation, Trans } from 'react-i18next';
-import { LargeButton } from '@genaism/components/Button/Button';
+import { LargeButton } from '@knicos/genai-base';
 import { useRecoilState } from 'recoil';
 import { menuShowShare } from '@genaism/state/menuState';
 import { useCallback } from 'react';

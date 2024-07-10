@@ -16,7 +16,7 @@ import { errorNotification } from '@genaism/state/errorState';
 import { appConfiguration } from '@genaism/state/settingsState';
 import TopicGraph from '@genaism/components/TopicGraph/TopicGraph';
 import ContentGraph from '@genaism/components/ContentGraph/ContentGraph';
-import { useID } from '@genaism/hooks/id';
+import { useID } from '@knicos/genai-base';
 import UserGrid from '@genaism/components/UserGrid/UserGrid';
 import Replay from '@genaism/components/Replay/Replay';
 import { onlineUsers } from '@genaism/state/sessionState';

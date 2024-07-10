@@ -11,7 +11,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import InfoIcon from '@mui/icons-material/Info';
 import { IconButton } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { Button } from '../Button/Button';
+import { Button } from '@knicos/genai-base';
 import DesignServicesIcon from '@mui/icons-material/DesignServices';
 import { getCurrentUser } from '@genaism/services/profiler/state';
 

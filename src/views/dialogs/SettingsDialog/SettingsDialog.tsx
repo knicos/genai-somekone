@@ -3,7 +3,7 @@ import { Dialog, DialogActions, DialogContent, DialogTitle, Tab, Tabs } from '@m
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useRecoilState } from 'recoil';
-import { Button } from '@genaism/components/Button/Button';
+import { Button } from '@knicos/genai-base';
 import SocialGraphSettings from './SocialGraph';
 import FeedSettings from './Feed';
 import TopicGraphSettings from './TopicGraph';

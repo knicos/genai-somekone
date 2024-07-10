@@ -1,4 +1,4 @@
-@value bgSubdued1, bgError, borderBrightBlue from "../../style/colours.module.css";
+@value bgSubdued1, bgError, borderBrightBlue from "@knicos/genai-base/dist/colours.module.css";
 
 .title {
     background: bgSubdued1;

@@ -1,4 +1,4 @@
-import { Button } from '@genaism/components/Button/Button';
+import { Button } from '@knicos/genai-base';
 import { ContentNodeId } from '@genaism/services/graph/graphTypes';
 import style from './style.module.css';
 import { useEffect, useState } from 'react';

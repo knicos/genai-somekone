@@ -4,7 +4,7 @@ import { useUserProfile } from '@genaism/services/profiler/hooks';
 import { useCallback, useEffect, useReducer, useRef, useState } from 'react';
 import { GraphLink, GraphNode, InternalGraphLink } from '../Graph/types';
 import TopicNode from './TopicNode';
-import colours from '../../style/colours.module.css';
+import colours from '@knicos/genai-base/dist/colours.module.css';
 import { getRelated } from '@genaism/services/graph/query';
 import { getTopicId } from '@genaism/services/concept/concept';
 import { getContentStats } from '@genaism/services/content/content';

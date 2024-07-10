@@ -3,7 +3,7 @@ import { ScoredRecommendation } from '@genaism/services/recommender/recommenderT
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import ScorePie from './ScorePie';
 import style from './style.module.css';
-import sColors from '../../style/colours.module.css';
+import sColors from '@knicos/genai-base/dist/colours.module.css';
 
 interface Props {
     item: ScoredRecommendation;

@@ -2,7 +2,7 @@ import { getCurrentUser } from '@genaism/services/profiler/state';
 import { appConfiguration } from '@genaism/state/settingsState';
 import { PropsWithChildren, createContext, memo, useCallback, useContext } from 'react';
 import { useRecoilValue } from 'recoil';
-import { SenderType } from './peer';
+import { SenderType } from '@knicos/genai-base';
 import { ResearchLogEvent } from '@genaism/protocol/protocol';
 
 type LogFn = null | ((action: string, details?: unknown) => void);

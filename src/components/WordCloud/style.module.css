@@ -1,4 +1,4 @@
-@value bgColourful1, textDark from "../../style/colours.module.css";
+@value bgColourful1, textDark from "@knicos/genai-base/dist/colours.module.css";
 
 .cloudItem {
     transition: transform 1s;

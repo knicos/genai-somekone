@@ -7,7 +7,7 @@ const { mockPeer } = vi.hoisted(() => ({
     mockPeer: vi.fn(),
 }));
 
-vi.mock('@genaism/hooks/peer', () => ({
+vi.mock('@knicos/genai-base/dist/hooks/peer', () => ({
     default: mockPeer,
 }));
 

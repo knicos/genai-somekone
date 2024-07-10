@@ -2,21 +2,23 @@ import { describe, it, vi } from 'vitest';
 import { render, screen, act } from '@testing-library/react';
 import { Component as Dashboard } from './Dashboard';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
-import { PeerEvent, PeerProps } from '@genaism/hooks/peer';
+import { usePeer } from '@knicos/genai-base';
 import { EventProtocol } from '@genaism/protocol/protocol';
 import { DataConnection } from 'peerjs';
 import TestWrapper from '@genaism/util/TestWrapper';
 import { Embedding } from '@genaism/util/embedding';
 
+type PeerProps = Parameters<typeof usePeer<EventProtocol>>[0];
+
 const { mockPeer } = vi.hoisted(() => ({
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    mockPeer: vi.fn((_props: PeerProps<PeerEvent>) => ({
+    mockPeer: vi.fn((_props: PeerProps) => ({
         ready: true,
         sender: vi.fn(),
     })),
 }));
 
-vi.mock('@genaism/hooks/peer', () => ({
+vi.mock('@knicos/genai-base/dist/hooks/peer', () => ({
     default: mockPeer,
 }));
 
@@ -62,10 +64,10 @@ describe('Dashboard view', () => {
     it('shows one user connected', async ({ expect }) => {
         const mockSender = vi.fn();
         const propsObj = {
-            props: {} as PeerProps<EventProtocol>,
+            props: {} as PeerProps,
         };
 
-        mockPeer.mockImplementation((props: PeerProps<EventProtocol>) => {
+        mockPeer.mockImplementation((props: PeerProps) => {
             propsObj.props = props;
             return { ready: true, sender: mockSender };
         });
@@ -96,10 +98,10 @@ describe('Dashboard view', () => {
     it('shows two users connected', async ({ expect }) => {
         const mockSender = vi.fn();
         const propsObj = {
-            props: {} as PeerProps<EventProtocol>,
+            props: {} as PeerProps,
         };
 
-        mockPeer.mockImplementation((props: PeerProps<EventProtocol>) => {
+        mockPeer.mockImplementation((props: PeerProps) => {
             propsObj.props = props;
             return { ready: true, sender: mockSender };
         });

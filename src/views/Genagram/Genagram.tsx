@@ -10,7 +10,7 @@ import DataPage from './DataPage';
 import ProfilePage from './ProfilePage';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { menuShowFeedActions } from '@genaism/state/menuState';
-import useRandom from '@genaism/hooks/random';
+import { useRandom } from '@knicos/genai-base';
 import SharePage from './SharePage';
 import { appConfiguration } from '@genaism/state/settingsState';
 import RecommendationPage from './RecommendationPage';

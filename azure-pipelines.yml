@@ -30,6 +30,7 @@ stages:
                       path: $(System.DefaultWorkingDirectory)/node_modules
                   displayName: Cache NPM packages
                 - script: |
+                      echo -e "\n//npm.pkg.github.com/:_authToken=$(GITHUB_TOKEN)" >> ./.npmrc
                       npm ci
                       npm run lint
     - stage: Build
@@ -53,6 +54,7 @@ stages:
                   displayName: Cache NPM packages
 
                 - script: |
+                      echo -e "\n//npm.pkg.github.com/:_authToken=$(GITHUB_TOKEN)" >> ./.npmrc
                       npm ci
                       npm run build
                   displayName: 'Build'
@@ -77,6 +79,7 @@ stages:
                 - download: current
                   artifact: DistFolder
                 - script: |
+                      echo -e "\n//npm.pkg.github.com/:_authToken=$(GITHUB_TOKEN)" >> ./.npmrc
                       npm ci
                       CI=true npm run ci:test
                   displayName: 'Test'

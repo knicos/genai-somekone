@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { useParams } from 'react-router';
 import ErrorDialog from '../dialogs/ErrorDialog/ErrorDialog';
-import useRandom from '@genaism/hooks/random';
+import { useRandom } from '@knicos/genai-base';
 import { useTranslation } from 'react-i18next';
 import DataProfile from '@genaism/components/DataProfile/DataProfile';
 import { useRecoilValue } from 'recoil';

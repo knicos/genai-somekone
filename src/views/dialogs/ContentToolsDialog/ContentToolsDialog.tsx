@@ -3,7 +3,7 @@ import { Dialog, DialogActions, DialogContent, DialogTitle, Tab, Tabs } from '@m
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useRecoilState } from 'recoil';
-import { Button } from '@genaism/components/Button/Button';
+import { Button } from '@knicos/genai-base';
 import RawEmbeddingTool from './RawEmbeddingTool';
 import EmbeddingTool from './EmbeddingTool';
 import MappingTool from './MappingTool';

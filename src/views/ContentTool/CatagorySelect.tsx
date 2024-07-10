@@ -6,7 +6,7 @@ import { getTopicId } from '@genaism/services/concept/concept';
 import TagIcon from '@mui/icons-material/Tag';
 import Stepper from './Stepper';
 import { useTranslation } from 'react-i18next';
-import AlertPara from '@genaism/components/AlertPara/AlertPara';
+import { AlertPara } from '@knicos/genai-base';
 
 interface Props {
     onAddNext: (stage: StageState[]) => void;

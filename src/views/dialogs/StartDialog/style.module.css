@@ -1,4 +1,4 @@
-@value bgSubdued1, borderBrightBlue, textDark from "../../../style/colours.module.css";
+@value bgSubdued1, borderBrightBlue, textDark from "@knicos/genai-base/dist/colours.module.css";
 
 .groupedItems {
     display: flex;

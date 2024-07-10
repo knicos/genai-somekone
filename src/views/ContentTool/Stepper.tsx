@@ -1,4 +1,4 @@
-import { LargeButton } from '@genaism/components/Button/Button';
+import { LargeButton } from '@knicos/genai-base';
 import { useTranslation } from 'react-i18next';
 
 interface Props {

@@ -1,4 +1,4 @@
-@value primary, bgSubdued1 from "../../style/colours.module.css";
+@value primary, bgSubdued1 from "@knicos/genai-base/dist/colours.module.css";
 
 .instaImage {
     width: 100%;

@@ -2,14 +2,15 @@ import { describe, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { Component as Genagram } from './Genagram';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
-import { PeerEvent, PeerProps } from '@genaism/hooks/peer';
+import { usePeer } from '@knicos/genai-base';
 import TestWrapper from '@genaism/util/TestWrapper';
-import { iceConfig, webrtcActive } from '@genaism/state/webrtcState';
 import { appConfiguration } from '@genaism/state/settingsState';
+
+type PeerProps = Parameters<typeof usePeer>[0];
 
 const { mockPeer } = vi.hoisted(() => ({
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    mockPeer: vi.fn((_props: PeerProps<PeerEvent>) => ({
+    mockPeer: vi.fn((_props: PeerProps) => ({
         ready: true,
         status: 'ready',
         error: 'none',
@@ -17,7 +18,7 @@ const { mockPeer } = vi.hoisted(() => ({
     })),
 }));
 
-vi.mock('@genaism/hooks/peer', () => ({
+vi.mock('@knicos/genai-base/dist/hooks/peer', () => ({
     default: mockPeer,
 }));
 
@@ -26,8 +27,6 @@ describe('Genagram view', () => {
         render(
             <TestWrapper
                 initializeState={({ set }) => {
-                    set(webrtcActive, 'full');
-                    set(iceConfig, { expiresOn: new Date(), iceServers: [] });
                     set(appConfiguration, {
                         recommendations: {
                             taste: 0,

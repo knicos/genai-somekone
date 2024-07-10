@@ -1,4 +1,4 @@
-@value primary, textDark, bgColourful1, bgSubdued1 from "../../style/colours.module.css";
+@value primary, textDark, bgColourful1, bgSubdued1 from "@knicos/genai-base/dist/colours.module.css";
 
 .container {
     margin: 1rem 0;

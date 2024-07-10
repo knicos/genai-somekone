@@ -1,4 +1,4 @@
-import { LargeButton } from '@genaism/components/Button/Button';
+import { LargeButton } from '@knicos/genai-base';
 import { TextField } from '@mui/material';
 import { useCallback, useRef, useState } from 'react';
 import style from './style.module.css';

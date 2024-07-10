@@ -1,4 +1,4 @@
-import { Button } from '@genaism/components/Button/Button';
+import { Button } from '@knicos/genai-base';
 import { useEffect, useState } from 'react';
 import style from './style.module.css';
 import AutoEncoder from '@genaism/services/content/autoencoder';

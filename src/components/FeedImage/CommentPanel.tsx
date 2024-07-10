@@ -6,7 +6,7 @@ import { ChangeEvent, useCallback, useState } from 'react';
 import { ContentNodeId } from '@genaism/services/graph/graphTypes';
 import { getComments } from '@genaism/services/content/content';
 import Comment from './Comment';
-import { Button } from '../Button/Button';
+import { Button } from '@knicos/genai-base';
 
 const MAX_COMMENT_LENGTH = 400;
 

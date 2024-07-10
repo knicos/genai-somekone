@@ -1,4 +1,4 @@
-import usePeer from '@genaism/hooks/peer';
+import { usePeer, ConnectionMonitor } from '@knicos/genai-base';
 import { EventProtocol } from '@genaism/protocol/protocol';
 import { addComment, updateContentStats } from '@genaism/services/content/content';
 import { addEdges } from '@genaism/services/graph/edges';
@@ -20,7 +20,6 @@ import { PropsWithChildren, createContext, useCallback, useContext, useEffect, u
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { SMConfig } from '../../state/smConfig';
 import { appConfiguration } from '@genaism/state/settingsState';
-import ConnectionMonitor from '@genaism/components/ConnectionMonitor/ConnectionMonitor';
 import { LogProvider } from '@genaism/hooks/logger';
 import { getRecommendations } from '@genaism/services/recommender/recommender';
 import { UserNodeData } from '@genaism/services/users/userTypes';
@@ -107,6 +106,10 @@ export default function FeedProtocol({ content, server, mycode, setContent, chil
     );
 
     const { ready, send, status, error } = usePeer<EventProtocol>({
+        host: import.meta.env.VITE_APP_PEER_SERVER,
+        secure: import.meta.env.VITE_APP_PEER_SECURE === '1',
+        key: import.meta.env.VITE_APP_PEER_KEY || 'peerjs',
+        port: import.meta.env.VITE_APP_PEER_PORT ? parseInt(import.meta.env.VITE_APP_PEER_PORT) : 443,
         code: server && `sm-${mycode}`,
         server: `sm-${server}`,
         onData,
@@ -164,6 +167,8 @@ export default function FeedProtocol({ content, server, mycode, setContent, chil
         >
             {hasBeenReady && <LogProvider sender={send}>{children}</LogProvider>}
             <ConnectionMonitor
+                api={import.meta.env.VITE_APP_APIURL}
+                appName="somekone"
                 ready={ready}
                 status={status}
                 error={error}

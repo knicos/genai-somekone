@@ -1,4 +1,4 @@
-import { Button } from '@genaism/components/Button/Button';
+import { Button } from '@knicos/genai-base';
 import { createRawEmbedding } from '@genaism/services/content/embedding';
 import { ContentNodeId } from '@genaism/services/graph/graphTypes';
 import { getNodesByType } from '@genaism/services/graph/nodes';

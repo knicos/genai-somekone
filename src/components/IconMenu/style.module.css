@@ -1,4 +1,4 @@
-@value textDark, workspaceBg, bgColourful1, secondary from "../../style/colours.module.css";
+@value textDark, workspaceBg, bgColourful1, secondary from "@knicos/genai-base/dist/colours.module.css";
 
 .menuContainer {
     position: absolute;

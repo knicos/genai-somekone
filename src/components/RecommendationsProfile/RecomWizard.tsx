@@ -1,4 +1,4 @@
-import { Button } from '../Button/Button';
+import { Button } from '@knicos/genai-base';
 import style from './style.module.css';
 import { useEffect, useRef, useState } from 'react';
 import SlideShow from '../SlideShow/SlideShow';

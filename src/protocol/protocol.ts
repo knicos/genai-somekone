@@ -1,4 +1,4 @@
-import { PeerEvent, BuiltinEvent } from '@genaism/hooks/peer';
+import { PeerEvent, BuiltinEvent } from '@knicos/genai-base';
 import { SMConfig } from '@genaism/state/smConfig';
 import { LogEntry, UserNodeData } from '@genaism/services/users/userTypes';
 import { ContentNodeId, UserNodeId } from '@genaism/services/graph/graphTypes';

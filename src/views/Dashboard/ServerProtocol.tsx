@@ -1,4 +1,4 @@
-import usePeer, { SenderType } from '@genaism/hooks/peer';
+import { usePeer, SenderType, ConnectionMonitor } from '@knicos/genai-base';
 import { EventProtocol, UserEntry } from '@genaism/protocol/protocol';
 import { UserNodeId } from '@genaism/services/graph/graphTypes';
 import { appConfiguration } from '@genaism/state/settingsState';
@@ -20,7 +20,6 @@ import { makeUserSnapshot } from '@genaism/services/users/users';
 import { addComment, getContentStats } from '@genaism/services/content/content';
 import { getNodesByType } from '@genaism/services/graph/nodes';
 import { onlineUsers } from '@genaism/state/sessionState';
-import ConnectionMonitor from '@genaism/components/ConnectionMonitor/ConnectionMonitor';
 
 const MAX_AGE = 30 * 60 * 1000; // 30 mins
 
@@ -120,7 +119,15 @@ export default function ServerProtocol({ onReady, code, content }: Props) {
         [setUsers]
     );
 
-    const { ready, send, status, error } = usePeer({ code: `sm-${code}`, onData: dataHandler, onClose: closeHandler });
+    const { ready, send, status, error } = usePeer({
+        host: import.meta.env.VITE_APP_PEER_SERVER,
+        secure: import.meta.env.VITE_APP_PEER_SECURE === '1',
+        key: import.meta.env.VITE_APP_PEER_KEY || 'peerjs',
+        port: import.meta.env.VITE_APP_PEER_PORT ? parseInt(import.meta.env.VITE_APP_PEER_PORT) : 443,
+        code: `sm-${code}`,
+        onData: dataHandler,
+        onClose: closeHandler,
+    });
 
     useEffect(() => {
         if (send) send({ event: 'eter:config', configuration: config });
@@ -133,6 +140,8 @@ export default function ServerProtocol({ onReady, code, content }: Props) {
 
     return (
         <ConnectionMonitor
+            api={import.meta.env.VITE_APP_APIURL}
+            appName="somekone"
             ready={ready}
             status={status}
             error={error}

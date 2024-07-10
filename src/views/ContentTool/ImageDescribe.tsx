@@ -7,7 +7,7 @@ import { Checkbox, FormControlLabel } from '@mui/material';
 import { useCallback, useEffect, useState } from 'react';
 import { addEdge } from '@genaism/services/graph/edges';
 import { getTopicId } from '@genaism/services/concept/concept';
-import AlertPara from '@genaism/components/AlertPara/AlertPara';
+import { AlertPara } from '@knicos/genai-base';
 
 interface TagProps {
     tag: string;

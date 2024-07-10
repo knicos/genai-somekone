@@ -1,4 +1,4 @@
-@value textDark, workspaceBg, backgroundDark, bgColourful1, bgSubdued2, textLight from "../../style/colours.module.css";
+@value textDark, workspaceBg, backgroundDark, bgColourful1, bgSubdued2, textLight from "@knicos/genai-base/dist/colours.module.css";
 
 .page {
     display: flex;

@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { ContentNodeId } from '@genaism/services/graph/graphTypes';
 import { ScoredRecommendation } from '@genaism/services/recommender/recommenderTypes';
 import { updateEngagement } from '@genaism/services/profiler/profiler';
-import Spinner from '../Spinner/Spinner';
+import { Spinner } from '@knicos/genai-base';
 import LangSelect from '../LangSelect/LangSelect';
 
 const INTERACTION_TIMEOUT = 5000;

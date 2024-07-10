@@ -1,4 +1,4 @@
-import { LargeButton } from '@genaism/components/Button/Button';
+import { LargeButton } from '@knicos/genai-base';
 import style from './style.module.css';
 import DownloadIcon from '@mui/icons-material/Download';
 import LoopIcon from '@mui/icons-material/Loop';

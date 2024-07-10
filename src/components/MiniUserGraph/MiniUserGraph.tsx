@@ -5,7 +5,7 @@ import { useUserProfile } from '@genaism/services/profiler/hooks';
 import { useEffect, useState } from 'react';
 import { GraphLink, GraphNode, InternalGraphLink } from '../Graph/types';
 import ProfileNode from './ProfileNode';
-import colours from '../../style/colours.module.css';
+import colours from '@knicos/genai-base/dist/colours.module.css';
 
 const LINE_THICKNESS_UNSELECTED = 20;
 const MIN_LINE_THICKNESS = 5;

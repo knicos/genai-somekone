@@ -1,4 +1,4 @@
-@value borderGrey, workspaceBg, textDark, primary from "../../style/colours.module.css";
+@value borderGrey, workspaceBg, textDark, primary from "@knicos/genai-base/dist/colours.module.css";
 
 .page {
     display: flex;

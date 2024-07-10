@@ -2,7 +2,7 @@ import { ContentNodeId, UserNodeId } from '@genaism/services/graph/graphTypes';
 import Graph from '../Graph/Graph';
 import { useEffect, useState } from 'react';
 import { GraphLink, GraphNode, InternalGraphLink } from '../Graph/types';
-import colours from '../../style/colours.module.css';
+import colours from '@knicos/genai-base/dist/colours.module.css';
 import ContentNode from './ContentNode';
 import { getRelated } from '@genaism/services/graph/query';
 import { useUserProfile } from '@genaism/services/profiler/hooks';

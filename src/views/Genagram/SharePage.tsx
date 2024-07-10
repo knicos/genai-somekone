@@ -4,9 +4,8 @@ import { menuShowFeedActions, menuShowShareProfile } from '@genaism/state/menuSt
 import style from './style.module.css';
 import { useEffect } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import QRCode from '@genaism/components/QRCode/QRCode';
 import { useLogger } from '@genaism/hooks/logger';
-import { Button } from '@genaism/components/Button/Button';
+import { Button, QRCode } from '@knicos/genai-base';
 import CloseIcon from '@mui/icons-material/Close';
 
 interface Props {

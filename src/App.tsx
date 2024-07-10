@@ -10,10 +10,10 @@ import {
 import { RecoilRoot } from 'recoil';
 import './App.css';
 import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
-import { theme } from './style/theme';
 import Loading from './components/Loading/Loading';
 import About from './views/About/About';
-import Privacy from './components/Privacy/Privacy';
+import { Privacy, theme } from '@knicos/genai-base';
+import gitInfo from './generatedGitInfo.json';
 
 interface RouterError {
     status: number;
@@ -113,7 +113,10 @@ function App() {
                         }
                     >
                         <RouterProvider router={router} />
-                        <Privacy />
+                        <Privacy
+                            appName="somekone"
+                            tag={gitInfo.gitTag || 'notag'}
+                        />
                     </React.Suspense>
                 </RecoilRoot>
             </ThemeProvider>
