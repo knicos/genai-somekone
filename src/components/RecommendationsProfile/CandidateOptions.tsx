@@ -1,14 +1,16 @@
-import { appConfiguration } from '@genaism/state/settingsState';
+import { configuration, userConfiguration } from '@genaism/state/settingsState';
 import { useTranslation } from 'react-i18next';
-import { useRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import style from './style.module.css';
 import { RadioGroup } from '@mui/material';
 import { RecommendationOptions } from '@genaism/services/recommender/recommenderTypes';
 import { mapPersonalisation } from './mappings';
 import { useEffect } from 'react';
 import WizardOption from './WizardOption';
+import { UserNodeId } from '@genaism/services/graph/graphTypes';
 
 interface Props {
+    id: UserNodeId;
     changePage: (v: number) => void;
 }
 
@@ -37,9 +39,10 @@ const templates: CandidateTemplate = {
     },
 };
 
-export default function CandidateOptions({ changePage }: Props) {
+export default function CandidateOptions({ id, changePage }: Props) {
     const { t } = useTranslation();
-    const [config, setConfig] = useRecoilState(appConfiguration);
+    const config = useRecoilValue(configuration(id));
+    const setConfig = useSetRecoilState(userConfiguration(id));
 
     const value = mapPersonalisation(config.recommendations);
 
@@ -63,14 +66,11 @@ export default function CandidateOptions({ changePage }: Props) {
                     name="radio-buttons-group"
                     value={value}
                     onChange={(_, value: string) => {
-                        setConfig((old) => {
-                            return {
-                                ...old,
-                                recommendations: {
-                                    ...old.recommendations,
-                                    ...templates[value as CandidateTemplateType],
-                                },
-                            };
+                        setConfig({
+                            recommendations: {
+                                ...config.recommendations,
+                                ...templates[value as CandidateTemplateType],
+                            },
                         });
                     }}
                 >

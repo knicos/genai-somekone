@@ -6,7 +6,7 @@ import { addLogEntry, getCurrentUser, getUserProfile } from '@genaism/services/p
 import { ScoredRecommendation } from '@genaism/services/recommender/recommenderTypes';
 import { useRecommendations } from '@genaism/services/recommender/hooks';
 import { useRecoilValue } from 'recoil';
-import { appConfiguration } from '@genaism/state/settingsState';
+import { configuration } from '@genaism/state/settingsState';
 import { UserNodeId } from '@genaism/services/graph/graphTypes';
 import ContentLoader from '../ContentLoader/ContentLoader';
 
@@ -30,7 +30,7 @@ export default function Feed({
     noActions,
 }: Props) {
     const [feedList, setFeedList] = useState<ScoredRecommendation[]>([]);
-    const appConfig = useRecoilValue(appConfiguration);
+    const appConfig = useRecoilValue(configuration(id));
     const moreState = useRef(true);
     const { recommendations, more } = useRecommendations(5, id, appConfig?.recommendations);
 

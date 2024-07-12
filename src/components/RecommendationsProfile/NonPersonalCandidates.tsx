@@ -1,13 +1,15 @@
-import { appConfiguration } from '@genaism/state/settingsState';
+import { configuration, userConfiguration } from '@genaism/state/settingsState';
 import { useTranslation } from 'react-i18next';
-import { useRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import style from './style.module.css';
 import { RadioGroup } from '@mui/material';
 import { RecommendationOptions } from '@genaism/services/recommender/recommenderTypes';
 import { useEffect } from 'react';
 import WizardOption from './WizardOption';
+import { UserNodeId } from '@genaism/services/graph/graphTypes';
 
 interface Props {
+    id: UserNodeId;
     changePage: (v: number) => void;
 }
 
@@ -57,9 +59,10 @@ function mapToValue(options: RecommendationOptions): CandidateTemplateType {
     return 'all';
 }
 
-export default function NonPersonalCandidates({ changePage }: Props) {
+export default function NonPersonalCandidates({ id, changePage }: Props) {
     const { t } = useTranslation();
-    const [config, setConfig] = useRecoilState(appConfiguration);
+    const config = useRecoilValue(configuration(id));
+    const setConfig = useSetRecoilState(userConfiguration(id));
 
     useEffect(() => {
         changePage(4);
@@ -78,14 +81,11 @@ export default function NonPersonalCandidates({ changePage }: Props) {
                     name="radio-buttons-group"
                     value={mapToValue(config.recommendations)}
                     onChange={(_, value: string) => {
-                        setConfig((old) => {
-                            return {
-                                ...old,
-                                recommendations: {
-                                    ...old.recommendations,
-                                    ...templates[value as CandidateTemplateType],
-                                },
-                            };
+                        setConfig({
+                            recommendations: {
+                                ...config.recommendations,
+                                ...templates[value as CandidateTemplateType],
+                            },
                         });
                     }}
                 >

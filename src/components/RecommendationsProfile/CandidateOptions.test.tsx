@@ -18,7 +18,10 @@ describe('CandidateOptions component', () => {
                     }));
                 }}
             >
-                <CandidateOptions changePage={() => {}} />
+                <CandidateOptions
+                    id="user:x"
+                    changePage={() => {}}
+                />
             </TestWrapper>
         );
 
@@ -37,7 +40,10 @@ describe('CandidateOptions component', () => {
                     }));
                 }}
             >
-                <CandidateOptions changePage={() => {}} />
+                <CandidateOptions
+                    id="user:x"
+                    changePage={() => {}}
+                />
             </TestWrapper>
         );
 

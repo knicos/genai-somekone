@@ -22,7 +22,7 @@
     overflow: hidden;
 }
 
-.panel header {
+.panel > header {
     display: flex;
     flex-direction: row;
     justify-content: space-between;

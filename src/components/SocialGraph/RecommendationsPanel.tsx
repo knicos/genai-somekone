@@ -17,7 +17,6 @@ export default function RecommendationsPanel() {
             <RecommendationsProfile
                 id={selectedUser}
                 generate
-                noWizard
             />
         </AppPanel>
     ) : null;

@@ -3,7 +3,7 @@ import style from './style.module.css';
 import { ContentNodeId, UserNodeId, WeightedNode } from '@genaism/services/graph/graphTypes';
 import { useRecommendations } from '@genaism/services/recommender/hooks';
 import RecommendationsTable from '../RecommendationsTable/RecommendationsTable';
-import { appConfiguration } from '@genaism/state/settingsState';
+import { configuration } from '@genaism/state/settingsState';
 import { useRecoilValue } from 'recoil';
 import RecomWizard from './RecomWizard';
 import ImageGrid from './ImageGrid';
@@ -23,12 +23,11 @@ interface Props {
 
 export default function RecommendationsProfile({ id, generate, noWizard }: Props) {
     const { t } = useTranslation();
-    const appConfig = useRecoilValue(appConfiguration);
+    const aid = id || getCurrentUser();
+    const appConfig = useRecoilValue(configuration(aid));
     const { recommendations, more } = useRecommendations(9, id, appConfig?.recommendations);
     const [selected, setSelected] = useState(-1);
     const [wizard, setWizard] = useState(false);
-
-    const aid = id || getCurrentUser();
 
     const recomNodes: WeightedNode<ContentNodeId>[] = recommendations.map((r) => ({
         id: r.contentId,
@@ -51,6 +50,7 @@ export default function RecommendationsProfile({ id, generate, noWizard }: Props
                     <RecomWizard
                         active={wizard}
                         onClose={() => setWizard(false)}
+                        id={aid}
                     />
                 )}
                 <div className={style.buttonBar}>

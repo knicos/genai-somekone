@@ -17,7 +17,10 @@ describe('ScoringOptions component', () => {
                     }));
                 }}
             >
-                <ScoringOptions changePage={() => {}} />
+                <ScoringOptions
+                    id="user:x"
+                    changePage={() => {}}
+                />
             </TestWrapper>
         );
 

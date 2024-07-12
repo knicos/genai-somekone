@@ -13,13 +13,15 @@ import { IconButton } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 import CloseIcon from '@mui/icons-material/Close';
 import { useTranslation } from 'react-i18next';
+import { UserNodeId } from '@genaism/services/graph/graphTypes';
 
 interface Props {
+    id: UserNodeId;
     active?: boolean;
     onClose: () => void;
 }
 
-export default function RecomWizard({ active, onClose }: Props) {
+export default function RecomWizard({ id, active, onClose }: Props) {
     const { t } = useTranslation();
     const [page, setPage] = useState(0);
     const [height, setHeight] = useState(0);
@@ -80,10 +82,22 @@ export default function RecomWizard({ active, onClose }: Props) {
                 }
             >
                 <div className={style.wizardStartPage}></div>
-                <CandidateOptions changePage={setNextPage} />
-                <PersonalCandidates changePage={setNextPage} />
-                <NonPersonalCandidates changePage={setNextPage} />
-                <ScoringOptions changePage={setNextPage} />
+                <CandidateOptions
+                    id={id}
+                    changePage={setNextPage}
+                />
+                <PersonalCandidates
+                    id={id}
+                    changePage={setNextPage}
+                />
+                <NonPersonalCandidates
+                    id={id}
+                    changePage={setNextPage}
+                />
+                <ScoringOptions
+                    id={id}
+                    changePage={setNextPage}
+                />
             </SlideShow>
             {page > 0 && (
                 <IconButton

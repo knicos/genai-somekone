@@ -18,7 +18,10 @@ describe('PersonalCandidates component', () => {
                     }));
                 }}
             >
-                <PersonalCandidates changePage={() => {}} />
+                <PersonalCandidates
+                    id="user:x"
+                    changePage={() => {}}
+                />
             </TestWrapper>
         );
 
@@ -37,7 +40,10 @@ describe('PersonalCandidates component', () => {
                     }));
                 }}
             >
-                <PersonalCandidates changePage={() => {}} />
+                <PersonalCandidates
+                    id="user:x"
+                    changePage={() => {}}
+                />
             </TestWrapper>
         );
 
@@ -56,7 +62,10 @@ describe('PersonalCandidates component', () => {
                     }));
                 }}
             >
-                <PersonalCandidates changePage={() => {}} />
+                <PersonalCandidates
+                    id="user:x"
+                    changePage={() => {}}
+                />
             </TestWrapper>
         );
 

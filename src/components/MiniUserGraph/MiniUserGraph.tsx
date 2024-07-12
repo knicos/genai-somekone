@@ -32,8 +32,6 @@ export default function MiniUserGraph({ userId, pairedId, contentId }: Props) {
         const maxC = pairprofile.affinities.contents.contents.reduce((m, s) => Math.max(m, s.weight), 0);
         const dC = maxC - minC;
 
-        console.log('PAIR PROFILE', contentId, pairprofile);
-
         const newNodes = [
             ...similar
                 .filter((u) => u.id !== pairedId)

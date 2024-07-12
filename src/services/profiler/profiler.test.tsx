@@ -7,7 +7,7 @@ import {
     resetProfiles,
     reverseProfile,
 } from '@genaism/services/profiler/profiler';
-import { dumpJSON, resetGraph } from '@genaism/services/graph/state';
+import { resetGraph } from '@genaism/services/graph/state';
 import { addEdge, getEdgesOfType } from '@genaism/services/graph/edges';
 import { addNode } from '@genaism/services/graph/nodes';
 import { ContentNodeId, WeightedNode } from '@genaism/services/graph/graphTypes';
@@ -59,11 +59,8 @@ describe('Profiler.updateProfile', () => {
         testProfile.affinities.topics.topics = [{ label: 'fff', weight: 0.5 }];
         testProfile.affinities.contents.contents = [{ id: 'content:zzz', weight: 0.5 }];
 
-        console.log('TEST', testProfile);
-
         reverseProfile('user:xyz', testProfile);
 
-        console.log(dumpJSON());
         expect(getEdgesOfType('topic', 'user:xyz')).toHaveLength(1);
         expect(getEdgesOfType('engaged', 'user:xyz')).toHaveLength(1);
     });

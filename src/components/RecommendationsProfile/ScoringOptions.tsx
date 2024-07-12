@@ -1,12 +1,13 @@
-import { appConfiguration } from '@genaism/state/settingsState';
+import { configuration, userConfiguration } from '@genaism/state/settingsState';
 import { useTranslation } from 'react-i18next';
-import { useRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import style from './style.module.css';
 import { RadioGroup } from '@mui/material';
 import WizardOption from './WizardOption';
 import { RecommendationOptions } from '@genaism/services/recommender/recommenderTypes';
 import { mapScoring } from './mappings';
 import { useEffect } from 'react';
+import { UserNodeId } from '@genaism/services/graph/graphTypes';
 
 type ScoringTemplateType = 'all' | 'profile' | 'noprofile' | 'random';
 
@@ -52,12 +53,14 @@ const templates: ScoringTemplate = {
 };
 
 interface Props {
+    id: UserNodeId;
     changePage: (v: number) => void;
 }
 
-export default function ScoringOptions({ changePage }: Props) {
+export default function ScoringOptions({ id, changePage }: Props) {
     const { t } = useTranslation();
-    const [config, setConfig] = useRecoilState(appConfiguration);
+    const config = useRecoilValue(configuration(id));
+    const setConfig = useSetRecoilState(userConfiguration(id));
 
     const value = mapScoring(config.recommendations);
 
@@ -78,14 +81,11 @@ export default function ScoringOptions({ changePage }: Props) {
                     name="radio-buttons-group"
                     value={value}
                     onChange={(_, value: string) => {
-                        setConfig((old) => {
-                            return {
-                                ...old,
-                                recommendations: {
-                                    ...old.recommendations,
-                                    ...templates[value as ScoringTemplateType],
-                                },
-                            };
+                        setConfig({
+                            recommendations: {
+                                ...config.recommendations,
+                                ...templates[value as ScoringTemplateType],
+                            },
                         });
                     }}
                 >
