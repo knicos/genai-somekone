@@ -24,18 +24,21 @@ const templates: CandidateTemplate = {
         similarUsers: 2,
         taste: 2,
         coengaged: 2,
+        popular: 2,
     },
     personal: {
         random: 0,
         similarUsers: 2,
         taste: 2,
         coengaged: 2,
+        popular: 0,
     },
     nonpersonal: {
-        random: 4,
+        random: 2,
         similarUsers: 0,
         taste: 0,
         coengaged: 0,
+        popular: 2,
     },
 };
 

@@ -13,7 +13,14 @@ describe('ScoringOptions component', () => {
                         ...p,
                         showRecommendationWizard: true,
                         experimental: true,
-                        recommendations: { random: 0, taste: 1, similarUsers: 1, coengaged: 1 },
+                        recommendations: {
+                            random: 0,
+                            taste: 1,
+                            similarUsers: 1,
+                            coengaged: 1,
+                            popular: 1,
+                            noPopularity: true,
+                        },
                     }));
                 }}
             >

@@ -5,7 +5,7 @@ export function isPersonalised(options: RecommendationOptions): boolean {
 }
 
 export function isNonPersonalised(options: RecommendationOptions): boolean {
-    return options.random > 0;
+    return options.random > 0 || options.popular > 0;
 }
 
 export function isOnlyPersonalised(options: RecommendationOptions): boolean {
@@ -35,6 +35,10 @@ export function isPredictedEngagement(options: RecommendationOptions) {
 }
 
 export function mapScoring(options: RecommendationOptions): 'all' | 'profile' | 'noprofile' | 'random' {
-    if (isPredictedEngagement(options)) return 'profile';
-    return 'random';
+    if (isPredictedEngagement(options)) {
+        if (options?.noPopularity) return 'profile';
+        else return 'all';
+    }
+    if (options?.noPopularity) return 'random';
+    return 'noprofile';
 }

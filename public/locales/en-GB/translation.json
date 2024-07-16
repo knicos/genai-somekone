@@ -308,6 +308,7 @@
         },
         "labels": {
             "topicCandidate": "Found from #{{topic}}.",
+            "popularCandidate": "Found from popular images.",
             "random": "Found randomly from all images.",
             "coengagedCandidate": "Found from another image you interacted with.",
             "similarUserCandidate": "User \"{{userName}}\" is similar to you and engaged with this image.",

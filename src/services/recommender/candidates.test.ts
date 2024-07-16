@@ -7,6 +7,7 @@ import { addEdge } from '../graph/edges';
 import { addTopic } from '../concept/concept';
 import { CandidateOptions } from './recommenderTypes';
 import { normalise } from '@genaism/util/embedding';
+import { addContentEngagement } from '../content/content';
 
 beforeEach(() => {
     resetGraph();
@@ -17,6 +18,7 @@ const DEFAULT_OPTIONS: CandidateOptions = {
     taste: 2,
     coengaged: 2,
     similarUsers: 2,
+    popular: 2,
 };
 
 describe('Candidates.generateCandidates()', () => {
@@ -29,10 +31,21 @@ describe('Candidates.generateCandidates()', () => {
     it('returns a random candidate if no other candidates', async ({ expect }) => {
         addNode('content', 'content:ggg');
         const profile = createUserProfile('user:xyz', 'TestUser');
-        const candidates = generateCandidates(profile, 10, DEFAULT_OPTIONS);
+        const candidates = generateCandidates(profile, 10, { ...DEFAULT_OPTIONS, popular: 0 });
         expect(candidates).toHaveLength(1);
         expect(candidates[0].candidateOrigin).toBe('random');
         expect(candidates[0].contentId).toBe('content:ggg');
+    });
+
+    it('returns popular candidates', async ({ expect }) => {
+        addNode('content', 'content:ggg');
+        addContentEngagement('content:ggg', 2);
+        const profile = createUserProfile('user:xyz', 'TestUser');
+        const candidates = generateCandidates(profile, 10, { ...DEFAULT_OPTIONS, random: 0 });
+        expect(candidates).toHaveLength(1);
+        expect(candidates[0].candidateOrigin).toBe('popular');
+        expect(candidates[0].contentId).toBe('content:ggg');
+        expect(candidates[0].popularityScore).toBe(1);
     });
 
     it('generates taste candidates', async ({ expect }) => {
@@ -41,7 +54,7 @@ describe('Candidates.generateCandidates()', () => {
         addEdge('content', topicID, 'content:ggg', 1.0);
         const profile = createUserProfile('user:xyz', 'TestUser');
         profile.affinities.topics.topics = [{ label: 'topic1', weight: 0.5 }];
-        const candidates = generateCandidates(profile, 10, { ...DEFAULT_OPTIONS, random: 0 });
+        const candidates = generateCandidates(profile, 10, { ...DEFAULT_OPTIONS, random: 0, popular: 0 });
 
         expect(candidates).toHaveLength(1);
         expect(candidates[0].candidateOrigin).toBe('topic_affinity');
@@ -58,7 +71,7 @@ describe('Candidates.generateCandidates()', () => {
         profile2.affinities.contents.contents = [{ id: 'content:ggg', weight: 1 }];
         touchProfile(profile1.id);
         touchProfile(profile2.id);
-        const candidates = generateCandidates(profile1, 10, { ...DEFAULT_OPTIONS, random: 0 });
+        const candidates = generateCandidates(profile1, 10, { ...DEFAULT_OPTIONS, random: 0, popular: 0 });
 
         expect(candidates).toHaveLength(1);
         expect(candidates[0].candidateOrigin).toBe('similar_user');

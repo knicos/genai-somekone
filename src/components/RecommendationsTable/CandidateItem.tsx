@@ -19,6 +19,9 @@ function generateCandidateMessage(item: ScoredRecommendation, t: TFunction) {
         case 'random':
             part1 = t('recommendations.labels.random');
             break;
+        case 'popular':
+            part1 = t('recommendations.labels.popularCandidate');
+            break;
         case 'coengagement':
             part1 = t('recommendations.labels.coengagedCandidate');
             break;

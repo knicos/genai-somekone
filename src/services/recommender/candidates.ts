@@ -4,6 +4,7 @@ import { generateSimilarUsers } from './candidates/similarUsers';
 import { generateCoengaged } from './candidates/coengaged';
 import { generateTasteBatch } from './candidates/taste';
 import { UserNodeData } from '../users/userTypes';
+import { getPopularCandidates } from './candidates/popular';
 
 function _generateCandidates(profile: UserNodeData, count: number, options: CandidateOptions) {
     const nodes: Recommendation[] = [];
@@ -11,6 +12,7 @@ function _generateCandidates(profile: UserNodeData, count: number, options: Cand
     if (options.taste > 0) generateTasteBatch(profile, nodes, count * options.taste);
     if (options.coengaged > 0) generateCoengaged(profile, nodes, count * options.coengaged);
     if (options.similarUsers > 0) generateSimilarUsers(profile, nodes, count * options.similarUsers);
+    if (options.popular > 0) getPopularCandidates(nodes, count * options.popular);
     if (options.random > 0) fillWithRandom(nodes, count * options.random);
 
     return nodes;
@@ -36,6 +38,7 @@ export function generateCandidates(profile: UserNodeData, count: number, options
             taste: 0,
             coengaged: 0,
             similarUsers: 0,
+            popular: 0,
             random: 2,
         });
 

@@ -15,6 +15,7 @@ const DEFAULT_OPTIONS: RecommendationOptions = {
     taste: 2,
     coengaged: 2,
     similarUsers: 2,
+    popular: 2,
 };
 
 interface InternalState {

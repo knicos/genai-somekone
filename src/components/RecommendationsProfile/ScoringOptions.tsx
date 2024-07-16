@@ -22,6 +22,7 @@ const templates: ScoringTemplate = {
         noViewingScore: true,
         noCoengagementScore: true,
         noCommentingScore: true,
+        noPopularity: false,
     },
     profile: {
         noTasteScore: false,
@@ -31,6 +32,7 @@ const templates: ScoringTemplate = {
         noViewingScore: false,
         noCoengagementScore: false,
         noCommentingScore: false,
+        noPopularity: true,
     },
     random: {
         noTasteScore: true,
@@ -40,6 +42,7 @@ const templates: ScoringTemplate = {
         noViewingScore: true,
         noCoengagementScore: true,
         noCommentingScore: true,
+        noPopularity: true,
     },
     all: {
         noTasteScore: false,
@@ -49,6 +52,7 @@ const templates: ScoringTemplate = {
         noViewingScore: false,
         noCoengagementScore: false,
         noCommentingScore: false,
+        noPopularity: false,
     },
 };
 
@@ -100,7 +104,6 @@ export default function ScoringOptions({ id, changePage }: Props) {
                         value="noprofile"
                         label={t('recommendations.labels.scoringGeneral')}
                         description={t('recommendations.descriptions.scoringGeneral')}
-                        disabled={true}
                     />
                     <WizardOption
                         selected={value === 'random'}
@@ -111,7 +114,6 @@ export default function ScoringOptions({ id, changePage }: Props) {
                     <WizardOption
                         selected={value === 'all'}
                         value="all"
-                        disabled={true}
                         label={t('recommendations.labels.scoringAll')}
                         description={t('recommendations.descriptions.scoringAll')}
                     />

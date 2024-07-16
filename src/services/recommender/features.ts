@@ -1,6 +1,6 @@
 import { normCosinesim } from '@genaism/util/embedding';
 import { getTopicId } from '../concept/concept';
-import { getContentMetadata } from '../content/content';
+import { getContentMetadata, getContentStats, getMaxContentEngagement } from '../content/content';
 import { getEdge, getEdgeWeights } from '../graph/edges';
 import { ContentNodeId, TopicNodeId, UserNodeId, WeightedNode } from '../graph/graphTypes';
 import { getRelated } from '../graph/query';
@@ -129,7 +129,7 @@ export function makeFeatures(
     const preferences = calculatePreferences(profile);
 
     return candidates.map((c) => {
-        const tasteSimilarityScore = calculateTasteScore(profile, c.contentId);
+        const tasteSimilarityScore = options?.noTasteScore ? 0 : calculateTasteScore(profile, c.contentId);
         const {
             viewingPreferenceScore,
             commentingPreferenceScore,
@@ -141,6 +141,10 @@ export function makeFeatures(
         const coengagementScore = options?.noCoengagementScore ? 0 : calculateCoengagementScore(userId, c.contentId);
 
         const lastSeenTime = options?.noLastSeenScore ? 0 : getLastSeenTime(userId, c.contentId);
+
+        const popScore = options?.noPopularity
+            ? 0
+            : (getContentStats(c.contentId)?.engagement || 0) / (getMaxContentEngagement() || 0.01);
 
         // userTasteSimilarity
         // userEngagementsSimilarity
@@ -159,6 +163,7 @@ export function makeFeatures(
             random: 0,
             coengagement: coengagementScore,
             lastSeen: lastSeenTime,
+            popularity: popScore,
         };
     });
 }

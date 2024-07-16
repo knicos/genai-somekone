@@ -11,6 +11,8 @@ const metaStore = new Map<ContentNodeId, ContentMetadata>();
 const commentStore = new Map<ContentNodeId, CommentEntry[]>();
 const statsStore = new Map<ContentNodeId, ContentStats>();
 
+let topEngagement = 0;
+
 export function resetContent() {
     for (const n of metaStore) {
         removeNode(n[0]);
@@ -142,6 +144,11 @@ export function addContentEngagement(id: ContentNodeId, value: number) {
     const stats = statsStore.get(id) || createEmptyStats();
     stats.engagement += value;
     statsStore.set(id, stats);
+    topEngagement = Math.max(topEngagement, stats.engagement);
+}
+
+export function getMaxContentEngagement() {
+    return topEngagement;
 }
 
 export function removeContentReaction(id: ContentNodeId) {

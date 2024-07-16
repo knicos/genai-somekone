@@ -33,6 +33,7 @@ describe('Genagram view', () => {
                             random: 0,
                             coengaged: 0,
                             similarUsers: 0,
+                            popular: 0,
                         },
                     });
                 }}

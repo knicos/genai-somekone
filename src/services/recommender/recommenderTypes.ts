@@ -1,6 +1,6 @@
 import { ContentNodeId, UserNodeId } from '../graph/graphTypes';
 
-type CandidateAlgorithm = 'topic_affinity' | 'similar_user' | 'coengagement' | 'random';
+type CandidateAlgorithm = 'topic_affinity' | 'similar_user' | 'coengagement' | 'random' | 'popular';
 
 export interface Recommendation {
     contentId: ContentNodeId;
@@ -10,6 +10,7 @@ export interface Recommendation {
     coengagementScore?: number;
     engagedItemScore?: number;
     userSimilarityScore?: number;
+    popularityScore?: number;
     topic?: string;
     engagedItem?: ContentNodeId;
     timestamp: number;
@@ -47,6 +48,7 @@ export interface CandidateOptions {
     coengaged: number;
     allowDuplicates?: boolean;
     similarUsers: number;
+    popular: number;
 }
 
 export interface ScoringOptions {
@@ -58,6 +60,7 @@ export interface ScoringOptions {
     noViewingScore?: boolean;
     noCoengagementScore?: boolean;
     noCommentingScore?: boolean;
+    noPopularity?: boolean;
     excludeSignificance?: boolean;
 }
 

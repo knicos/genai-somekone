@@ -4,7 +4,8 @@
             "taste": 2,
             "similarUsers": 2,
             "coengaged": 2,
-            "random": 2
+            "random": 2,
+            "popular": 2
         },
         "hideDataView": false,
         "hideProfileView": false,

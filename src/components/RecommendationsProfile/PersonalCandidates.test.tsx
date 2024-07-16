@@ -14,7 +14,7 @@ describe('PersonalCandidates component', () => {
                         ...p,
                         showRecommendationWizard: true,
                         experimental: true,
-                        recommendations: { random: 0, taste: 1, similarUsers: 0, coengaged: 0 },
+                        recommendations: { random: 0, taste: 1, similarUsers: 0, coengaged: 0, popular: 0 },
                     }));
                 }}
             >
@@ -36,7 +36,7 @@ describe('PersonalCandidates component', () => {
                         ...p,
                         showRecommendationWizard: true,
                         experimental: true,
-                        recommendations: { random: 0, taste: 0, similarUsers: 0, coengaged: 1 },
+                        recommendations: { random: 0, taste: 0, similarUsers: 0, coengaged: 1, popular: 0 },
                     }));
                 }}
             >
@@ -58,7 +58,7 @@ describe('PersonalCandidates component', () => {
                         ...p,
                         showRecommendationWizard: true,
                         experimental: true,
-                        recommendations: { random: 0, taste: 0, similarUsers: 1, coengaged: 0 },
+                        recommendations: { random: 0, taste: 0, similarUsers: 1, coengaged: 0, popular: 0 },
                     }));
                 }}
             >
