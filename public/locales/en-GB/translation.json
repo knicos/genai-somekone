@@ -338,13 +338,16 @@
             "scoringRandom": "Any image at random",
             "scoringAll": "Combine all scores (default)",
             "score": "Score",
-            "diversity": "Diversity"
+            "diversity": "Diversity",
+            "selectionProbability": "Add some diversity",
+            "selectionRank": "No diversity"
         },
         "titles": {
             "candidateDiscovery": "How are candidates discovered?",
             "scoringOptions": "How can we rank the images?",
             "candidatesPersonal": "Which personal candidates?",
-            "candidatesNonPersonal": "How to select non-personal candidates?"
+            "candidatesNonPersonal": "How to select non-personal candidates?",
+            "diversityOptions": "Should there be diversity?"
         },
         "descriptions": {
             "selectHint": "Select an image to see why it is suggested",
@@ -362,7 +365,9 @@
             "candidateRecent": "Anything recent that has not been seen much",
             "candidatePersonal": "Use only your profile to find images",
             "candidateNonPersonal": "Look for images without your profile",
-            "candidatePersonalAndNon": "Use a mix of personal and non-personal"
+            "candidatePersonalAndNon": "Use a mix of personal and non-personal",
+            "selectionProbability": "Allow some images with lower scores to be selected",
+            "selectionRank": "Only select images that have the best scores"
         },
         "features": {
             "taste": "Taste Similarity",

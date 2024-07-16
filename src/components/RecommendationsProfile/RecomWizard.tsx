@@ -14,6 +14,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import CloseIcon from '@mui/icons-material/Close';
 import { useTranslation } from 'react-i18next';
 import { UserNodeId } from '@genaism/services/graph/graphTypes';
+import DiversityOptions from './DiversityOptions';
 
 interface Props {
     id: UserNodeId;
@@ -62,7 +63,7 @@ export default function RecomWizard({ id, active, onClose }: Props) {
                                 {t('recommendations.actions.back')}
                             </Button>
                             <Stepper
-                                steps={[[0, 1], [2, 3], [4]]}
+                                steps={[[0, 1], [2, 3], [4], [5]]}
                                 page={page}
                             />
                             <Button
@@ -95,6 +96,10 @@ export default function RecomWizard({ id, active, onClose }: Props) {
                     changePage={setNextPage}
                 />
                 <ScoringOptions
+                    id={id}
+                    changePage={setNextPage}
+                />
+                <DiversityOptions
                     id={id}
                     changePage={setNextPage}
                 />

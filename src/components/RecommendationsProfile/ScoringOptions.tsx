@@ -69,7 +69,7 @@ export default function ScoringOptions({ id, changePage }: Props) {
     const value = mapScoring(config.recommendations);
 
     useEffect(() => {
-        changePage(0);
+        changePage(5);
     }, [value, changePage]);
 
     return (
