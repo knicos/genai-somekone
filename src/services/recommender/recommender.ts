@@ -8,6 +8,8 @@ import { biasedUniqueSubset } from '@genaism/util/subsets';
 
 const store = new Map<UserNodeId, ScoredRecommendation[]>();
 
+const CANDIDATE_FACTOR = 10;
+
 export function generateNewRecommendations(
     id: UserNodeId,
     count: number,
@@ -15,7 +17,7 @@ export function generateNewRecommendations(
     events = true
 ) {
     const profile = getUserProfile(id);
-    const candidates = generateCandidates(profile, count, options);
+    const candidates = generateCandidates(profile, count * CANDIDATE_FACTOR, options);
     const scored = scoreCandidates(id, candidates, profile, options);
 
     const old = store.get(id) || [];

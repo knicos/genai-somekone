@@ -1,0 +1,24 @@
+@value backgroundDark from "@knicos/genai-base/dist/colours.module.css";
+
+.loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.8);
+}
+
+.container {
+    background: backgroundDark;
+    position: relative;
+    padding: 1rem 0;
+}
+
+.svg {
+    user-select: none;
+    touch-action: none;
+}

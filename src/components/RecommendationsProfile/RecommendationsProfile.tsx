@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 import style from './style.module.css';
 import { ContentNodeId, UserNodeId, WeightedNode } from '@genaism/services/graph/graphTypes';
 import { useRecommendations } from '@genaism/services/recommender/hooks';
@@ -14,6 +14,12 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '@knicos/genai-base';
 import DesignServicesIcon from '@mui/icons-material/DesignServices';
 import { getCurrentUser } from '@genaism/services/profiler/state';
+import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
+import AppsIcon from '@mui/icons-material/Apps';
+import IconMenuItem from '../IconMenu/Item';
+import Spacer from '../IconMenu/Spacer';
+import { IconMenuContext } from '../IconMenu/context';
+import RecommendationsHeatmap from '../RecommendationsHeatmap/RecommendationsHeatmap';
 
 interface Props {
     id?: UserNodeId;
@@ -28,6 +34,8 @@ export default function RecommendationsProfile({ id, generate, noWizard }: Props
     const { recommendations, more } = useRecommendations(9, id, appConfig?.recommendations);
     const [selected, setSelected] = useState(-1);
     const [wizard, setWizard] = useState(false);
+    const [viewMode, setViewMode] = useState<'grid' | 'heat'>('grid');
+    const [heatCount, refreshHeat] = useReducer((v) => v + 1, 0);
 
     const recomNodes: WeightedNode<ContentNodeId>[] = recommendations.map((r) => ({
         id: r.contentId,
@@ -54,42 +62,92 @@ export default function RecommendationsProfile({ id, generate, noWizard }: Props
                     />
                 )}
                 <div className={style.buttonBar}>
-                    <IconButton
-                        color="inherit"
-                        onClick={more}
-                        aria-label={t('recommendations.aria.refresh')}
-                    >
-                        <RefreshIcon />
-                    </IconButton>
-                    <div style={{ flexGrow: 1 }} />
-                    <Button
-                        onClick={() => setWizard(true)}
-                        variant="contained"
-                        color="secondary"
-                        startIcon={<DesignServicesIcon />}
-                        data-testid="start-recom-wizard"
-                        sx={{ marginRight: '1rem' }}
-                        disabled={wizard}
-                    >
-                        {t('recommendations.actions.change')}
-                    </Button>
+                    <IconMenuContext.Provider value="top">
+                        <Button
+                            onClick={() => setWizard(true)}
+                            variant="contained"
+                            color="secondary"
+                            startIcon={<DesignServicesIcon />}
+                            data-testid="start-recom-wizard"
+                            sx={{ marginLeft: '1rem' }}
+                            disabled={wizard}
+                        >
+                            {t('recommendations.actions.change')}
+                        </Button>
+                        <div style={{ flexGrow: 1 }} />
+                        <Spacer />
+                        <IconMenuItem tooltip={t('recommendations.labels.imageGrid')}>
+                            <IconButton
+                                color={viewMode === 'grid' ? 'secondary' : 'inherit'}
+                                onClick={() => setViewMode('grid')}
+                                aria-label={t('recommendations.aria.imageGrid')}
+                            >
+                                <AppsIcon />
+                            </IconButton>
+                        </IconMenuItem>
+                        <IconMenuItem tooltip={t('recommendations.labels.heatmap')}>
+                            <IconButton
+                                color={viewMode === 'heat' ? 'secondary' : 'inherit'}
+                                onClick={() => setViewMode('heat')}
+                                aria-label={t('recommendations.aria.heatmap')}
+                                data-testid="heatmap-button"
+                            >
+                                <LocalFireDepartmentIcon />
+                            </IconButton>
+                        </IconMenuItem>
+                        <Spacer />
+                        <IconMenuItem tooltip={t('recommendations.actions.refresh')}>
+                            <IconButton
+                                color="inherit"
+                                onClick={() => {
+                                    if (viewMode === 'grid') {
+                                        more();
+                                    } else {
+                                        refreshHeat();
+                                    }
+                                }}
+                                aria-label={t('recommendations.aria.refresh')}
+                            >
+                                <RefreshIcon />
+                            </IconButton>
+                        </IconMenuItem>
+                    </IconMenuContext.Provider>
                 </div>
-                <ImageGrid
-                    selected={selected}
-                    onSelect={(ix: number) => setSelected((old) => (old === ix ? -1 : ix))}
-                    images={recomNodes.map((n) => n.id)}
-                />
-                {!selectedRecom && (
-                    <div className={style.infoBar}>
-                        <InfoIcon />
-                        <span>{t('recommendations.descriptions.selectHint')}</span>
-                    </div>
+                {viewMode === 'heat' && (
+                    <>
+                        <RecommendationsHeatmap
+                            user={aid}
+                            dimensions={25}
+                            key={`heat-${heatCount}`}
+                        />
+                        {
+                            <div className={style.infoBar}>
+                                <InfoIcon />
+                                <span>{t('recommendations.descriptions.heatHint')}</span>
+                            </div>
+                        }
+                    </>
                 )}
-                {selectedRecom && (
-                    <RecommendationsTable
-                        userId={aid}
-                        recommendation={selectedRecom}
-                    />
+                {viewMode === 'grid' && (
+                    <>
+                        <ImageGrid
+                            selected={selected}
+                            onSelect={(ix: number) => setSelected((old) => (old === ix ? -1 : ix))}
+                            images={recomNodes.map((n) => n.id)}
+                        />
+                        {!selectedRecom && (
+                            <div className={style.infoBar}>
+                                <InfoIcon />
+                                <span>{t('recommendations.descriptions.selectHint')}</span>
+                            </div>
+                        )}
+                        {selectedRecom && (
+                            <RecommendationsTable
+                                userId={aid}
+                                recommendation={selectedRecom}
+                            />
+                        )}
+                    </>
                 )}
                 <div style={{ flexGrow: 5, flexShrink: 1 }} />
             </div>

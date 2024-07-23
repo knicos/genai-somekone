@@ -19,7 +19,7 @@ export default function ClusteringTool() {
             const nodes = getNodesByType('content');
             const embeddings = nodes.map((n) => {
                 const meta = getContentMetadata(n);
-                return meta?.embedding || [];
+                return { id: n, embedding: meta?.embedding || [] };
             });
 
             const newClusters = clusterEmbeddings(embeddings, { maxDistance, k: minClusters, minClusterSize: minSize });

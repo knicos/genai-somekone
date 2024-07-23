@@ -304,7 +304,8 @@
             "back": "Back",
             "continue": "Continue",
             "close": "Close",
-            "change": "Change"
+            "change": "Change",
+            "refresh": "Refresh view"
         },
         "labels": {
             "topicCandidate": "Found from #{{topic}}.",
@@ -340,7 +341,9 @@
             "score": "Score",
             "diversity": "Diversity",
             "selectionProbability": "Add some diversity",
-            "selectionRank": "No diversity"
+            "selectionRank": "No diversity",
+            "imageGrid": "Show top recommendations",
+            "heatmap": "Show all images"
         },
         "titles": {
             "candidateDiscovery": "How are candidates discovered?",
@@ -350,7 +353,8 @@
             "diversityOptions": "Should there be diversity?"
         },
         "descriptions": {
-            "selectHint": "Select an image to see why it is suggested",
+            "selectHint": "Select an image to see why it is suggested.",
+            "heatHint": "Click to zoom and explore what you can see.",
             "explainHint": "See some reasons for this recommendation below.",
             "scoringPredict": "Predict if you might engage with the image",
             "scoringGeneral": "Only consider popularity",

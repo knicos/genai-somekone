@@ -5,7 +5,8 @@
             "similarUsers": 2,
             "coengaged": 2,
             "random": 2,
-            "popular": 2
+            "popular": 2,
+            "selection": "distribution"
         },
         "hideDataView": false,
         "hideProfileView": false,
@@ -19,5 +20,5 @@
         "showCandidateWizard": true,
         "showCandidateRefinementWizard": true
     },
-    "content": ["https://store.gen-ai.fi/somekone/imageSet1b_embed.zip"]
+    "content": ["https://store.gen-ai.fi/somekone/imageSet1b_embed_points.zip"]
 }

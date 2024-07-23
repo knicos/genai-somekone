@@ -5,6 +5,7 @@ import AutoEncoder from '@genaism/services/content/autoencoder';
 import { getRawEmbeddings } from './RawEmbeddingTool';
 import { Slider } from '@mui/material';
 import { getContentMetadata } from '@genaism/services/content/content';
+import { normalise } from '@genaism/util/embedding';
 
 export default function EmbeddingTool() {
     const [startTraining, setStartTraining] = useState(false);
@@ -24,7 +25,7 @@ export default function EmbeddingTool() {
                 Array.from(raw.keys()).forEach((k, ix) => {
                     const meta = getContentMetadata(k);
                     if (meta) {
-                        meta.embedding = embeddings[ix];
+                        meta.embedding = normalise(embeddings[ix]);
                     }
                 });
                 setStartGenerate(false);
@@ -33,7 +34,7 @@ export default function EmbeddingTool() {
     }, [startGenerate, encoder]);
 
     useEffect(() => {
-        const e = new AutoEncoder(dims);
+        const e = new AutoEncoder(dims, 1280, [640, 320]);
         setEncoder(e);
         setEpochCount(0);
         setLoss(0);

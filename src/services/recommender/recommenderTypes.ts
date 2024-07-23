@@ -14,6 +14,8 @@ export interface Recommendation {
     topic?: string;
     engagedItem?: ContentNodeId;
     timestamp: number;
+    probability?: number;
+    candidateProbability?: number;
 }
 
 export interface Scores {
@@ -62,8 +64,7 @@ export interface ScoringOptions {
     noCommentingScore?: boolean;
     noPopularity?: boolean;
     excludeSignificance?: boolean;
-}
-
-export interface RecommendationOptions extends ScoringOptions, CandidateOptions {
     selection?: 'rank' | 'distribution';
 }
+
+export type RecommendationOptions = ScoringOptions & CandidateOptions;

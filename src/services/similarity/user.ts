@@ -31,14 +31,13 @@ export function clusterUsers(users: UserNodeId[], k: number): Map<UserNodeId, We
     const clusters = new Map<UserNodeId, WeightedLabel>();
 
     const userEmbeddings = users
-        .map((user) => ({ user, embedding: getUserProfile(user)?.embeddings.taste || [] }))
+        .map((user) => ({ id: user, embedding: getUserProfile(user)?.embeddings.taste || [] }))
         .filter((u) => u.embedding.length > 0);
-    const embeddings = userEmbeddings.map((u) => u.embedding);
-    const rawClusters = clusterEmbeddings(embeddings, { k });
+    const rawClusters = clusterEmbeddings(userEmbeddings, { k });
 
     rawClusters.forEach((cluster, ix) => {
         cluster.forEach((member) => {
-            clusters.set(userEmbeddings[member].user, { label: `cluster${ix}`, weight: 1 });
+            clusters.set(userEmbeddings[member].id, { label: `cluster${ix}`, weight: 1 });
         });
     });
 

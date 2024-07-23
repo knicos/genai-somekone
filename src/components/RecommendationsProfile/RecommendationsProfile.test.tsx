@@ -5,6 +5,7 @@ import RecommendationsProfile from './RecommendationsProfile';
 import TestWrapper from '@genaism/util/TestWrapper';
 import { appConfiguration } from '@genaism/state/settingsState';
 import userEvent from '@testing-library/user-event';
+import { addContent } from '@genaism/services/content/content';
 
 interface RecReturn {
     more: () => void;
@@ -89,5 +90,36 @@ describe('RecommendationsProfile component', () => {
         expect(start).toBeInTheDocument();
         user.click(start);
         expect(await screen.findByTestId('recom-candidate-options')).toBeVisible();
+    });
+
+    it('can show the heatmap', async ({ expect }) => {
+        addContent('', {
+            id: '1',
+            labels: [],
+        });
+        addContent('', {
+            id: '2',
+            labels: [],
+        });
+        const user = userEvent.setup();
+
+        render(
+            <TestWrapper
+                initializeState={(snap) => {
+                    snap.set(appConfiguration, (p) => ({
+                        ...p,
+                        experimental: true,
+                        recommendations: { random: 1, taste: 1, similarUsers: 1, coengaged: 1, popular: 1 },
+                    }));
+                }}
+            >
+                <RecommendationsProfile />
+            </TestWrapper>
+        );
+
+        const heatmap = await screen.findByTestId('heatmap-button');
+        expect(heatmap).toBeInTheDocument();
+        user.click(heatmap);
+        expect(await screen.findAllByTestId('heatmap-image')).toHaveLength(2);
     });
 });

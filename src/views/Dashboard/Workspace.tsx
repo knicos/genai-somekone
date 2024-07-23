@@ -48,7 +48,7 @@ export function Workspace({ contentUrls, cfg, guide, experimental }: Props) {
 
     useEffect(() => {
         if (!ready) return;
-        let configObj: SMConfig = { ...DEFAULT_CONFIG.configuration };
+        let configObj: SMConfig = { ...(DEFAULT_CONFIG.configuration as SMConfig) };
         let contentObj: (ArrayBuffer | string)[] = DEFAULT_CONFIG.content;
         const configParam = cfg;
         if (configParam) {

@@ -16,3 +16,8 @@ export function fillWithRandom(nodes: Recommendation[], count: number) {
         });
     });
 }
+
+export function randomCandidateProbability(count: number) {
+    const allNodes = getNodesByType('content');
+    return 1 - Math.pow(1 - 1 / allNodes.length, count);
+}
