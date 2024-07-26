@@ -1,4 +1,4 @@
-import { TFunction } from 'i18next';
+//import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { ScoredRecommendation, Scores } from '@genaism/services/recommender/recommenderTypes';
 import ScorePie from './ScorePie';
@@ -9,7 +9,7 @@ import LightbulbIcon from '@mui/icons-material/Lightbulb';
 const SCORE_SCALE = 20;
 const MIN_SCORE_SIZE = 60;
 
-function generateScoreMessage(item: ScoredRecommendation, t: TFunction) {
+/*function generateScoreMessage(item: ScoredRecommendation, t: TFunction) {
     const keys = Object.keys(item.significance) as (keyof Scores)[];
     const maxComponent = keys.reduce(
         (cmax, k, ix) => ((item.significance[k] || -1000) > (item.significance[keys[cmax]] || 0) ? ix : cmax),
@@ -20,21 +20,28 @@ function generateScoreMessage(item: ScoredRecommendation, t: TFunction) {
     const part2 = t(`recommendations.labels.${key}`);
 
     return part2;
-}
+}*/
 
 interface Props {
     item: ScoredRecommendation;
 }
 
-const SCORE_KEYS: (keyof Scores)[] = ['taste', 'coengagement', 'viewing'];
-
 export default function ExplainItem({ item }: Props) {
     const { t } = useTranslation();
 
-    const significance = SCORE_KEYS.map((k) => item.scores[k] || -1000);
+    const keys = Object.keys(item.scores) as (keyof Scores)[];
+    const significance = keys.map((k) => item.significance[k] || 0);
     const sigMax = Math.max(...significance);
     const sigMin = Math.min(...significance);
     const sigDiff = sigMax - sigMin;
+    const scores = keys
+        .map((k) => ({
+            name: k,
+            score: item.features[k] || 0,
+            significance: sigDiff > 0 ? ((item.significance[k] || 0) - sigMin) / sigDiff : item.significance[k] || 0,
+        }))
+        .filter((s) => s.score > 0 && s.significance > 0);
+    scores.sort((a, b) => b.significance - a.significance);
 
     return (
         <li data-testid="explain-item">
@@ -42,24 +49,27 @@ export default function ExplainItem({ item }: Props) {
                 <LightbulbIcon fontSize="large" />
             </div>
             <div className={style.listColumn}>
-                {generateScoreMessage(item, t)}
-                <div className={style.scoreList}>
-                    {SCORE_KEYS.map((k, ix) => (
-                        <ScorePie
-                            value={item.features[k] || 0}
-                            key={k}
-                            maxValue={1}
-                            label={t(`recommendations.features.${k}`)}
-                            showValue
-                            color={gColors[ix % gColors.length]}
-                            size={
-                                sigDiff > 0
-                                    ? ((significance[ix] - sigMin) / sigDiff) * SCORE_SCALE + MIN_SCORE_SIZE
-                                    : MIN_SCORE_SIZE + SCORE_SCALE / 2
-                            }
-                        />
-                    ))}
-                </div>
+                {scores.map((k, ix) =>
+                    k.score > 0 ? (
+                        <div
+                            key={k.name}
+                            className={style.scoreRow}
+                        >
+                            <ScorePie
+                                value={k.score || 0}
+                                maxValue={1}
+                                showValue
+                                color={gColors[ix % gColors.length]}
+                                size={
+                                    sigDiff > 0
+                                        ? k.significance * SCORE_SCALE + MIN_SCORE_SIZE
+                                        : MIN_SCORE_SIZE + SCORE_SCALE / 2
+                                }
+                            />
+                            <div>{t(`recommendations.features.${k.name}`)}</div>
+                        </div>
+                    ) : null
+                )}
             </div>
         </li>
     );

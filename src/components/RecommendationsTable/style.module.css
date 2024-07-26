@@ -80,10 +80,18 @@
 
 .scoreList {
     display: flex;
+    flex-direction: row;
     gap: 1rem;
     flex-wrap: wrap;
     justify-content: flex-start;
-    align-items: flex-end;
+    align-items: center;
+}
+
+.scoreRow {
+    display: flex;
+    gap: 1rem;
+    padding: 0.5rem;
+    align-items: center;
 }
 
 .listIcon {
@@ -91,7 +99,6 @@
     color: white;
     align-self: stretch;
     display: flex;
-    align-items: center;
     padding: 1rem;
 }
 

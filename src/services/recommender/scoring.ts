@@ -1,59 +1,54 @@
-import { normalise } from '@genaism/util/embedding';
 import { makeFeatures } from './features';
 import { Recommendation, ScoredRecommendation, Scores, ScoringOptions } from './recommenderTypes';
 import { UserNodeId } from '../graph/graphTypes';
 import { UserNodeData } from '../users/userTypes';
 import { beta } from 'jstat';
 
+function normalise(v: number[]) {
+    const sum = v.reduce((s, i) => s + i, 0);
+    return sum > 0 ? v.map((i) => i / sum) : v.slice();
+}
+
 function calculateSignificance(items: ScoredRecommendation[]) {
-    if (items.length < 1) return;
-
+    if (items.length === 0) return [];
     const keys = Object.keys(items[0].scores) as (keyof Scores)[];
-    const means = new Array(keys.length);
-    means.fill(0);
 
-    items.forEach((item) => {
-        keys.forEach((k, ix) => {
-            means[ix] += item.scores[k];
+    items.forEach((item, i) => {
+        const significance: Scores = {};
+        let maxSig = -Infinity;
+
+        keys.forEach((key) => {
+            for (let k = i + 1; k < items.length; ++k) {
+                const diff = (item.scores[key] || 0) - (items[k].scores[key] || 0);
+                const s = (significance[key] || 0) + diff;
+                significance[key] = s;
+                maxSig = Math.max(maxSig, s);
+            }
         });
-    });
-    means.forEach((mean, ix) => {
-        means[ix] = mean / items.length;
-    });
 
-    const deviations = new Array(means.length);
-    deviations.fill(0);
-    items.forEach((item) => {
-        keys.forEach((k, ix) => {
-            const diff = (item.scores[k] || 0) - means[ix];
-            deviations[ix] += diff * diff;
+        keys.forEach((key) => {
+            const s = significance[key] || 0;
+            significance[key] = maxSig > 0 ? Math.max(0, s) / maxSig : 0;
         });
-    });
-    deviations.forEach((dev, ix) => {
-        deviations[ix] = Math.sqrt(dev / items.length);
-    });
 
-    items.forEach((item) => {
-        item.significance = keys.reduce((r, k, ix) => {
-            const dev = deviations[ix];
-            return { ...r, [k]: dev > 0 ? ((item.scores[k] || 0) - means[ix]) / deviations[ix] : 0 };
-        }, {});
+        item.significance = significance;
     });
 }
 
-export function scoreCandidates(
+function calculateScores(
     userId: UserNodeId,
     candidates: Recommendation[],
     profile: UserNodeData,
     options?: ScoringOptions
-): ScoredRecommendation[] {
+) {
     // Could use Tensorflow here?
     const features = makeFeatures(userId, candidates, profile, options);
     const keys = (features.length > 0 ? Object.keys(features[0]) : []) as (keyof Scores)[];
     const featureVectors = features.map((i) => Object.values(i));
     const weights = normalise(keys.map((k) => profile.featureWeights[k] || 1));
-    const scores = featureVectors.map((c) => c.map((f, ix) => f * (weights[ix] || 0)));
+    const scores = featureVectors.map((c) => c.map((f, ix) => (f || 0) * (weights[ix] || 0)));
     const namedScores = scores.map((s) => s.reduce((r, v, ix) => ({ ...r, [keys[ix]]: v }), {}));
+
     const results: ScoredRecommendation[] = candidates.map((c, ix) => ({
         ...c,
         features: features[ix],
@@ -64,19 +59,26 @@ export function scoreCandidates(
         diversity: 0,
     }));
 
+    return results;
+}
+
+export function scoreCandidates(
+    userId: UserNodeId,
+    candidates: Recommendation[],
+    profile: UserNodeData,
+    options?: ScoringOptions
+): ScoredRecommendation[] {
+    const results = calculateScores(userId, candidates, profile, options);
+
     results.sort((a, b) => b.score - a.score);
     results.forEach((r, ix) => {
-        //const p = options?.selection === 'distribution' ? betaProbability(ix, results.length) : 1 - ix / results.length;
-        //const pc = 1 - Math.pow(1 - p, 10);
         r.rank = ix;
-        //r.probability = r.probability === undefined ? 1 : r.probability * p;
     });
 
     if (!options?.excludeSignificance) {
         calculateSignificance(results);
     }
 
-    // console.log('SCORED', results);
     return results;
 }
 
@@ -90,22 +92,7 @@ export function scoringProbability(
     count: number,
     options?: ScoringOptions
 ): ScoredRecommendation[] {
-    // Could use Tensorflow here?
-    const features = makeFeatures(userId, candidates, profile, options);
-    const keys = (features.length > 0 ? Object.keys(features[0]) : []) as (keyof Scores)[];
-    const featureVectors = features.map((i) => Object.values(i));
-    const weights = normalise(keys.map((k) => profile.featureWeights[k] || 1));
-    const scores = featureVectors.map((c) => c.map((f, ix) => f * (weights[ix] || 0)));
-    const namedScores = scores.map((s) => s.reduce((r, v, ix) => ({ ...r, [keys[ix]]: v }), {}));
-    const results: ScoredRecommendation[] = candidates.map((c, ix) => ({
-        ...c,
-        features: features[ix],
-        scores: namedScores[ix],
-        significance: {},
-        score: scores[ix].reduce((s, v) => s + v, 0),
-        rank: 0,
-        diversity: 0,
-    }));
+    const results = calculateScores(userId, candidates, profile, options);
 
     results.sort((a, b) => b.score - a.score);
     const totalScores = results.reduce((s, v) => s + v.score, 0);

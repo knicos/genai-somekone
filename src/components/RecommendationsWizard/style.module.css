@@ -1,0 +1,90 @@
+.wizard {
+    background: bgSubdued1;
+    color: textDark;
+    transition: height 0.3s, background 0.3s, border-top 0.3s, border-bottom 0.3s;
+    flex: 1 0 auto;
+    position: relative;
+    border-top: 6px solid primary;
+    border-bottom: 6px solid primary;
+}
+
+.wizardClosed {
+    composes: wizard;
+    background: workspaceBg;
+    border-top: 6px solid workspaceBg;
+    border-bottom: 6px solid workspaceBg;
+    flex-grow: 0;
+}
+
+.wizard h2 {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin: 0;
+    margin-bottom: 1rem;
+}
+
+.wizardStartPage span {
+    font-size: 0.8rem;
+}
+
+.wizardPage {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    box-sizing: border-box;
+    justify-content: center;
+}
+
+.wizardControls {
+    display: flex;
+    gap: 0.2rem;
+    justify-content: flex-end;
+    padding: 1rem;
+    align-items: center;
+    animation-name: fadein;
+    animation-duration: 0.4s;
+    animation-iteration-count: 1;
+}
+
+@keyframes fadein {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.wizardLabelContainer {
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+    background: white;
+    gap: 0.2rem;
+    box-shadow: 0 0 5px #aaa;
+}
+
+.wizardLabelDisabled {
+    composes: wizardLabelContainer;
+    opacity: 0.6;
+}
+
+.wizardLabel {
+    font-size: 1rem;
+    color: black;
+}
+
+.wizardLabelSelect {
+    composes: wizardLabel;
+    font-weight: bold;
+}
+
+.wizardLabelDesc {
+    font-size: 0.8rem;
+}
+
+.wizardLabelGroup {
+    display: flex;
+    flex-direction: column;
+}

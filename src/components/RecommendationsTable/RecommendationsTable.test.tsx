@@ -36,7 +36,9 @@ describe('RecommendationsTable component', () => {
                     contentId: 'content:xyz',
                     scores: { taste: 1 },
                     significance: { taste: 1 },
-                    features: {},
+                    features: {
+                        taste: 1,
+                    },
                     rank: 0,
                     diversity: 0,
                     timestamp: 0,

@@ -5,7 +5,7 @@ import style from './style.module.css';
 import { RadioGroup } from '@mui/material';
 import { RecommendationOptions } from '@genaism/services/recommender/recommenderTypes';
 import { useEffect } from 'react';
-import WizardOption from './WizardOption';
+import WizardOption from '../RecommendationsWizard/WizardOption';
 import { UserNodeId } from '@genaism/services/graph/graphTypes';
 
 interface Props {

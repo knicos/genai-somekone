@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import style from './style.module.css';
 import { RadioGroup } from '@mui/material';
-import WizardOption from './WizardOption';
+import WizardOption from '../RecommendationsWizard/WizardOption';
 import { useEffect } from 'react';
 import { UserNodeId } from '@genaism/services/graph/graphTypes';
 

@@ -343,7 +343,8 @@
             "selectionProbability": "Add some diversity",
             "selectionRank": "No diversity",
             "imageGrid": "Show top recommendations",
-            "heatmap": "Show all images"
+            "heatmap": "Show all images",
+            "popularity": "Ranked high for popularity"
         },
         "titles": {
             "candidateDiscovery": "How are candidates discovered?",
@@ -381,7 +382,9 @@
             "following": "Likely to follow",
             "reacting": "Likely to react",
             "viewing": "Likely to view",
-            "lastSeen": "Not seen recently"
+            "lastSeen": "Not seen recently",
+            "popularity": "Popularity",
+            "reaction": "Likely to react"
         },
         "aria": {
             "imageSelect": "Select recommendation number {{number}}",
