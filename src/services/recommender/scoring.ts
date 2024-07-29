@@ -35,6 +35,22 @@ function calculateSignificance(items: ScoredRecommendation[]) {
     });
 }
 
+function optionsWeights(options?: ScoringOptions) {
+    const weights: Scores = {
+        taste: options?.noTasteScore ? 0 : 1,
+        coengagement: options?.noCoengagementScore ? 0 : 1,
+        viewing: options?.noViewingScore ? 0 : 1,
+        sharing: options?.noSharingScore ? 0 : 1,
+        commenting: options?.noCommentingScore ? 0 : 1,
+        popularity: options?.noPopularity ? 0 : 1,
+        following: options?.noFollowingScore ? 0 : 1,
+        reaction: options?.noReactionScore ? 0 : 1,
+        lastSeen: options?.noLastSeenScore ? 0 : 1,
+        random: 0,
+    };
+    return weights;
+}
+
 function calculateScores(
     userId: UserNodeId,
     candidates: Recommendation[],
@@ -45,7 +61,14 @@ function calculateScores(
     const features = makeFeatures(userId, candidates, profile, options);
     const keys = (features.length > 0 ? Object.keys(features[0]) : []) as (keyof Scores)[];
     const featureVectors = features.map((i) => Object.values(i));
-    const weights = normalise(keys.map((k) => profile.featureWeights[k] || 1));
+    const enabledWeights = optionsWeights(options);
+    const weights = normalise(
+        keys.map((k) => {
+            const ew = enabledWeights[k];
+            const fw = profile.featureWeights[k];
+            return (ew === undefined ? 1 : ew) * (fw === undefined ? 1 : fw);
+        })
+    );
     const scores = featureVectors.map((c) => c.map((f, ix) => (f || 0) * (weights[ix] || 0)));
     const namedScores = scores.map((s) => s.reduce((r, v, ix) => ({ ...r, [keys[ix]]: v }), {}));
 
