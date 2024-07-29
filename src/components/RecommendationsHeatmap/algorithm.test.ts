@@ -37,15 +37,20 @@ vi.mock('@genaism/services/users/users', () => ({
 
 describe('heatmapScores()', () => {
     it('generates the expected results', async ({ expect }) => {
-        const scores = await heatmapScores(['content:1', 'content:2'], 'user:1', {
-            recommendations: {
-                taste: 2,
-                coengaged: 2,
-                random: 2,
-                popular: 2,
-                similarUsers: 2,
-            },
-        });
+        const scores = await heatmapScores(
+            ['content:1', 'content:2'],
+            'user:1',
+            createEmptyProfile('user:1', 'NoName'),
+            {
+                recommendations: {
+                    taste: 2,
+                    coengaged: 2,
+                    random: 2,
+                    popular: 2,
+                    similarUsers: 2,
+                },
+            }
+        );
 
         expect(scores).toHaveLength(2);
         expect(mockScoring).toHaveBeenCalledOnce();

@@ -3,7 +3,7 @@ import { getNodesByType } from '@genaism/services/graph/nodes';
 import { candidateProbabilities } from '@genaism/services/recommender/candidates';
 import { Recommendation } from '@genaism/services/recommender/recommenderTypes';
 import { scoringProbability } from '@genaism/services/recommender/scoring';
-import { getUserData } from '@genaism/services/users/users';
+import { UserNodeData } from '@genaism/services/users/userTypes';
 import { SMConfig } from '@genaism/state/smConfig';
 import { batchMap } from '@genaism/util/batch';
 import { uniformUniqueSubset } from '@genaism/util/subsets';
@@ -18,10 +18,10 @@ export function heatmapImageSet(dim: number): ContentNodeId[] {
 export async function heatmapScores(
     images: ContentNodeId[],
     user: UserNodeId,
+    profile: UserNodeData,
     config: SMConfig
 ): Promise<WeightedNode<ContentNodeId>[]> {
     const start = performance.now();
-    const profile = getUserData(user);
     if (profile) {
         const candidates: Recommendation[] = await batchMap(images, 100, (p) => ({
             candidateOrigin: 'popular',

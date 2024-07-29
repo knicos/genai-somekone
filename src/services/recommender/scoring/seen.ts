@@ -10,7 +10,7 @@ export function getLastSeenTime(userId: UserNodeId, contentId: ContentNodeId): n
         const now = Date.now();
         const diff = now - edge.timestamp;
         const norm = 1 - Math.min(1, diff / SEEN_TIME);
-        return 1 - norm * norm;
+        return 1 - norm;
     }
     return 1;
 }

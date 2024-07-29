@@ -7,8 +7,9 @@ import { normWeights } from '@genaism/util/weights';
 import { heatmapGrid } from './grid';
 
 interface Props {
-    data?: WeightedNode<ContentNodeId>[];
+    data: WeightedNode<ContentNodeId>[];
     dimensions: number;
+    busy?: boolean;
 }
 
 /*function heatMapColorforValue(value: number) {
@@ -20,12 +21,12 @@ interface Props {
 const ZOOM_SCALE = 60;
 const MIN_OPACITY = 0.1;
 
-export default function Heatmap({ data, dimensions }: Props) {
+export default function Heatmap({ data, dimensions, busy }: Props) {
     const [grid, setGrid] = useState<(ContentNodeId | null)[][]>();
     const svgRef = useRef<SVGSVGElement>(null);
     const [zoom, setZoom] = useState(false);
 
-    const loading = !data || !grid;
+    const loading = data.length === 0 || !grid || busy;
 
     const size = 200 / dimensions;
 
