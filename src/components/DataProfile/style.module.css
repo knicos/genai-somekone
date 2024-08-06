@@ -1,7 +1,21 @@
 .container {
+    min-height: 0;
     display: flex;
     flex-direction: column;
-    overflow-y: scroll;
-    height: 100%;
+    /*flex: 0 1 auto;*/
+    flex-grow: 1;
+    max-width: 500px;
+    width: 100%;
+    background: workspaceBg;
+}
+
+.outerContainer {
+    display: flex;
+    flex-direction: column;
     min-height: 0;
+    flex-grow: 1;
+    overflow-y: scroll;
+    align-items: center;
+    height: 100%;
+    scrollbar-gutter: stable both-edges;
 }

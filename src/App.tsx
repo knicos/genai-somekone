@@ -6,14 +6,14 @@ import {
     createRoutesFromElements,
     useRouteError,
     Navigate,
+    redirect,
 } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import './App.css';
 import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 import Loading from './components/Loading/Loading';
 import About from './views/About/About';
-import { Privacy, theme } from '@knicos/genai-base';
-import gitInfo from './generatedGitInfo.json';
+import { theme } from '@knicos/genai-base';
 import { defaultServices, ServiceProvider } from './hooks/services';
 
 interface RouterError {
@@ -69,13 +69,51 @@ const router = createBrowserRouter(
                 }
             />
             <Route
-                path="feed/:code"
+                path="app/:code"
                 lazy={() => import('./views/Genagram/Genagram')}
-            />
+            >
+                <Route
+                    path="feed"
+                    lazy={() => import('./views/Genagram/subviews/FeedView')}
+                />
+                <Route
+                    path="data"
+                    lazy={() => import('./views/Genagram/subviews/DataView')}
+                />
+                <Route
+                    path="profile"
+                    lazy={() => import('./views/Genagram/subviews/ProfileView')}
+                />
+                <Route
+                    path="recommendations"
+                    lazy={() => import('./views/Genagram/subviews/RecommendationView')}
+                />
+                <Route
+                    path="share"
+                    lazy={() => import('./views/Genagram/subviews/ShareView')}
+                />
+            </Route>
             <Route
                 path="profile/:code"
                 lazy={() => import('./views/ProfileViewer/ProfileViewer')}
-            />
+            >
+                <Route
+                    index
+                    loader={() => redirect('data')}
+                />
+                <Route
+                    path="data"
+                    lazy={() => import('./views/Genagram/subviews/DataView')}
+                />
+                <Route
+                    path="profile"
+                    lazy={() => import('./views/Genagram/subviews/ProfileView')}
+                />
+                <Route
+                    path="recommendations"
+                    lazy={() => import('./views/Genagram/subviews/RecommendationView')}
+                />
+            </Route>
             <Route
                 path="start"
                 lazy={() => import('./views/Start/Start')}
@@ -115,10 +153,6 @@ function App() {
                             }
                         >
                             <RouterProvider router={router} />
-                            <Privacy
-                                appName="somekone"
-                                tag={gitInfo.gitTag || 'notag'}
-                            />
                         </React.Suspense>
                     </ServiceProvider>
                 </RecoilRoot>

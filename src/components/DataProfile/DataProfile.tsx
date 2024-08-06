@@ -22,27 +22,29 @@ export default function Profile({ id }: Props) {
     }, []);
 
     return (
-        <div
-            className={style.container}
-            tabIndex={0}
-        >
-            <div>
-                <svg
-                    width="100%"
-                    height="300px"
-                    viewBox={`${-(wcSize * 1.67)} ${-wcSize} ${wcSize * 1.67 * 2} ${wcSize * 2}`}
-                >
-                    <ImageCloud
-                        content={profile.affinities.contents.contents}
-                        size={300}
-                        onSize={doResize}
-                    />
-                </svg>
+        <div className={style.outerContainer}>
+            <div
+                className={style.container}
+                tabIndex={0}
+            >
+                <div>
+                    <svg
+                        width="100%"
+                        height="300px"
+                        viewBox={`${-(wcSize * 1.67)} ${-wcSize} ${wcSize * 1.67 * 2} ${wcSize * 2}`}
+                    >
+                        <ImageCloud
+                            content={profile.affinities.contents.contents}
+                            size={300}
+                            onSize={doResize}
+                        />
+                    </svg>
+                </div>
+                <ActionLogTable
+                    user={id || profiler.getCurrentUser()}
+                    log={log}
+                />
             </div>
-            <ActionLogTable
-                user={id || profiler.getCurrentUser()}
-                log={log}
-            />
         </div>
     );
 }

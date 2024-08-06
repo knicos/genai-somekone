@@ -13,6 +13,7 @@
     top: 0;
     right: 0;
     bottom: 0;
+    scrollbar-gutter: stable both-edges;
 
     /*gap: 50px;*/
 }

@@ -36,7 +36,7 @@ export default function StartDialog({ users, code, onDemo }: Props) {
             <DialogContent>
                 <div className={style.connectMessage}>
                     <QRCode
-                        url={`${window.location.origin}/feed/${code}`}
+                        url={`${window.location.origin}/app/${code}`}
                         size="large"
                         label={t('dashboard.aria.linkForFeed')}
                     />

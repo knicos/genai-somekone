@@ -1,35 +1,18 @@
 import { IconButton, Slide } from '@mui/material';
-import { useRecoilState, useSetRecoilState } from 'recoil';
-import { menuShowFeedActions, menuShowRecommendations } from '@genaism/state/menuState';
-import style from './style.module.css';
-import { useEffect } from 'react';
+import style from '../style.module.css';
 import { useTranslation } from 'react-i18next';
 import RecommendationsProfile from '@genaism/components/RecommendationsProfile/RecommendationsProfile';
-import { useLogger } from '@genaism/hooks/logger';
-import CloseIcon from '@mui/icons-material/Close';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { useNavigate } from 'react-router';
 
-interface Props {
-    onClose?: () => void;
-}
-
-export default function RecommendationPage({ onClose }: Props) {
+export function Component() {
     const { t } = useTranslation();
-    const [show, setShow] = useRecoilState(menuShowRecommendations);
-    const setShowFeedActions = useSetRecoilState(menuShowFeedActions);
-    const logger = useLogger();
-
-    useEffect(() => {
-        setShowFeedActions(!show);
-        if (logger) {
-            if (show) logger('open_recommendations_view');
-            else logger('close_recommendations_view');
-        }
-    }, [show, setShowFeedActions, logger]);
+    const navigate = useNavigate();
 
     return (
         <Slide
             direction="left"
-            in={show}
+            in={true}
             mountOnEnter
             unmountOnExit
         >
@@ -37,21 +20,20 @@ export default function RecommendationPage({ onClose }: Props) {
                 <div className={style.dataInner}>
                     <header>
                         <div className={style.headerContainer}>
-                            <h1>{t('profile.titles.yourRecommendations')}</h1>
                             <IconButton
                                 size="large"
                                 color="inherit"
                                 onClick={() => {
-                                    setShow(false);
-                                    if (onClose) onClose();
+                                    navigate(-1);
                                 }}
                                 aria-label={t('dashboard.actions.close')}
                             >
-                                <CloseIcon
+                                <ArrowBackIcon
                                     fontSize="large"
                                     color="inherit"
                                 />
                             </IconButton>
+                            <h1>{t('profile.titles.yourRecommendations')}</h1>
                         </div>
                     </header>
                     <RecommendationsProfile />

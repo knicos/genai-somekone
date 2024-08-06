@@ -24,3 +24,8 @@ export const currentUserName = atom<string | undefined>({
     key: 'currentUserName',
     default: loadUser(),
 });
+
+export const contentLoaded = atom<boolean>({
+    key: 'contentLoaded',
+    default: false,
+});

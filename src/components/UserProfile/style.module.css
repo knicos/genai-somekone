@@ -1,4 +1,4 @@
-@value bgColourful1, backgroundDark, textDark from "@knicos/genai-base/dist/colours.module.css";
+@value workspaceBg, bgColourful1, backgroundDark, textDark from "@knicos/genai-base/dist/colours.module.css";
 
 .word rect {
     opacity: 0.9;
@@ -17,6 +17,7 @@
     flex-grow: 1;
     max-width: 500px;
     width: 100%;
+    background: workspaceBg;
 }
 
 .outerContainer {
@@ -27,6 +28,7 @@
     overflow-y: scroll;
     align-items: center;
     height: 100%;
+    scrollbar-gutter: stable both-edges;
 }
 
 .similarUser {

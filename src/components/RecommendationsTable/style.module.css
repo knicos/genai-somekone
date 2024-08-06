@@ -1,4 +1,4 @@
-@value bgSubdued1, textDark, primary from "@knicos/genai-base/dist/colours.module.css";
+@value workspaceBg, bgSubdued1, textDark, primary from "@knicos/genai-base/dist/colours.module.css";
 
 .content img {
     border-radius: 6px;
@@ -43,6 +43,7 @@
     margin: 0;
     margin-top: 1rem;
     margin-bottom: 1rem;
+    background: workspaceBg;
 }
 
 .tableList li {
