@@ -15,6 +15,8 @@ import { ContentNodeId, UserNodeId, WeightedLabel } from '@knicos/genai-recom';
 import { useUserProfile } from '@genaism/hooks/profiler';
 import { useContentService } from '@genaism/hooks/services';
 
+const BORDER_SIZE = 10;
+
 interface Props {
     id: UserNodeId;
     live?: boolean;
@@ -81,7 +83,7 @@ const ProfileNode = memo(function ProfileNode({ id, onResize, live, selected, di
             <circle
                 className={selected ? style.selectedCircle : style.outerCircle}
                 data-testid="profile-selected"
-                r={selected ? asize + 20 : asize}
+                r={selected ? asize + BORDER_SIZE + 5 : asize}
             />
             <circle
                 data-nodeitem
@@ -89,7 +91,7 @@ const ProfileNode = memo(function ProfileNode({ id, onResize, live, selected, di
                 r={asize}
                 fill={'white'}
                 stroke={(node.data?.colour as string) || '#5f7377'}
-                strokeWidth={reduced ? 5 : 15}
+                strokeWidth={reduced ? 5 : BORDER_SIZE}
             />
             {!reduced && nodeMode === 'image' && profile.affinities.contents.contents.length > 0 && (
                 <ImageCloud
@@ -129,7 +131,7 @@ const ProfileNode = memo(function ProfileNode({ id, onResize, live, selected, di
                     height={asize * 2}
                     href={content.getContentData(image as ContentNodeId)}
                     preserveAspectRatio="none"
-                    clipPath={`circle(${Math.floor(asize - 15)}px)`}
+                    clipPath={`circle(${Math.floor(asize - BORDER_SIZE)}px)`}
                 />
             )}
         </g>

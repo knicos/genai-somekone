@@ -5,6 +5,8 @@ import Label from '../SocialGraph/Label';
 import { ContentNodeId, UserNodeId } from '@knicos/genai-recom';
 import { useContentService } from '@genaism/hooks/services';
 
+const BORDER_SIZE = 5;
+
 interface Props {
     id: UserNodeId | ContentNodeId;
     disabled?: boolean;
@@ -28,7 +30,7 @@ const ProfileNode = memo(function ProfileNode({ disabled, node }: Props) {
                 r={asize}
                 fill={image.length > 0 ? 'white' : (node.data?.colour as string) || '#5f7377'}
                 stroke={(node.data?.colour as string) || '#5f7377'}
-                strokeWidth={15}
+                strokeWidth={BORDER_SIZE}
             />
             {image.length > 0 && (
                 <image
@@ -38,7 +40,7 @@ const ProfileNode = memo(function ProfileNode({ disabled, node }: Props) {
                     height={asize * 2}
                     href={content.getContentData(image as ContentNodeId)}
                     preserveAspectRatio="none"
-                    clipPath={`circle(${asize - 15}px)`}
+                    clipPath={`circle(${asize - BORDER_SIZE}px)`}
                 />
             )}
             {name && (
