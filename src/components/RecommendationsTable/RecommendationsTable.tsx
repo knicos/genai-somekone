@@ -1,9 +1,8 @@
-import { ScoredRecommendation } from '@genaism/services/recommender/recommenderTypes';
 import CandidateItem from './CandidateItem';
 import style from './style.module.css';
 import ScoresItem from './ScoresItem';
 import ExplainItem from './ExplainItem';
-import { UserNodeId } from '@genaism/services/graph/graphTypes';
+import { ScoredRecommendation, UserNodeId } from '@knicos/genai-recom';
 
 interface Props {
     recommendation: ScoredRecommendation;

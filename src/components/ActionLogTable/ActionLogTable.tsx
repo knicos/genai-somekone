@@ -1,25 +1,29 @@
-import { LogEntry } from '@genaism/services/users/userTypes';
 import { useMemo, useRef, useState } from 'react';
 import { Button } from '@knicos/genai-base';
 import { useTranslation } from 'react-i18next';
 import Cards from '../DataCard/Cards';
 import LogBatch from './LogBatch';
-import { UserNodeId } from '@genaism/services/graph/graphTypes';
-import { getEdgeWeights } from '@genaism/services/graph/edges';
-import { getCurrentUser } from '@genaism/services/profiler/state';
 import style from './style.module.css';
+import { GraphService, LogEntry, UserNodeId } from '@knicos/genai-recom';
+import { useGraphService, useProfilerService } from '@genaism/hooks/services';
 
 interface Props {
     user?: UserNodeId;
     log: LogEntry[];
 }
 
-function batchLogs(user: UserNodeId, log: LogEntry[], size: number, startOffset: number): LogEntry[][] {
+function batchLogs(
+    graph: GraphService,
+    user: UserNodeId,
+    log: LogEntry[],
+    size: number,
+    startOffset: number
+): LogEntry[][] {
     const results: LogEntry[][] = [[]];
     if (log.length === 0) return results;
 
     if (log[0].activity !== 'engagement') {
-        const weight = getEdgeWeights('last_engaged', user, log[0].id)[0] || 0;
+        const weight = graph.getEdgeWeights('last_engaged', user, log[0].id)[0] || 0;
         results[0].push({
             activity: 'engagement',
             timestamp: log[0].timestamp,
@@ -49,10 +53,12 @@ export default function ActionLogTable({ user, log }: Props) {
     const { t } = useTranslation();
     const [size, setSize] = useState(5);
     const firstSize = useRef(log.length);
+    const graph = useGraphService();
+    const profiler = useProfilerService();
 
     const logLimited = useMemo(() => {
-        return batchLogs(user || getCurrentUser(), log, size, log.length - firstSize.current);
-    }, [log, size, user]);
+        return batchLogs(graph, user || profiler.getCurrentUser(), log, size, log.length - firstSize.current);
+    }, [log, size, user, profiler, graph]);
 
     return (
         <Cards>

@@ -1,19 +1,5 @@
 import { usePeer, ConnectionMonitor } from '@knicos/genai-base';
 import { EventProtocol } from '@genaism/protocol/protocol';
-import { addComment, updateContentStats } from '@genaism/services/content/content';
-import { addEdges } from '@genaism/services/graph/edges';
-import { addNodes } from '@genaism/services/graph/nodes';
-import {
-    addLogEntry,
-    appendActionLog,
-    getActionLogSince,
-    getCurrentUser,
-    getUserProfile,
-    reverseProfile,
-    setBestEngagement,
-    setUserName,
-} from '@genaism/services/profiler/profiler';
-import { ScoredRecommendation } from '@genaism/services/recommender/recommenderTypes';
 import { availableUsers, currentUserName } from '@genaism/state/sessionState';
 import { DataConnection } from 'peerjs';
 import { PropsWithChildren, createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
@@ -21,10 +7,9 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { SMConfig } from '../../state/smConfig';
 import { appConfiguration } from '@genaism/state/settingsState';
 import { LogProvider } from '@genaism/hooks/logger';
-import { getRecommendations } from '@genaism/services/recommender/recommender';
-import { UserNodeData } from '@genaism/services/users/userTypes';
 import { decompressFromUTF16 } from 'lz-string';
-import { Snapshot } from '@genaism/services/users/users';
+import { ScoredRecommendation, Snapshot, UserNodeData } from '@knicos/genai-recom';
+import { useServices } from '@genaism/hooks/services';
 
 const DATA_LOG_TIME = 15 * 60 * 1000;
 const USERNAME_KEY = 'genai_somekone_username';
@@ -56,6 +41,7 @@ export default function FeedProtocol({ content, server, mycode, setContent, chil
     const username = useRecoilValue<string | undefined>(currentUserName);
     const hasBeenConnected = useRef(false);
     const [hasBeenReady, setHasBeenReady] = useState(false);
+    const { content: contentSvc, profiler: profilerSvc, actionLog, recommender } = useServices();
 
     const onData = useCallback(
         (data: EventProtocol, conn: DataConnection) => {
@@ -69,40 +55,58 @@ export default function FeedProtocol({ content, server, mycode, setContent, chil
                     console.info('Skipping profile update');
                     return;
                 }
-                reverseProfile(data.id, data.profile);
+                profilerSvc.reverseProfile(data.id, data.profile);
             } else if (data.event === 'eter:action_log') {
                 if (hasBeenConnected.current) return;
                 hasBeenConnected.current = true;
-                appendActionLog(data.log, data.id);
+                actionLog.appendActionLog(data.log, data.id);
             } else if (data.event === 'eter:comment') {
-                addComment(data.contentId, data.id, data.comment, data.timestamp);
+                contentSvc.addComment(data.contentId, data.id, data.comment, data.timestamp);
             } else if (data.event === 'eter:join') {
-                const profile = getUserProfile();
-                const logs = getActionLogSince(Date.now() - DATA_LOG_TIME).filter((a) => a.timestamp <= logRef.current);
-                const recommendations = getRecommendations(getCurrentUser(), 5, config.recommendations);
+                const profile = profilerSvc.getUserProfile();
+                const logs = actionLog
+                    .getActionLogSince(Date.now() - DATA_LOG_TIME, profilerSvc.getCurrentUser())
+                    .filter((a) => a.timestamp <= logRef.current);
+                const recommendations = recommender.getRecommendations(
+                    profilerSvc.getCurrentUser(),
+                    5,
+                    config.recommendations
+                );
                 conn.send({ event: 'eter:config', configuration: config, content });
-                conn.send({ event: 'eter:reguser', username, id: getCurrentUser() });
-                conn.send({ event: 'eter:action_log', id: getCurrentUser(), log: logs });
-                conn.send({ event: 'eter:profile_data', profile, id: getCurrentUser() });
-                conn.send({ event: 'eter:recommendations', recommendations, id: getCurrentUser() });
+                conn.send({ event: 'eter:reguser', username, id: profilerSvc.getCurrentUser() });
+                conn.send({ event: 'eter:action_log', id: profilerSvc.getCurrentUser(), log: logs });
+                conn.send({ event: 'eter:profile_data', profile, id: profilerSvc.getCurrentUser() });
+                conn.send({ event: 'eter:recommendations', recommendations, id: profilerSvc.getCurrentUser() });
                 conn.send({ event: 'eter:connect', code: `sm-${server}` });
             } else if (data.event === 'eter:snapshot' && data.snapshot) {
                 const snap = data.compressed
                     ? (JSON.parse(decompressFromUTF16(data.snapshot as string)) as Snapshot)
                     : (data.snapshot as Snapshot);
                 // console.log('SNAP', getCurrentUser(), snap);
-                addNodes(snap.nodes);
-                addEdges(snap.edges.map((e) => ({ ...e, timestamp: Date.now(), metadata: {} })));
+                profilerSvc.graph.addNodes(snap.nodes);
+                profilerSvc.graph.addEdges(snap.edges.map((e) => ({ ...e, timestamp: Date.now(), metadata: {} })));
                 snap.logs?.forEach((log) => {
                     // if (log.user !== getCurrentUser())
-                    addLogEntry(log.entry, log.user);
+                    actionLog.addLogEntry(log.entry, log.user);
                 });
             } else if (data.event === 'eter:stats') {
-                updateContentStats(data.content);
-                setBestEngagement(data.bestEngagement);
+                contentSvc.updateContentStats(data.content);
+                profilerSvc.setBestEngagement(data.bestEngagement);
             }
         },
-        [config, username, content, server, setConfig, setAvailableUsers, setContent]
+        [
+            config,
+            username,
+            content,
+            server,
+            setConfig,
+            setAvailableUsers,
+            setContent,
+            contentSvc,
+            profilerSvc,
+            actionLog,
+            recommender,
+        ]
     );
 
     const { ready, send, status, error } = usePeer<EventProtocol>({
@@ -118,39 +122,39 @@ export default function FeedProtocol({ content, server, mycode, setContent, chil
     useEffect(() => {
         if (username && send && ready) {
             window.sessionStorage.setItem(USERNAME_KEY, username);
-            setUserName(getCurrentUser(), username);
-            send({ event: 'eter:reguser', username, id: getCurrentUser() });
+            profilerSvc.setUserName(profilerSvc.getCurrentUser(), username);
+            send({ event: 'eter:reguser', username, id: profilerSvc.getCurrentUser() });
         }
-    }, [username, send, ready]);
+    }, [username, send, ready, profilerSvc]);
 
     const doLog = useCallback(() => {
         if (send && logTimer.current === -1) {
             logTimer.current = window.setTimeout(() => {
                 logTimer.current = -1;
-                const logs = getActionLogSince(logRef.current);
+                const logs = actionLog.getActionLogSince(logRef.current, profilerSvc.getCurrentUser());
                 logRef.current = Date.now();
-                send({ event: 'eter:action_log', id: getCurrentUser(), log: logs });
+                send({ event: 'eter:action_log', id: profilerSvc.getCurrentUser(), log: logs });
             }, 500);
         }
-    }, [send]);
+    }, [send, actionLog, profilerSvc]);
 
     const doProfile = useCallback(
         (profile: UserNodeData) => {
             if (send) {
-                send({ event: 'eter:profile_data', profile, id: getCurrentUser() });
+                send({ event: 'eter:profile_data', profile, id: profilerSvc.getCurrentUser() });
             }
         },
-        [send]
+        [send, profilerSvc]
     );
 
     const doRecommend = useCallback(
         (recommendations: ScoredRecommendation[]) => {
             if (send) {
-                send({ event: 'eter:recommendations', recommendations, id: getCurrentUser() });
-                send({ event: 'eter:snapshot', id: getCurrentUser() });
+                send({ event: 'eter:recommendations', recommendations, id: profilerSvc.getCurrentUser() });
+                send({ event: 'eter:snapshot', id: profilerSvc.getCurrentUser() });
             }
         },
-        [send]
+        [send, profilerSvc]
     );
 
     useEffect(() => {

@@ -1,8 +1,6 @@
-import { useNodeType } from '@genaism/services/graph/hooks';
 import { useCallback, useEffect, useState } from 'react';
 import Graph from '../Graph/Graph';
 import { GraphLink, GraphNode, InternalGraphLink, LinkStyle } from '../Graph/types';
-import { ContentNodeId } from '@genaism/services/graph/graphTypes';
 import ContentNode from './ContentNode';
 import { useAllCoengagements } from './similarity';
 import {
@@ -13,16 +11,17 @@ import {
 } from '@genaism/state/settingsState';
 import { useRecoilValue } from 'recoil';
 import style from './style.module.css';
-import { getRelated } from '@genaism/services/graph/query';
-import { getContentStats } from '@genaism/services/content/content';
+import { ContentNodeId, GraphService } from '@knicos/genai-recom';
+import { useNodeType } from '@genaism/hooks/graph';
+import { useContentService, useGraphService } from '@genaism/hooks/services';
 
 const MIN_WEIGHT = 0.02;
 const MIN_SIZE = 50;
 const MAX_SIZE = 400;
 const SIZE_SCALE = 200;
 
-function calculateNodeSize(id: ContentNodeId) {
-    const engage = getRelated('engaged', id, { count: 10, timeDecay: 0.1, period: 60 * 60 * 1000 });
+function calculateNodeSize(graph: GraphService, id: ContentNodeId) {
+    const engage = graph.getRelated('engaged', id, { count: 10, timeDecay: 0.1, period: 60 * 60 * 1000 });
     const sum = engage.reduce((s, v) => s + v.weight, 0);
     return Math.min(MAX_SIZE, sum * SIZE_SCALE) + MIN_SIZE;
 }
@@ -35,6 +34,8 @@ export default function ContentGraph() {
     const charge = useRecoilValue(settingContentNodeCharge);
     const simPercent = useRecoilValue(settingContentSimilarPercent);
     const content = useNodeType('content');
+    const contentService = useContentService();
+    const graph = useGraphService();
 
     const similar = useAllCoengagements(content);
 
@@ -49,12 +50,16 @@ export default function ContentGraph() {
             return (s?.maxSimilarity || 0) > MIN_WEIGHT;
         });
 
-        filteredTopics.sort((a, b) => (getContentStats(b)?.engagement || 0) - (getContentStats(a)?.engagement || 0));
+        filteredTopics.sort(
+            (a, b) =>
+                (contentService.getContentStats(b)?.engagement || 0) -
+                (contentService.getContentStats(a)?.engagement || 0)
+        );
 
         const newNodes = filteredTopics.slice(0, Math.max(20, Math.floor(0.4 * filteredTopics.length))).map((u) => ({
             id: u,
             label: u,
-            size: calculateNodeSize(u),
+            size: calculateNodeSize(graph, u),
         }));
 
         setNodes(newNodes);
@@ -87,7 +92,7 @@ export default function ContentGraph() {
         });
 
         setLinks(links);
-    }, [content, similar, simPercent]);
+    }, [content, similar, simPercent, contentService, graph]);
 
     useEffect(() => {
         doRedrawNodes();

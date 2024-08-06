@@ -14,6 +14,7 @@ import Loading from './components/Loading/Loading';
 import About from './views/About/About';
 import { Privacy, theme } from '@knicos/genai-base';
 import gitInfo from './generatedGitInfo.json';
+import { defaultServices, ServiceProvider } from './hooks/services';
 
 interface RouterError {
     status: number;
@@ -104,20 +105,22 @@ function App() {
         <StyledEngineProvider injectFirst>
             <ThemeProvider theme={theme}>
                 <RecoilRoot>
-                    <React.Suspense
-                        fallback={
-                            <Loading
-                                loading={true}
-                                message="..."
+                    <ServiceProvider value={defaultServices}>
+                        <React.Suspense
+                            fallback={
+                                <Loading
+                                    loading={true}
+                                    message="..."
+                                />
+                            }
+                        >
+                            <RouterProvider router={router} />
+                            <Privacy
+                                appName="somekone"
+                                tag={gitInfo.gitTag || 'notag'}
                             />
-                        }
-                    >
-                        <RouterProvider router={router} />
-                        <Privacy
-                            appName="somekone"
-                            tag={gitInfo.gitTag || 'notag'}
-                        />
-                    </React.Suspense>
+                        </React.Suspense>
+                    </ServiceProvider>
                 </RecoilRoot>
             </ThemeProvider>
         </StyledEngineProvider>

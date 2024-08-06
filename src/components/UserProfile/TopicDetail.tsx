@@ -1,8 +1,8 @@
-import { ContentNodeId, UserNodeId, WeightedNode } from '@genaism/services/graph/graphTypes';
 import Card from '../DataCard/Card';
 import style from './style.module.css';
 import ImageCloud from '../ImageCloud/ImageCloud';
 import { useCallback, useState } from 'react';
+import { ContentNodeId, UserNodeId, WeightedNode } from '@knicos/genai-recom';
 
 interface Props {
     id: UserNodeId;

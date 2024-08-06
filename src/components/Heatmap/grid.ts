@@ -1,5 +1,4 @@
-import { getContentMetadata } from '@genaism/services/content/content';
-import { ContentNodeId } from '@genaism/services/graph/graphTypes';
+import { ContentNodeId, ContentService } from '@knicos/genai-recom';
 
 interface QueueItem {
     pt: [number, number];
@@ -55,7 +54,7 @@ export function findNearestSlot(grid: unknown[][], pt: [number, number], maxDist
     return [-1, -1];
 }
 
-export function heatmapGrid(images: ContentNodeId[], dim: number) {
+export function heatmapGrid(content: ContentService, images: ContentNodeId[], dim: number) {
     const start = performance.now();
     const grid: (ContentNodeId | null)[][] = new Array(dim);
     for (let i = 0; i < dim; ++i) {
@@ -65,7 +64,7 @@ export function heatmapGrid(images: ContentNodeId[], dim: number) {
     }
 
     images.forEach((image) => {
-        const point = getContentMetadata(image)?.point || [Math.random(), Math.random()];
+        const point = content.getContentMetadata(image)?.point || [Math.random(), Math.random()];
         const pt: [number, number] = [Math.round(point[0] * dim), Math.round(point[1] * dim)];
         const nearest = findNearestSlot(grid, pt, 100);
         if (nearest[0] >= 0) {

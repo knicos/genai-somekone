@@ -1,13 +1,17 @@
 import { describe, it, vi } from 'vitest';
 import { heatmapScores } from './algorithm';
-import { createEmptyProfile } from '@genaism/services/profiler/profiler';
-import { UserNodeData } from '@genaism/services/users/userTypes';
-import { Recommendation, ScoredRecommendation } from '@genaism/services/recommender/recommenderTypes';
+import {
+    ContentService,
+    createEmptyProfile,
+    GraphService,
+    ProfilerService,
+    Recommendation,
+    RecommenderService,
+    ScoredRecommendation,
+    ServiceBroker,
+} from '@knicos/genai-recom';
 
-const { mockCandidates, mockProfile, mockScoring } = vi.hoisted(() => ({
-    mockProfile: vi.fn<unknown[], UserNodeData>(() => ({
-        ...createEmptyProfile('user:xyz', 'TestUser1'),
-    })),
+const { mockCandidates, mockScoring } = vi.hoisted(() => ({
     mockCandidates: vi.fn(() => 0.5),
     mockScoring: vi.fn((_, candidates: Recommendation[]): ScoredRecommendation[] => {
         return candidates.map((c) => ({
@@ -23,6 +27,17 @@ const { mockCandidates, mockProfile, mockScoring } = vi.hoisted(() => ({
     }),
 }));
 
+vi.mock('@knicos/genai-recom', async () => {
+    const mod = await vi.importActual<typeof import('@knicos/genai-recom')>('@knicos/genai-recom');
+    return {
+        ...mod,
+        RecommenderService: vi.fn(() => ({
+            getCandidateProbability: mockCandidates,
+            getScoringProbabilities: mockScoring,
+        })),
+    };
+});
+
 vi.mock('@genaism/services/recommender/candidates', () => ({
     candidateProbabilities: mockCandidates,
 }));
@@ -31,13 +46,16 @@ vi.mock('@genaism/services/recommender/scoring', () => ({
     scoringProbability: mockScoring,
 }));
 
-vi.mock('@genaism/services/users/users', () => ({
-    getUserData: mockProfile,
-}));
-
 describe('heatmapScores()', () => {
     it('generates the expected results', async ({ expect }) => {
+        const broker = new ServiceBroker();
+        const graph = new GraphService(broker);
+        const content = new ContentService(broker, graph);
+        const profiler = new ProfilerService(broker, graph, content);
+        const recommender = new RecommenderService(broker, graph, content, profiler);
+
         const scores = await heatmapScores(
+            recommender,
             ['content:1', 'content:2'],
             'user:1',
             createEmptyProfile('user:1', 'NoName'),

@@ -6,7 +6,6 @@ import { usePeer } from '@knicos/genai-base';
 import { EventProtocol } from '@genaism/protocol/protocol';
 import { DataConnection } from 'peerjs';
 import TestWrapper from '@genaism/util/TestWrapper';
-import { Embedding } from '@genaism/util/embedding';
 
 type PeerProps = Parameters<typeof usePeer<EventProtocol>>[0];
 
@@ -24,10 +23,6 @@ vi.mock('@knicos/genai-base/dist/hooks/peer', () => ({
 
 vi.mock('@genaism/services/loader/session', () => ({
     loadSession: () => {},
-}));
-
-vi.mock('@genaism/services/content/mapping', () => ({
-    mapEmbeddingsToPoints: (e: Embedding[]) => e.map(() => ({ x: 0, y: 0 })),
 }));
 
 vi.mock('qrcode', () => ({

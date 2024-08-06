@@ -1,9 +1,9 @@
 import { memo } from 'react';
-import { ContentNodeId, UserNodeId } from '@genaism/services/graph/graphTypes';
 import style from './style.module.css';
 import { GraphNode } from '../Graph/types';
-import { getContentData } from '@genaism/services/content/content';
 import Label from '../SocialGraph/Label';
+import { ContentNodeId, UserNodeId } from '@knicos/genai-recom';
+import { useContentService } from '@genaism/hooks/services';
 
 interface Props {
     id: UserNodeId | ContentNodeId;
@@ -14,6 +14,7 @@ interface Props {
 }
 
 const ContentNode = memo(function ContentNode({ disabled, node }: Props) {
+    const content = useContentService();
     const asize = node.size;
 
     const image = (node.data?.image as string) || '';
@@ -35,7 +36,7 @@ const ContentNode = memo(function ContentNode({ disabled, node }: Props) {
                     y={-asize}
                     width={asize * 2}
                     height={asize * 2}
-                    href={getContentData(image as ContentNodeId)}
+                    href={content.getContentData(image as ContentNodeId)}
                     preserveAspectRatio="none"
                     clipPath={`circle(${asize - 15}px)`}
                 />

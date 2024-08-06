@@ -1,15 +1,14 @@
 import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
-import { ScoredRecommendation } from '@genaism/services/recommender/recommenderTypes';
 import ImageSearchIcon from '@mui/icons-material/ImageSearch';
 import style from './style.module.css';
 import MiniUserGraph from '../MiniUserGraph/MiniUserGraph';
-import { UserNodeId } from '@genaism/services/graph/graphTypes';
 import MiniTopicGraph from '../MiniTopicGraph/MiniTopicGraph';
 import MiniCoengGraph from '../MiniCoengGraph/MiniCoengGraph';
-import { getUserData } from '@genaism/services/users/users';
+import { ProfilerService, ScoredRecommendation, UserNodeId } from '@knicos/genai-recom';
+import { useProfilerService } from '@genaism/hooks/services';
 
-function generateCandidateMessage(item: ScoredRecommendation, t: TFunction) {
+function generateCandidateMessage(profiler: ProfilerService, item: ScoredRecommendation, t: TFunction) {
     let part1: string;
 
     switch (item.candidateOrigin) {
@@ -27,7 +26,7 @@ function generateCandidateMessage(item: ScoredRecommendation, t: TFunction) {
             break;
         case 'similar_user':
             part1 = t('recommendations.labels.similarUserCandidate', {
-                userName: item.similarUser ? getUserData(item.similarUser)?.name || '' : '',
+                userName: item.similarUser ? profiler.getUserData(item.similarUser)?.name || '' : '',
             });
             break;
         default:
@@ -43,13 +42,15 @@ interface Props {
 
 export default function CandidateItem({ item, userId }: Props) {
     const { t } = useTranslation();
+    const profiler = useProfilerService();
+
     return (
         <li data-testid="candidate-item">
             <div className={style.listIcon}>
                 <ImageSearchIcon fontSize="large" />
             </div>
             <div className={style.listColumn}>
-                {generateCandidateMessage(item, t)}
+                {generateCandidateMessage(profiler, item, t)}
                 {item.candidateOrigin === 'similar_user' && (
                     <div className={style.miniGraphBox}>
                         <MiniUserGraph

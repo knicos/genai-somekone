@@ -2,14 +2,13 @@ import { beforeEach, describe, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import SocialMenu from './SocialMenu';
 import TestWrapper from '@genaism/util/TestWrapper';
-import { addNode } from '@genaism/services/graph/nodes';
-import { resetGraph } from '@genaism/services/graph/state';
 import userEvent from '@testing-library/user-event';
 import { useRecoilValue } from 'recoil';
 import { menuSelectedUser, menuShowUserPanel } from '@genaism/state/menuState';
+import { getGraphService } from '@knicos/genai-recom';
 
 describe('SocialMenu component', () => {
-    beforeEach(() => resetGraph());
+    beforeEach(() => getGraphService().reset());
     it('renders the default menu', async ({ expect }) => {
         render(
             <TestWrapper>
@@ -21,7 +20,7 @@ describe('SocialMenu component', () => {
     });
 
     it('renders a selected user menu', async ({ expect }) => {
-        addNode('user', 'user:test', { name: 'FakeUsername' });
+        getGraphService().addNode('user', 'user:test', { name: 'FakeUsername' });
         render(
             <TestWrapper
                 initializeState={({ set }) => {
@@ -46,7 +45,7 @@ describe('SocialMenu component', () => {
             return null;
         };
 
-        addNode('user', 'user:test', { name: 'FakeUsername' });
+        getGraphService().addNode('user', 'user:test', { name: 'FakeUsername' });
         render(
             <TestWrapper
                 initializeState={({ set }) => {
@@ -73,7 +72,7 @@ describe('SocialMenu component', () => {
             return null;
         };
 
-        addNode('user', 'user:test', { name: 'FakeUsername' });
+        getGraphService().addNode('user', 'user:test', { name: 'FakeUsername' });
         render(
             <TestWrapper
                 initializeState={({ set }) => {
@@ -100,7 +99,7 @@ describe('SocialMenu component', () => {
             return null;
         };
 
-        addNode('user', 'user:test', { name: 'FakeUsername' });
+        getGraphService().addNode('user', 'user:test', { name: 'FakeUsername' });
         render(
             <TestWrapper
                 initializeState={({ set }) => {
@@ -127,7 +126,7 @@ describe('SocialMenu component', () => {
             return null;
         };
 
-        addNode('user', 'user:test', { name: 'FakeUsername' });
+        getGraphService().addNode('user', 'user:test', { name: 'FakeUsername' });
         render(
             <TestWrapper
                 initializeState={({ set }) => {

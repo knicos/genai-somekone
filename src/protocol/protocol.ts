@@ -1,10 +1,14 @@
 import { PeerEvent, BuiltinEvent } from '@knicos/genai-base';
 import { SMConfig } from '@genaism/state/smConfig';
-import { LogEntry, UserNodeData } from '@genaism/services/users/userTypes';
-import { ContentNodeId, UserNodeId } from '@genaism/services/graph/graphTypes';
-import { ScoredRecommendation } from '@genaism/services/recommender/recommenderTypes';
-import { Snapshot } from '@genaism/services/users/users';
-import { ContentStatsId } from '@genaism/services/content/contentTypes';
+import {
+    ContentNodeId,
+    ContentStatsId,
+    LogEntry,
+    ScoredRecommendation,
+    Snapshot,
+    UserNodeData,
+    UserNodeId,
+} from '@knicos/genai-recom';
 
 export interface ConfigurationEvent extends PeerEvent {
     event: 'eter:config';

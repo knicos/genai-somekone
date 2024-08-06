@@ -1,7 +1,6 @@
-import { UserNodeId } from '@genaism/services/graph/graphTypes';
+import { UserNodeId } from '@knicos/genai-recom';
 import { GraphNode } from '../Graph/types';
 import Label from './Label';
-import { getUserData } from '@genaism/services/users/users';
 
 function hexToRgb(hex: string) {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -27,7 +26,7 @@ interface Props {
 }
 
 export default function UserLabel({ node, scale }: Props) {
-    const name = getUserData(node.id)?.name;
+    const name = node.label || 'None';
     const colour = node.data?.colour as string;
     if (!name) return null;
     return (

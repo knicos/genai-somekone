@@ -1,7 +1,5 @@
 import { useEffect, useReducer, useState } from 'react';
 import style from './style.module.css';
-import { ContentNodeId, UserNodeId, WeightedNode } from '@genaism/services/graph/graphTypes';
-import { useRecommendations } from '@genaism/services/recommender/hooks';
 import RecommendationsTable from '../RecommendationsTable/RecommendationsTable';
 import { configuration } from '@genaism/state/settingsState';
 import { useRecoilValue } from 'recoil';
@@ -13,13 +11,15 @@ import { IconButton } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@knicos/genai-base';
 import DesignServicesIcon from '@mui/icons-material/DesignServices';
-import { getCurrentUser } from '@genaism/services/profiler/state';
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 import AppsIcon from '@mui/icons-material/Apps';
 import IconMenuItem from '../IconMenu/Item';
 import Spacer from '../IconMenu/Spacer';
 import { IconMenuContext } from '../IconMenu/context';
 import RecommendationsHeatmap from '../RecommendationsHeatmap/RecommendationsHeatmap';
+import { ContentNodeId, UserNodeId, WeightedNode } from '@knicos/genai-recom';
+import { useRecommendations } from '@genaism/hooks/recommender';
+import { useProfilerService } from '@genaism/hooks/services';
 
 interface Props {
     id?: UserNodeId;
@@ -29,7 +29,8 @@ interface Props {
 
 export default function RecommendationsProfile({ id, generate, noWizard }: Props) {
     const { t } = useTranslation();
-    const aid = id || getCurrentUser();
+    const profiler = useProfilerService();
+    const aid = id || profiler.getCurrentUser();
     const appConfig = useRecoilValue(configuration(aid));
     const { recommendations, more } = useRecommendations(9, id, appConfig?.recommendations);
     const [selected, setSelected] = useState(-1);

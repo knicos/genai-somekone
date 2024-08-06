@@ -3,9 +3,7 @@ import { render, screen } from '@testing-library/react';
 import ProfileNode from './ProfileNode';
 import TestWrapper from '@genaism/util/TestWrapper';
 import { settingDisplayLabel, settingShrinkOfflineUsers } from '@genaism/state/settingsState';
-import { ContentNodeId, UserNodeId, WeightedNode } from '@genaism/services/graph/graphTypes';
-import { createEmptyProfile } from '@genaism/services/profiler/profiler';
-import { UserNodeData } from '@genaism/services/users/userTypes';
+import { ContentNodeId, createEmptyProfile, UserNodeData, UserNodeId, WeightedNode } from '@knicos/genai-recom';
 
 const { mockProfile, mockSimilar } = vi.hoisted(() => ({
     mockProfile: vi.fn<unknown[], UserNodeData>(() => {
@@ -17,10 +15,8 @@ const { mockProfile, mockSimilar } = vi.hoisted(() => ({
     mockSimilar: vi.fn(() => [] as WeightedNode<UserNodeId>[]),
 }));
 
-vi.mock('@genaism/services/profiler/hooks', () => ({
+vi.mock('@genaism/hooks/profiler', () => ({
     useUserProfile: mockProfile,
-}));
-vi.mock('@genaism/services/users/users', () => ({
     useSimilarUsers: mockSimilar,
 }));
 

@@ -13,11 +13,11 @@ import UserProfile from '@genaism/components/UserProfile/UserProfile';
 import style from './style.module.css';
 import { appConfiguration } from '@genaism/state/settingsState';
 import { SMConfig } from '../../state/smConfig';
-import { UserNodeId } from '@genaism/services/graph/graphTypes';
 import RecommendationsProfile from '@genaism/components/RecommendationsProfile/RecommendationsProfile';
 import BlockDialog from '../dialogs/BlockDialog/BlockDialog';
 import ViewerProtocol from './ViewerProtocol';
 import LangSelect from '@genaism/components/LangSelect/LangSelect';
+import { UserNodeId } from '@knicos/genai-recom';
 
 function slideDirection(my: number, current: number, previous: number): SlideProps['direction'] {
     if (my === current) {

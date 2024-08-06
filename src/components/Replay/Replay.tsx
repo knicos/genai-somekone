@@ -4,21 +4,23 @@ import IconMenuItem from '../IconMenu/Item';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import StopIcon from '@mui/icons-material/Stop';
 import PauseIcon from '@mui/icons-material/Pause';
-import { useLogReplay } from '@genaism/services/replay/replay';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import Spacer from '../IconMenu/Spacer';
+import { useServices } from '@genaism/hooks/services';
 
 export default function Replay() {
     const { t } = useTranslation();
     const [speed, setSpeed] = useState(4);
-    const { active, start, stop, time, startTime, endTime, paused, pause } = useLogReplay(speed);
-    const position = (time - startTime) / (endTime - startTime);
+    const { replay: replaySvc } = useServices();
+
+    const active = replaySvc.isPlaying();
+    const paused = replaySvc.isPaused();
 
     return (
         <IconMenu placement="bottom">
             <IconMenuItem tooltip={t('dashboard.labels.play')}>
-                <IconButton onClick={() => (active && !paused ? pause() : start())}>
+                <IconButton onClick={() => active && replaySvc.pause()}>
                     {active ? paused ? <PlayArrowIcon /> : <PauseIcon /> : <PlayArrowIcon />}
                 </IconButton>
             </IconMenuItem>
@@ -33,7 +35,7 @@ export default function Replay() {
             <Spacer />
             <LinearProgress
                 variant="determinate"
-                value={position * 100}
+                value={replaySvc.getPosition() * 100}
                 style={{ width: '200px' }}
             />
             <Spacer />

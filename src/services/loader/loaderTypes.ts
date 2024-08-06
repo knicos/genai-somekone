@@ -1,5 +1,4 @@
-import { UserNodeId } from '../graph/graphTypes';
-import { LogEntry } from '../users/userTypes';
+import { LogEntry, UserNodeId } from '@knicos/genai-recom';
 
 export interface LogItem {
     id: UserNodeId;

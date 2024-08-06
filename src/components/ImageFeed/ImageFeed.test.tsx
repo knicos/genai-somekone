@@ -1,11 +1,8 @@
-import { describe, it, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, beforeEach, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import ImageFeed from './ImageFeed';
-import { addContent } from '../../services/content/content';
-import { resetGraph } from '../../services/graph/graph';
 import userEvent from '@testing-library/user-event';
-import { ContentNodeId } from '@genaism/services/graph/graphTypes';
-import { ScoredRecommendation } from '@genaism/services/recommender/recommenderTypes';
+import { ContentNodeId, getContentService, getGraphService, ScoredRecommendation } from '@knicos/genai-recom';
 
 function makeRecommendation(id: ContentNodeId): ScoredRecommendation {
     return {
@@ -26,11 +23,8 @@ const TEST_IMAGE =
 
 describe('ImageFeed component', () => {
     beforeEach(() => {
-        addContent(TEST_IMAGE, { id: 'xyz', author: 'TestAuthor', labels: [] });
-    });
-
-    afterEach(() => {
-        resetGraph();
+        getGraphService().reset();
+        getContentService().addContent(TEST_IMAGE, { id: 'xyz', author: 'TestAuthor', labels: [] });
     });
 
     it('renders a feed of test images', async ({ expect }) => {

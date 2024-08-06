@@ -1,8 +1,8 @@
-import { getContentData } from '@genaism/services/content/content';
-import { ContentNodeId } from '@genaism/services/graph/graphTypes';
+import { ContentNodeId } from '@knicos/genai-recom';
 import style from './style.module.css';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { useTranslation } from 'react-i18next';
+import { useContentService } from '@genaism/hooks/services';
 
 interface Props {
     images: ContentNodeId[];
@@ -24,6 +24,8 @@ function SelectButton({ selected }: SelectProps) {
 
 export default function ImageGrid({ images, selected, onSelect }: Props) {
     const { t } = useTranslation();
+    const content = useContentService();
+
     return (
         <div
             className={style.grid}
@@ -37,7 +39,7 @@ export default function ImageGrid({ images, selected, onSelect }: Props) {
                     aria-label={t('recommendations.aria.imageSelect', { number: ix + 1 })}
                 >
                     <img
-                        src={getContentData(img)}
+                        src={content.getContentData(img)}
                         style={{ aspectRatio: '1/1', objectFit: 'contain' }}
                         alt={t('recommendations.aria.imageSelect', { number: ix + 1 })}
                     />

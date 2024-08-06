@@ -1,4 +1,4 @@
-import { NodeID } from '@genaism/services/graph/graphTypes';
+import { NodeID } from '@knicos/genai-recom';
 import { GraphLink, GraphNode, InternalGraphLink } from './types';
 
 function defaultNodePosition() {

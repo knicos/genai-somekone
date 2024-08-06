@@ -1,4 +1,3 @@
-import { UserNodeId } from '@genaism/services/graph/graphTypes';
 import style from './style.module.css';
 import ProfileNode from '../SocialGraph/ProfileNode';
 import {
@@ -22,8 +21,9 @@ import RecommendationsPanel from '../SocialGraph/RecommendationsPanel';
 import GridMenu from './GridMenu';
 import { menuSelectedUser } from '@genaism/state/menuState';
 import { useRecoilState } from 'recoil';
-import { useNodeType } from '@genaism/services/graph/hooks';
-import { getUserName } from '@genaism/services/profiler/profiler';
+import { UserNodeId } from '@knicos/genai-recom';
+import { useNodeType } from '@genaism/hooks/graph';
+import { useProfilerService } from '@genaism/hooks/services';
 
 interface Props {
     users?: UserNodeId[];
@@ -83,6 +83,7 @@ export default function UserGrid({ users }: Props) {
     const extents = useRef<[number, number, number, number]>([0, 0, 0, 0]);
     const movement = useRef<[number, number]>([0, 0]);
     const pointerCache = useRef(new Map<number, PointerEvent<SVGSVGElement>>());
+    const profiler = useProfilerService();
 
     const allusers = useNodeType('user');
     const ausers = users ? users : allusers;
@@ -98,13 +99,13 @@ export default function UserGrid({ users }: Props) {
             ausers
                 .map((user, ix) => ({
                     id: user,
-                    label: getUserName(user),
+                    label: profiler.getUserName(user),
                     size: sizes.get(user) || SIZE,
                     x: -Math.floor(COLS / 2) * size * 2 + (ix % COLS) * size * 2,
                     y: -Math.floor(ROWS / 2) * ysize * 2 + Math.floor(ix / COLS) * ysize * 2,
                 }))
                 .filter((f) => f.label),
-        [ausers, COLS, ROWS, size, ysize, sizes]
+        [ausers, COLS, ROWS, size, ysize, sizes, profiler]
     );
 
     // Animate camera motion

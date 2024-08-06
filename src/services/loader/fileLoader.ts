@@ -1,20 +1,24 @@
 import JSZip from 'jszip';
 
-import { ContentMetadata } from '@genaism/services/content/contentTypes';
-import { addContent } from '@genaism/services/content/content';
-import { appendActionLog } from '@genaism/services/profiler/profiler';
-import { TopicNodeId, UserNodeId } from '../graph/graphTypes';
-import { GraphExport } from '../graph/state';
-import { addNodes } from '../graph/nodes';
-import { getTopicId } from '../concept/concept';
 import { ProjectMeta, VERSION } from '../saver/types';
 import { dependencies } from './tracker';
 import { LogItem } from './loaderTypes';
 import { findLargestEdgeTimestamp, findLargestLogTimestamp, rebaseLog } from './rebase';
 import { SomekoneSettings } from '@genaism/hooks/settings';
-import { UserNodeData } from '../users/userTypes';
 import './session';
-import { sortLogs } from '../users/logs';
+import {
+    ActionLogService,
+    ContentMetadata,
+    ContentService,
+    Edge,
+    getTopicId,
+    GNode,
+    NodeID,
+    NodeType,
+    TopicNodeId,
+    UserNodeData,
+    UserNodeId,
+} from '@knicos/genai-recom';
 
 const STATIC_PATH = 'https://store.gen-ai.fi/somekone/images';
 
@@ -88,7 +92,16 @@ function patchLogs(logs: OldLogItem[]) {
     return logs as LogItem[];
 }
 
-export async function loadFile(file: File | Blob): Promise<SomekoneSettings | undefined> {
+interface GraphExport {
+    nodes: GNode<NodeType>[];
+    edges: Edge<NodeID<NodeType>, NodeID<NodeType>>[];
+}
+
+export async function loadFile(
+    contentSvc: ContentService,
+    actionLogger: ActionLogService,
+    file: File | Blob
+): Promise<SomekoneSettings | undefined> {
     const zip = await JSZip.loadAsync(file);
 
     const images = new Map<string, string>();
@@ -188,7 +201,7 @@ export async function loadFile(file: File | Blob): Promise<SomekoneSettings | un
             if (node.type === 'topic') {
                 const label = (node.data as TopicData).label;
                 topicSet.set(node.id as TopicNodeId, label);
-                node.id = getTopicId(label);
+                node.id = getTopicId(contentSvc.graph, label);
             }
             if (node.type === 'user' && Array.isArray((node.data as UserNodeData)?.featureWeights)) {
                 (node.data as UserNodeData).featureWeights = {};
@@ -210,12 +223,12 @@ export async function loadFile(file: File | Blob): Promise<SomekoneSettings | un
         // Remove users who do not have valid names
         // const badUsers = new Set<NodeID>(store.graph.nodes.filter((n) => !n.data).map((n) => n.id));
 
-        addNodes(store.graph.nodes.filter((n) => !!n.data));
+        contentSvc.graph.addNodes(store.graph.nodes.filter((n) => !!n.data));
         // addEdges(store.graph.edges.filter((e) => !badUsers.has(e.destination) && !badUsers.has(e.source)));
     }
 
     store.meta.forEach((v) => {
-        addContent(images.get(v.id) || `${STATIC_PATH}/${v.id}.jpg`, v);
+        contentSvc.addContent(images.get(v.id) || `${STATIC_PATH}/${v.id}.jpg`, v);
     });
 
     /*store.users.forEach((u) => {
@@ -228,9 +241,9 @@ export async function loadFile(file: File | Blob): Promise<SomekoneSettings | un
 
     rebaseLog(store.logs, timeOffset);
     store.logs.forEach((l) => {
-        appendActionLog(l.log, l.id);
+        actionLogger.appendActionLog(l.log, l.id);
     });
-    sortLogs();
+    actionLogger.sortLogs();
 
     return store.settings;
 }

@@ -2,11 +2,12 @@ import { ChangeEvent, useEffect, useState } from 'react';
 import { Autocomplete, InputAdornment, TextField } from '@mui/material';
 import style from './style.module.css';
 import { StageState } from './types';
-import { getTopicId } from '@genaism/services/concept/concept';
 import TagIcon from '@mui/icons-material/Tag';
 import Stepper from './Stepper';
 import { useTranslation } from 'react-i18next';
 import { AlertPara } from '@knicos/genai-base';
+import { getTopicId } from '@knicos/genai-recom';
+import { useGraphService } from '@genaism/hooks/services';
 
 interface Props {
     onAddNext: (stage: StageState[]) => void;
@@ -29,13 +30,14 @@ export default function CategorySelect({ onAddNext, onNext }: Props) {
     const [selected, setSelected] = useState<string>('');
     const [isdone, setDone] = useState(false);
     const [error, setError] = useState<TagError>('none');
+    const graph = useGraphService();
 
     useEffect(() => {
         if (selected.length > 0) {
-            onAddNext([{ view: 'images', topicId: getTopicId(selected) }]);
+            onAddNext([{ view: 'images', topicId: getTopicId(graph, selected) }]);
             setDone(true);
         }
-    }, [selected, onAddNext]);
+    }, [selected, onAddNext, graph]);
 
     const suggestions = t('allowedTopics', { returnObjects: true }) as string[];
 

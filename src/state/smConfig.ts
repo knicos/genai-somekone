@@ -1,4 +1,4 @@
-import { RecommendationOptions } from '@genaism/services/recommender/recommenderTypes';
+import { RecommendationOptions } from '@knicos/genai-recom';
 
 export interface SMConfig {
     hideShareProfile?: boolean;

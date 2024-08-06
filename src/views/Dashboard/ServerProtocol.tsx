@@ -1,33 +1,23 @@
 import { usePeer, SenderType, ConnectionMonitor } from '@knicos/genai-base';
 import { EventProtocol, UserEntry } from '@genaism/protocol/protocol';
-import { UserNodeId } from '@genaism/services/graph/graphTypes';
 import { appConfiguration } from '@genaism/state/settingsState';
 import { DataConnection } from 'peerjs';
 import { useCallback, useEffect, useRef } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { SMConfig } from '../../state/smConfig';
-import { appendActionLog, getActionLogSince } from '@genaism/services/users/logs';
 import { compressToUTF16 } from 'lz-string';
-import {
-    getBestEngagement,
-    getUserName,
-    getUserProfile,
-    reverseProfile,
-    setUserName,
-} from '@genaism/services/profiler/profiler';
 import { appendResearchLog } from '@genaism/services/research/research';
-import { makeUserSnapshot } from '@genaism/services/users/users';
-import { addComment, getContentStats } from '@genaism/services/content/content';
-import { getNodesByType } from '@genaism/services/graph/nodes';
 import { onlineUsers } from '@genaism/state/sessionState';
+import { makeUserSnapshot, ProfilerService, UserNodeId } from '@knicos/genai-recom';
+import { useServices } from '@genaism/hooks/services';
 
 const MAX_AGE = 30 * 60 * 1000; // 30 mins
 
-function getOfflineUsers(online: UserNodeId[]): UserEntry[] {
-    const allUsers = getNodesByType('user');
+function getOfflineUsers(profiler: ProfilerService, online: UserNodeId[]): UserEntry[] {
+    const allUsers = profiler.graph.getNodesByType('user');
     const set = new Set<UserNodeId>(online);
     const offline = allUsers.filter((u) => !set.has(u));
-    const named = offline.map((u: UserNodeId) => ({ id: u, name: getUserName(u) }));
+    const named = offline.map((u: UserNodeId) => ({ id: u, name: profiler.getUserName(u) }));
     return named.filter((u) => u.name !== '');
 }
 
@@ -42,6 +32,7 @@ export default function ServerProtocol({ onReady, code, content }: Props) {
     const snapRef = useRef(new Map<UserNodeId, number>());
     const senderRef = useRef<SenderType<EventProtocol> | undefined>();
     const [users, setUsers] = useRecoilState(onlineUsers);
+    const { content: contentSvc, profiler: profilerSvc, actionLog } = useServices();
 
     const dataHandler = useCallback(
         (data: EventProtocol, conn: DataConnection) => {
@@ -49,22 +40,25 @@ export default function ServerProtocol({ onReady, code, content }: Props) {
                 conn.send({ event: 'eter:config', configuration: config, content });
                 conn.send({
                     event: 'eter:users',
-                    users: getOfflineUsers(users.map((u) => u.id)),
+                    users: getOfflineUsers(
+                        profilerSvc,
+                        users.map((u) => u.id)
+                    ),
                 });
             } else if (data.event === 'eter:reguser') {
-                setUserName(data.id, data.username);
+                profilerSvc.setUserName(data.id, data.username);
                 snapRef.current.delete(data.id);
                 setUsers((old) => [...old, { id: data.id, username: data.username, connection: conn }]);
-                const profile = getUserProfile(data.id);
+                const profile = profilerSvc.getUserProfile(data.id);
                 conn.send({ event: 'eter:profile_data', profile, id: data.id });
-                const logs = getActionLogSince(Date.now() - 3 * 60 * 60 * 1000, data.id);
+                const logs = actionLog.getActionLogSince(Date.now() - 3 * 60 * 60 * 1000, data.id);
                 conn.send({ event: 'eter:action_log', log: logs, id: data.id });
             } else if (data.event === 'eter:close') {
                 setUsers((old) => old.filter((o) => o.connection !== conn));
             } else if (data.event === 'eter:profile_data') {
-                reverseProfile(data.id, data.profile);
+                profilerSvc.reverseProfile(data.id, data.profile);
             } else if (data.event === 'eter:action_log') {
-                appendActionLog(data.log, data.id);
+                actionLog.appendActionLog(data.log, data.id);
                 data.log.forEach((l) => {
                     if (l.activity === 'comment') {
                         if (senderRef.current) {
@@ -76,7 +70,7 @@ export default function ServerProtocol({ onReady, code, content }: Props) {
                                 timestamp: l.timestamp,
                             });
                         }
-                        addComment(l.id || 'content:none', data.id, l.content || '', l.timestamp);
+                        contentSvc.addComment(l.id || 'content:none', data.id, l.content || '', l.timestamp);
                     }
                 });
             } else if (data.event === 'researchlog') {
@@ -90,7 +84,7 @@ export default function ServerProtocol({ onReady, code, content }: Props) {
                 const now = Date.now();
                 const timeEntry = snapRef.current.get(data.id);
                 const time = timeEntry || now - MAX_AGE;
-                const snap = makeUserSnapshot(data.id, time, !timeEntry);
+                const snap = makeUserSnapshot(profilerSvc.graph, actionLog, data.id, time, !timeEntry);
                 snapRef.current.set(data.id, now);
                 const compressed = now - time > 5 * 60 * 1000;
                 conn.send({
@@ -103,12 +97,12 @@ export default function ServerProtocol({ onReady, code, content }: Props) {
                 // Send some updated statistics for these new recommendations
                 conn.send({
                     event: 'eter:stats',
-                    content: getContentStats(data.recommendations.map((r) => r.contentId)),
-                    bestEngagement: getBestEngagement(),
+                    content: contentSvc.getContentStats(data.recommendations.map((r) => r.contentId)),
+                    bestEngagement: profilerSvc.getBestEngagement(),
                 });
             }
         },
-        [config, content, users, setUsers]
+        [config, content, users, setUsers, profilerSvc, contentSvc, actionLog]
     );
     const closeHandler = useCallback(
         (conn?: DataConnection) => {

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 import Graph from './Graph';
 import { GraphNode } from './types';
-import { UserNodeId } from '@genaism/services/graph/graphTypes';
+import { UserNodeId } from '@knicos/genai-recom';
 
 const meta: Meta<typeof Graph> = {
     component: Graph,

@@ -1,17 +1,15 @@
 import React, { useRef, useCallback, useState, useEffect, FocusEvent } from 'react';
 import IImage from '../FeedImage/FeedImage';
 import style from './style.module.css';
-import { LogActivity, LogEntry } from '@genaism/services/users/userTypes';
 import { LikeKind } from '@genaism/components/FeedImage/FeedImage';
 import { ShareKind } from '@genaism/components/FeedImage/SharePanel';
 import FeedSpacer from './FeedSpacer';
 import { useTabActive } from '@genaism/hooks/interaction';
 import { useTranslation } from 'react-i18next';
-import { ContentNodeId } from '@genaism/services/graph/graphTypes';
-import { ScoredRecommendation } from '@genaism/services/recommender/recommenderTypes';
-import { updateEngagement } from '@genaism/services/profiler/profiler';
 import { Spinner } from '@knicos/genai-base';
 import LangSelect from '../LangSelect/LangSelect';
+import { ContentNodeId, LogActivity, LogEntry, ScoredRecommendation } from '@knicos/genai-recom';
+import { useActionLogService, useProfilerService } from '@genaism/hooks/services';
 
 const INTERACTION_TIMEOUT = 5000;
 
@@ -37,6 +35,8 @@ export default function ImageFeed({ images, onView, onMore, onLog, noActions, sh
     const durationRef = useRef<number>(0);
     const active = useTabActive();
     const [focus, setFocus] = useState(false);
+    const actionLog = useActionLogService();
+    const profiler = useProfilerService();
     //const ref = useRef<HTMLDivElement>(null);
 
     viewedRef.current = images[viewed];
@@ -89,12 +89,12 @@ export default function ImageFeed({ images, onView, onMore, onLog, noActions, sh
         if (prevRef.current >= 0) {
             const delta = now - startRef.current;
             doDwell(delta, prevRef.current);
-            updateEngagement(images[prevRef.current]);
+            actionLog.createEngagementEntry(profiler.getCurrentUser(), images[prevRef.current].contentId);
         }
         doSeen(viewed);
         startRef.current = now;
         prevRef.current = viewed;
-    }, [viewed, onView, onLog, images, doDwell, doSeen]);
+    }, [viewed, onView, onLog, images, doDwell, doSeen, actionLog, profiler]);
 
     const doInteraction = useCallback(() => {
         const now = Date.now();

@@ -1,8 +1,8 @@
 import { memo, useEffect, useState } from 'react';
-import { ContentNodeId, WeightedNode } from '@genaism/services/graph/graphTypes';
-import { getContentData } from '@genaism/services/content/content';
 import style from './style.module.css';
 import cloudLayout, { LocationItem, SizedItem } from './cloudLayout';
+import { ContentNodeId, WeightedNode } from '@knicos/genai-recom';
+import { useContentService } from '@genaism/hooks/services';
 
 interface Props {
     content: WeightedNode<ContentNodeId>[];
@@ -19,6 +19,7 @@ const MIN_SIZE = 30;
 
 const ImageCloud = memo(function Cloud({ content, size, padding, colour, borderSize, onSize, className }: Props) {
     const [locations, setLocations] = useState<LocationItem<ContentNodeId>[]>([]);
+    const contentSrv = useContentService();
 
     useEffect(() => {
         const maxWeight = Math.max(0.01, content.length > 0 ? content[0].weight : 1);
@@ -68,7 +69,7 @@ const ImageCloud = memo(function Cloud({ content, size, padding, colour, borderS
                         y={0}
                         width={l.item.width}
                         height={l.item.height}
-                        href={getContentData(l.item.id)}
+                        href={contentSrv.getContentData(l.item.id)}
                         preserveAspectRatio="none"
                         clipPath="inset(0% round 5px)"
                     />

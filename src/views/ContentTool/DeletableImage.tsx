@@ -4,8 +4,8 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import MIconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
-import { getContentData } from '@genaism/services/content/content';
-import { ContentNodeId } from '@genaism/services/graph/graphTypes';
+import { ContentNodeId } from '@knicos/genai-recom';
+import { useContentService } from '@genaism/hooks/services';
 
 const IconButton = styled(MIconButton)({
     position: 'absolute',
@@ -21,6 +21,7 @@ interface Props {
 
 export default function DeletableImage({ id, onDelete }: Props) {
     const { t } = useTranslation();
+    const content = useContentService();
 
     const doClick = useCallback(() => onDelete(id), [onDelete, id]);
 
@@ -36,7 +37,7 @@ export default function DeletableImage({ id, onDelete }: Props) {
                 <DeleteForeverIcon />
             </IconButton>
             <img
-                src={getContentData(id)}
+                src={content.getContentData(id)}
                 width={64}
                 height={64}
                 alt={t('trainingdata.aria.sample')}

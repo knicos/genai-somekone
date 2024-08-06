@@ -11,14 +11,13 @@ import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid';
 import Spacer from '../IconMenu/Spacer';
 import style from './style.module.css';
 import { useTranslation } from 'react-i18next';
-import { removeNode } from '@genaism/services/graph/nodes';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { settingNodeMode } from '@genaism/state/settingsState';
 import { useEffect, useRef, useState } from 'react';
 import DeleteDialog from '../SocialGraph/DeleteDialog';
 import { menuNodeSelectAction, menuSelectedUser, menuShowGridMenu, menuShowUserPanel } from '@genaism/state/menuState';
-import { UserNodeId } from '@genaism/services/graph/graphTypes';
-import { getUserData } from '@genaism/services/users/users';
+import { UserNodeId } from '@knicos/genai-recom';
+import { useServices } from '@genaism/hooks/services';
 
 export default function GridMenu() {
     const { t } = useTranslation();
@@ -29,6 +28,7 @@ export default function GridMenu() {
     const showMenu = useRecoilValue(menuShowGridMenu);
     const selectAction = useRecoilValue(menuNodeSelectAction);
     const userRef = useRef<UserNodeId | undefined>();
+    const { graph, profiler } = useServices();
 
     useEffect(() => {
         if (selectedUser && selectedUser !== userRef.current && selectAction !== 'none') {
@@ -45,7 +45,7 @@ export default function GridMenu() {
             selected={!!selectedUser}
             label={
                 <div className={style.menuLogo}>
-                    {selectedUser ? getUserData(selectedUser)?.name : t('dashboard.titles.people')}
+                    {selectedUser ? profiler.getUserData(selectedUser)?.name : t('dashboard.titles.people')}
                 </div>
             }
         >
@@ -122,11 +122,11 @@ export default function GridMenu() {
                         </IconButton>
                     </IconMenuItem>
                     <DeleteDialog
-                        name={getUserData(selectedUser)?.name || 'No Name'}
+                        name={profiler.getUserData(selectedUser)?.name || 'No Name'}
                         open={showDelete}
                         onClose={() => setShowDelete(false)}
                         onDelete={() => {
-                            removeNode(selectedUser);
+                            graph.removeNode(selectedUser);
                             setShowDelete(false);
                         }}
                     />

@@ -1,11 +1,7 @@
 import { beforeEach, describe, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import UserProfileComp from './UserProfile';
-import { ContentNodeId } from '@genaism/services/graph/graphTypes';
-import { createEmptyProfile } from '@genaism/services/profiler/profiler';
-import { resetGraph } from '@genaism/services/graph/state';
-import { addEdge } from '@genaism/services/graph/edges';
-import { UserNodeData } from '@genaism/services/users/userTypes';
+import { ContentNodeId, createEmptyProfile, getGraphService, UserNodeData } from '@knicos/genai-recom';
 
 const { mockProfile } = vi.hoisted(() => ({
     mockProfile: vi.fn<unknown[], UserNodeData>(() => {
@@ -16,13 +12,13 @@ const { mockProfile } = vi.hoisted(() => ({
     }),
 }));
 
-vi.mock('@genaism/services/profiler/hooks', () => ({
+vi.mock('@genaism/hooks/profiler', () => ({
     useUserProfile: mockProfile,
 }));
 
 describe('UserProfile component', () => {
     beforeEach(() => {
-        resetGraph();
+        getGraphService().reset();
     });
 
     it('renders with no topic data', async ({ expect }) => {
@@ -56,8 +52,9 @@ describe('UserProfile component', () => {
             return profile;
         });
 
-        addEdge('engaged', 'user:xyz', 'content:content1', 1);
-        addEdge('topic', 'content:content1', 'topic:taste1', 1);
+        const graph = getGraphService();
+        graph.addEdge('engaged', 'user:xyz', 'content:content1', 1);
+        graph.addEdge('topic', 'content:content1', 'topic:taste1', 1);
 
         render(<UserProfileComp id="user:xyz" />);
         expect(await screen.findByText('#taste1')).toBeVisible();

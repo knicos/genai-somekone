@@ -3,11 +3,9 @@ import { IconButton, ListItemText, Menu, MenuItem } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import HandymanIcon from '@mui/icons-material/Handyman';
-import { anonComments } from '@genaism/services/content/content';
-import { anonLogs } from '@genaism/services/users/logs';
-import { anonProfiles } from '@genaism/services/profiler/profiler';
 import { useSetRecoilState } from 'recoil';
 import { menuShowContentTools } from '@genaism/state/menuState';
+import { useServices } from '@genaism/hooks/services';
 
 export default function ToolsMenu() {
     const { t } = useTranslation();
@@ -20,6 +18,7 @@ export default function ToolsMenu() {
         setAnchorEl(null);
     };
     const setShowContentTools = useSetRecoilState(menuShowContentTools);
+    const { content, profiler, actionLog } = useServices();
 
     return (
         <>
@@ -47,9 +46,9 @@ export default function ToolsMenu() {
             >
                 <MenuItem
                     onClick={() => {
-                        anonComments();
-                        anonLogs();
-                        anonProfiles();
+                        content.anonComments();
+                        actionLog.anonLogs();
+                        profiler.anonProfiles();
                     }}
                 >
                     <ListItemText>{t('dashboard.labels.toolAnonymise')}</ListItemText>

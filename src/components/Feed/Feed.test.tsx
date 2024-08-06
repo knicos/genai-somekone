@@ -1,16 +1,14 @@
-import { describe, it, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, beforeEach, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import Feed from './Feed';
-import { addContent } from '@genaism/services/content/content';
-import { resetGraph } from '@genaism/services/graph/graph';
 import TestWrapper from '@genaism/util/TestWrapper';
+import { getContentService, getGraphService, getProfilerService } from '@knicos/genai-recom';
 
 const TEST_IMAGE =
     'https://images.pexels.com/photos/3030647/pexels-photo-3030647.jpeg?cs=srgb&dl=pexels-nextvoyage-3030647.jpg&fm=jpg';
 
-const { mockLoader, mockRecom, mockGenerate, mockBlob } = vi.hoisted(() => ({
+const { mockLoader, mockBlob } = vi.hoisted(() => ({
     mockLoader: vi.fn(),
-    mockRecom: vi.fn(() => [{ contentId: 'content:xyz' }]),
     mockBlob: vi.fn(async () => new Blob()),
     mockGenerate: vi.fn(async () => {}),
 }));
@@ -20,18 +18,14 @@ vi.mock('@genaism/services/loader/fileLoader', () => ({
     getZipBlob: mockBlob,
 }));
 
-vi.mock('@genaism/services/recommender/recommender', () => ({
-    getRecommendations: mockRecom,
-    generateNewRecommendations: mockGenerate,
-}));
-
 describe('Feed component', () => {
     beforeEach(() => {
-        addContent(TEST_IMAGE, { id: 'xyz', author: 'TestAuthor', labels: [] });
-    });
-
-    afterEach(() => {
-        resetGraph();
+        getGraphService().reset();
+        getContentService().reset();
+        getContentService().addContent(TEST_IMAGE, { id: 'xyz', author: 'TestAuthor', labels: [] });
+        getProfilerService().reset();
+        //getProfilerService().createUserProfile('user:xyz', 'NoName');
+        getProfilerService().setUser('user:xyz');
     });
 
     it('fetches and renders a feed', async ({ expect }) => {
@@ -41,7 +35,6 @@ describe('Feed component', () => {
         await vi.waitFor(() => {
             expect(mockBlob).toHaveBeenCalled();
             expect(mockLoader).toHaveBeenCalled();
-            expect(mockRecom).toHaveBeenCalled();
         });
     });
 });

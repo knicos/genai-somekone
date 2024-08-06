@@ -1,6 +1,5 @@
-import { addEdgeTypeListener, removeEdgeTypeListener } from '@genaism/services/graph/events';
-import { ContentNodeId, WeightedNode } from '@genaism/services/graph/graphTypes';
-import { getRelated } from '@genaism/services/graph/query';
+import { useBroker, useGraphService } from '@genaism/hooks/services';
+import { ContentNodeId, GraphService, NodeID, WeightedNode } from '@knicos/genai-recom';
 import { useEffect, useMemo, useReducer, useRef } from 'react';
 
 interface Similarities {
@@ -9,18 +8,20 @@ interface Similarities {
     minSimilarity: number;
 }
 
-export function contentSimilarity(id: ContentNodeId): WeightedNode<ContentNodeId>[] {
-    const related = getRelated('coengaged', id, { count: 10 });
+export function contentSimilarity(graph: GraphService, id: ContentNodeId): WeightedNode<ContentNodeId>[] {
+    const related = graph.getRelated('coengaged', id, { count: 10 });
     return related;
 }
 
 export function useAllCoengagements(content: ContentNodeId[]) {
     const simRef = useRef(new Map<ContentNodeId, Similarities>());
     const [count, trigger] = useReducer((a) => ++a, 0);
+    const broker = useBroker();
+    const graph = useGraphService();
 
     useEffect(() => {
         content.forEach((c) => {
-            const s = contentSimilarity(c);
+            const s = contentSimilarity(graph, c);
             let maxS = 0;
             let minS = 1000000;
             s.forEach((item) => {
@@ -30,25 +31,25 @@ export function useAllCoengagements(content: ContentNodeId[]) {
             simRef.current.set(c, { nodes: s, maxSimilarity: maxS, minSimilarity: minS });
         });
         trigger();
-    }, [content]);
+    }, [content, graph]);
 
     useEffect(() => {
-        const handler = (id: ContentNodeId) => {
-            const s = contentSimilarity(id);
+        const handler = (id: NodeID) => {
+            const s = contentSimilarity(graph, id as ContentNodeId);
             let maxS = 0;
             let minS = 1000000;
             s.forEach((item) => {
                 maxS = Math.max(maxS, item.weight);
                 minS = Math.min(minS, item.weight);
             });
-            simRef.current.set(id, { nodes: s, maxSimilarity: maxS, minSimilarity: minS });
+            simRef.current.set(id as ContentNodeId, { nodes: s, maxSimilarity: maxS, minSimilarity: minS });
             trigger();
         };
-        addEdgeTypeListener('coengaged', handler);
+        broker.on('edgetype-coengaged', handler);
         return () => {
-            removeEdgeTypeListener('coengaged', handler);
+            broker.off('edgetype-coengaged', handler);
         };
-    }, []);
+    }, [graph, broker]);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     return useMemo(() => ({ similar: simRef.current }), [count]);

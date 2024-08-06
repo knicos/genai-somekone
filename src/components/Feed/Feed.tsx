@@ -1,14 +1,12 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import style from './style.module.css';
 import ImageFeed from '@genaism/components/ImageFeed/ImageFeed';
-import { LogEntry, UserNodeData } from '@genaism/services/users/userTypes';
-import { addLogEntry, getCurrentUser, getUserProfile } from '@genaism/services/profiler/profiler';
-import { ScoredRecommendation } from '@genaism/services/recommender/recommenderTypes';
-import { useRecommendations } from '@genaism/services/recommender/hooks';
 import { useRecoilValue } from 'recoil';
 import { configuration } from '@genaism/state/settingsState';
-import { UserNodeId } from '@genaism/services/graph/graphTypes';
 import ContentLoader from '../ContentLoader/ContentLoader';
+import { LogEntry, ScoredRecommendation, UserNodeData, UserNodeId } from '@knicos/genai-recom';
+import { useActionLogService, useProfilerService } from '@genaism/hooks/services';
+import { useRecommendations } from '@genaism/hooks/recommender';
 
 interface Props {
     id?: UserNodeId;
@@ -20,37 +18,32 @@ interface Props {
     noActions?: boolean;
 }
 
-export default function Feed({
-    content,
-    onProfile,
-    onLog,
-    onRecommend,
-    id = getCurrentUser(),
-    noLog,
-    noActions,
-}: Props) {
+export default function Feed({ content, onProfile, onLog, onRecommend, id, noLog, noActions }: Props) {
     const [feedList, setFeedList] = useState<ScoredRecommendation[]>([]);
-    const appConfig = useRecoilValue(configuration(id));
     const moreState = useRef(true);
-    const { recommendations, more } = useRecommendations(5, id, appConfig?.recommendations);
+    const profiler = useProfilerService();
+    const aid = id || profiler.getCurrentUser();
+    const appConfig = useRecoilValue(configuration(aid));
+    const { recommendations, more } = useRecommendations(5, aid, appConfig?.recommendations);
+    const actionLog = useActionLogService();
 
     useEffect(() => {
         if (moreState.current && recommendations.length > 0) {
             setFeedList((old) => [...old, ...recommendations]);
             moreState.current = false;
             if (onRecommend) onRecommend(recommendations);
-            if (onProfile) onProfile(getUserProfile());
+            if (onProfile) onProfile(profiler.getUserProfile(aid));
         }
-    }, [recommendations, onProfile, onRecommend]);
+    }, [recommendations, onProfile, onRecommend, profiler, aid]);
 
     const doLog = useCallback(
         (data: LogEntry) => {
             if (!noLog) {
-                addLogEntry(data);
+                actionLog.addLogEntry(data, aid);
                 if (onLog) onLog();
             }
         },
-        [onLog, noLog]
+        [onLog, noLog, actionLog, aid]
     );
 
     const doLoaded = useCallback(() => {

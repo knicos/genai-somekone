@@ -8,13 +8,13 @@ import ReplyIcon from '@mui/icons-material/Reply';
 import Avatar from '@mui/material/Avatar';
 import SharePanel, { ShareKind } from './SharePanel';
 import CommentPanel from './CommentPanel';
-import { getComments, getContentData, getContentMetadata, getContentStats } from '@genaism/services/content/content';
-import { ContentNodeId } from '@genaism/services/graph/graphTypes';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import LabelsPanel from './LabelsPanel';
 import IconButtonDot from '../IconButtonDot/IconButtonDot';
 import { useTranslation } from 'react-i18next';
+import { ContentNodeId } from '@knicos/genai-recom';
+import { useContentService } from '@genaism/hooks/services';
 
 const MAX_COMMENTS = 10;
 
@@ -78,8 +78,9 @@ export default function FeedImage({
     showLabels,
 }: Props) {
     const { t } = useTranslation();
-    const contentData = getContentData(id); //useRecoilValue(contentCache(id));
-    const contentMeta = getContentMetadata(id);
+    const content = useContentService();
+    const contentData = content.getContentData(id); //useRecoilValue(contentCache(id));
+    const contentMeta = content.getContentMetadata(id);
     const [liked, setLiked] = useState<LikeKind>('none');
     const [activePanel, setActivePanel] = useState<ActionPanel>('none');
     const [followed, setFollowed] = useState(false);
@@ -150,7 +151,7 @@ export default function FeedImage({
         }
     }, [content, reqContent, id]);*/
 
-    const stats = getContentStats(id);
+    const stats = content.getContentStats(id);
 
     return !visible || !contentData || !contentMeta ? null : (
         <div className={style.container}>
@@ -212,7 +213,7 @@ export default function FeedImage({
                             )}
                         </IconButtonDot>
                         <IconButtonDot
-                            count={getComments(id).length}
+                            count={content.getComments(id).length}
                             color="inherit"
                             onClick={doShowComments}
                             data-testid="feed-image-comment-button"

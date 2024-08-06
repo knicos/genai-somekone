@@ -1,8 +1,6 @@
-import { useNodeType } from '@genaism/services/graph/hooks';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Graph from '../Graph/Graph';
 import { GraphLink, GraphNode, InternalGraphLink } from '../Graph/types';
-import { TopicNodeId, WeightedNode } from '@genaism/services/graph/graphTypes';
 import TopicNode from './TopicNode';
 import { topicUserSimilarity } from './similarity';
 import {
@@ -12,6 +10,9 @@ import {
     settingTopicSimilarPercent,
 } from '@genaism/state/settingsState';
 import { useRecoilValue } from 'recoil';
+import { TopicNodeId, WeightedNode } from '@knicos/genai-recom';
+import { useNodeType } from '@genaism/hooks/graph';
+import { useGraphService } from '@genaism/hooks/services';
 
 export default function TopicGraph() {
     const [links, setLinks] = useState<GraphLink<TopicNodeId, TopicNodeId>[]>([]);
@@ -22,11 +23,12 @@ export default function TopicGraph() {
     const similarityThreshold = useRecoilValue(settingTopicSimilarPercent);
     const charge = useRecoilValue(settingTopicNodeCharge);
     const topics = useNodeType('topic');
+    const graph = useGraphService();
 
     const similar = useMemo(() => {
         const results = new Map<TopicNodeId, WeightedNode<TopicNodeId>[]>();
         topics.forEach((topic) => {
-            const allSimilar = topicUserSimilarity(topic);
+            const allSimilar = topicUserSimilarity(graph, topic);
             allSimilar.sort((a, b) => b.weight - a.weight);
             const maxsim = allSimilar[0]?.weight || 0;
             results.set(
@@ -35,7 +37,7 @@ export default function TopicGraph() {
             );
         });
         return results;
-    }, [topics, similarityThreshold]);
+    }, [topics, similarityThreshold, graph]);
 
     const [focusNode, setFocusNode] = useState<string | undefined>();
     const [zoom, setZoom] = useState(5);

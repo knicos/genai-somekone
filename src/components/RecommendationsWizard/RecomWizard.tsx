@@ -13,8 +13,8 @@ import { IconButton } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 import CloseIcon from '@mui/icons-material/Close';
 import { useTranslation } from 'react-i18next';
-import { UserNodeId } from '@genaism/services/graph/graphTypes';
 import DiversityOptions from './DiversityOptions';
+import { UserNodeId } from '@knicos/genai-recom';
 
 interface Props {
     id: UserNodeId;

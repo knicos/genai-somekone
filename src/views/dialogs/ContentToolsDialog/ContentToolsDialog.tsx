@@ -4,7 +4,6 @@ import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useRecoilState } from 'recoil';
 import { Button } from '@knicos/genai-base';
-import RawEmbeddingTool from './RawEmbeddingTool';
 import EmbeddingTool from './EmbeddingTool';
 import MappingTool from './MappingTool';
 import SimilarityChecker from './SimilarityChecker';
@@ -35,17 +34,15 @@ export default function ContentToolsDialog() {
                     orientation="vertical"
                     sx={{ borderRight: '1px solid #008297' }}
                 >
-                    <Tab label={t('dashboard.titles.rawEmbeddingTool')} />
                     <Tab label={t('dashboard.titles.embeddingTool')} />
                     <Tab label={t('dashboard.titles.mappingTool')} />
                     <Tab label={t('dashboard.titles.similarityTool')} />
                     <Tab label={t('dashboard.titles.clusteringTool')} />
                 </Tabs>
-                {tabNumber === 0 && <RawEmbeddingTool />}
-                {tabNumber === 1 && <EmbeddingTool />}
-                {tabNumber === 2 && <MappingTool />}
-                {tabNumber === 3 && <SimilarityChecker />}
-                {tabNumber === 4 && <ClusteringTool />}
+                {tabNumber === 0 && <EmbeddingTool />}
+                {tabNumber === 1 && <MappingTool />}
+                {tabNumber === 2 && <SimilarityChecker />}
+                {tabNumber === 3 && <ClusteringTool />}
             </DialogContent>
             <DialogActions>
                 <Button

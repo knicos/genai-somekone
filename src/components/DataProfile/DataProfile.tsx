@@ -1,11 +1,11 @@
-import { useUserProfile } from '@genaism/services/profiler/hooks';
-import { useActionLog } from '@genaism/services/users/hooks';
 import ImageCloud from '../ImageCloud/ImageCloud';
 import { useCallback, useState } from 'react';
 import ActionLogTable from '../ActionLogTable/ActionLogTable';
 import style from './style.module.css';
-import { UserNodeId } from '@genaism/services/graph/graphTypes';
-import { getCurrentUser } from '@genaism/services/profiler/state';
+import { UserNodeId } from '@knicos/genai-recom';
+import { useUserProfile } from '@genaism/hooks/profiler';
+import { useProfilerService } from '@genaism/hooks/services';
+import { useActionLog } from '@genaism/hooks/actionLog';
 
 interface Props {
     id?: UserNodeId;
@@ -14,7 +14,8 @@ interface Props {
 export default function Profile({ id }: Props) {
     const [wcSize, setWCSize] = useState(300);
     const profile = useUserProfile(id);
-    const log = useActionLog(id);
+    const profiler = useProfilerService();
+    const log = useActionLog(id || profiler.getCurrentUser());
 
     const doResize = useCallback((size: number) => {
         setWCSize(size);
@@ -39,7 +40,7 @@ export default function Profile({ id }: Props) {
                 </svg>
             </div>
             <ActionLogTable
-                user={id || getCurrentUser()}
+                user={id || profiler.getCurrentUser()}
                 log={log}
             />
         </div>

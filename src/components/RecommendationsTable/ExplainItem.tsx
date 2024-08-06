@@ -1,10 +1,10 @@
 //import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
-import { ScoredRecommendation, Scores } from '@genaism/services/recommender/recommenderTypes';
 import ScorePie from './ScorePie';
 import style from './style.module.css';
 import gColors from '../../style/graphColours.json';
 import LightbulbIcon from '@mui/icons-material/Lightbulb';
+import { ScoredRecommendation, Scores } from '@knicos/genai-recom';
 
 const SCORE_SCALE = 20;
 const MIN_SCORE_SIZE = 60;

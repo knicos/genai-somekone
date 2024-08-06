@@ -1,20 +1,17 @@
 import { Button } from '@knicos/genai-base';
 import { useEffect, useState } from 'react';
 import style from './style.module.css';
-import AutoEncoder from '@genaism/services/content/autoencoder';
 import { Slider } from '@mui/material';
-import { getContentMetadata } from '@genaism/services/content/content';
-import { getNodesByType } from '@genaism/services/graph/nodes';
-import { ContentNodeId } from '@genaism/services/graph/graphTypes';
-import HierarchicalEmbeddingCluster from '@genaism/util/embeddings/clustering';
-import { normalise } from '@genaism/util/embedding';
 import { findNearestSlot } from '@genaism/components/Heatmap/grid';
+import { AutoEncoder, ContentNodeId, ContentService, normalise } from '@knicos/genai-recom';
+import HierarchicalEmbeddingCluster from '@knicos/genai-recom/utils/embeddings/clustering';
+import { useContentService } from '@genaism/hooks/services';
 
 const CLUSTERS = 5;
 const COLORS = ['blue', 'pink', 'green', 'red', 'purple', 'silver'];
 
-function makeFeatures(nodes: ContentNodeId[]) {
-    const inputEmbeddings = nodes.map((n) => ({ id: n, embedding: getContentMetadata(n)?.embedding || [] }));
+function makeFeatures(contentSvc: ContentService, nodes: ContentNodeId[]) {
+    const inputEmbeddings = nodes.map((n) => ({ id: n, embedding: contentSvc.getContentMetadata(n)?.embedding || [] }));
 
     const clusterer = new HierarchicalEmbeddingCluster({ k: CLUSTERS });
     clusterer.calculate(inputEmbeddings);
@@ -82,12 +79,13 @@ export default function MappingTool() {
     const [encoder, setEncoder] = useState<AutoEncoder>();
     const [startGenerate, setStartGenerate] = useState(false);
     const [points, setPoints] = useState<Point[]>([]);
+    const contentSvc = useContentService();
 
     useEffect(() => {
         if (startGenerate) {
             if (encoder) {
-                const nodes = getNodesByType('content');
-                const { features, clusters } = makeFeatures(nodes);
+                const nodes = contentSvc.graph.getNodesByType('content');
+                const { features, clusters } = makeFeatures(contentSvc, nodes);
 
                 const embeddings = encoder.generate(features);
 
@@ -112,7 +110,7 @@ export default function MappingTool() {
                 });
                 points.sort((a, b) => a.d - b.d);
                 points.forEach((p) => {
-                    const meta = getContentMetadata(p.id);
+                    const meta = contentSvc.getContentMetadata(p.id);
                     if (meta) {
                         meta.point = [p.x, p.y];
                     }
@@ -122,10 +120,11 @@ export default function MappingTool() {
                 setPoints(points);
             }
         }
-    }, [startGenerate, encoder]);
+    }, [startGenerate, encoder, contentSvc]);
 
     useEffect(() => {
-        const e = new AutoEncoder(dims, 20 + CLUSTERS, [8]);
+        const e = new AutoEncoder();
+        e.create(dims, 20 + CLUSTERS, [8]);
         setEncoder(e);
         setEpochCount(0);
         setLoss(0);
@@ -138,7 +137,7 @@ export default function MappingTool() {
     useEffect(() => {
         if (startTraining) {
             if (encoder) {
-                const { features } = makeFeatures(getNodesByType('content'));
+                const { features } = makeFeatures(contentSvc, contentSvc.graph.getNodesByType('content'));
                 encoder
                     .train(features, epochs, (_, logs) => {
                         if (logs) {
@@ -152,7 +151,7 @@ export default function MappingTool() {
                     });
             }
         }
-    }, [startTraining, encoder, epochs]);
+    }, [startTraining, encoder, epochs, contentSvc]);
 
     return (
         <div className={style.toolContainer}>

@@ -9,6 +9,7 @@ import { Button } from '@knicos/genai-base';
 import { saveFile } from '@genaism/services/saver/fileSaver';
 import { appConfiguration } from '@genaism/state/settingsState';
 import { useSettingSerialise } from '@genaism/hooks/settings';
+import { useServices } from '@genaism/hooks/services';
 
 export default function SaveDialog() {
     const { t } = useTranslation();
@@ -20,12 +21,13 @@ export default function SaveDialog() {
     const [saveSettings, setSaveSettings] = useState(false);
     const appConfig = useRecoilValue(appConfiguration);
     const serial = useSettingSerialise();
+    const { content: contentSvc, profiler: profilerSvc, actionLog } = useServices();
 
     const doClose = useCallback(() => setShowDialog(false), [setShowDialog]);
 
     const doSave = useCallback(async () => {
         setShowDialog(false);
-        saveFile({
+        saveFile(profilerSvc, contentSvc, actionLog, {
             includeContent: saveContent,
             includeProfiles: saveProfiles,
             includeLogs: saveLogs,
@@ -33,7 +35,19 @@ export default function SaveDialog() {
             configuration: appConfig,
             settings: saveSettings ? await serial() : undefined,
         });
-    }, [setShowDialog, saveContent, saveProfiles, saveLogs, saveGraph, appConfig, serial, saveSettings]);
+    }, [
+        setShowDialog,
+        saveContent,
+        saveProfiles,
+        saveLogs,
+        saveGraph,
+        appConfig,
+        serial,
+        saveSettings,
+        contentSvc,
+        profilerSvc,
+        actionLog,
+    ]);
 
     return (
         <Dialog

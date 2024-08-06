@@ -2,16 +2,17 @@ import { menuAllowFeedActions, menuSelectedUser, menuShowUserPanel } from '@gena
 import { useRecoilState, useRecoilValue } from 'recoil';
 import AppPanel from '../AppPanel/AppPanel';
 import Feed from '../Feed/Feed';
-import { getUserData } from '@genaism/services/users/users';
+import { useProfilerService } from '@genaism/hooks/services';
 
 export default function FeedPanel() {
     const [panel, setPanel] = useRecoilState(menuShowUserPanel);
+    const profiler = useProfilerService();
     const selectedUser = useRecoilValue(menuSelectedUser);
     const allowActions = useRecoilValue(menuAllowFeedActions);
 
     return panel === 'feed' && selectedUser ? (
         <AppPanel
-            title={getUserData(selectedUser)?.name}
+            title={profiler.getUserData(selectedUser)?.name}
             onClose={() => setPanel('none')}
             data-testid="feed-panel"
         >

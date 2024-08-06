@@ -1,7 +1,7 @@
 import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import style from './style.module.css';
 import cloudLayout, { LocationItem, SizedItem } from '@genaism/components/ImageCloud/cloudLayout';
-import { WeightedLabel } from '@genaism/services/content/contentTypes';
+import { WeightedLabel } from '@knicos/genai-recom';
 
 interface Props {
     content: WeightedLabel[];

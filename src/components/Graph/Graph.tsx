@@ -13,13 +13,13 @@ import {
 import * as d3 from 'd3';
 import style from './style.module.css';
 import gsap from 'gsap';
-import { NodeID } from '@genaism/services/graph/graphTypes';
 import { GraphLink, GraphNode, InternalGraphLink, LinkStyle } from './types';
 import Nodes from './Nodes';
 import Lines from './Lines';
 import { createSimulation } from './simulation';
 import { makeLinks, makeNodes } from './utilities';
 import { ZoomState, pointerMove, wheelZoom } from './controls';
+import { NodeID } from '@knicos/genai-recom';
 
 interface Extents {
     minX: number;

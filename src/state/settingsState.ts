@@ -1,5 +1,5 @@
-import { UserNodeId } from '@genaism/services/graph/graphTypes';
 import { SMConfig } from '@genaism/state/smConfig';
+import { UserNodeId } from '@knicos/genai-recom';
 import { atom, atomFamily, selectorFamily } from 'recoil';
 
 /* === General === */

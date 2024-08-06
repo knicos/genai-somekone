@@ -4,10 +4,9 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import style from './style.module.css';
 import { RadioGroup } from '@mui/material';
 import WizardOption from '../RecommendationsWizard/WizardOption';
-import { RecommendationOptions } from '@genaism/services/recommender/recommenderTypes';
 import { mapScoring } from './mappings';
 import { useEffect } from 'react';
-import { UserNodeId } from '@genaism/services/graph/graphTypes';
+import { RecommendationOptions, UserNodeId } from '@knicos/genai-recom';
 
 type ScoringTemplateType = 'all' | 'profile' | 'noprofile' | 'random';
 

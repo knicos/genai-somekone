@@ -3,10 +3,10 @@ import TextField from '@mui/material/TextField';
 import ActionPanel from './ActionPanel';
 import { useTranslation } from 'react-i18next';
 import { ChangeEvent, useCallback, useState } from 'react';
-import { ContentNodeId } from '@genaism/services/graph/graphTypes';
-import { getComments } from '@genaism/services/content/content';
 import Comment from './Comment';
 import { Button } from '@knicos/genai-base';
+import { ContentNodeId } from '@knicos/genai-recom';
+import { useContentService } from '@genaism/hooks/services';
 
 const MAX_COMMENT_LENGTH = 400;
 
@@ -23,8 +23,9 @@ export default function CommentPanel({ onClose, onComment, id, disabled }: Props
     const { t } = useTranslation();
     const [value, setValue] = useState<string>(unsavedComments.get(id) || '');
     const [showMore, setShowMore] = useState(false);
+    const content = useContentService();
 
-    const comments = getComments(id);
+    const comments = content.getComments(id);
 
     const doChange = useCallback(
         (e: ChangeEvent<HTMLTextAreaElement>) => {

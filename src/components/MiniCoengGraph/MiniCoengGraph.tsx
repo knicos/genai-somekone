@@ -1,12 +1,11 @@
-import { ContentNodeId, UserNodeId } from '@genaism/services/graph/graphTypes';
 import Graph from '../Graph/Graph';
 import { useEffect, useState } from 'react';
 import { GraphLink, GraphNode, InternalGraphLink } from '../Graph/types';
 import colours from '@knicos/genai-base/dist/colours.module.css';
 import ContentNode from './ContentNode';
-import { getRelated } from '@genaism/services/graph/query';
-import { useUserProfile } from '@genaism/services/profiler/hooks';
-import { getEdgeWeights } from '@genaism/services/graph/edges';
+import { ContentNodeId, UserNodeId } from '@knicos/genai-recom';
+import { useUserProfile } from '@genaism/hooks/profiler';
+import { useGraphService } from '@genaism/hooks/services';
 
 const LINE_THICKNESS_UNSELECTED = 20;
 const MIN_LINE_THICKNESS = 5;
@@ -21,11 +20,12 @@ export default function MiniCoengGraph({ userId, originId, contentId }: Props) {
     const profile = useUserProfile(userId);
     const [nodes, setNodes] = useState<GraphNode<UserNodeId | ContentNodeId>[]>([]);
     const [links, setLinks] = useState<GraphLink<UserNodeId | ContentNodeId, UserNodeId | ContentNodeId>[]>([]);
+    const graph = useGraphService();
 
     useEffect(() => {
-        const related = getRelated('coengaged', originId, { count: 8 });
-        const engageOrigin = getEdgeWeights('engaged', userId, originId)[0] || 0;
-        const engageCo = getEdgeWeights('coengaged', originId, contentId)[0] || 0;
+        const related = graph.getRelated('coengaged', originId, { count: 8 });
+        const engageOrigin = graph.getEdgeWeights('engaged', userId, originId)[0] || 0;
+        const engageCo = graph.getEdgeWeights('coengaged', originId, contentId)[0] || 0;
 
         const minS = related.reduce((m, s) => Math.min(m, s.weight), Math.min(engageOrigin, engageCo));
         const maxS = related.reduce((m, s) => Math.max(m, s.weight), Math.max(engageOrigin, engageCo));
@@ -94,7 +94,7 @@ export default function MiniCoengGraph({ userId, originId, contentId }: Props) {
             },
         ];
         setLinks(newLinks);
-    }, [originId, contentId, userId, profile]);
+    }, [originId, contentId, userId, profile, graph]);
 
     return (
         <Graph

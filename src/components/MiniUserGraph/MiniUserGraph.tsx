@@ -1,11 +1,10 @@
-import { ContentNodeId, UserNodeId } from '@genaism/services/graph/graphTypes';
 import Graph from '../Graph/Graph';
-import { useSimilarUsers } from '@genaism/services/similarity/hooks';
-import { useUserProfile } from '@genaism/services/profiler/hooks';
 import { useEffect, useState } from 'react';
 import { GraphLink, GraphNode, InternalGraphLink } from '../Graph/types';
 import ProfileNode from './ProfileNode';
 import colours from '@knicos/genai-base/dist/colours.module.css';
+import { ContentNodeId, UserNodeId } from '@knicos/genai-recom';
+import { useSimilarUsers, useUserProfile } from '@genaism/hooks/profiler';
 
 const LINE_THICKNESS_UNSELECTED = 20;
 const MIN_LINE_THICKNESS = 5;

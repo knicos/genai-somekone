@@ -1,4 +1,4 @@
-import { NodeID } from '@genaism/services/graph/graphTypes';
+import { NodeID } from '@knicos/genai-recom';
 
 export interface GraphNode<T extends NodeID> {
     size: number;

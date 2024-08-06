@@ -1,11 +1,9 @@
 import { Button } from '@knicos/genai-base';
-import { ContentNodeId } from '@genaism/services/graph/graphTypes';
 import style from './style.module.css';
 import { useEffect, useState } from 'react';
-import { getNodesByType } from '@genaism/services/graph/nodes';
-import { getContentData, getContentMetadata } from '@genaism/services/content/content';
-import { clusterEmbeddings } from '@genaism/util/embedding';
 import { Slider } from '@mui/material';
+import { clusterEmbeddings, ContentNodeId } from '@knicos/genai-recom';
+import { useContentService } from '@genaism/hooks/services';
 
 export default function ClusteringTool() {
     const [startCluster, setStartCluster] = useState(false);
@@ -13,12 +11,13 @@ export default function ClusteringTool() {
     const [maxDistance, setMaxDistance] = useState(0.3);
     const [minClusters, setMinClusters] = useState(2);
     const [minSize, setMinSize] = useState(5);
+    const contentSvc = useContentService();
 
     useEffect(() => {
         if (startCluster) {
-            const nodes = getNodesByType('content');
+            const nodes = contentSvc.graph.getNodesByType('content');
             const embeddings = nodes.map((n) => {
-                const meta = getContentMetadata(n);
+                const meta = contentSvc.getContentMetadata(n);
                 return { id: n, embedding: meta?.embedding || [] };
             });
 
@@ -27,7 +26,7 @@ export default function ClusteringTool() {
             setClusters(newClusters.map((c) => c.map((n) => nodes[n])));
             setStartCluster(false);
         }
-    }, [startCluster, maxDistance, minClusters, minSize]);
+    }, [startCluster, maxDistance, minClusters, minSize, contentSvc]);
 
     return (
         <div className={style.toolContainer}>
@@ -89,7 +88,7 @@ export default function ClusteringTool() {
                         {cluster.map((n) => (
                             <img
                                 key={n}
-                                src={getContentData(n)}
+                                src={contentSvc.getContentData(n)}
                                 width={32}
                                 height={32}
                             />

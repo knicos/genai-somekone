@@ -6,6 +6,7 @@ import { saveFile } from '@genaism/services/saver/fileSaver';
 import { useTranslation } from 'react-i18next';
 import { useSetRecoilState } from 'recoil';
 import { unsavedChanges } from '@genaism/state/interaction';
+import { useServices } from '@genaism/hooks/services';
 
 interface Props {
     onNext: () => void;
@@ -14,6 +15,8 @@ interface Props {
 export default function ConfirmPage({ onNext }: Props) {
     const setUnsaved = useSetRecoilState(unsavedChanges);
     const { t } = useTranslation('creator');
+    const { profiler, content, actionLog } = useServices();
+
     return (
         <main className={style.contentSection}>
             <header>
@@ -25,7 +28,7 @@ export default function ConfirmPage({ onNext }: Props) {
                     startIcon={<DownloadIcon />}
                     onClick={() => {
                         setUnsaved(false);
-                        saveFile({ includeContent: true });
+                        saveFile(profiler, content, actionLog, { includeContent: true });
                     }}
                 >
                     {t('actions.download')}

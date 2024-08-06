@@ -1,13 +1,11 @@
-import { ContentNodeId, TopicNodeId, UserNodeId } from '@genaism/services/graph/graphTypes';
 import Graph from '../Graph/Graph';
-import { useUserProfile } from '@genaism/services/profiler/hooks';
 import { useCallback, useEffect, useReducer, useRef, useState } from 'react';
 import { GraphLink, GraphNode, InternalGraphLink } from '../Graph/types';
 import TopicNode from './TopicNode';
 import colours from '@knicos/genai-base/dist/colours.module.css';
-import { getRelated } from '@genaism/services/graph/query';
-import { getTopicId } from '@genaism/services/concept/concept';
-import { getContentStats } from '@genaism/services/content/content';
+import { useUserProfile } from '@genaism/hooks/profiler';
+import { useServices } from '@genaism/hooks/services';
+import { ContentNodeId, getTopicId, TopicNodeId, UserNodeId } from '@knicos/genai-recom';
 
 const LINE_THICKNESS_UNSELECTED = 20;
 const MIN_LINE_THICKNESS = 5;
@@ -27,6 +25,7 @@ export default function MiniTopicGraph({ userId, topic, contentId }: Props) {
     const [nodes, setNodes] = useState<GraphNode<AnyNode>[]>([]);
     const [links, setLinks] = useState<GraphLink<AnyNode, AnyNode>[]>([]);
     const sizesRef = useRef<Map<string, number>>(new Map<string, number>());
+    const { graph, content } = useServices();
 
     const doResize = useCallback((id: string, size: number) => {
         const current = sizesRef.current.get(id);
@@ -40,9 +39,9 @@ export default function MiniTopicGraph({ userId, topic, contentId }: Props) {
         const maxS = topics.reduce((m, s) => Math.max(m, s.weight), 0);
         const dS = maxS - minS;
 
-        const related = getRelated('content', getTopicId(topic)).map((t) => ({
+        const related = graph.getRelated('content', getTopicId(graph, topic)).map((t) => ({
             id: t.id,
-            weight: getContentStats(t.id)?.engagement || 0,
+            weight: content.getContentStats(t.id)?.engagement || 0,
         }));
         related.sort((a, b) => b.weight - a.weight);
         related.splice(5);
@@ -136,7 +135,7 @@ export default function MiniTopicGraph({ userId, topic, contentId }: Props) {
                 }),
         ];
         setLinks(newLinks);
-    }, [profile, userId, contentId, topic, count]);
+    }, [profile, userId, contentId, topic, count, content, graph]);
 
     return (
         <Graph

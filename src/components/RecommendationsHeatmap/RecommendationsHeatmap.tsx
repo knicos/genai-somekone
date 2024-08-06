@@ -1,10 +1,11 @@
-import { ContentNodeId, UserNodeId, WeightedNode } from '@genaism/services/graph/graphTypes';
 import { configuration } from '@genaism/state/settingsState';
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { heatmapImageSet, heatmapScores } from '../RecommendationsHeatmap/algorithm';
 import Heatmap from '../Heatmap/Heatmap';
-import { useUserProfile } from '@genaism/services/profiler/hooks';
+import { ContentNodeId, UserNodeId, WeightedNode } from '@knicos/genai-recom';
+import { useUserProfile } from '@genaism/hooks/profiler';
+import { useRecommenderService } from '@genaism/hooks/services';
 
 interface Props {
     user: UserNodeId;
@@ -17,18 +18,19 @@ export default function RecommendationsHeatmap({ user, dimensions }: Props) {
     const [heats, setHeats] = useState<WeightedNode<ContentNodeId>[]>();
     const [loading, setLoading] = useState(false);
     const profile = useUserProfile(user);
+    const recommender = useRecommenderService();
 
     useEffect(() => {
         setLoading(true);
         if (!images.current) {
-            images.current = heatmapImageSet(dimensions);
+            images.current = heatmapImageSet(recommender.graph, dimensions);
         }
 
-        heatmapScores(images.current, user, profile, config).then((scored) => {
+        heatmapScores(recommender, images.current, user, profile, config).then((scored) => {
             setHeats(scored);
             setLoading(false);
         });
-    }, [dimensions, user, config, profile]);
+    }, [dimensions, user, config, profile, recommender]);
 
     return (
         <Heatmap

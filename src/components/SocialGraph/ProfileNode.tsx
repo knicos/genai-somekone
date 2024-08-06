@@ -1,7 +1,5 @@
 import ImageCloud from '../ImageCloud/ImageCloud';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
-import { useUserProfile } from '@genaism/services/profiler/hooks';
-import { ContentNodeId, UserNodeId } from '@genaism/services/graph/graphTypes';
 import { useRecoilValue } from 'recoil';
 import {
     //settingDisplayLabel,
@@ -13,8 +11,9 @@ import WordCloud from '../WordCloud/WordCloud';
 import style from './style.module.css';
 import Label from './Label';
 import { GraphNode } from '../Graph/types';
-import { WeightedLabel } from '@genaism/services/content/contentTypes';
-import { getContentData } from '@genaism/services/content/content';
+import { ContentNodeId, UserNodeId, WeightedLabel } from '@knicos/genai-recom';
+import { useUserProfile } from '@genaism/hooks/profiler';
+import { useContentService } from '@genaism/hooks/services';
 
 interface Props {
     id: UserNodeId;
@@ -37,6 +36,7 @@ const ProfileNode = memo(function ProfileNode({ id, onResize, live, selected, di
     const shrinkOffline = useRecoilValue(settingShrinkOfflineUsers);
     const nodeMode = useRecoilValue(settingNodeMode);
     const topicThreshold = useRecoilValue(settingTopicThreshold);
+    const content = useContentService();
 
     const profile = useUserProfile(id);
 
@@ -127,7 +127,7 @@ const ProfileNode = memo(function ProfileNode({ id, onResize, live, selected, di
                     y={-asize}
                     width={asize * 2}
                     height={asize * 2}
-                    href={getContentData(image as ContentNodeId)}
+                    href={content.getContentData(image as ContentNodeId)}
                     preserveAspectRatio="none"
                     clipPath={`circle(${Math.floor(asize - 15)}px)`}
                 />

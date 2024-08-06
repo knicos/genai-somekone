@@ -1,14 +1,12 @@
 import { beforeEach, describe, it } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import ContentGraph from './ContentGraph';
-import { resetGraph } from '@genaism/services/graph/state';
 import TestWrapper from '@genaism/util/TestWrapper';
-import { addEdge } from '@genaism/services/graph/edges';
-import { addNode } from '@genaism/services/graph/nodes';
+import { getGraphService } from '@knicos/genai-recom';
 
 describe('ContentGraph component', () => {
     beforeEach(() => {
-        resetGraph();
+        getGraphService().reset();
     });
 
     it('renders with no content', async ({ expect }) => {
@@ -17,13 +15,14 @@ describe('ContentGraph component', () => {
     });
 
     it('renders with similarity links', async ({ expect }) => {
-        const tid1 = addNode('content');
-        const tid2 = addNode('content');
-        const tid3 = addNode('content');
-        addEdge('coengaged', tid1, tid2, 1);
-        addEdge('coengaged', tid2, tid1, 1);
-        addEdge('coengaged', tid3, tid1, 0.5);
-        addEdge('coengaged', tid1, tid3, 0.5);
+        const graph = getGraphService();
+        const tid1 = graph.addNode('content');
+        const tid2 = graph.addNode('content');
+        const tid3 = graph.addNode('content');
+        graph.addEdge('coengaged', tid1, tid2, 1);
+        graph.addEdge('coengaged', tid2, tid1, 1);
+        graph.addEdge('coengaged', tid3, tid1, 0.5);
+        graph.addEdge('coengaged', tid1, tid3, 0.5);
 
         render(<ContentGraph />, { wrapper: TestWrapper });
         await waitFor(() => expect(screen.getByTestId(`topic-node-${tid1}`)).toBeVisible());
@@ -32,11 +31,12 @@ describe('ContentGraph component', () => {
     });
 
     it('does not render if no similarity', async ({ expect }) => {
-        const tid1 = addNode('content');
-        const tid2 = addNode('content');
-        const tid3 = addNode('content');
-        addEdge('coengaged', tid1, tid2, 1);
-        addEdge('coengaged', tid2, tid1, 1);
+        const graph = getGraphService();
+        const tid1 = graph.addNode('content');
+        const tid2 = graph.addNode('content');
+        const tid3 = graph.addNode('content');
+        graph.addEdge('coengaged', tid1, tid2, 1);
+        graph.addEdge('coengaged', tid2, tid1, 1);
 
         render(<ContentGraph />, { wrapper: TestWrapper });
         await waitFor(() => expect(screen.getByTestId(`topic-node-${tid1}`)).toBeVisible());

@@ -1,7 +1,7 @@
-import { NodeID } from '@genaism/services/graph/graphTypes';
 import { GraphNode } from './types';
 import { KeyboardEvent, MouseEvent, PropsWithChildren } from 'react';
 import style from './style.module.css';
+import { NodeID } from '@knicos/genai-recom';
 
 interface Props<T extends NodeID> extends PropsWithChildren {
     nodeList: GraphNode<T>[];

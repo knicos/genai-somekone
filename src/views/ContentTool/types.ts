@@ -1,4 +1,4 @@
-import { ContentNodeId, TopicNodeId } from '@genaism/services/graph/graphTypes';
+import { ContentNodeId, TopicNodeId } from '@knicos/genai-recom';
 
 type StageView = 'category' | 'refine' | 'images' | 'describe' | 'style' | 'colour' | 'confirm';
 

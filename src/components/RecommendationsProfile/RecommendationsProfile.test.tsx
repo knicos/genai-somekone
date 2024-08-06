@@ -1,11 +1,10 @@
 import { describe, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { ScoredRecommendation } from '@genaism/services/recommender/recommenderTypes';
 import RecommendationsProfile from './RecommendationsProfile';
 import TestWrapper from '@genaism/util/TestWrapper';
 import { appConfiguration } from '@genaism/state/settingsState';
 import userEvent from '@testing-library/user-event';
-import { addContent } from '@genaism/services/content/content';
+import { getContentService, ScoredRecommendation } from '@knicos/genai-recom';
 
 interface RecReturn {
     more: () => void;
@@ -16,7 +15,7 @@ const { mockRecommendations } = vi.hoisted(() => ({
     mockRecommendations: vi.fn<unknown[], RecReturn>(() => ({ more: () => {}, recommendations: [] })),
 }));
 
-vi.mock('@genaism/services/recommender/hooks', () => ({
+vi.mock('@genaism/hooks/recommender', () => ({
     useRecommendations: mockRecommendations,
 }));
 
@@ -93,11 +92,12 @@ describe('RecommendationsProfile component', () => {
     });
 
     it('can show the heatmap', async ({ expect }) => {
-        addContent('', {
+        const contentSvc = getContentService();
+        contentSvc.addContent('', {
             id: '1',
             labels: [],
         });
-        addContent('', {
+        contentSvc.addContent('', {
             id: '2',
             labels: [],
         });

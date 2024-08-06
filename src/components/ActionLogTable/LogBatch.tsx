@@ -1,8 +1,8 @@
-import { LogEntry } from '@genaism/services/users/userTypes';
 import { generateMessage } from './message';
 import { useTranslation } from 'react-i18next';
 import Card from '../DataCard/Card';
 import LogItem from './LogItem';
+import { LogEntry } from '@knicos/genai-recom';
 
 interface Props {
     batch: LogEntry[];

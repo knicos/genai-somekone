@@ -1,10 +1,10 @@
 import { describe, it, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import ImageCloud from './ImageCloud';
-import { addContent, resetContent } from '@genaism/services/content/content';
+import { getContentService } from '@knicos/genai-recom';
 
 describe('ImageCloud component', () => {
-    beforeEach(() => resetContent());
+    beforeEach(() => getContentService().reset());
 
     it('renders with no content', async ({ expect }) => {
         render(
@@ -17,7 +17,7 @@ describe('ImageCloud component', () => {
     });
 
     it('renders with one item', async ({ expect }) => {
-        addContent('https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg', {
+        getContentService().addContent('https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg', {
             id: 'image1',
             author: 'Unknown',
             labels: [],
@@ -33,7 +33,7 @@ describe('ImageCloud component', () => {
     });
 
     it('renders with three items', async ({ expect }) => {
-        addContent('https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg', {
+        getContentService().addContent('https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg', {
             id: 'image1',
             author: 'Unknown',
             labels: [],

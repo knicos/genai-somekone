@@ -1,26 +1,14 @@
 import { compress, decompress } from 'lz-string';
-import { addNodes, getNodesByType } from '../graph/nodes';
-import { GNode, NodeType } from '../graph/graphTypes';
 import { LogItem } from './loaderTypes';
 import { findLargestLogTimestamp, rebaseLog } from './rebase';
-import { appendActionLog, getActionLog, sortLogs } from '../users/logs';
-import { dumpNodes } from '../graph/state';
+import { ActionLogService, GNode, GraphService, NodeType } from '@knicos/genai-recom';
 
 const GRAPH_KEY = 'genai_somekone_graph';
 const LOG_KEY = 'genai_somekone_logs';
 
-window.addEventListener('beforeunload', () => {
-    try {
-        window.sessionStorage.setItem(GRAPH_KEY, compress(JSON.stringify(dumpNodes())));
-        const users = getNodesByType('user');
-        const logs = users.map((u) => ({ id: u, log: getActionLog(u) }));
-        window.sessionStorage.setItem(LOG_KEY, compress(JSON.stringify(logs)));
-    } catch (e) {
-        console.log('Save error', e);
-    }
-});
+let addedHandler = false;
 
-export function loadSession() {
+export function loadSession(graphSvc: GraphService, logger: ActionLogService) {
     const sessionGraph = window.sessionStorage.getItem(GRAPH_KEY);
     window.sessionStorage.removeItem(GRAPH_KEY);
     const sessionLogs = window.sessionStorage.getItem(LOG_KEY);
@@ -28,7 +16,7 @@ export function loadSession() {
 
     if (sessionGraph) {
         const graph = JSON.parse(decompress(sessionGraph)) as GNode<NodeType>[];
-        addNodes(graph);
+        graphSvc.addNodes(graph);
         console.log('Loaded session graph');
     }
 
@@ -38,8 +26,22 @@ export function loadSession() {
         const timeOffset = Date.now() - ts;
         rebaseLog(logs, timeOffset);
         logs.forEach((log) => {
-            appendActionLog(log.log, log.id);
+            logger.appendActionLog(log.log, log.id);
         });
-        sortLogs();
+        logger.sortLogs();
+    }
+
+    if (!addedHandler) {
+        window.addEventListener('beforeunload', () => {
+            try {
+                window.sessionStorage.setItem(GRAPH_KEY, compress(JSON.stringify(graphSvc.dumpNodes())));
+                const users = graphSvc.getNodesByType('user');
+                const logs = users.map((u) => ({ id: u, log: logger.getActionLog(u) }));
+                window.sessionStorage.setItem(LOG_KEY, compress(JSON.stringify(logs)));
+            } catch (e) {
+                console.log('Save error', e);
+            }
+        });
+        addedHandler = true;
     }
 }

@@ -1,4 +1,4 @@
-import { LogEntry } from '@genaism/services/users/userTypes';
+import { LogEntry } from '@knicos/genai-recom';
 import { TFunction } from 'i18next';
 
 export function generateMessage(log: LogEntry, t: TFunction) {

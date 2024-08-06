@@ -1,12 +1,14 @@
-import { WeightedLabel } from '@genaism/services/content/contentTypes';
-import { UserNodeId, WeightedNode } from '@genaism/services/graph/graphTypes';
-import { addAnyProfileListener, removeAnyProfileListener } from '@genaism/services/profiler/events';
-import { clusterUsers } from '@genaism/services/similarity/user';
-import { findSimilarUsers } from '@genaism/services/users/users';
+import { useProfilerService } from '@genaism/hooks/services';
+import { findSimilarUsers, ProfilerService, UserNodeId, WeightedLabel, WeightedNode } from '@knicos/genai-recom';
+import clusterUsers from '@knicos/genai-recom/helpers/clusterUsers';
 import { useEffect, useRef, useState } from 'react';
 
-function getSimilar(id: UserNodeId, similarities: Map<UserNodeId, WeightedNode<UserNodeId>[]>) {
-    const s = findSimilarUsers(id);
+function getSimilar(
+    profiler: ProfilerService,
+    id: UserNodeId,
+    similarities: Map<UserNodeId, WeightedNode<UserNodeId>[]>
+) {
+    const s = findSimilarUsers(profiler.graph, profiler, id);
     similarities.set(
         id,
         s.filter((ss) => ss.weight > 0 && ss.id !== id)
@@ -21,30 +23,31 @@ interface Result {
 export function useAllSimilarUsers(users: UserNodeId[], cluster?: boolean, k?: number): Result {
     const simRef = useRef(new Map<UserNodeId, WeightedNode<UserNodeId>[]>());
     const [result, setResult] = useState<Result>({ similar: simRef.current });
+    const profiler = useProfilerService();
 
     useEffect(() => {
         users.forEach((c) => {
-            getSimilar(c, simRef.current);
+            getSimilar(profiler, c, simRef.current);
         });
         setResult({
             similar: simRef.current,
-            topics: cluster ? clusterUsers(users, k || 2) : undefined,
+            topics: cluster ? clusterUsers(profiler, users, k || 2) : undefined,
         });
-    }, [users, cluster, k]);
+    }, [users, cluster, k, profiler]);
 
     useEffect(() => {
         const handler = (id: UserNodeId) => {
-            getSimilar(id, simRef.current);
+            getSimilar(profiler, id, simRef.current);
             setResult({
                 similar: simRef.current,
-                topics: cluster ? clusterUsers(users, k || 2) : undefined,
+                topics: cluster ? clusterUsers(profiler, users, k || 2) : undefined,
             });
         };
-        addAnyProfileListener(handler);
+        profiler.broker.on('profile', handler);
         return () => {
-            removeAnyProfileListener(handler);
+            profiler.broker.off('profile', handler);
         };
-    }, [users, cluster, k]);
+    }, [users, cluster, k, profiler]);
 
     return result;
 }

@@ -6,10 +6,10 @@ import { useTranslation } from 'react-i18next';
 import { useLogger } from '@genaism/hooks/logger';
 import { useRecoilValue } from 'recoil';
 import { availableUsers } from '@genaism/state/sessionState';
-import { setUser } from '@genaism/services/profiler/state';
-import { UserNodeId } from '@genaism/services/graph/graphTypes';
 import RestoreIcon from '@mui/icons-material/Restore';
 import { useDuplicateTabCheck } from '@genaism/hooks/duplicateTab';
+import { UserNodeId } from '@knicos/genai-recom';
+import { useProfilerService } from '@genaism/hooks/services';
 
 interface Props {
     onUsername: (name: string) => void;
@@ -29,6 +29,7 @@ export default function EnterUsername({ onUsername }: Props) {
     const users = useRecoilValue(availableUsers);
     const [showRestore, setShowRestore] = useState(false);
     const foundTab = useDuplicateTabCheck();
+    const profiler = useProfilerService();
 
     const doUsernameKey = useCallback(
         (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -49,13 +50,13 @@ export default function EnterUsername({ onUsername }: Props) {
     const doSelect = useCallback(
         (e: SelectChangeEvent) => {
             const id = e.target.value as UserNodeId;
-            setUser(id);
+            profiler.setUser(id);
             const item = users.find((u) => u.id === id);
             if (item) {
                 onUsername(item.name);
             }
         },
-        [onUsername, users]
+        [onUsername, users, profiler]
     );
 
     return (

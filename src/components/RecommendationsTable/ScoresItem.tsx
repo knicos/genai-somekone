@@ -1,9 +1,9 @@
 import { useTranslation } from 'react-i18next';
-import { ScoredRecommendation } from '@genaism/services/recommender/recommenderTypes';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import ScorePie from './ScorePie';
 import style from './style.module.css';
 import sColors from '@knicos/genai-base/dist/colours.module.css';
+import { ScoredRecommendation } from '@knicos/genai-recom';
 
 interface Props {
     item: ScoredRecommendation;

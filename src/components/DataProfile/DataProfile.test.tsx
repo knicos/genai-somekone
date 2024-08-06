@@ -1,8 +1,7 @@
 import { describe, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import DataProfile from './DataProfile';
-import { createEmptyProfile } from '@genaism/services/profiler/profiler';
-import { LogEntry, UserNodeData } from '@genaism/services/users/userTypes';
+import { createEmptyProfile, LogEntry, UserNodeData } from '@knicos/genai-recom';
 
 const { mockProfile, mockLog } = vi.hoisted(() => ({
     mockProfile: vi.fn<unknown[], UserNodeData>(() => ({
@@ -11,11 +10,11 @@ const { mockProfile, mockLog } = vi.hoisted(() => ({
     mockLog: vi.fn<unknown[], LogEntry[]>(() => []),
 }));
 
-vi.mock('@genaism/services/profiler/hooks', () => ({
+vi.mock('@genaism/hooks/profiler', () => ({
     useUserProfile: mockProfile,
 }));
 
-vi.mock('@genaism/services/users/hooks', () => ({
+vi.mock('@genaism/hooks/actionLog', () => ({
     useActionLog: mockLog,
 }));
 

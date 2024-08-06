@@ -1,4 +1,4 @@
-import { UserNodeId } from '@genaism/services/graph/graphTypes';
+import { UserNodeId } from '@knicos/genai-recom';
 import { atom } from 'recoil';
 
 export const menuShowShare = atom<boolean>({

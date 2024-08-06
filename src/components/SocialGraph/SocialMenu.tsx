@@ -22,9 +22,9 @@ import {
     menuShowUserPanel,
 } from '@genaism/state/menuState';
 import ClusterMenu from './ClusterMenu';
-import { getUserData, removeUser } from '@genaism/services/users/users';
-import { UserNodeId } from '@genaism/services/graph/graphTypes';
 import ImageIcon from '@mui/icons-material/Image';
+import { UserNodeId } from '@knicos/genai-recom';
+import { useProfilerService } from '@genaism/hooks/services';
 
 export default function SocialMenu() {
     const { t } = useTranslation();
@@ -35,6 +35,7 @@ export default function SocialMenu() {
     const showMenu = useRecoilValue(menuShowSocialMenu);
     const selectAction = useRecoilValue(menuNodeSelectAction);
     const userRef = useRef<UserNodeId | undefined>();
+    const profiler = useProfilerService();
 
     useEffect(() => {
         if (selectedUser && selectedUser !== userRef.current && selectAction !== 'none') {
@@ -52,7 +53,7 @@ export default function SocialMenu() {
             selected={!!selectedUser}
             label={
                 <div className={style.menuLogo}>
-                    {selectedUser ? getUserData(selectedUser)?.name : t('dashboard.titles.people')}
+                    {selectedUser ? profiler.getUserData(selectedUser)?.name : t('dashboard.titles.people')}
                 </div>
             }
         >
@@ -141,11 +142,11 @@ export default function SocialMenu() {
                         </IconButton>
                     </IconMenuItem>
                     <DeleteDialog
-                        name={getUserData(selectedUser)?.name || 'No Name'}
+                        name={profiler.getUserData(selectedUser)?.name || 'No Name'}
                         open={showDelete}
                         onClose={() => setShowDelete(false)}
                         onDelete={() => {
-                            removeUser(selectedUser);
+                            // removeUser(selectedUser);
                             setShowDelete(false);
                         }}
                     />

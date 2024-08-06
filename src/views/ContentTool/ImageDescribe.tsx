@@ -1,13 +1,11 @@
-import { getContentData, getContentMetadata } from '@genaism/services/content/content';
-import { ContentNodeId } from '@genaism/services/graph/graphTypes';
 import Stepper from './Stepper';
 import style from './style.module.css';
 import { useTranslation } from 'react-i18next';
 import { Checkbox, FormControlLabel } from '@mui/material';
 import { useCallback, useEffect, useState } from 'react';
-import { addEdge } from '@genaism/services/graph/edges';
-import { getTopicId } from '@genaism/services/concept/concept';
 import { AlertPara } from '@knicos/genai-base';
+import { ContentNodeId, getTopicId } from '@knicos/genai-recom';
+import { useContentService } from '@genaism/hooks/services';
 
 interface TagProps {
     tag: string;
@@ -39,6 +37,7 @@ const MAX_TAGS = 5;
 export default function ImageDescribe({ content, onNext }: Props) {
     const [selected, setSelected] = useState<Set<string>>();
     const { t } = useTranslation('creator');
+    const contentSvc = useContentService();
 
     useEffect(() => {
         setSelected(undefined);
@@ -65,7 +64,7 @@ export default function ImageDescribe({ content, onNext }: Props) {
                 <AlertPara severity="info">{t('hints.describeImages', { max: MAX_TAGS })}</AlertPara>
                 <div className={style.tagContainer}>
                     <img
-                        src={getContentData(content)}
+                        src={contentSvc.getContentData(content)}
                         width={400}
                     />
                     <div className={style.tagList}>
@@ -82,12 +81,12 @@ export default function ImageDescribe({ content, onNext }: Props) {
             </main>
             <Stepper
                 onNext={() => {
-                    const meta = getContentMetadata(content);
+                    const meta = contentSvc.getContentMetadata(content);
                     if (meta && selected) {
                         const tagArray = Array.from(selected);
                         tagArray.forEach((tag) => {
                             meta.labels.push({ label: tag, weight: 1 });
-                            addEdge('topic', content, getTopicId(tag));
+                            contentSvc.graph.addEdge('topic', content, getTopicId(contentSvc.graph, tag));
                         });
                     }
                     onNext();

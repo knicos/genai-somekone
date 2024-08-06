@@ -1,6 +1,6 @@
-import { UserNodeId } from '@genaism/services/graph/graphTypes';
+import { UserNodeId } from '@knicos/genai-recom';
 import style from './style.module.css';
-import { getUserData } from '@genaism/services/users/users';
+import { useProfilerService } from '@genaism/hooks/services';
 
 const MAX_LENGTH = 100;
 
@@ -19,7 +19,8 @@ interface Props {
 }
 
 export default function Comment({ comment, user, noLimit }: Props) {
-    const username = getUserData(user)?.name;
+    const profiler = useProfilerService();
+    const username = profiler.getUserData(user)?.name;
     return (
         <li className={style.commentItem}>
             <div className={style.commentText}>{noLimit ? comment : limitString(comment)}</div>

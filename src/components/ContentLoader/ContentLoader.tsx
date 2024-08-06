@@ -4,6 +4,7 @@ import ContentError from './ContentError';
 import ContentProgress from './ContentProgress';
 import { useSettingDeserialise } from '@genaism/hooks/settings';
 import { loadSession } from '@genaism/services/loader/session';
+import { useServices } from '@genaism/hooks/services';
 
 type LoadingStatus = 'waiting' | 'downloading' | 'loading' | 'failed-download' | 'failed-load' | 'done';
 
@@ -17,6 +18,7 @@ export default function ContentLoader({ content, onLoaded }: Props) {
     const [status, setStatus] = useState<LoadingStatus>('waiting');
     const [progress, setProgress] = useState<number | undefined>();
     const deserial = useSettingDeserialise();
+    const { content: contentSvc, actionLog } = useServices();
 
     useEffect(() => {
         if (content && content.length > 0) {
@@ -46,14 +48,14 @@ export default function ContentLoader({ content, onLoaded }: Props) {
                     setStatus('loading');
                     setProgress(undefined);
 
-                    const loadPromises = blobs.map((blob) => loadFile(blob));
+                    const loadPromises = blobs.map((blob) => loadFile(contentSvc, actionLog, blob));
                     Promise.all(loadPromises)
                         .then((r) => {
                             r.forEach((setting) => {
                                 if (setting) deserial(setting);
                             });
                             setStatus('done');
-                            loadSession();
+                            loadSession(contentSvc.graph, actionLog);
                             if (onLoaded) onLoaded();
                         })
                         .catch((e) => {
@@ -68,7 +70,7 @@ export default function ContentLoader({ content, onLoaded }: Props) {
         } else {
             setStatus('waiting');
         }
-    }, [content, onLoaded, deserial]);
+    }, [content, onLoaded, deserial, contentSvc, actionLog]);
 
     return (
         <>

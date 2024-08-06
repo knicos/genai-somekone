@@ -1,10 +1,10 @@
-import { ContentNodeId, WeightedNode } from '@genaism/services/graph/graphTypes';
 import { Fragment, MouseEvent, PointerEvent, useEffect, useMemo, useRef, useState } from 'react';
-import { getContentData } from '@genaism/services/content/content';
 import { Spinner } from '@knicos/genai-base';
 import style from './style.module.css';
 import { normWeights } from '@genaism/util/weights';
 import { heatmapGrid } from './grid';
+import { ContentNodeId, WeightedNode } from '@knicos/genai-recom';
+import { useContentService } from '@genaism/hooks/services';
 
 interface Props {
     data: WeightedNode<ContentNodeId>[];
@@ -25,6 +25,7 @@ export default function Heatmap({ data, dimensions, busy }: Props) {
     const [grid, setGrid] = useState<(ContentNodeId | null)[][]>();
     const svgRef = useRef<SVGSVGElement>(null);
     const [zoom, setZoom] = useState(false);
+    const content = useContentService();
 
     const loading = data.length === 0 || !grid || busy;
 
@@ -45,12 +46,13 @@ export default function Heatmap({ data, dimensions, busy }: Props) {
                 oldGrid && oldGrid.length === dimensions
                     ? oldGrid
                     : heatmapGrid(
+                          content,
                           normData.map((n) => n.id),
                           dimensions
                       )
             );
         }
-    }, [normData, dimensions]);
+    }, [normData, dimensions, content]);
 
     useEffect(() => {
         if (!zoom) {
@@ -101,7 +103,7 @@ export default function Heatmap({ data, dimensions, busy }: Props) {
                                     <Fragment key={ix2}>
                                         <image
                                             data-testid="heatmap-image"
-                                            href={getContentData(img)}
+                                            href={content.getContentData(img)}
                                             width={size}
                                             height={size}
                                             x={ix2 * size}

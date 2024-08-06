@@ -1,4 +1,3 @@
-import { useNodeType } from '@genaism/services/graph/hooks';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import ProfileNode from './ProfileNode';
 import Graph from '../Graph/Graph';
@@ -15,21 +14,21 @@ import {
     settingShowOfflineUsers,
     settingSimilarPercent,
 } from '@genaism/state/settingsState';
-import { UserNodeId } from '@genaism/services/graph/graphTypes';
 // import FakeNode from '../FakeNode/FakeNode';
 import style from './style.module.css';
 import { useAllSimilarUsers } from './similarity';
 import UserLabel from './UserLabel';
 import SocialMenu from './SocialMenu';
-import { getCurrentUser } from '@genaism/services/profiler/state';
 import FeedPanel from './FeedPanel';
 import DataPanel from './DataPanel';
 import ProfilePanel from './ProfilePanel';
 import { menuSelectedUser } from '@genaism/state/menuState';
 import RecommendationsPanel from './RecommendationsPanel';
 import { colourLabel } from './colourise';
-import { getUserName } from '@genaism/services/profiler/profiler';
-import { Point } from '@genaism/services/content/mapping';
+import { UserNodeId } from '@knicos/genai-recom';
+import { useNodeType } from '@genaism/hooks/graph';
+import { Point } from '@knicos/genai-recom/utils/embeddings/mapping';
+import { useProfilerService } from '@genaism/hooks/services';
 
 const LINE_THICKNESS_UNSELECTED = 40;
 const MIN_LINE_THICKNESS = 10;
@@ -70,6 +69,7 @@ export default function SocialGraph({ liveUsers }: Props) {
         clusterColouring > 0 ? clusterColouring : undefined
     );
     const pointMap = useRef(new Map<UserNodeId, Point>());
+    const profiler = useProfilerService();
 
     useEffect(() => {
         const newLinks: GraphLink<UserNodeId, UserNodeId>[] = [];
@@ -110,8 +110,8 @@ export default function SocialGraph({ liveUsers }: Props) {
 
         setNodes((oldNodes) => {
             const filteredUsers = showOfflineUsers
-                ? users.filter((u) => u !== getCurrentUser())
-                : users.filter((u) => liveSet.has(u) && u !== getCurrentUser());
+                ? users.filter((u) => u !== profiler.getCurrentUser())
+                : users.filter((u) => liveSet.has(u) && u !== profiler.getCurrentUser());
 
             const oldMap = new Map<UserNodeId, GraphNode<UserNodeId>>();
             oldNodes.map((on) => oldMap.set(on.id, on));
@@ -134,7 +134,7 @@ export default function SocialGraph({ liveUsers }: Props) {
                         id: u,
                         x: p ? p.x * 4000 - 2000 : undefined,
                         y: p ? p.y * 4000 - 2000 : undefined,
-                        label: getUserName(u),
+                        label: profiler.getUserName(u),
                         size: newSize,
                         strength: similar.similar.get(u)?.length || 0,
                         data: {
@@ -147,7 +147,7 @@ export default function SocialGraph({ liveUsers }: Props) {
             });
             return newNodes;
         });
-    }, [users, liveSet, showOfflineUsers, similar]);
+    }, [users, liveSet, showOfflineUsers, similar, profiler]);
 
     const doResize = useCallback(
         (id: string, size: number) => {

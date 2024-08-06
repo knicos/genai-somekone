@@ -3,10 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import style from './style.module.css';
 import { RadioGroup } from '@mui/material';
-import { RecommendationOptions } from '@genaism/services/recommender/recommenderTypes';
 import { useEffect } from 'react';
 import WizardOption from '../RecommendationsWizard/WizardOption';
-import { UserNodeId } from '@genaism/services/graph/graphTypes';
+import { RecommendationOptions, UserNodeId } from '@knicos/genai-recom';
 
 interface Props {
     id: UserNodeId;

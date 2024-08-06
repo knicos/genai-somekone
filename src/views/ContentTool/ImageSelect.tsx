@@ -1,12 +1,8 @@
 import ImageSearch from '@genaism/components/ImageSearch/ImageSearch';
-import { getTopicLabel } from '@genaism/services/concept/concept';
-import { addContent, removeContent } from '@genaism/services/content/content';
-import { ContentNodeId, TopicNodeId } from '@genaism/services/graph/graphTypes';
 import { ImageResult, SearchSource } from '@genaism/services/imageSearch/hook';
 import { useCallback, useEffect, useState } from 'react';
 import { StageState } from './types';
 import style from './style.module.css';
-import { addEdge } from '@genaism/services/graph/edges';
 import Stepper from './Stepper';
 import DeletableImage from './DeletableImage';
 import { useTranslation } from 'react-i18next';
@@ -14,6 +10,8 @@ import HideImageIcon from '@mui/icons-material/HideImage';
 import { useSetRecoilState } from 'recoil';
 import { unsavedChanges } from '@genaism/state/interaction';
 import { useSearchParams } from 'react-router-dom';
+import { ContentNodeId, getTopicLabel, TopicNodeId } from '@knicos/genai-recom';
+import { useContentService } from '@genaism/hooks/services';
 
 const MIN_IMAGES = 10;
 const MAX_IMAGES = 20;
@@ -31,6 +29,7 @@ export default function ImageSelect({ topic, onAddNext, onNext }: Props) {
     const [isdone, setDone] = useState(false);
     const setUnsaved = useSetRecoilState(unsavedChanges);
     const [params] = useSearchParams();
+    const contentSvc = useContentService();
 
     useEffect(() => {
         if (selected.length >= MIN_IMAGES) {
@@ -44,23 +43,30 @@ export default function ImageSelect({ topic, onAddNext, onNext }: Props) {
 
     const onAdd = useCallback(
         (url: string, meta: ImageResult) => {
-            addContent(url, { author: meta.author, id: meta.id, labels: [{ label: getTopicLabel(topic), weight: 1 }] });
-            addEdge('topic', `content:${meta.id}`, topic, 1);
+            contentSvc.addContent(url, {
+                author: meta.author,
+                id: meta.id,
+                labels: [{ label: getTopicLabel(topic), weight: 1 }],
+            });
+            contentSvc.graph.addEdge('topic', `content:${meta.id}`, topic, 1);
             setSelected((old) => [...old, `content:${meta.id}`]);
             setUnsaved(true);
         },
-        [topic, setUnsaved]
+        [topic, setUnsaved, contentSvc]
     );
 
-    const doDelete = useCallback((id: ContentNodeId) => {
-        removeContent(id);
-        setSelSet((old) => {
-            const newset = new Set<string>(old);
-            newset.delete(id.split(':')[1]);
-            return newset;
-        });
-        setSelected((old) => old.filter((o) => o !== id));
-    }, []);
+    const doDelete = useCallback(
+        (id: ContentNodeId) => {
+            contentSvc.removeContent(id);
+            setSelSet((old) => {
+                const newset = new Set<string>(old);
+                newset.delete(id.split(':')[1]);
+                return newset;
+            });
+            setSelected((old) => old.filter((o) => o !== id));
+        },
+        [contentSvc]
+    );
 
     const columns = Math.min(4, Math.ceil(Math.min(1200, window.innerWidth) / 400));
 

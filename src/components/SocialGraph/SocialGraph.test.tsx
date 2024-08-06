@@ -1,22 +1,17 @@
-import { addNode } from '@genaism/services/graph/nodes';
-import { resetGraph } from '@genaism/services/graph/state';
-import { beforeEach, describe, it, vi } from 'vitest';
+import { beforeEach, describe, it } from 'vitest';
 import SocialGraph from './SocialGraph';
 import { render, screen, waitFor } from '@testing-library/react';
 import TestWrapper from '@genaism/util/TestWrapper';
 import userEvent from '@testing-library/user-event';
 import { appConfiguration, settingDisplayLabel } from '@genaism/state/settingsState';
-import { Embedding } from '@genaism/util/embedding';
-
-vi.mock('@genaism/services/content/mapping', () => ({
-    mapEmbeddingsToPoints: (e: Embedding[]) => e.map(() => ({ x: 0, y: 0 })),
-}));
+import { getGraphService } from '@knicos/genai-recom';
 
 describe('SocialGraph Component', () => {
     beforeEach(() => {
-        resetGraph();
-        addNode('user', 'user:test1', { name: 'TestUser1' });
-        addNode('user', 'user:test2', { name: 'TestUser2' });
+        const graph = getGraphService();
+        graph.reset();
+        graph.addNode('user', 'user:test1', { name: 'TestUser1' });
+        graph.addNode('user', 'user:test2', { name: 'TestUser2' });
     });
 
     it('renders nodes', async ({ expect }) => {

@@ -2,15 +2,16 @@ import { menuSelectedUser, menuShowUserPanel } from '@genaism/state/menuState';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import AppPanel from '../AppPanel/AppPanel';
 import RecommendationsProfile from '../RecommendationsProfile/RecommendationsProfile';
-import { getUserData } from '@genaism/services/users/users';
+import { useProfilerService } from '@genaism/hooks/services';
 
 export default function RecommendationsPanel() {
     const [panel, setPanel] = useRecoilState(menuShowUserPanel);
     const selectedUser = useRecoilValue(menuSelectedUser);
+    const profiler = useProfilerService();
 
     return panel === 'recommendations' && selectedUser ? (
         <AppPanel
-            title={getUserData(selectedUser)?.name}
+            title={profiler.getUserData(selectedUser)?.name}
             onClose={() => setPanel('none')}
             data-testid="recom-panel"
         >

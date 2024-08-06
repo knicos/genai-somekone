@@ -1,21 +1,14 @@
 import { usePeer, ConnectionMonitor } from '@knicos/genai-base';
 import { EventProtocol } from '@genaism/protocol/protocol';
-import {
-    appendActionLog,
-    createUserProfile,
-    getCurrentUser,
-    replaceProfile,
-    setUserName,
-} from '@genaism/services/profiler/profiler';
 import { currentUserName } from '@genaism/state/sessionState';
 import { PropsWithChildren, useCallback, useEffect, useState } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { SMConfig } from '../../state/smConfig';
 import { appConfiguration } from '@genaism/state/settingsState';
 import { LogProvider } from '@genaism/hooks/logger';
-import { appendRecommendations } from '@genaism/services/recommender/recommender';
 import ContentLoader from '@genaism/components/ContentLoader/ContentLoader';
-import { UserNodeId } from '@genaism/services/graph/graphTypes';
+import { UserNodeId } from '@knicos/genai-recom';
+import { useServices } from '@genaism/hooks/services';
 
 const USERNAME_KEY = 'genai_somekone_username';
 
@@ -30,26 +23,27 @@ export default function ViewerProtocol({ server, mycode, children, onID }: Props
     const username = useRecoilValue<string | undefined>(currentUserName);
     const [content, setContent] = useState<(string | ArrayBuffer)[]>();
     const [loaded, setLoaded] = useState(false);
+    const { profiler, recommender, actionLog } = useServices();
 
     const onData = useCallback(
         (data: EventProtocol) => {
             if (data.event === 'eter:reguser') {
                 try {
-                    createUserProfile(data.id, data.username);
+                    profiler.createUserProfile(data.id, data.username);
                 } catch (e) {
                     console.warn(e);
                 }
                 onID(data.id);
             } else if (data.event === 'eter:profile_data') {
                 try {
-                    replaceProfile(data.id, data.profile);
+                    profiler.replaceProfile(data.id, data.profile);
                 } catch (e) {
                     // Ignore
                 }
             } else if (data.event === 'eter:action_log') {
-                appendActionLog(data.log, data.id);
+                actionLog.appendActionLog(data.log, data.id);
             } else if (data.event === 'eter:recommendations') {
-                appendRecommendations(data.id, data.recommendations);
+                recommender.appendRecommendations(data.id, data.recommendations);
             } else if (data.event === 'eter:config') {
                 setConfig((old) => ({ ...old, ...data.configuration }));
                 if (data.content) {
@@ -57,7 +51,7 @@ export default function ViewerProtocol({ server, mycode, children, onID }: Props
                 }
             }
         },
-        [setConfig, onID]
+        [setConfig, onID, profiler, actionLog, recommender]
     );
 
     const { ready, send, status, error } = usePeer<EventProtocol>({
@@ -77,10 +71,10 @@ export default function ViewerProtocol({ server, mycode, children, onID }: Props
             } catch (e) {
                 // Ignore this
             }
-            setUserName(getCurrentUser(), username);
-            send({ event: 'eter:reguser', username, id: getCurrentUser() });
+            profiler.setUserName(profiler.getCurrentUser(), username);
+            send({ event: 'eter:reguser', username, id: profiler.getCurrentUser() });
         }
-    }, [username, send, ready]);
+    }, [username, send, ready, profiler]);
 
     return (
         <>

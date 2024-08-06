@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { TopicNodeId } from '@genaism/services/graph/graphTypes';
 import style from './style.module.css';
-import { getTopicLabel } from '@genaism/services/concept/concept';
+import { getTopicLabel, TopicNodeId } from '@knicos/genai-recom';
 
 interface Props {
     id: TopicNodeId;

@@ -1,5 +1,6 @@
 import { describe, it } from 'vitest';
 import { findNearestSlot, heatmapGrid } from './grid';
+import { getContentService } from '@knicos/genai-recom';
 
 describe('Grid findNearestSlot', () => {
     it('finds the first slot if empty', async ({ expect }) => {
@@ -71,7 +72,11 @@ describe('Grid findNearestSlot', () => {
 
 describe('Grid heatmapGrid()', () => {
     it('completely fills a grid', async ({ expect }) => {
-        const grid = heatmapGrid(['content:1', 'content:2', 'content:3', 'content:4', 'content:5'], 2);
+        const grid = heatmapGrid(
+            getContentService(),
+            ['content:1', 'content:2', 'content:3', 'content:4', 'content:5'],
+            2
+        );
         expect(grid).toHaveLength(2);
         expect(grid[0]).toHaveLength(2);
         expect(grid[0][0]).not.toBe(null);
