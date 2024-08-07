@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import style from './style.module.css';
 import { Slider } from '@mui/material';
 import { useContentService } from '@genaism/hooks/services';
+import { saveAs } from 'file-saver';
 
 export default function EmbeddingTool() {
     const [loss, setLoss] = useState(0);
@@ -12,6 +13,7 @@ export default function EmbeddingTool() {
     const [dims, setDims] = useState(20);
     const [startGenerate, setStartGenerate] = useState(false);
     const contentSvc = useContentService();
+    const [blob, setBlob] = useState<Blob | undefined>();
 
     useEffect(() => {
         if (startGenerate) {
@@ -19,14 +21,15 @@ export default function EmbeddingTool() {
                 .createEncoderModel({
                     epochs,
                     dims,
-                    noSave: true,
+                    noSave: false,
                     onEpoch: (_, l, v) => {
                         setLoss(l);
                         setValLoss(v);
                         setEpochCount((old) => old + 1);
                     },
                 })
-                .then(() => {
+                .then((b) => {
+                    setBlob(b);
                     setStartGenerate(false);
                 });
         }
@@ -73,6 +76,17 @@ export default function EmbeddingTool() {
                 onClick={() => setStartGenerate(true)}
             >
                 Generate Embeddings
+            </Button>
+            <Button
+                disabled={!blob}
+                variant="outlined"
+                onClick={() => {
+                    if (blob) {
+                        saveAs(blob, 'encoder.zip');
+                    }
+                }}
+            >
+                Save Encoder
             </Button>
         </div>
     );

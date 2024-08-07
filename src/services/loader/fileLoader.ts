@@ -193,6 +193,13 @@ export async function loadFile(
         if (store.project.version > VERSION) {
             throw new Error('bad_version');
         }
+
+        if (store.project.encoderURL) {
+            console.log('Loading encoder', store.project.encoderURL);
+            contentSvc.setEncoderModel(store.project.encoderURL).then(() => {
+                console.log('Encoder loaded');
+            });
+        }
     }
 
     const maxTimestamp = Math.max(

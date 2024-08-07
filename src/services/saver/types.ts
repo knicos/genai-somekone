@@ -11,6 +11,7 @@ export interface ProjectMeta {
     origin: string;
 
     feedConfiguration?: SMConfig;
+    encoderURL?: string;
 
     dependencies: string[];
 }
