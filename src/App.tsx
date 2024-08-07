@@ -81,6 +81,10 @@ const router = createBrowserRouter(
                     lazy={() => import('./views/Genagram/subviews/DataView')}
                 />
                 <Route
+                    path="post"
+                    lazy={() => import('./views/Genagram/subviews/PostView')}
+                />
+                <Route
                     path="profile"
                     lazy={() => import('./views/Genagram/subviews/ProfileView')}
                 />

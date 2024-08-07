@@ -1,6 +1,6 @@
 import { PieChart } from '@mui/x-charts';
 import style from './style.module.css';
-import colors from '@knicos/genai-base/dist/colours.module.css';
+import colors from '@knicos/genai-base/css/colours.module.css';
 
 interface Props {
     label?: string;

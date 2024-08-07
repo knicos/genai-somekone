@@ -1,4 +1,4 @@
-@value textDark, workspaceBg, backgroundDark, bgColourful1, bgSubdued1, textLight from "@knicos/genai-base/dist/colours.module.css";
+@value textDark, workspaceBg, backgroundDark, bgColourful1, bgSubdued1, textLight from "@knicos/genai-base/css/colours.module.css";
 
 .dashboard {
     position: absolute;

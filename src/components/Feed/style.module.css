@@ -1,4 +1,4 @@
-@value borderGrey from "@knicos/genai-base/dist/colours.module.css";
+@value borderGrey from "@knicos/genai-base/css/colours.module.css";
 
 .feedView {
     height: 100%;

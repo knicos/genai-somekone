@@ -1,0 +1,79 @@
+@value backgroundDark from "@knicos/genai-base/css/colours.module.css";
+
+.container {
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    /*flex: 0 1 auto;*/
+    flex-grow: 1;
+    max-width: 500px;
+    width: 100%;
+    height: 100%;
+    background: white;
+}
+
+.darkContainer {
+    composes: container;
+    background: #222;
+}
+
+.outerContainer {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    flex-grow: 1;
+    overflow-y: scroll;
+    align-items: center;
+    height: 100%;
+    scrollbar-gutter: stable both-edges;
+}
+
+.webcamContainer {
+    margin-top: 20%;
+    border-radius: 20px;
+    overflow: hidden;
+    line-height: 0;
+}
+
+.imageContainer {
+    line-height: 0;
+    position: relative;
+    color: white;
+}
+
+.buttonContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    top: -2rem;
+}
+
+.labelChips {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    padding: 1rem;
+}
+
+.postButtonContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+    flex-grow: 1;
+    align-items: center;
+}
+
+.spinnerContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.topRightButtons {
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 0.5rem;
+}

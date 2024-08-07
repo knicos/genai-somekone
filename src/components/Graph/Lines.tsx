@@ -1,6 +1,6 @@
 import { InternalGraphLink, LinkStyle } from './types';
 import style from './style.module.css';
-import colours from '@knicos/genai-base/dist/colours.module.css';
+import colours from '@knicos/genai-base/css/colours.module.css';
 import { NodeID } from '@knicos/genai-recom';
 
 interface Props<T extends NodeID> {

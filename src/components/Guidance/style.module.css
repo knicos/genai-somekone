@@ -1,4 +1,4 @@
-@value secondary, bgColourful1, textDark from "@knicos/genai-base/dist/colours.module.css";
+@value secondary, bgColourful1, textDark from "@knicos/genai-base/css/colours.module.css";
 
 .container {
     background: bgColourful1;

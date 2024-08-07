@@ -287,13 +287,15 @@
             "yourProfile": "Your Profile",
             "yourRecommendations": "Your Recommendations",
             "shareProfile": "Share Profile",
-            "engagement": "Your engagement"
+            "engagement": "Your engagement",
+            "newPost": "Create Post"
         },
         "actions": {
             "more": "More",
             "data": "Data",
             "profile": "Profile",
-            "recommendations": "Recommendations"
+            "recommendations": "Recommendations",
+            "post": "Post"
         },
         "messages": {
             "loading": "Finding profile data"

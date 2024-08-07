@@ -18,8 +18,9 @@ const { mockPeer } = vi.hoisted(() => ({
     })),
 }));
 
-vi.mock('@knicos/genai-base/dist/hooks/peer', () => ({
-    default: mockPeer,
+vi.mock('@knicos/genai-base', async (importOriginal) => ({
+    ...(await importOriginal<typeof import('@knicos/genai-base')>()),
+    usePeer: mockPeer,
 }));
 
 describe('Genagram view', () => {

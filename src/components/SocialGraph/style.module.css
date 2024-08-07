@@ -1,4 +1,4 @@
-@value primary, secondary, bgColourful1, textDark, textLight, bgSubdued1, borderBrightBlue from "@knicos/genai-base/dist/colours.module.css";
+@value primary, secondary, bgColourful1, textDark, textLight, bgSubdued1, borderBrightBlue from "@knicos/genai-base/css/colours.module.css";
 
 .group:hover > .outerCircle {
     fill: secondary;

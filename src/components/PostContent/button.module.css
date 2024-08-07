@@ -1,0 +1,36 @@
+.recordButton {
+    cursor: pointer;
+    outline: none;
+    border: none;
+    background: none;
+}
+
+.buttonCircleOuter {
+    background: black;
+    border-radius: 50%;
+    box-sizing: border-box;
+    padding: 4px;
+    border: 4px solid white;
+}
+
+.recordButton:disabled .buttonCircleOuter {
+    background: #bbb;
+}
+
+.recordButton:disabled .buttonCircleOuter .buttonCircleInner {
+    background: #bbb;
+}
+
+.buttonCircleInner {
+    width: 4.5rem;
+    height: 4.5rem;
+    border: 3px solid white;
+    border-radius: 50%;
+    box-sizing: border-box;
+    background: white;
+}
+
+.buttonCircleActive {
+    composes: buttonCircleInner;
+    background: red;
+}

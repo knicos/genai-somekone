@@ -19,6 +19,13 @@ import {
     UserNodeData,
     UserNodeId,
 } from '@knicos/genai-recom';
+import topics from './disallowedTopics.json';
+
+const set = new Set(topics);
+
+export function isDisallowedTopic(label: string) {
+    return set.has(label);
+}
 
 const STATIC_PATH = 'https://store.gen-ai.fi/somekone/images';
 
@@ -228,6 +235,12 @@ export async function loadFile(
     }
 
     store.meta.forEach((v) => {
+        // Patch hack to reduce label strength
+        for (let i = 0; i < v.labels.length; ++i) {
+            if (isDisallowedTopic(v.labels[i].label)) {
+                v.labels[i].weight *= 0.1;
+            }
+        }
         contentSvc.addContent(images.get(v.id) || `${STATIC_PATH}/${v.id}.jpg`, v);
     });
 

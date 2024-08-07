@@ -23,14 +23,15 @@ stages:
             steps:
                 - task: Cache@2
                   inputs:
-                      key: '"npm" | "$(Agent.OS)" | package-lock.json'
+                      key: '"npmcache" | "$(Agent.OS)" | package-lock.json'
                       restoreKeys: |
-                          npm | "$(Agent.OS)"
-                          npm
-                      path: $(System.DefaultWorkingDirectory)/node_modules
+                          npmcache | "$(Agent.OS)"
+                          npmcache
+                      path: $(System.DefaultWorkingDirectory)/.npm
                   displayName: Cache NPM packages
                 - script: |
                       echo -e "\n//npm.pkg.github.com/:_authToken=$(GITHUB_TOKEN)" >> ./.npmrc
+                      npm set cache .npm
                       npm ci
                       npm run lint
     - stage: Build
@@ -46,15 +47,16 @@ stages:
 
                 - task: Cache@2
                   inputs:
-                      key: '"npm" | "$(Agent.OS)" | package-lock.json'
+                      key: '"npmcache" | "$(Agent.OS)" | package-lock.json'
                       restoreKeys: |
-                          npm | "$(Agent.OS)"
-                          npm
-                      path: $(System.DefaultWorkingDirectory)/node_modules
+                          npmcache | "$(Agent.OS)"
+                          npmcache
+                      path: $(System.DefaultWorkingDirectory)/.npm
                   displayName: Cache NPM packages
 
                 - script: |
                       echo -e "\n//npm.pkg.github.com/:_authToken=$(GITHUB_TOKEN)" >> ./.npmrc
+                      npm set cache .npm
                       npm ci
                       npm run build
                   displayName: 'Build'
@@ -70,16 +72,15 @@ stages:
             steps:
                 - task: Cache@2
                   inputs:
-                      key: '"npm" | "$(Agent.OS)" | package-lock.json'
+                      key: '"npmcache" | "$(Agent.OS)" | package-lock.json'
                       restoreKeys: |
-                          npm | "$(Agent.OS)"
-                          npm
-                      path: $(System.DefaultWorkingDirectory)/node_modules
+                          npmcache | "$(Agent.OS)"
+                          npmcache
+                      path: $(System.DefaultWorkingDirectory)/.npm
                   displayName: Cache NPM packages
-                - download: current
-                  artifact: DistFolder
                 - script: |
                       echo -e "\n//npm.pkg.github.com/:_authToken=$(GITHUB_TOKEN)" >> ./.npmrc
+                      npm set cache .npm
                       npm ci
                       CI=true npm run ci:test
                   displayName: 'Test'

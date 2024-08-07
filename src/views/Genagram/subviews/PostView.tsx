@@ -1,9 +1,9 @@
 import { IconButton } from '@mui/material';
 import style from '../style.module.css';
 import { useTranslation } from 'react-i18next';
-import RecommendationsProfile from '@genaism/components/RecommendationsProfile/RecommendationsProfile';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate } from 'react-router';
+import PostContent from '@genaism/components/PostContent/PostContent';
 import ViewContainer from './ViewContainer';
 
 export function Component() {
@@ -27,10 +27,10 @@ export function Component() {
                             color="inherit"
                         />
                     </IconButton>
-                    <h1>{t('profile.titles.yourRecommendations')}</h1>
+                    <h1>{t('profile.titles.newPost')}</h1>
                 </div>
             </header>
-            <RecommendationsProfile />
+            <PostContent />
         </ViewContainer>
     );
 }

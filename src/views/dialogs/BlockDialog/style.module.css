@@ -1,4 +1,4 @@
-@value bgOk, borderGreen from "@knicos/genai-base/dist/colours.module.css";
+@value bgOk, borderGreen from "@knicos/genai-base/css/colours.module.css";
 
 .title {
     background: bgOk;
