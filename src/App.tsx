@@ -96,6 +96,10 @@ const router = createBrowserRouter(
                     path="share"
                     lazy={() => import('./views/Genagram/subviews/ShareView')}
                 />
+                <Route
+                    path="public/:userId"
+                    lazy={() => import('./views/Genagram/subviews/PublicView')}
+                />
             </Route>
             <Route
                 path="profile/:code"

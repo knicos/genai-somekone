@@ -4,11 +4,13 @@ import PersonIcon from '@mui/icons-material/Person';
 import ImageSearchIcon from '@mui/icons-material/ImageSearch';
 import HomeIcon from '@mui/icons-material/Home';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { IconButton } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router';
 import style from './style.module.css';
 import { useRecoilValue } from 'recoil';
 import { uiDarkMode } from '@genaism/state/uiState';
+import { useProfilerService } from '@genaism/hooks/services';
 
 interface Props {
     code: string;
@@ -18,6 +20,7 @@ export default function AppNavigation({ code }: Props) {
     const location = useLocation();
     const navigate = useNavigate();
     const darkMode = useRecoilValue(uiDarkMode);
+    const profiler = useProfilerService();
 
     const currentView = location.pathname.split('/').pop();
 
@@ -58,6 +61,13 @@ export default function AppNavigation({ code }: Props) {
                     onClick={() => navigate('recommendations', { replace: currentView !== 'feed' })}
                 >
                     <ImageSearchIcon fontSize="inherit" />
+                </IconButton>
+                <IconButton
+                    color={currentView === profiler.getCurrentUser() ? 'secondary' : 'inherit'}
+                    size="large"
+                    onClick={() => navigate(`public/${profiler.getCurrentUser()}`, { replace: currentView !== 'feed' })}
+                >
+                    <AccountCircleIcon fontSize="inherit" />
                 </IconButton>
                 <IconButton
                     size="large"

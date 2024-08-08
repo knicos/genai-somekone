@@ -288,7 +288,15 @@
             "yourRecommendations": "Your Recommendations",
             "shareProfile": "Share Profile",
             "engagement": "Your engagement",
-            "newPost": "Create Post"
+            "newPost": "Create Post",
+            "self": "You"
+        },
+        "labels": {
+            "followers": "followers",
+            "posts": "posts",
+            "follows": "follows",
+            "yourPosts": "Your Posts",
+            "missingPosts": "When you add your own posts they will show here."
         },
         "actions": {
             "more": "More",

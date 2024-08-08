@@ -110,6 +110,7 @@ export default function ImageEdit({ image, onDone, onCancel }: Props) {
                         contentSvc.addContent(image, {
                             id: uuidv4(),
                             author: profile.name,
+                            authorId: profile.id,
                             labels: labels.slice(0, labelCount).map((l) => ({ label: l.label, weight: l.weight })),
                         });
                         onDone();

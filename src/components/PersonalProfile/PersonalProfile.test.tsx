@@ -1,0 +1,43 @@
+import { TestWrapper } from '@knicos/genai-base';
+import { getContentService, getProfilerService } from '@knicos/genai-recom';
+import { render, screen } from '@testing-library/react';
+import { describe, it } from 'vitest';
+import PersonalProfile from './PersonalProfile';
+
+describe('PersonalProfile component', () => {
+    it('shows an empty profile', async ({ expect }) => {
+        const profiler = getProfilerService();
+        profiler.reset();
+
+        profiler.createUserProfile('user:xyz', 'NoName');
+
+        render(
+            <TestWrapper>
+                <PersonalProfile id="user:xyz" />
+            </TestWrapper>
+        );
+
+        expect(screen.getByText('NoName')).toBeVisible();
+        expect(screen.getByTestId('noposts-box')).toBeVisible();
+    });
+
+    it('includes content', async ({ expect }) => {
+        const content = getContentService();
+        const profiler = getProfilerService();
+        content.reset();
+        profiler.reset();
+
+        profiler.createUserProfile('user:xyz', 'NoName');
+
+        content.addContent('data', { id: '1', labels: [], authorId: 'user:xyz' });
+
+        render(
+            <TestWrapper>
+                <PersonalProfile id="user:xyz" />
+            </TestWrapper>
+        );
+
+        expect(screen.getByText('NoName')).toBeVisible();
+        expect(screen.getByTestId('gridimage-0')).toBeVisible();
+    });
+});

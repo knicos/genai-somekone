@@ -1,0 +1,85 @@
+@value workspaceBg, textDark, borderGrey from "@knicos/genai-base/css/colours.module.css";
+
+.profileContainer {
+    width: 100%;
+    min-height: 0;
+    height: 100%;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: scroll;
+    scrollbar-gutter: stable both-edges;
+    background: white;
+}
+
+.innerContainer {
+    width: 100%;
+    max-width: 500px;
+    min-height: 0;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.headerBar {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+    padding: 2rem 1.5rem;
+    border-bottom: 1px solid borderGrey;
+}
+
+.avatarBlock {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+}
+
+.headerBar > h2 {
+    margin: 0;
+    color: textDark;
+    font-size: 1rem;
+}
+
+.avatarBlock > img {
+    border-radius: 50%;
+}
+
+.statsBlock {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 0.9rem;
+    color: textDark;
+}
+
+.statsNumber {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: black;
+}
+
+.noPosts {
+    margin: 3rem 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.noPostsMain {
+    font-size: 1.3rem;
+    font-weight: bold;
+}
+
+.noPostsDesc {
+    text-align: center;
+}
+
+.noPostsIcon {
+    font-size: 4.5rem;
+}
