@@ -1,6 +1,7 @@
 import { PeerEvent, BuiltinEvent } from '@knicos/genai-base';
 import { SMConfig } from '@genaism/state/smConfig';
 import {
+    ContentMetadata,
     ContentNodeId,
     ContentStatsId,
     LogEntry,
@@ -79,6 +80,17 @@ export interface SnapshotEvent extends PeerEvent {
     compressed?: boolean;
 }
 
+export interface NewPostEvent extends PeerEvent {
+    event: 'eter:newpost';
+    meta: ContentMetadata;
+    data?: Uint8Array;
+}
+
+export interface ContentRequestEvent extends PeerEvent {
+    event: 'eter:request_content';
+    id: ContentNodeId;
+}
+
 export type EventProtocol =
     | BuiltinEvent
     | ContentStatsEvent
@@ -90,4 +102,6 @@ export type EventProtocol =
     | ResearchLogEvent
     | UserListEvent
     | CommentEvent
+    | NewPostEvent
+    | ContentRequestEvent
     | ActionLogEvent;

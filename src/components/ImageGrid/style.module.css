@@ -48,3 +48,8 @@
     composes: selectButton;
     background: rgba(0, 0, 0, 0.5);
 }
+
+.blankImage {
+    aspect-ratio: 1/1;
+    background: #ddd;
+}

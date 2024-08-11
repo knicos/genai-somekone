@@ -65,7 +65,7 @@ export function heatmapGrid(content: ContentService, images: ContentNodeId[], di
 
     images.forEach((image) => {
         const point = content.getContentMetadata(image)?.point || [Math.random(), Math.random()];
-        const pt: [number, number] = [Math.round(point[0] * dim), Math.round(point[1] * dim)];
+        const pt: [number, number] = [Math.floor(point[0] * dim), Math.floor(point[1] * dim)];
         const nearest = findNearestSlot(grid, pt, 100);
         if (nearest[0] >= 0) {
             grid[nearest[1]][nearest[0]] = image;

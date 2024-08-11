@@ -1,4 +1,4 @@
-import { UserNodeData, UserNodeId } from '@knicos/genai-recom';
+import { createEmptyProfile, UserNodeData, UserNodeId } from '@knicos/genai-recom';
 import { useEffect, useMemo, useReducer } from 'react';
 import { useBroker, useProfilerService } from './services';
 
@@ -12,8 +12,14 @@ export function useUserProfile(id?: UserNodeId): UserNodeData {
         broker.on(`profile-${aid}`, handler);
         return () => broker.off(`profile-${aid}`, handler);
     }, [aid, broker]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    return useMemo(() => profiler.getUserProfile(aid), [aid, count]);
+    return useMemo(() => {
+        try {
+            return profiler.getUserProfile(aid);
+        } catch (e) {
+            return createEmptyProfile(aid, '');
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [profiler, aid, count]);
 }
 
 export function useSimilarUsers(profile: UserNodeData) {

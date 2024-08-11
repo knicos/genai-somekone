@@ -8,8 +8,9 @@ import { SMConfig } from '../../state/smConfig';
 import { compressToUTF16 } from 'lz-string';
 import { appendResearchLog } from '@genaism/services/research/research';
 import { onlineUsers } from '@genaism/state/sessionState';
-import { makeUserSnapshot, ProfilerService, UserNodeId } from '@knicos/genai-recom';
+import { ContentNodeId, makeUserSnapshot, ProfilerService, UserNodeId } from '@knicos/genai-recom';
 import { useServices } from '@genaism/hooks/services';
+import { bytesToBase64DataUrl, dataUrlToBytes } from '@genaism/util/base64';
 
 const MAX_AGE = 30 * 60 * 1000; // 30 mins
 
@@ -33,6 +34,7 @@ export default function ServerProtocol({ onReady, code, content }: Props) {
     const senderRef = useRef<SenderType<EventProtocol> | undefined>();
     const [users, setUsers] = useRecoilState(onlineUsers);
     const { content: contentSvc, profiler: profilerSvc, actionLog } = useServices();
+    const postCache = useRef(new Set<ContentNodeId>());
 
     const dataHandler = useCallback(
         (data: EventProtocol, conn: DataConnection) => {
@@ -57,6 +59,38 @@ export default function ServerProtocol({ onReady, code, content }: Props) {
                 setUsers((old) => old.filter((o) => o.connection !== conn));
             } else if (data.event === 'eter:profile_data') {
                 profilerSvc.reverseProfile(data.id, data.profile);
+            } else if (data.event === 'eter:request_content') {
+                const meta = contentSvc.getContentMetadata(data.id);
+                const contentData = contentSvc.getContentData(data.id);
+                if (meta && contentData) {
+                    dataUrlToBytes(contentData).then((binaryData) => {
+                        conn.send({
+                            event: 'eter:newpost',
+                            meta,
+                            data: binaryData,
+                        });
+                    });
+                }
+            } else if (data.event === 'eter:newpost') {
+                const cid: ContentNodeId = `content:${data.meta.id}`;
+                if (data.data) {
+                    bytesToBase64DataUrl(data.data).then((base64) => {
+                        if (!contentSvc.hasContent(cid)) {
+                            contentSvc.addContent(base64, data.meta);
+                        } else {
+                            contentSvc.addContentData(base64, data.meta);
+                        }
+                    });
+                } else {
+                    contentSvc.addContentMeta(data.meta);
+                }
+
+                postCache.current.add(cid);
+
+                // Must forward it to everyone except the poster.
+                if (senderRef.current) {
+                    senderRef.current({ event: 'eter:newpost', meta: data.meta }, [conn.connectionId]);
+                }
             } else if (data.event === 'eter:action_log') {
                 actionLog.appendActionLog(data.log, data.id);
                 data.log.forEach((l) => {
@@ -93,6 +127,17 @@ export default function ServerProtocol({ onReady, code, content }: Props) {
                     snapshot: compressed ? compressToUTF16(JSON.stringify(snap)) : snap,
                     compressed,
                 });
+
+                // First snapshot
+                if (!timeEntry) {
+                    // Send all posted content metadata
+                    postCache.current.forEach((c) => {
+                        const meta = contentSvc.getContentMetadata(c);
+                        if (meta) {
+                            conn.send({ event: 'eter:newpost', meta });
+                        }
+                    });
+                }
             } else if (data.event === 'eter:recommendations') {
                 // Send some updated statistics for these new recommendations
                 conn.send({

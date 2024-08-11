@@ -15,6 +15,7 @@ import IconButtonDot from '../IconButtonDot/IconButtonDot';
 import { useTranslation } from 'react-i18next';
 import { ContentNodeId } from '@knicos/genai-recom';
 import { useContentService } from '@genaism/hooks/services';
+import { useContent } from '@genaism/hooks/content';
 
 const MAX_COMMENTS = 10;
 
@@ -79,8 +80,7 @@ export default function FeedImage({
 }: Props) {
     const { t } = useTranslation();
     const content = useContentService();
-    const contentData = content.getContentData(id); //useRecoilValue(contentCache(id));
-    const contentMeta = content.getContentMetadata(id);
+    const [contentMeta, contentData] = useContent(id);
     const [liked, setLiked] = useState<LikeKind>('none');
     const [activePanel, setActivePanel] = useState<ActionPanel>('none');
     const [followed, setFollowed] = useState(false);

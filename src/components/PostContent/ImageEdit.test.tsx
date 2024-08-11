@@ -14,7 +14,7 @@ import {
 } from '@knicos/genai-recom';
 
 const { mockEncode, mockSimilar } = vi.hoisted(() => ({
-    mockEncode: vi.fn(() => [1, 1, 1]),
+    mockEncode: vi.fn(() => new Promise((resolve) => resolve([1, 1, 1]))),
     mockSimilar: vi.fn(() => [
         { id: 'content:1', weight: 1 },
         { id: 'content:2', weight: 0.5 },

@@ -8,8 +8,9 @@ import { SMConfig } from '../../state/smConfig';
 import { appConfiguration } from '@genaism/state/settingsState';
 import { LogProvider } from '@genaism/hooks/logger';
 import { decompressFromUTF16 } from 'lz-string';
-import { ScoredRecommendation, Snapshot, UserNodeData } from '@knicos/genai-recom';
+import { ContentNodeId, ScoredRecommendation, Snapshot, UserNodeData } from '@knicos/genai-recom';
 import { useServices } from '@genaism/hooks/services';
+import { bytesToBase64DataUrl, dataUrlToBytes } from '@genaism/util/base64';
 
 const DATA_LOG_TIME = 15 * 60 * 1000;
 const USERNAME_KEY = 'genai_somekone_username';
@@ -78,11 +79,22 @@ export default function FeedProtocol({ content, server, mycode, setContent, chil
                 conn.send({ event: 'eter:profile_data', profile, id: profilerSvc.getCurrentUser() });
                 conn.send({ event: 'eter:recommendations', recommendations, id: profilerSvc.getCurrentUser() });
                 conn.send({ event: 'eter:connect', code: `sm-${server}` });
+            } else if (data.event === 'eter:newpost') {
+                if (data.data) {
+                    bytesToBase64DataUrl(data.data).then((base64) => {
+                        if (!contentSvc.hasContent(`content:${data.meta.id}`)) {
+                            contentSvc.addContent(base64, data.meta);
+                        } else {
+                            contentSvc.addContentData(base64, data.meta);
+                        }
+                    });
+                } else {
+                    contentSvc.addContentMeta(data.meta);
+                }
             } else if (data.event === 'eter:snapshot' && data.snapshot) {
                 const snap = data.compressed
                     ? (JSON.parse(decompressFromUTF16(data.snapshot as string)) as Snapshot)
                     : (data.snapshot as Snapshot);
-                // console.log('SNAP', getCurrentUser(), snap);
                 profilerSvc.graph.addNodes(snap.nodes);
                 profilerSvc.graph.addEdges(snap.edges.map((e) => ({ ...e, timestamp: Date.now(), metadata: {} })));
                 snap.logs?.forEach((log) => {
@@ -124,6 +136,7 @@ export default function FeedProtocol({ content, server, mycode, setContent, chil
             window.sessionStorage.setItem(USERNAME_KEY, username);
             profilerSvc.setUserName(profilerSvc.getCurrentUser(), username);
             send({ event: 'eter:reguser', username, id: profilerSvc.getCurrentUser() });
+            send({ event: 'eter:snapshot', id: profilerSvc.getCurrentUser() });
         }
     }, [username, send, ready, profilerSvc]);
 
@@ -160,6 +173,30 @@ export default function FeedProtocol({ content, server, mycode, setContent, chil
     useEffect(() => {
         setHasBeenReady(true);
     }, [ready]);
+
+    useEffect(() => {
+        const postHandler = (cid: ContentNodeId) => {
+            const uid = profilerSvc.getCurrentUser();
+            const meta = contentSvc.getContentMetadata(cid);
+            const data = contentSvc.getContentData(cid);
+            if (send && meta && data && meta.authorId === uid) {
+                dataUrlToBytes(data).then((binaryData) => {
+                    send({ event: 'eter:newpost', meta, data: binaryData });
+                });
+            }
+        };
+        const missingHandler = (cid: ContentNodeId) => {
+            if (send && contentSvc.hasContent(cid)) {
+                send({ event: 'eter:request_content', id: cid });
+            }
+        };
+        contentSvc.broker.on('posted', postHandler);
+        contentSvc.broker.on('contentmissing', missingHandler);
+        return () => {
+            contentSvc.broker.off('posted', postHandler);
+            contentSvc.broker.off('contentmissing', missingHandler);
+        };
+    }, [contentSvc, send, profilerSvc]);
 
     return (
         <ProtocolContext.Provider

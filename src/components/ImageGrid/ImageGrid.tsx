@@ -2,7 +2,7 @@ import { ContentNodeId } from '@knicos/genai-recom';
 import style from './style.module.css';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { useTranslation } from 'react-i18next';
-import { useContentService } from '@genaism/hooks/services';
+import { useContent } from '@genaism/hooks/content';
 
 interface Props {
     images: ContentNodeId[];
@@ -22,9 +22,21 @@ function SelectButton({ selected }: SelectProps) {
     );
 }
 
+function ImageItem({ image }: { image: ContentNodeId }) {
+    const [, data] = useContent(image);
+    return data ? (
+        <img
+            src={data}
+            style={{ aspectRatio: '1/1', objectFit: 'contain' }}
+            alt=""
+        />
+    ) : (
+        <div className={style.blankImage} />
+    );
+}
+
 export default function ImageGrid({ images, selected, onSelect }: Props) {
     const { t } = useTranslation();
-    const content = useContentService();
 
     return (
         <div
@@ -39,11 +51,7 @@ export default function ImageGrid({ images, selected, onSelect }: Props) {
                         onClick={() => onSelect && onSelect(ix)}
                         aria-label={t('recommendations.aria.imageSelect', { number: ix + 1 })}
                     >
-                        <img
-                            src={content.getContentData(img)}
-                            style={{ aspectRatio: '1/1', objectFit: 'contain' }}
-                            alt={t('recommendations.aria.imageSelect', { number: ix + 1 })}
-                        />
+                        <ImageItem image={img} />
                         <SelectButton selected={selected === ix} />
                     </button>
                 ) : (
@@ -52,11 +60,7 @@ export default function ImageGrid({ images, selected, onSelect }: Props) {
                         className={style.gridItem}
                         data-testid={`gridimage-${ix}`}
                     >
-                        <img
-                            src={content.getContentData(img)}
-                            style={{ aspectRatio: '1/1', objectFit: 'contain' }}
-                            alt=""
-                        />
+                        <ImageItem image={img} />
                     </div>
                 )
             )}

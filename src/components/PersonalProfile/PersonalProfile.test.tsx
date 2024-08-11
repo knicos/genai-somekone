@@ -29,7 +29,7 @@ describe('PersonalProfile component', () => {
 
         profiler.createUserProfile('user:xyz', 'NoName');
 
-        content.addContent('data', { id: '1', labels: [], authorId: 'user:xyz' });
+        content.postContent('data', { id: '1', labels: [], authorId: 'user:xyz' });
 
         render(
             <TestWrapper>

@@ -4,9 +4,11 @@ import { Workspace } from './Workspace';
 export function Component() {
     const [params] = useSearchParams();
 
+    const content = params.get('content');
+
     return (
         <Workspace
-            contentUrls={params.get('content') || undefined}
+            contentUrls={content === null ? undefined : content}
             cfg={params.get('cfg') || undefined}
             experimental={!!params.get('experimental')}
         />

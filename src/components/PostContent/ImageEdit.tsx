@@ -1,5 +1,5 @@
 import { useContentService } from '@genaism/hooks/services';
-import { ContentService } from '@knicos/genai-recom';
+import { ContentService, Embedding } from '@knicos/genai-recom';
 import { Chip, IconButton } from '@mui/material';
 import { useEffect, useState } from 'react';
 import style from './style.module.css';
@@ -23,37 +23,45 @@ interface LabelChoice {
     weight: number;
 }
 
-async function getSimilarContent(contentSvc: ContentService, image: string) {
+async function getSimilarContent(contentSvc: ContentService, embedding: Embedding) {
     if (!contentSvc.hasEncoder()) {
         await contentSvc.createEncoderModel({ noSave: true });
     }
-    const embedding = await contentSvc.createEmbedding(image);
     return contentSvc.getSimilarContent(embedding, 20);
 }
 
 export default function ImageEdit({ image, onDone, onCancel }: Props) {
     const { t } = useTranslation();
     const contentSvc = useContentService();
-    const [labels, setLabels] = useState<LabelChoice[]>([]);
+    const [labels, setLabels] = useState<LabelChoice[]>();
     const [labelCount, setLabelCount] = useState(5);
+    const [embedding, setEmbedding] = useState<Embedding | undefined>();
     const profile = useUserProfile();
 
     useEffect(() => {
-        getSimilarContent(contentSvc, image).then((sim) => {
-            const labelMap = new Map<string, { weight: number; score: number }>();
-            sim.forEach((s) => {
-                const meta = contentSvc.getContentMetadata(s.id);
-                if (meta) {
-                    meta.labels.forEach((l) => {
-                        const current = labelMap.get(l.label) || { score: 0, weight: 0 };
-                        labelMap.set(l.label, { score: current.score + s.weight, weight: l.weight });
+        contentSvc
+            .createEmbedding(image)
+            .then((e) => {
+                setEmbedding(e);
+                getSimilarContent(contentSvc, e).then((sim) => {
+                    const labelMap = new Map<string, { weight: number; score: number }>();
+                    sim.forEach((s) => {
+                        const meta = contentSvc.getContentMetadata(s.id);
+                        if (meta) {
+                            meta.labels.forEach((l) => {
+                                const current = labelMap.get(l.label) || { score: 0, weight: 0 };
+                                labelMap.set(l.label, { score: current.score + s.weight, weight: l.weight });
+                            });
+                        }
                     });
-                }
+                    const bestLabels = Array.from(labelMap);
+                    bestLabels.sort((a, b) => b[1].score - a[1].score);
+                    setLabels(bestLabels.map((b) => ({ label: b[0], score: b[1].score, weight: b[1].weight })));
+                });
+            })
+            .catch(() => {
+                setLabels([]);
             });
-            const bestLabels = Array.from(labelMap);
-            bestLabels.sort((a, b) => b[1].score - a[1].score);
-            setLabels(bestLabels.map((b) => ({ label: b[0], score: b[1].score, weight: b[1].weight })));
-        });
     }, [image, contentSvc]);
 
     return (
@@ -73,7 +81,7 @@ export default function ImageEdit({ image, onDone, onCancel }: Props) {
                     </IconButton>
                 </div>
             </div>
-            {labels.length > 0 && (
+            {labels && (
                 <div className={style.labelChips}>
                     {labels.slice(0, labelCount).map((label, ix) => (
                         <Chip
@@ -81,7 +89,7 @@ export default function ImageEdit({ image, onDone, onCancel }: Props) {
                             key={ix}
                             label={`#${label.label}`}
                             onDelete={() => {
-                                setLabels((old) => old.filter((l) => l.label !== label.label));
+                                setLabels((old) => (old || []).filter((l) => l.label !== label.label));
                                 setLabelCount((old) => old - 1);
                             }}
                         />
@@ -95,23 +103,25 @@ export default function ImageEdit({ image, onDone, onCancel }: Props) {
                     />
                 </div>
             )}
-            {labels.length === 0 && (
+            {!labels && (
                 <div className={style.spinnerContainer}>
                     <Spinner />
                 </div>
             )}
             <div className={style.postButtonContainer}>
                 <LargeButton
-                    disabled={labels.length === 0}
+                    disabled={!labels}
                     startIcon={<DoneIcon fontSize="large" />}
                     variant="contained"
                     color="secondary"
                     onClick={() => {
-                        contentSvc.addContent(image, {
+                        contentSvc.postContent(image, {
                             id: uuidv4(),
                             author: profile.name,
                             authorId: profile.id,
-                            labels: labels.slice(0, labelCount).map((l) => ({ label: l.label, weight: l.weight })),
+                            embedding,
+                            labels:
+                                labels?.slice(0, labelCount).map((l) => ({ label: l.label, weight: l.weight })) || [],
                         });
                         onDone();
                     }}

@@ -1,11 +1,11 @@
 import { useServices } from '@genaism/hooks/services';
 import style from './style.module.css';
-import { useMemo } from 'react';
 import ImageGrid from '../ImageGrid/ImageGrid';
 import { useUserProfile } from '@genaism/hooks/profiler';
 import { UserNodeId } from '@knicos/genai-recom';
 import PhotoCameraOutlinedIcon from '@mui/icons-material/PhotoCameraOutlined';
 import { useTranslation } from 'react-i18next';
+import { useRelatedNodes } from '@genaism/hooks/graph';
 
 interface Props {
     id?: UserNodeId;
@@ -13,10 +13,11 @@ interface Props {
 
 export default function PersonalProfile({ id }: Props) {
     const { t } = useTranslation();
-    const { profiler: profilerSvc, content: contentSvc } = useServices();
+    const { content: contentSvc } = useServices();
     const profile = useUserProfile(id);
 
-    const images = useMemo(() => profilerSvc.getUserContent(profile.id), [profilerSvc, profile]);
+    //const images = useMemo(() => profilerSvc.getUserContent(profile.id), [profilerSvc, profile]);
+    const images = useRelatedNodes(profile.id, 'author').map((n) => n.id);
 
     return (
         <div className={style.profileContainer}>

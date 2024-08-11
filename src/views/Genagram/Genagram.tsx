@@ -1,5 +1,5 @@
 import style from './style.module.css';
-import { Outlet, useNavigate, useParams } from 'react-router-dom';
+import { Outlet, useParams } from 'react-router-dom';
 import { useCallback, useState } from 'react';
 import { SMConfig } from '../../state/smConfig';
 import EnterUsername from './EnterUsername';
@@ -22,7 +22,6 @@ export function Component() {
     const [content, setContent] = useState<(string | ArrayBuffer)[]>();
     const [username, setUsername] = useRecoilState<string | undefined>(currentUserName);
     const setContentLoaded = useSetRecoilState(contentLoaded);
-    const navigate = useNavigate();
 
     const MYCODE = useRandom(10);
 
@@ -49,7 +48,6 @@ export function Component() {
                             <EnterUsername
                                 onUsername={(name: string) => {
                                     setUsername(name);
-                                    navigate('feed');
                                 }}
                             />
                             <Privacy
@@ -58,10 +56,10 @@ export function Component() {
                             />
                         </>
                     )}
-                    <Outlet />
-                    <BlockDialog />
                     {config && username && (
                         <>
+                            <Outlet />
+                            <BlockDialog />
                             <AppNavigation code={MYCODE} />
                         </>
                     )}

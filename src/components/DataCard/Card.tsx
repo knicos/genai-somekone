@@ -3,7 +3,7 @@ import PieScore from '../PieScore/PieScore';
 import { PropsWithChildren } from 'react';
 import { timeAgo } from './time';
 import { ContentNodeId } from '@knicos/genai-recom';
-import { useContentService } from '@genaism/hooks/services';
+import { useContentData } from '@genaism/hooks/content';
 
 interface Props extends PropsWithChildren {
     image?: ContentNodeId;
@@ -15,7 +15,7 @@ interface Props extends PropsWithChildren {
 }
 
 export default function Card({ image, message, score, children, avatar, time, title }: Props) {
-    const contentSvc = useContentService();
+    const data = useContentData(image);
     return (
         <li
             className={style.item}
@@ -24,7 +24,7 @@ export default function Card({ image, message, score, children, avatar, time, ti
             <div className={style.header}>
                 {image && (
                     <img
-                        src={contentSvc.getContentData(image)}
+                        src={data}
                         alt="Content item"
                         width={75}
                         height={75}

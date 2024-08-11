@@ -67,6 +67,10 @@ export default function ContentLoader({ content, onLoaded }: Props) {
                     console.error(e);
                     setStatus('failed-download');
                 });
+        } else if (content) {
+            setStatus('done');
+            loadSession(contentSvc.graph, actionLog);
+            if (onLoaded) onLoaded();
         } else {
             setStatus('waiting');
         }

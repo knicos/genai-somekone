@@ -33,8 +33,10 @@ export default function Feed({ onProfile, onLog, onRecommend, id, noLog, noActio
             moreState.current = false;
             if (onRecommend) onRecommend(recommendations);
             if (onProfile) onProfile(profiler.getUserProfile(aid));
+        } else if (moreState.current) {
+            setTimeout(more, 2000);
         }
-    }, [recommendations, onProfile, onRecommend, profiler, aid]);
+    }, [recommendations, onProfile, onRecommend, profiler, aid, more]);
 
     const doLog = useCallback(
         (data: LogEntry) => {

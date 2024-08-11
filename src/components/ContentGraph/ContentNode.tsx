@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import style from './style.module.css';
 import { ContentNodeId } from '@knicos/genai-recom';
-import { useContentService } from '@genaism/hooks/services';
+import { useContentData } from '@genaism/hooks/content';
 
 interface Props {
     id: ContentNodeId;
@@ -12,7 +12,7 @@ interface Props {
 
 export default function ContentNode({ id, selected, disabled, size }: Props) {
     const gRef = useRef<SVGGElement>(null);
-    const content = useContentService();
+    const data = useContentData(id);
 
     return (
         <g
@@ -34,7 +34,7 @@ export default function ContentNode({ id, selected, disabled, size }: Props) {
                 data-nodeitem
             />
             <image
-                href={content.getContentData(id)}
+                href={data}
                 width={size}
                 height={size}
                 x={-size / 2}

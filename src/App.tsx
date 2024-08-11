@@ -73,6 +73,10 @@ const router = createBrowserRouter(
                 lazy={() => import('./views/Genagram/Genagram')}
             >
                 <Route
+                    index
+                    loader={() => redirect('feed')}
+                />
+                <Route
                     path="feed"
                     lazy={() => import('./views/Genagram/subviews/FeedView')}
                 />

@@ -12,7 +12,7 @@ export default function WebcamView({ onImage }: Props) {
     const doCapture = useCallback(
         (canvas: HTMLCanvasElement) => {
             setCapturing(false);
-            onImage(canvas.toDataURL());
+            onImage(canvas.toDataURL('image/jpeg', 0.9));
         },
         [onImage]
     );
