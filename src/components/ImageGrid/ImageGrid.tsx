@@ -3,11 +3,13 @@ import style from './style.module.css';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { useTranslation } from 'react-i18next';
 import { useContent } from '@genaism/hooks/content';
+import { Link } from 'react-router-dom';
 
 interface Props {
     images: ContentNodeId[];
     selected?: number;
     onSelect?: (ix: number) => void;
+    linkPrefix?: string;
 }
 
 interface SelectProps {
@@ -35,7 +37,7 @@ function ImageItem({ image }: { image: ContentNodeId }) {
     );
 }
 
-export default function ImageGrid({ images, selected, onSelect }: Props) {
+export default function ImageGrid({ images, selected, onSelect, linkPrefix }: Props) {
     const { t } = useTranslation();
 
     return (
@@ -54,6 +56,18 @@ export default function ImageGrid({ images, selected, onSelect }: Props) {
                         <ImageItem image={img} />
                         <SelectButton selected={selected === ix} />
                     </button>
+                ) : linkPrefix ? (
+                    <Link
+                        key={ix}
+                        to={`${linkPrefix}${img}`}
+                    >
+                        <div
+                            className={style.gridItem}
+                            data-testid={`gridimage-${ix}`}
+                        >
+                            <ImageItem image={img} />
+                        </div>
+                    </Link>
                 ) : (
                     <div
                         key={ix}

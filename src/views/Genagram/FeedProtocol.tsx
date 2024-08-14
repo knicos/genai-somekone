@@ -141,15 +141,15 @@ export default function FeedProtocol({ content, server, mycode, setContent, chil
     }, [username, send, ready, profilerSvc]);
 
     const doLog = useCallback(() => {
-        if (send && logTimer.current === -1) {
+        /*if (send && logTimer.current === -1) {
             logTimer.current = window.setTimeout(() => {
                 logTimer.current = -1;
                 const logs = actionLog.getActionLogSince(logRef.current, profilerSvc.getCurrentUser());
                 logRef.current = Date.now();
                 send({ event: 'eter:action_log', id: profilerSvc.getCurrentUser(), log: logs });
             }, 500);
-        }
-    }, [send, actionLog, profilerSvc]);
+        }*/
+    }, []);
 
     const doProfile = useCallback(
         (profile: UserNodeData) => {
@@ -190,13 +190,30 @@ export default function FeedProtocol({ content, server, mycode, setContent, chil
                 send({ event: 'eter:request_content', id: cid });
             }
         };
+        const logHandler = () => {
+            if (send) {
+                if (send && logTimer.current === -1) {
+                    logTimer.current = window.setTimeout(() => {
+                        logTimer.current = -1;
+                        const logs = actionLog.getActionLogSince(logRef.current, profilerSvc.getCurrentUser());
+                        logRef.current = Date.now();
+                        send({ event: 'eter:action_log', id: profilerSvc.getCurrentUser(), log: logs });
+                    }, 500);
+                }
+            }
+        };
+
         contentSvc.broker.on('posted', postHandler);
         contentSvc.broker.on('contentmissing', missingHandler);
+        actionLog.broker.on('logdata-engagement', logHandler);
+        actionLog.broker.on('logdata-comment', logHandler);
         return () => {
             contentSvc.broker.off('posted', postHandler);
             contentSvc.broker.off('contentmissing', missingHandler);
+            contentSvc.broker.off('logdata-engagement', logHandler);
+            contentSvc.broker.off('logdata-comment', logHandler);
         };
-    }, [contentSvc, send, profilerSvc]);
+    }, [contentSvc, send, profilerSvc, actionLog]);
 
     return (
         <ProtocolContext.Provider

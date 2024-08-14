@@ -5,12 +5,11 @@ import { SMConfig } from '@genaism/state/smConfig';
 import { appConfiguration } from '@genaism/state/settingsState';
 
 function FeedWrapper() {
-    const { doProfile, doRecommend, doLog } = useFeedProtocol();
+    const { doProfile, doRecommend } = useFeedProtocol();
 
     return (
         <Feed
             onProfile={doProfile}
-            onLog={doLog}
             onRecommend={doRecommend}
         />
     );

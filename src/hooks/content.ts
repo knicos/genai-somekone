@@ -23,6 +23,27 @@ export function useContentData(id?: ContentNodeId) {
     return data;
 }
 
+export function useContentComments(id: ContentNodeId) {
+    const service = useContentService();
+    const [comments, setComments] = useState(id ? service.getComments(id) : undefined);
+
+    useEffect(() => {
+        if (id) {
+            const cid = id;
+            const handler = () => {
+                setComments([...service.getComments(cid)]);
+            };
+
+            service.broker.on(`contentcomment-${cid}`, handler);
+            return () => {
+                service.broker.off(`contentcomment-${cid}`, handler);
+            };
+        }
+    }, [service, id]);
+
+    return comments;
+}
+
 export function useContent(id?: ContentNodeId): [ContentMetadata | undefined, string | undefined] {
     const service = useContentService();
     const [data, setData] = useState(id ? service.getContentData(id) : undefined);

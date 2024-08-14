@@ -1,3 +1,5 @@
+@value workspaceBg from "@knicos/genai-base/css/colours.module.css";
+
 .container {
     min-height: 0;
     display: flex;

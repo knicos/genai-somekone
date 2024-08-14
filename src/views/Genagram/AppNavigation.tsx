@@ -11,6 +11,7 @@ import style from './style.module.css';
 import { useRecoilValue } from 'recoil';
 import { uiDarkMode } from '@genaism/state/uiState';
 import { useProfilerService } from '@genaism/hooks/services';
+import { MouseEvent } from 'react';
 
 interface Props {
     code: string;
@@ -30,49 +31,77 @@ export default function AppNavigation({ code }: Props) {
                 <IconButton
                     color={currentView === 'feed' ? 'secondary' : 'inherit'}
                     size="large"
-                    onClick={() => navigate('feed', { replace: true })}
+                    onClick={(e: MouseEvent) => {
+                        navigate('feed', { replace: true });
+                        e.preventDefault();
+                    }}
+                    href="feed"
                 >
                     <HomeIcon fontSize="inherit" />
                 </IconButton>
                 <IconButton
                     color={currentView === 'post' ? 'secondary' : 'inherit'}
                     size="large"
-                    onClick={() => navigate('post', { replace: currentView !== 'feed' })}
+                    onClick={(e: MouseEvent) => {
+                        navigate('post', { replace: currentView !== 'feed' });
+                        e.preventDefault();
+                    }}
+                    href="post"
                 >
                     <AddAPhotoIcon fontSize="inherit" />
                 </IconButton>
                 <IconButton
                     color={currentView === 'data' ? 'secondary' : 'inherit'}
                     size="large"
-                    onClick={() => navigate('data', { replace: currentView !== 'feed' })}
+                    onClick={(e: MouseEvent) => {
+                        navigate('data', { replace: currentView !== 'feed' });
+                        e.preventDefault();
+                    }}
+                    href="data"
                 >
                     <QueryStatsIcon fontSize="inherit" />
                 </IconButton>
                 <IconButton
                     color={currentView === 'profile' ? 'secondary' : 'inherit'}
                     size="large"
-                    onClick={() => navigate('profile', { replace: currentView !== 'feed' })}
+                    onClick={(e: MouseEvent) => {
+                        navigate('profile', { replace: currentView !== 'feed' });
+                        e.preventDefault();
+                    }}
+                    href="profile"
                 >
                     <PersonIcon fontSize="inherit" />
                 </IconButton>
                 <IconButton
                     color={currentView === 'recommendations' ? 'secondary' : 'inherit'}
                     size="large"
-                    onClick={() => navigate('recommendations', { replace: currentView !== 'feed' })}
+                    onClick={(e: MouseEvent) => {
+                        navigate('recommendations', { replace: currentView !== 'feed' });
+                        e.preventDefault();
+                    }}
+                    href="recommendations"
                 >
                     <ImageSearchIcon fontSize="inherit" />
                 </IconButton>
                 <IconButton
                     color={currentView === profiler.getCurrentUser() ? 'secondary' : 'inherit'}
                     size="large"
-                    onClick={() => navigate(`public/${profiler.getCurrentUser()}`, { replace: currentView !== 'feed' })}
+                    onClick={(e: MouseEvent) => {
+                        navigate(`public/${profiler.getCurrentUser()}`, { replace: currentView !== 'feed' });
+                        e.preventDefault();
+                    }}
+                    href={`public/${profiler.getCurrentUser()}`}
                 >
                     <AccountCircleIcon fontSize="inherit" />
                 </IconButton>
                 <IconButton
                     size="large"
                     color={currentView === 'share' ? 'secondary' : 'inherit'}
-                    onClick={() => navigate(`share?code=${code}`, { replace: currentView !== 'feed' })}
+                    onClick={(e: MouseEvent) => {
+                        navigate(`share?code=${code}`, { replace: currentView !== 'feed' });
+                        e.preventDefault();
+                    }}
+                    href={`share?code=${code}`}
                 >
                     <ShareIcon fontSize="inherit" />
                 </IconButton>

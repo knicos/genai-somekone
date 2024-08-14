@@ -47,7 +47,10 @@ export default function PersonalProfile({ id }: Props) {
                     </div>
                     <h2>{profile.name}</h2>
                 </div>
-                <ImageGrid images={images} />
+                <ImageGrid
+                    images={images}
+                    linkPrefix="../image/"
+                />
                 {images.length === 0 && (
                     <div
                         className={style.noPosts}
