@@ -20,6 +20,6 @@ describe('Feed component', () => {
     it('renders a feed', async ({ expect }) => {
         render(<Feed />, { wrapper: TestWrapper });
 
-        expect(await screen.findAllByTestId('feed-image-element')).toHaveLength(1);
+        expect(await screen.findAllByTestId('feed-image-element')).toHaveLength(2);
     });
 });

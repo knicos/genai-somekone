@@ -1,6 +1,6 @@
 import { RecommendationOptions, ScoredRecommendation, UserNodeId } from '@knicos/genai-recom';
-import { useCallback, useEffect, useMemo, useReducer, useRef } from 'react';
-import { useBroker, useProfilerService, useRecommenderService } from './services';
+import { useCallback, useEffect, useState } from 'react';
+import { useServices } from './services';
 
 interface RecReturn {
     more: () => void;
@@ -15,49 +15,29 @@ const DEFAULT_OPTIONS: RecommendationOptions = {
     popular: 2,
 };
 
-interface InternalState {
-    options: RecommendationOptions;
-    size: number;
-    id: UserNodeId;
-}
-
 export function useRecommendations(size: number, id?: UserNodeId, options?: RecommendationOptions): RecReturn {
-    const broker = useBroker();
-    const profiler = useProfilerService();
-    const recommender = useRecommenderService();
+    const { broker, profiler, recommender } = useServices();
     const aid = id || profiler.getCurrentUser();
-    const optRef = useRef<InternalState>({
-        options: options || DEFAULT_OPTIONS,
-        id: aid,
-        size: size,
-    });
-    const [count, trigger] = useReducer((a) => ++a, 0);
+    const [recommendations, setRecommendations] = useState<ScoredRecommendation[]>([]);
+
     useEffect(() => {
-        const handler = () => trigger();
+        const handler = () => {
+            const newItems = recommender.getRecommendations(aid, size, options || DEFAULT_OPTIONS);
+            setRecommendations([...newItems]);
+        };
         broker.on(`recom-${aid}`, handler);
+        recommender.generateNewRecommendations(aid, size, options || DEFAULT_OPTIONS, true);
         return () => broker.off(`recom-${aid}`, handler);
-    }, [aid, broker]);
-
-    useEffect(() => {
-        optRef.current.id = aid;
-        optRef.current.size = size;
-    }, [aid, size]);
-
-    useEffect(() => {
-        optRef.current.options = options || DEFAULT_OPTIONS;
-        recommender.generateNewRecommendations(optRef.current.id, optRef.current.size, optRef.current.options, true);
-    }, [options, recommender]);
+    }, [aid, broker, recommender, size, options]);
 
     const doMore = useCallback(() => {
-        recommender.generateNewRecommendations(aid, size, optRef.current.options, true);
-    }, [size, aid, recommender]);
+        recommender.generateNewRecommendations(aid, size, options || DEFAULT_OPTIONS, true);
+    }, [size, aid, recommender, options]);
 
-    return useMemo(
-        () => ({
-            recommendations: recommender.getRecommendations(aid, size, optRef.current.options),
-            more: doMore,
-        }),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [aid, count, size, doMore, recommender]
-    );
+    console.log('RECOM', recommendations);
+
+    return {
+        recommendations,
+        more: doMore,
+    };
 }

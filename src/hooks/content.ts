@@ -1,23 +1,23 @@
-import { ContentMetadata, ContentNodeId } from '@knicos/genai-recom';
+import { CommentEntry, ContentMetadata, ContentNodeId } from '@knicos/genai-recom';
 import { useContentService } from './services';
 import { useEffect, useReducer, useState } from 'react';
 
 export function useContentData(id?: ContentNodeId) {
     const service = useContentService();
-    const [data, setData] = useState(id ? service.getContentData(id) : undefined);
+    const [data, setData] = useState<string | undefined>();
 
     useEffect(() => {
-        const handler = () => {
-            if (id) setData(service.getContentData(id));
-        };
         if (id) {
-            service.broker.on(`contentupdate-${id}`, handler);
+            const cid = id;
+            const handler = () => {
+                setData(service.getContentData(cid));
+            };
+            service.broker.on(`contentupdate-${cid}`, handler);
+            setData(service.getContentData(cid));
+            return () => {
+                service.broker.off(`contentupdate-${cid}`, handler);
+            };
         }
-        return () => {
-            if (id) {
-                service.broker.off(`contentupdate-${id}`, handler);
-            }
-        };
     }, [service, id]);
 
     return data;
@@ -25,7 +25,7 @@ export function useContentData(id?: ContentNodeId) {
 
 export function useContentComments(id: ContentNodeId) {
     const service = useContentService();
-    const [comments, setComments] = useState(id ? service.getComments(id) : undefined);
+    const [comments, setComments] = useState<CommentEntry[]>([]);
 
     useEffect(() => {
         if (id) {
@@ -35,6 +35,8 @@ export function useContentComments(id: ContentNodeId) {
             };
 
             service.broker.on(`contentcomment-${cid}`, handler);
+            setComments([...service.getComments(cid)]);
+
             return () => {
                 service.broker.off(`contentcomment-${cid}`, handler);
             };
@@ -46,20 +48,22 @@ export function useContentComments(id: ContentNodeId) {
 
 export function useContent(id?: ContentNodeId): [ContentMetadata | undefined, string | undefined] {
     const service = useContentService();
-    const [data, setData] = useState(id ? service.getContentData(id) : undefined);
+    const [data, setData] = useState<string | undefined>(undefined);
 
     useEffect(() => {
-        const handler = () => {
-            if (id) setData(service.getContentData(id));
-        };
-        if (id) {
-            service.broker.on(`contentupdate-${id}`, handler);
+        const cid = id;
+        if (cid) {
+            const handler = () => {
+                setData(service.getContentData(cid));
+            };
+            service.broker.on(`contentupdate-${cid}`, handler);
+
+            setData(service.getContentData(cid));
+
+            return () => {
+                service.broker.off(`contentupdate-${cid}`, handler);
+            };
         }
-        return () => {
-            if (id) {
-                service.broker.off(`contentupdate-${id}`, handler);
-            }
-        };
     }, [service, id]);
 
     return id ? [service.getContentMetadata(id), data] : [undefined, undefined];
