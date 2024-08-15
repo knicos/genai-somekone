@@ -46,6 +46,34 @@ export function useContentComments(id: ContentNodeId) {
     return comments;
 }
 
+export function useContentStats(id: ContentNodeId) {
+    const service = useContentService();
+    const [reactions, setReactions] = useState(0);
+    const [shares, setShares] = useState(0);
+
+    useEffect(() => {
+        if (id) {
+            const cid = id;
+            const handler = () => {
+                const stats = service.getContentStats(cid);
+                setReactions(stats.reactions);
+                setShares(stats.shares);
+            };
+
+            service.broker.on(`contentstats-${cid}`, handler);
+            const stats = service.getContentStats(cid);
+            setReactions(stats.reactions);
+            setShares(stats.shares);
+
+            return () => {
+                service.broker.off(`contentstats-${cid}`, handler);
+            };
+        }
+    }, [service, id]);
+
+    return { reactions, shares };
+}
+
 export function useContent(id?: ContentNodeId): [ContentMetadata | undefined, string | undefined] {
     const service = useContentService();
     const [data, setData] = useState<string | undefined>(undefined);

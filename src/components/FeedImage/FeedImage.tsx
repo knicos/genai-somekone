@@ -15,7 +15,7 @@ import IconButtonDot from '../IconButtonDot/IconButtonDot';
 import { useTranslation } from 'react-i18next';
 import { ContentNodeId } from '@knicos/genai-recom';
 import { useContentService } from '@genaism/hooks/services';
-import { useContent } from '@genaism/hooks/content';
+import { useContent, useContentStats } from '@genaism/hooks/content';
 
 const MAX_COMMENTS = 10;
 
@@ -86,6 +86,8 @@ export default function FeedImage({
     const [followed, setFollowed] = useState(false);
     const [shareState, setShareState] = useState(new Set<ShareKind>());
     const [commentCount, incComment] = useReducer((v) => ++v, 0);
+    const { reactions, shares } = useContentStats(id);
+
     const doClick = useCallback(() => {
         if (onClick) onClick(id);
         setActivePanel('none');
@@ -145,14 +147,6 @@ export default function FeedImage({
         if (!active) setActivePanel('none');
     }, [active]);
 
-    /*useEffect(() => {
-        if (!content && reqContent) {
-            reqContent.fn({ event: 'eter:request_content', id });
-        }
-    }, [content, reqContent, id]);*/
-
-    const stats = content.getContentStats(id);
-
     return !visible || !contentData || !contentMeta ? null : (
         <div className={style.container}>
             <div className={active || noActions ? style.activeImageContainer : style.imageContainer}>
@@ -193,7 +187,7 @@ export default function FeedImage({
                 {active && !noActions && (
                     <div className={style.buttonRow}>
                         <IconButtonDot
-                            count={stats.reactions}
+                            count={reactions}
                             className={liked !== 'none' ? style.liked : ''}
                             onClick={() => doLike()}
                             color="inherit"
@@ -225,7 +219,7 @@ export default function FeedImage({
                             />
                         </IconButtonDot>
                         <IconButtonDot
-                            count={stats.shares}
+                            count={shares}
                             position="left"
                             color="inherit"
                             onClick={doShowSharePanel}

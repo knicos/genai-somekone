@@ -34,8 +34,6 @@ export function useRecommendations(size: number, id?: UserNodeId, options?: Reco
         recommender.generateNewRecommendations(aid, size, options || DEFAULT_OPTIONS, true);
     }, [size, aid, recommender, options]);
 
-    console.log('RECOM', recommendations);
-
     return {
         recommendations,
         more: doMore,
