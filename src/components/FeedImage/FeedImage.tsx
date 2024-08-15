@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useReducer, useState } from 'react';
+import { MouseEvent, useCallback, useEffect, useReducer, useState } from 'react';
 import style from './style.module.css';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import IconButton from '@mui/material/IconButton';
@@ -84,7 +84,6 @@ export default function FeedImage({
     const [liked, setLiked] = useState<LikeKind>('none');
     const [activePanel, setActivePanel] = useState<ActionPanel>('none');
     const [followed, setFollowed] = useState(false);
-    const [shareState, setShareState] = useState(new Set<ShareKind>());
     const [commentCount, incComment] = useReducer((v) => ++v, 0);
     const { reactions, shares } = useContentStats(id);
 
@@ -103,11 +102,6 @@ export default function FeedImage({
 
     const doShare = useCallback(
         (kind: ShareKind) => {
-            setShareState((old) => {
-                const n = new Set(old);
-                n.add(kind);
-                return n;
-            });
             if (onShare) onShare(id, kind);
         },
         [onShare, id]
@@ -123,13 +117,21 @@ export default function FeedImage({
         [onComment, id]
     );
 
-    const doShowSharePanel = useCallback(() => {
-        setActivePanel('share');
-    }, [setActivePanel]);
+    const doShowSharePanel = useCallback(
+        (e: MouseEvent) => {
+            setActivePanel('share');
+            e.stopPropagation();
+        },
+        [setActivePanel]
+    );
 
-    const doShowComments = useCallback(() => {
-        setActivePanel((current) => (current === 'comment' ? 'none' : 'comment'));
-    }, [setActivePanel]);
+    const doShowComments = useCallback(
+        (e: MouseEvent) => {
+            setActivePanel((current) => (current === 'comment' ? 'none' : 'comment'));
+            e.stopPropagation();
+        },
+        [setActivePanel]
+    );
 
     const doFollow = useCallback(() => {
         setFollowed((v) => {
@@ -185,7 +187,10 @@ export default function FeedImage({
                     data-testid="feed-image-element"
                 />
                 {active && !noActions && (
-                    <div className={style.buttonRow}>
+                    <div
+                        className={style.buttonRow}
+                        onClick={doClick}
+                    >
                         <IconButtonDot
                             count={reactions}
                             className={liked !== 'none' ? style.liked : ''}
@@ -241,7 +246,6 @@ export default function FeedImage({
                     <SharePanel
                         onClose={doCloseLike}
                         onChange={doShare}
-                        state={shareState}
                     />
                 )}
                 {active && activePanel === 'comment' && (

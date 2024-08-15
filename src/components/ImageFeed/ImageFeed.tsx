@@ -8,7 +8,7 @@ import { useTabActive } from '@genaism/hooks/interaction';
 import { useTranslation } from 'react-i18next';
 import { Spinner } from '@knicos/genai-base';
 import LangSelect from '../LangSelect/LangSelect';
-import { ContentNodeId, LogActivity, LogEntry, ScoredRecommendation } from '@knicos/genai-recom';
+import { ContentNodeId, LogEntry, ScoredRecommendation } from '@knicos/genai-recom';
 import { useActionLogService, useProfilerService } from '@genaism/hooks/services';
 
 const INTERACTION_TIMEOUT = 5000;
@@ -155,20 +155,8 @@ export default function ImageFeed({ images, onView, onMore, onLog, noActions, sh
 
     const doShare = useCallback(
         (id: ContentNodeId, kind: ShareKind) => {
-            let type: LogActivity = 'share_private';
-            switch (kind) {
-                case 'friends':
-                    type = 'share_friends';
-                    break;
-                case 'individual':
-                    type = 'share_private';
-                    break;
-                case 'public':
-                    type = 'share_public';
-                    break;
-            }
-            if (kind !== 'none') {
-                onLog({ activity: type, id, timestamp: Date.now() });
+            if (kind === 'public') {
+                onLog({ activity: 'share_public', id, timestamp: Date.now() });
             }
         },
         [onLog]

@@ -2,7 +2,7 @@ import { beforeEach, describe, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import FeedImage from './FeedImage';
 import userEvent from '@testing-library/user-event';
-import { getContentService, getGraphService } from '@knicos/genai-recom';
+import { getContentService, getGraphService, getProfilerService } from '@knicos/genai-recom';
 
 const TEST_IMAGE =
     'https://images.pexels.com/photos/3030647/pexels-photo-3030647.jpeg?cs=srgb&dl=pexels-nextvoyage-3030647.jpg&fm=jpg';
@@ -14,6 +14,8 @@ describe('FeedImage component', () => {
         contentSvc.reset();
         contentSvc.addContent(TEST_IMAGE, { id: 'xyz', author: 'TestAuthor', labels: [] });
         contentSvc.addContent(TEST_IMAGE, { id: 'xyz2', author: 'TestAuthor', labels: [] });
+        const profilerSvc = getProfilerService();
+        profilerSvc.reset();
     });
 
     it('renders with a test image', async ({ expect }) => {
@@ -159,7 +161,10 @@ describe('FeedImage component', () => {
         expect(screen.getByTestId('feed-image-share-panel')).toBeVisible();
     });
 
-    it('calls share action on share friends', async ({ expect }) => {
+    it('calls share action on share with user', async ({ expect }) => {
+        const profilerSvc = getProfilerService();
+        const profile = profilerSvc.createUserProfile('user:1', 'NoName1');
+        profile.embeddings.taste = [1];
         const user = userEvent.setup();
         const sharefn = vi.fn();
         render(
@@ -172,8 +177,8 @@ describe('FeedImage component', () => {
         );
 
         await user.click(screen.getByTestId('feed-image-share-button'));
-        await user.click(screen.getByTestId('share-friends-button'));
-        expect(sharefn).toHaveBeenCalledWith('content:xyz', 'friends');
+        await user.click(screen.getByLabelText('NoName1'));
+        expect(sharefn).toHaveBeenCalledWith('content:xyz', 'public');
     });
 
     it('can hide actions', async ({ expect }) => {

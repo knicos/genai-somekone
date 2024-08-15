@@ -2,7 +2,13 @@ import { describe, it, beforeEach, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import ImageFeed from './ImageFeed';
 import userEvent from '@testing-library/user-event';
-import { ContentNodeId, getContentService, getGraphService, ScoredRecommendation } from '@knicos/genai-recom';
+import {
+    ContentNodeId,
+    getContentService,
+    getGraphService,
+    getProfilerService,
+    ScoredRecommendation,
+} from '@knicos/genai-recom';
 
 function makeRecommendation(id: ContentNodeId): ScoredRecommendation {
     return {
@@ -56,6 +62,10 @@ describe('ImageFeed component', () => {
     });
 
     it('generates a share log event', async ({ expect }) => {
+        const profiler = getProfilerService();
+        profiler.reset();
+        const profile = profiler.createUserProfile('user:x', 'NoName2');
+        profile.embeddings.taste = [1];
         const user = userEvent.setup();
         const logfn = vi.fn();
         render(
@@ -66,10 +76,10 @@ describe('ImageFeed component', () => {
         );
 
         await user.click(screen.getByTestId('feed-image-share-button'));
-        await user.click(screen.getByTestId('share-friends-button'));
+        await user.click(screen.getByLabelText('NoName2'));
 
         expect(logfn).toHaveBeenCalledWith({
-            activity: 'share_friends',
+            activity: 'share_public',
             id: 'content:xyz',
             timestamp: expect.any(Number),
         });

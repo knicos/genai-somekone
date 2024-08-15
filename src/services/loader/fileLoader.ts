@@ -93,6 +93,11 @@ function patchLogs(logs: OldLogItem[]) {
                 case 'anger':
                 case 'sad':
                     item.activity = 'like';
+                    break;
+                case 'share_friends':
+                case 'share_private':
+                    item.activity = 'share_public';
+                    break;
             }
         });
     });
