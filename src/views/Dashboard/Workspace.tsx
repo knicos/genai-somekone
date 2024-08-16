@@ -24,6 +24,7 @@ import ServerProtocol from './ServerProtocol';
 import ContentLoader from '@genaism/components/ContentLoader/ContentLoader';
 import Guidance from '@genaism/components/Guidance/Guidance';
 import ContentToolsDialog from '../dialogs/ContentToolsDialog/ContentToolsDialog';
+import HeatmapCompare from '@genaism/components/HeatmapCompare/HeatmapCompare';
 
 interface Props {
     contentUrls?: string;
@@ -113,6 +114,7 @@ export function Workspace({ contentUrls, cfg, guide, experimental }: Props) {
                         {graphMode === 'topic' && <TopicGraph key={`tg-${count}`} />}
                         {graphMode === 'content' && <ContentGraph key={`cg-${count}`} />}
                         {graphMode === 'grid' && <UserGrid key={`ug-${count}`} />}
+                        {graphMode === 'heat' && <HeatmapCompare key={`hm-${count}`} />}
 
                         <StartDialog
                             users={users}

@@ -9,6 +9,7 @@ import AppsIcon from '@mui/icons-material/Apps';
 import PeopleIcon from '@mui/icons-material/People';
 import CollectionsIcon from '@mui/icons-material/Collections';
 import TextFieldsIcon from '@mui/icons-material/TextFields';
+import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 
 export default function ViewMenu() {
     const { t } = useTranslation();
@@ -48,7 +49,10 @@ export default function ViewMenu() {
             >
                 <MenuItem
                     selected={graphMode === 'grid'}
-                    onClick={() => setGraphMode('grid')}
+                    onClick={() => {
+                        setGraphMode('grid');
+                        handleClose();
+                    }}
                 >
                     <ListItemIcon>
                         <AppsIcon color={graphMode === 'grid' ? 'secondary' : 'disabled'} />
@@ -57,7 +61,10 @@ export default function ViewMenu() {
                 </MenuItem>
                 <MenuItem
                     selected={graphMode === 'social'}
-                    onClick={() => setGraphMode('social')}
+                    onClick={() => {
+                        setGraphMode('social');
+                        handleClose();
+                    }}
                 >
                     <ListItemIcon>
                         <PeopleIcon color={graphMode === 'social' ? 'secondary' : 'disabled'} />
@@ -66,7 +73,10 @@ export default function ViewMenu() {
                 </MenuItem>
                 <MenuItem
                     selected={graphMode === 'content'}
-                    onClick={() => setGraphMode('content')}
+                    onClick={() => {
+                        setGraphMode('content');
+                        handleClose();
+                    }}
                 >
                     <ListItemIcon>
                         <CollectionsIcon color={graphMode === 'content' ? 'secondary' : 'disabled'} />
@@ -75,12 +85,27 @@ export default function ViewMenu() {
                 </MenuItem>
                 <MenuItem
                     selected={graphMode === 'topic'}
-                    onClick={() => setGraphMode('topic')}
+                    onClick={() => {
+                        setGraphMode('topic');
+                        handleClose();
+                    }}
                 >
                     <ListItemIcon>
                         <TextFieldsIcon color={graphMode === 'topic' ? 'secondary' : 'disabled'} />
                     </ListItemIcon>
                     <ListItemText>{t('dashboard.labels.showTopicGraph')}</ListItemText>
+                </MenuItem>
+                <MenuItem
+                    selected={graphMode === 'heat'}
+                    onClick={() => {
+                        setGraphMode('heat');
+                        handleClose();
+                    }}
+                >
+                    <ListItemIcon>
+                        <LocalFireDepartmentIcon color={graphMode === 'heat' ? 'secondary' : 'disabled'} />
+                    </ListItemIcon>
+                    <ListItemText>{t('dashboard.labels.showHeatGraph')}</ListItemText>
                 </MenuItem>
             </Menu>
         </>

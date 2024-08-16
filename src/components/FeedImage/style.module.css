@@ -237,7 +237,7 @@
     width: 100%;
     background: white;
     border-radius: 10px;
-    overflow-y: scroll;
+    overflow: hidden;
 }
 
 .sharecontainer :global .MuiButtonBase-root {

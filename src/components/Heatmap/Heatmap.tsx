@@ -5,11 +5,13 @@ import { normWeights } from '@genaism/util/weights';
 import { heatmapGrid } from './grid';
 import { ContentNodeId, WeightedNode } from '@knicos/genai-recom';
 import { useContentService } from '@genaism/hooks/services';
+import HeatLabel from './HeatLabel';
 
 interface Props {
     data: WeightedNode<ContentNodeId>[];
     dimensions: number;
     busy?: boolean;
+    label?: string;
 }
 
 /*function heatMapColorforValue(value: number) {
@@ -21,7 +23,7 @@ interface Props {
 const ZOOM_SCALE = 60;
 const MIN_OPACITY = 0.1;
 
-export default function Heatmap({ data, dimensions, busy }: Props) {
+export default function Heatmap({ data, dimensions, busy, label }: Props) {
     const [grid, setGrid] = useState<(ContentNodeId | null)[][]>();
     const svgRef = useRef<SVGSVGElement>(null);
     const [zoom, setZoom] = useState(false);
@@ -126,6 +128,7 @@ export default function Heatmap({ data, dimensions, busy }: Props) {
                     ))}
                 </g>
             </svg>
+            {label && <HeatLabel label={label} />}
             {loading && (
                 <div
                     className={style.loading}

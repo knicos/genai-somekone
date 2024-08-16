@@ -5,6 +5,9 @@ import UserItem from './UserItem';
 import style from './style.module.css';
 import { colourLabel } from '../SocialGraph/colourise';
 import { useProfilerService } from '@genaism/hooks/services';
+import { useEffect, useState } from 'react';
+import { Button } from '@knicos/genai-base';
+import { useTranslation } from 'react-i18next';
 
 function buildList(
     id: UserNodeId,
@@ -34,15 +37,25 @@ function buildList(
 }
 
 interface Props {
-    onSelect: (id: UserNodeId) => void;
+    onSelect: (id: UserNodeId[]) => void;
+    multiple?: boolean | number;
+    preSelected?: UserNodeId[];
 }
 
-export default function UserListing({ onSelect }: Props) {
+export default function UserListing({ onSelect, multiple, preSelected }: Props) {
+    const { t } = useTranslation();
     const users = useNodeType('user');
     const similar = useAllSimilarUsers(users, true, 5);
     const profiler = useProfilerService();
+    const [selected, setSelected] = useState(new Set<UserNodeId>());
 
     const sorted = buildList(profiler.getCurrentUser(), users, similar.similar, similar.topics);
+
+    useEffect(() => {
+        if (preSelected) {
+            setSelected(new Set(preSelected));
+        }
+    }, [preSelected]);
 
     return (
         <div className={style.userSection}>
@@ -51,11 +64,40 @@ export default function UserListing({ onSelect }: Props) {
                     <UserItem
                         key={user}
                         id={user}
-                        onSelect={() => onSelect(user)}
+                        multiple={!!multiple}
+                        onSelect={() => {
+                            if (multiple === true || (multiple && multiple > 1)) {
+                                setSelected((old) => {
+                                    const newSet = new Set(old);
+                                    if (newSet.has(user)) {
+                                        newSet.delete(user);
+                                    } else {
+                                        if (multiple === true || multiple > newSet.size) {
+                                            newSet.add(user);
+                                        }
+                                    }
+                                    return newSet;
+                                });
+                            } else {
+                                onSelect([user]);
+                            }
+                        }}
+                        selected={selected?.has(user)}
                         colour={colourLabel(similar.topics?.get(user)?.label || 'nocluster')}
                     />
                 ))}
             </ul>
+            {(multiple === true || (multiple && multiple > 1)) && (
+                <Button
+                    disabled={selected.size === 0}
+                    onClick={() => onSelect(Array.from(selected))}
+                    variant="contained"
+                    color="primary"
+                    data-testid="user-select-button"
+                >
+                    {t('dashboard.actions.select')}
+                </Button>
+            )}
         </div>
     );
 }

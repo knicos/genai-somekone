@@ -15,8 +15,8 @@ interface Props {
 export default function SharePanel({ onClose, onChange }: Props) {
     const { t } = useTranslation();
     const doClick = useCallback(
-        (user: UserNodeId) => {
-            if (onChange) onChange('public', user);
+        (user: UserNodeId[]) => {
+            if (onChange) onChange('public', user[0]);
             if (onClose) onClose();
         },
         [onChange, onClose]

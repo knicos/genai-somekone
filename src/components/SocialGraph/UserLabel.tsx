@@ -1,24 +1,7 @@
 import { UserNodeId } from '@knicos/genai-recom';
 import { GraphNode } from '../Graph/types';
 import Label from './Label';
-
-function hexToRgb(hex: string) {
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result
-        ? {
-              r: parseInt(result[1], 16),
-              g: parseInt(result[2], 16),
-              b: parseInt(result[3], 16),
-          }
-        : null;
-}
-
-function isLight(colour: string): boolean {
-    const col = hexToRgb(colour);
-    if (!col) return true;
-    const Y = 0.2126 * col.r + 0.7152 * col.g + 0.0722 * col.b;
-    return Y >= 128;
-}
+import { isLight } from '@genaism/util/colours';
 
 interface Props {
     node: GraphNode<UserNodeId>;

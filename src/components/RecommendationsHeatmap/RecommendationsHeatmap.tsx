@@ -10,9 +10,10 @@ import { useRecommenderService } from '@genaism/hooks/services';
 interface Props {
     user: UserNodeId;
     dimensions: number;
+    showName?: boolean;
 }
 
-export default function RecommendationsHeatmap({ user, dimensions }: Props) {
+export default function RecommendationsHeatmap({ user, dimensions, showName }: Props) {
     const config = useRecoilValue(configuration(user));
     const images = useRef<ContentNodeId[]>();
     const [heats, setHeats] = useState<WeightedNode<ContentNodeId>[]>();
@@ -37,6 +38,7 @@ export default function RecommendationsHeatmap({ user, dimensions }: Props) {
             data={heats || []}
             busy={loading}
             dimensions={dimensions}
+            label={showName ? profile.name : undefined}
         />
     );
 }

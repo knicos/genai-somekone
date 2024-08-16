@@ -106,7 +106,6 @@ export default function ServerProtocol({ onReady, code, content }: Props) {
                         }
                         contentSvc.addComment(l.id || 'content:none', data.id, l.content || '', l.timestamp);
                     } else if (l.activity === 'share_public' && l.user && l.id) {
-                        console.log('INJECT A USER POST');
                         // TODO: Send only to target user
                         if (senderRef.current) {
                             senderRef.current(

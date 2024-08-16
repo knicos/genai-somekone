@@ -1,6 +1,14 @@
+@value secondary from "@knicos/genai-base/css/colours.module.css";
+
 .userSection {
     background: white;
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+    padding-bottom: 1rem;
+    min-height: 0;
 }
 
 .userSection ul {
@@ -11,13 +19,14 @@
     width: 100%;
     box-sizing: border-box;
     padding: 0;
+    overflow-y: scroll;
 }
 
 .userSection li {
     width: 100%;
 }
 
-.userSection button {
+.userSection li button {
     outline: none;
     border: none;
     color: inherit;
@@ -34,7 +43,7 @@
     padding: 0 1rem;
 }
 
-.userSection button:hover {
+.userSection li button:hover {
     background: #eee;
 }
 
@@ -49,4 +58,19 @@
     height: 58px;
     background: #ddd;
     border-radius: 50%;
+}
+
+.selectButton {
+    background: white;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    border: 2px solid #ddd;
+    color: white;
+    box-sizing: content-box;
+}
+
+.selectedButton {
+    composes: selectButton;
+    background: secondary;
 }

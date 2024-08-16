@@ -1,4 +1,4 @@
-@value backgroundDark from "@knicos/genai-base/css/colours.module.css";
+@value primary from "@knicos/genai-base/css/colours.module.css";
 
 .loading {
     position: absolute;
@@ -13,12 +13,25 @@
 }
 
 .container {
-    background: backgroundDark;
+    /*background: white;*/
     position: relative;
-    padding: 1rem 0;
+    width: 100%;
+    height: 100%;
 }
 
 .svg {
     user-select: none;
     touch-action: none;
+}
+
+.label {
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    transform: translate(-50%, 0);
+    background: primary;
+    color: white;
+    font-weight: bold;
+    border-radius: 1rem;
+    padding: 0.5rem 1rem;
 }

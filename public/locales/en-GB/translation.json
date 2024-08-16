@@ -163,9 +163,15 @@
             "rawEmbeddingTool": "Full Embeddings",
             "embeddingTool": "Reduced Embeddings",
             "mappingTool": "Mapping",
-            "contentTools": "Content Tools"
+            "contentTools": "Content Tools",
+            "userSelect": "Select User",
+            "usersSelect": "Select Users"
         },
         "labels": {
+            "showHeatGraph": "Display image heat maps",
+            "heatmapUsers": "Select users to show",
+            "refresh": "Refresh",
+            "invertHeatmap": "Invert the heatmap",
             "saveContent": "Save the image content",
             "saveProfiles": "Save user profiles",
             "saveActions": "Save actions logs",
@@ -257,7 +263,8 @@
             "cancel": "Cancel",
             "close": "Close",
             "delete": "Delete",
-            "demo": "Demo"
+            "demo": "Demo",
+            "select": "Select"
         },
         "errors": {
             "unknown": "There was a problem, please try again.",
