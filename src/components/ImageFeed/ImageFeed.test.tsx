@@ -82,6 +82,7 @@ describe('ImageFeed component', () => {
             activity: 'share_public',
             id: 'content:xyz',
             timestamp: expect.any(Number),
+            user: 'user:x',
         });
     });
 

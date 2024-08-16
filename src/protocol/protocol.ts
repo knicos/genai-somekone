@@ -65,6 +65,16 @@ export interface CommentEvent extends PeerEvent {
     timestamp: number;
 }
 
+export type ContentInjectReason = 'unknown' | 'share';
+
+export interface InjectEvent extends PeerEvent {
+    event: 'eter:inject';
+    from?: UserNodeId;
+    to: UserNodeId;
+    content: ContentNodeId;
+    reason: ContentInjectReason;
+}
+
 export interface ResearchLogEvent extends PeerEvent {
     event: 'researchlog';
     action: string;
@@ -103,5 +113,6 @@ export type EventProtocol =
     | UserListEvent
     | CommentEvent
     | NewPostEvent
+    | InjectEvent
     | ContentRequestEvent
     | ActionLogEvent;

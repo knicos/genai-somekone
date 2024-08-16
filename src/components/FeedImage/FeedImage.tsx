@@ -13,7 +13,7 @@ import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import LabelsPanel from './LabelsPanel';
 import IconButtonDot from '../IconButtonDot/IconButtonDot';
 import { useTranslation } from 'react-i18next';
-import { ContentNodeId } from '@knicos/genai-recom';
+import { ContentNodeId, UserNodeId } from '@knicos/genai-recom';
 import { useContentService } from '@genaism/hooks/services';
 import { useContent, useContentStats } from '@genaism/hooks/content';
 
@@ -27,9 +27,10 @@ interface Props {
     visible?: boolean;
     noActions?: boolean;
     showLabels?: boolean;
+    reason?: string;
     onClick?: (id: ContentNodeId) => void;
     onLike?: (id: ContentNodeId, kind: LikeKind) => void;
-    onShare?: (id: ContentNodeId, kind: ShareKind) => void;
+    onShare?: (id: ContentNodeId, kind: ShareKind, user?: UserNodeId) => void;
     onComment?: (id: ContentNodeId, comment: string) => void;
     onFollow?: (id: ContentNodeId) => void;
     onUnfollow?: (id: ContentNodeId) => void;
@@ -77,6 +78,7 @@ export default function FeedImage({
     visible,
     noActions,
     showLabels,
+    reason,
 }: Props) {
     const { t } = useTranslation();
     const content = useContentService();
@@ -101,8 +103,8 @@ export default function FeedImage({
     }, [onLike, id]);
 
     const doShare = useCallback(
-        (kind: ShareKind) => {
-            if (onShare) onShare(id, kind);
+        (kind: ShareKind, user: UserNodeId) => {
+            if (onShare) onShare(id, kind, user);
         },
         [onShare, id]
     );
@@ -152,7 +154,7 @@ export default function FeedImage({
     return !visible || !contentData || !contentMeta ? null : (
         <div className={style.container}>
             <div className={active || noActions ? style.activeImageContainer : style.imageContainer}>
-                {(active || noActions) && (
+                {(active || noActions) && !reason && (
                     <div className={style.name}>
                         <Avatar {...stringAvatar(contentMeta.author || 'Unknown')} />
                         <span className={style.author}>{contentMeta.author || 'Unknown'}</span>
@@ -179,6 +181,7 @@ export default function FeedImage({
                         )}
                     </div>
                 )}
+                {reason && <div className={style.reason}>{reason}</div>}
                 <img
                     onClick={doClick}
                     className={style.instaImage}

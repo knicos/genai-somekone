@@ -3,20 +3,24 @@ import style from './style.module.css';
 import ActionPanel from './ActionPanel';
 import { useTranslation } from 'react-i18next';
 import UserListing from '../UserListing/UserListing';
+import { UserNodeId } from '@knicos/genai-recom';
 
 export type ShareKind = 'none' | 'public';
 
 interface Props {
     onClose?: () => void;
-    onChange?: (kind: ShareKind) => void;
+    onChange?: (kind: ShareKind, user: UserNodeId) => void;
 }
 
 export default function SharePanel({ onClose, onChange }: Props) {
     const { t } = useTranslation();
-    const doClick = useCallback(() => {
-        if (onChange) onChange('public');
-        if (onClose) onClose();
-    }, [onChange, onClose]);
+    const doClick = useCallback(
+        (user: UserNodeId) => {
+            if (onChange) onChange('public', user);
+            if (onClose) onClose();
+        },
+        [onChange, onClose]
+    );
 
     return (
         <ActionPanel

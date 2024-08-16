@@ -1,12 +1,12 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import style from './style.module.css';
-import ImageFeed from '@genaism/components/ImageFeed/ImageFeed';
+import ImageFeed, { FeedEntry } from '@genaism/components/ImageFeed/ImageFeed';
 import { useRecoilValue } from 'recoil';
 import { configuration } from '@genaism/state/settingsState';
 import { LogEntry, ScoredRecommendation, UserNodeData, UserNodeId } from '@knicos/genai-recom';
 import { useActionLogService, useProfilerService } from '@genaism/hooks/services';
 import { useRecommendations } from '@genaism/hooks/recommender';
-import { contentLoaded } from '@genaism/state/sessionState';
+import { contentLoaded, injectedContent } from '@genaism/state/sessionState';
 
 interface Props {
     id?: UserNodeId;
@@ -18,7 +18,7 @@ interface Props {
 }
 
 export default function Feed({ onProfile, onLog, onRecommend, id, noLog, noActions }: Props) {
-    const [feedList, setFeedList] = useState<ScoredRecommendation[]>([]);
+    const [feedList, setFeedList] = useState<FeedEntry[]>([]);
     const moreState = useRef(true);
     const profiler = useProfilerService();
     const aid = id || profiler.getCurrentUser();
@@ -26,17 +26,27 @@ export default function Feed({ onProfile, onLog, onRecommend, id, noLog, noActio
     const { recommendations, more } = useRecommendations(5, aid, appConfig?.recommendations);
     const actionLog = useActionLogService();
     const contentReady = useRecoilValue(contentLoaded);
+    const injections = useRecoilValue(injectedContent);
+    const injectTime = useRef(Date.now());
 
     useEffect(() => {
         if (moreState.current && recommendations.length > 0) {
-            setFeedList((old) => [...old, ...recommendations]);
+            const toInject = injections
+                .filter((i) => i.timestamp > injectTime.current)
+                .map((i) => ({ contentId: i.content, injection: i }));
+            setFeedList((old) => [
+                ...old,
+                ...toInject,
+                ...recommendations.map((r) => ({ contentId: r.contentId, recommendation: r })),
+            ]);
+            injectTime.current = Date.now();
             moreState.current = false;
             if (onRecommend) onRecommend(recommendations);
             if (onProfile) onProfile(profiler.getUserProfile(aid));
         } else if (moreState.current) {
             setTimeout(more, 2000);
         }
-    }, [recommendations, onProfile, onRecommend, profiler, aid, more]);
+    }, [recommendations, onProfile, onRecommend, profiler, aid, more, injections]);
 
     const doLog = useCallback(
         (data: LogEntry) => {

@@ -8,13 +8,20 @@ import { useTabActive } from '@genaism/hooks/interaction';
 import { useTranslation } from 'react-i18next';
 import { Spinner } from '@knicos/genai-base';
 import LangSelect from '../LangSelect/LangSelect';
-import { ContentNodeId, LogEntry, ScoredRecommendation } from '@knicos/genai-recom';
+import { ContentNodeId, LogEntry, ScoredRecommendation, UserNodeId } from '@knicos/genai-recom';
 import { useActionLogService, useProfilerService } from '@genaism/hooks/services';
+import { InjectContentType } from '@genaism/state/sessionState';
 
 const INTERACTION_TIMEOUT = 5000;
 
+export interface FeedEntry {
+    contentId: ContentNodeId;
+    recommendation?: ScoredRecommendation;
+    injection?: InjectContentType;
+}
+
 interface Props {
-    images: ScoredRecommendation[];
+    images: FeedEntry[];
     noActions?: boolean;
     showLabels?: boolean;
     onView?: (index: number, time: number) => void;
@@ -30,7 +37,7 @@ export default function ImageFeed({ images, onView, onMore, onLog, noActions, sh
     const prevRef = useRef<number>(-1);
     const startRef = useRef<number>(0);
     const lastRef = useRef<number>(0);
-    const viewedRef = useRef<ScoredRecommendation>();
+    const viewedRef = useRef<FeedEntry>();
     const canMoreRef = useRef(true);
     const durationRef = useRef<number>(0);
     const active = useTabActive();
@@ -154,9 +161,9 @@ export default function ImageFeed({ images, onView, onMore, onLog, noActions, sh
     );
 
     const doShare = useCallback(
-        (id: ContentNodeId, kind: ShareKind) => {
+        (id: ContentNodeId, kind: ShareKind, user?: UserNodeId) => {
             if (kind === 'public') {
-                onLog({ activity: 'share_public', id, timestamp: Date.now() });
+                onLog({ activity: 'share_public', id, timestamp: Date.now(), user });
             }
         },
         [onLog]
@@ -236,6 +243,11 @@ export default function ImageFeed({ images, onView, onMore, onLog, noActions, sh
                         visible={Math.abs(ix - viewed) < 5}
                         noActions={noActions}
                         showLabels={showLabels}
+                        reason={
+                            img.injection?.from && img.injection?.reason === 'share'
+                                ? t('feed.messages.sharedBy', { name: profiler.getUserName(img.injection.from) })
+                                : undefined
+                        }
                     />
                 ))}
                 <FeedSpacer size={images.length - viewed - 5} />

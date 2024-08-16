@@ -1,5 +1,6 @@
-import { UserEntry } from '@genaism/protocol/protocol';
+import { ContentInjectReason, UserEntry } from '@genaism/protocol/protocol';
 import { UserInfo } from '@genaism/views/Dashboard/userInfo';
+import { ContentNodeId, UserNodeId } from '@knicos/genai-recom';
 import { atom } from 'recoil';
 
 const USERNAME_KEY = 'genai_somekone_username';
@@ -28,4 +29,17 @@ export const currentUserName = atom<string | undefined>({
 export const contentLoaded = atom<boolean>({
     key: 'contentLoaded',
     default: false,
+});
+
+export interface InjectContentType {
+    to: UserNodeId;
+    from?: UserNodeId;
+    reason: ContentInjectReason;
+    content: ContentNodeId;
+    timestamp: number;
+}
+
+export const injectedContent = atom<InjectContentType[]>({
+    key: 'injectcontent',
+    default: [],
 });

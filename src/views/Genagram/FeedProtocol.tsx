@@ -1,6 +1,6 @@
 import { usePeer, ConnectionMonitor } from '@knicos/genai-base';
 import { EventProtocol } from '@genaism/protocol/protocol';
-import { availableUsers, currentUserName } from '@genaism/state/sessionState';
+import { availableUsers, currentUserName, injectedContent } from '@genaism/state/sessionState';
 import { DataConnection } from 'peerjs';
 import { PropsWithChildren, createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
@@ -39,6 +39,7 @@ export default function FeedProtocol({ content, server, mycode, setContent, chil
     const logTimer = useRef(-1);
     const setAvailableUsers = useSetRecoilState(availableUsers);
     const [config, setConfig] = useRecoilState<SMConfig>(appConfiguration);
+    const setInjected = useSetRecoilState(injectedContent);
     const username = useRecoilValue<string | undefined>(currentUserName);
     const hasBeenConnected = useRef(false);
     const [hasBeenReady, setHasBeenReady] = useState(false);
@@ -79,6 +80,10 @@ export default function FeedProtocol({ content, server, mycode, setContent, chil
                 conn.send({ event: 'eter:profile_data', profile, id: profilerSvc.getCurrentUser() });
                 conn.send({ event: 'eter:recommendations', recommendations, id: profilerSvc.getCurrentUser() });
                 conn.send({ event: 'eter:connect', code: `sm-${server}` });
+            } else if (data.event === 'eter:inject') {
+                if (data.to === profilerSvc.getCurrentUser()) {
+                    setInjected((old) => [{ ...data, timestamp: Date.now() }, ...old.slice(0, 5)]);
+                }
             } else if (data.event === 'eter:newpost') {
                 if (data.data) {
                     bytesToBase64DataUrl(data.data).then((base64) => {
@@ -118,6 +123,7 @@ export default function FeedProtocol({ content, server, mycode, setContent, chil
             profilerSvc,
             actionLog,
             recommender,
+            setInjected,
         ]
     );
 
@@ -207,11 +213,13 @@ export default function FeedProtocol({ content, server, mycode, setContent, chil
         contentSvc.broker.on('contentmissing', missingHandler);
         actionLog.broker.on('logdata-engagement', logHandler);
         actionLog.broker.on('logdata-comment', logHandler);
+        //actionLog.broker.on('logdata-share_public', logHandler);
         return () => {
             contentSvc.broker.off('posted', postHandler);
             contentSvc.broker.off('contentmissing', missingHandler);
             contentSvc.broker.off('logdata-engagement', logHandler);
             contentSvc.broker.off('logdata-comment', logHandler);
+            //contentSvc.broker.off('logdata-share_public', logHandler);
         };
     }, [contentSvc, send, profilerSvc, actionLog]);
 

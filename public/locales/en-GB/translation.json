@@ -111,7 +111,8 @@
             "fullnameError": {
                 "missing": "Your full name is required"
             },
-            "alreadyOpen": "You already have the app open in another tab."
+            "alreadyOpen": "You already have the app open in another tab.",
+            "sharedBy": "Shared by {{name}}."
         },
         "actionlog": {
             "dwell": "Viewed for {{time}} second(s)",

@@ -270,3 +270,14 @@
     line-height: normal;
     font-size: 1.2rem;
 }
+
+.reason {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    line-height: normal;
+    color: white;
+    background: primary;
+    border-radius: 1.2rem;
+    padding: 0 0.8rem;
+}
