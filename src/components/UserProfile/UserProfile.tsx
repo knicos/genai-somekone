@@ -1,7 +1,7 @@
 import style from './style.module.css';
 import WordCloud from '../WordCloud/WordCloud';
 import topicSummary from './topicSummary';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import TopicPie from '../TopicPie/TopicPie';
 import { useTranslation } from 'react-i18next';
 
@@ -11,6 +11,10 @@ import TopicDetail from './TopicDetail';
 import { ContentNodeId, getTopicLabel, UserNodeId, WeightedNode } from '@knicos/genai-recom';
 import { useProfilerService } from '@genaism/hooks/services';
 import { useUserProfile } from '@genaism/hooks/profiler';
+import { svgToPNG } from '@genaism/util/svgToPNG';
+import { saveAs } from 'file-saver';
+import { IconButton } from '@mui/material';
+import DownloadIcon from '@mui/icons-material/Download';
 
 interface Props {
     id?: UserNodeId;
@@ -22,6 +26,15 @@ export default function Profile({ id }: Props) {
     const profiler = useProfilerService();
     const aid = id || profiler.getCurrentUser();
     const profile = useUserProfile(aid);
+    const svgRef = useRef<SVGSVGElement>(null);
+
+    const doSave = () => {
+        if (svgRef.current) {
+            svgToPNG(svgRef.current, 4).then((data) => {
+                saveAs(data, `wordcloud_${profile.name}.png`);
+            });
+        }
+    };
 
     const topics = useMemo(() => {
         return topicSummary(profile);
@@ -58,12 +71,15 @@ export default function Profile({ id }: Props) {
                 className={style.container}
                 tabIndex={0}
             >
-                <div>
+                <div className={style.svgContainer}>
                     <svg
+                        xmlns="http://www.w3.org/2000/svg"
                         width="100%"
                         height="300px"
+                        ref={svgRef}
                         viewBox={`${-(wcSize * 1.67)} ${-wcSize} ${wcSize * 1.67 * 2} ${wcSize * 2}`}
                     >
+                        <style>{'rect {opacity: 0.9; fill: #5f7377;} text { fill: white;}'}</style>
                         <WordCloud
                             content={profile.affinities.topics.topics}
                             size={300}
@@ -71,6 +87,9 @@ export default function Profile({ id }: Props) {
                             onSize={doResize}
                         />
                     </svg>
+                    <IconButton onClick={doSave}>
+                        <DownloadIcon />
+                    </IconButton>
                 </div>
                 <Cards>
                     <Card

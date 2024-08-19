@@ -20,6 +20,11 @@ import { createSimulation } from './simulation';
 import { makeLinks, makeNodes } from './utilities';
 import { ZoomState, pointerMove, wheelZoom } from './controls';
 import { NodeID } from '@knicos/genai-recom';
+import { useEventListen } from '@genaism/hooks/events';
+import { saveAs } from 'file-saver';
+import { svgToPNG } from '@genaism/util/svgToPNG';
+import ProgressDialog from '../ProgressDialog/ProgressDialog';
+import { useTranslation } from 'react-i18next';
 
 interface Extents {
     minX: number;
@@ -61,6 +66,7 @@ interface Props<T extends NodeID> extends PropsWithChildren {
     labelProps?: object;
     disableControls?: boolean;
     disableCenter?: boolean;
+    injectStyle?: JSX.Element;
 }
 
 interface InternalState {
@@ -104,7 +110,10 @@ export default function Graph<T extends NodeID>({
     labelProps,
     disableControls,
     disableCenter,
+    injectStyle,
 }: Props<T>) {
+    const { t } = useTranslation();
+    const [saving, setSaving] = useState(false);
     const svgRef = useRef<SVGSVGElement>(null);
     const [redraw, trigger] = useReducer((a) => ++a, 0);
     const [nodeList, setNodeList] = useState<GraphNode<T>[]>([]);
@@ -124,6 +133,15 @@ export default function Graph<T extends NodeID>({
     const movement = useRef<[number, number]>([0, 0]);
     const pointerCache = useRef(new Map<number, PointerEvent<SVGSVGElement>>());
     const drawCount = useRef(0);
+    useEventListen('save_graph', () => {
+        if (svgRef.current) {
+            setSaving(true);
+            svgToPNG(svgRef.current).then((data) => {
+                saveAs(data, 'graph.png');
+                setSaving(false);
+            });
+        }
+    });
 
     internalState.current.focusNode = focusNode;
 
@@ -208,140 +226,148 @@ export default function Graph<T extends NodeID>({
     }, [actualZoom, onZoom]);
 
     return (
-        <svg
-            className={style.svg}
-            ref={svgRef}
-            width="100%"
-            height="100%"
-            viewBox="-500 -500 1000 1000"
-            data-testid="graph-svg"
-            tabIndex={0}
-            onKeyDown={
-                !disableControls
-                    ? (e: KeyboardEvent<SVGSVGElement>) => {
-                          if (e.key === '+' || e.key === '=') {
-                              setActualZoom((oldZoom) => ({
-                                  ...oldZoom,
-                                  zoom: Math.max(0.5, oldZoom.zoom - 0.2 * oldZoom.zoom),
-                              }));
-                          } else if (e.key === '-') {
-                              setActualZoom((oldZoom) => ({
-                                  ...oldZoom,
-                                  zoom: Math.max(0.5, oldZoom.zoom + 0.2 * oldZoom.zoom),
-                              }));
-                          } else if (e.key === 'ArrowLeft') {
-                              setActualZoom((oldZoom) => ({
-                                  ...oldZoom,
-                                  cx: oldZoom.cx - MOVE_SPEED * oldZoom.zoom,
-                              }));
-                          } else if (e.key === 'ArrowRight') {
-                              setActualZoom((oldZoom) => ({
-                                  ...oldZoom,
-                                  cx: oldZoom.cx + MOVE_SPEED * oldZoom.zoom,
-                              }));
-                          } else if (e.key === 'ArrowUp') {
-                              setActualZoom((oldZoom) => ({
-                                  ...oldZoom,
-                                  cy: oldZoom.cy - MOVE_SPEED * oldZoom.zoom,
-                              }));
-                          } else if (e.key === 'ArrowDown') {
-                              setActualZoom((oldZoom) => ({
-                                  ...oldZoom,
-                                  cy: oldZoom.cy + MOVE_SPEED * oldZoom.zoom,
-                              }));
+        <>
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className={style.svg}
+                ref={svgRef}
+                width="100%"
+                height="100%"
+                viewBox="-500 -500 1000 1000"
+                data-testid="graph-svg"
+                tabIndex={0}
+                onKeyDown={
+                    !disableControls
+                        ? (e: KeyboardEvent<SVGSVGElement>) => {
+                              if (e.key === '+' || e.key === '=') {
+                                  setActualZoom((oldZoom) => ({
+                                      ...oldZoom,
+                                      zoom: Math.max(0.5, oldZoom.zoom - 0.2 * oldZoom.zoom),
+                                  }));
+                              } else if (e.key === '-') {
+                                  setActualZoom((oldZoom) => ({
+                                      ...oldZoom,
+                                      zoom: Math.max(0.5, oldZoom.zoom + 0.2 * oldZoom.zoom),
+                                  }));
+                              } else if (e.key === 'ArrowLeft') {
+                                  setActualZoom((oldZoom) => ({
+                                      ...oldZoom,
+                                      cx: oldZoom.cx - MOVE_SPEED * oldZoom.zoom,
+                                  }));
+                              } else if (e.key === 'ArrowRight') {
+                                  setActualZoom((oldZoom) => ({
+                                      ...oldZoom,
+                                      cx: oldZoom.cx + MOVE_SPEED * oldZoom.zoom,
+                                  }));
+                              } else if (e.key === 'ArrowUp') {
+                                  setActualZoom((oldZoom) => ({
+                                      ...oldZoom,
+                                      cy: oldZoom.cy - MOVE_SPEED * oldZoom.zoom,
+                                  }));
+                              } else if (e.key === 'ArrowDown') {
+                                  setActualZoom((oldZoom) => ({
+                                      ...oldZoom,
+                                      cy: oldZoom.cy + MOVE_SPEED * oldZoom.zoom,
+                                  }));
+                              }
                           }
-                      }
-                    : undefined
-            }
-            onClickCapture={
-                !disableControls
-                    ? (e: MouseEvent<SVGSVGElement>) => {
-                          if (Math.max(movement.current[0], movement.current[1]) > MOVE_THRESHOLD) {
+                        : undefined
+                }
+                onClickCapture={
+                    !disableControls
+                        ? (e: MouseEvent<SVGSVGElement>) => {
+                              if (Math.max(movement.current[0], movement.current[1]) > MOVE_THRESHOLD) {
+                                  movement.current = [0, 0];
+                                  e.stopPropagation();
+                                  return;
+                              }
+                              if (onUnselect && focusNode) onUnselect();
                               movement.current = [0, 0];
-                              e.stopPropagation();
-                              return;
                           }
-                          if (onUnselect && focusNode) onUnselect();
-                          movement.current = [0, 0];
-                      }
-                    : undefined
-            }
-            onPointerMove={
-                !disableControls
-                    ? (e: PointerEvent<SVGSVGElement>) => {
-                          setActualZoom((oldZoom) => {
-                              if (svgRef.current) {
-                                  return pointerMove(
-                                      e,
-                                      oldZoom,
-                                      extents.current,
-                                      svgRef.current,
-                                      pointerCache.current,
-                                      movement.current
-                                  );
-                              }
-                              return oldZoom;
-                          });
-                      }
-                    : undefined
-            }
-            onPointerUp={
-                !disableControls
-                    ? (e: PointerEvent<SVGSVGElement>) => {
-                          pointerCache.current.clear();
-                          if (e.pointerType === 'touch') movement.current = [0, 0];
-                      }
-                    : undefined
-            }
-            onWheel={
-                !disableControls
-                    ? (e: WheelEvent<SVGSVGElement>) => {
-                          setActualZoom((oldZoom) => {
-                              if (svgRef.current) {
-                                  return wheelZoom(e, svgRef.current, extents.current, oldZoom);
-                              }
-                              return oldZoom;
-                          });
-                      }
-                    : undefined
-            }
-        >
-            <g>
-                {showLines && (
-                    <Lines
-                        linkList={linkList}
-                        linkStyles={linkStyles}
-                        defaultLinkStyle={defaultLinkStyle}
-                    />
-                )}
-                <Nodes
-                    nodeList={nodeList}
-                    onSelect={(node: GraphNode<T>) => {
-                        if (onSelect) {
-                            if (Math.max(movement.current[0], movement.current[1]) > MOVE_THRESHOLD) {
-                                movement.current = [0, 0];
-                                return;
-                            }
-                            movement.current = [0, 0];
-                            onSelect(
-                                node,
-                                linkList.filter((l) => l.source.id === node.id || l.target.id === node.id)
-                            );
-                        }
-                    }}
-                >
-                    {children}
-                </Nodes>
-                {LabelComponent &&
-                    nodeList.map((n) => (
-                        <LabelComponent
-                            {...labelProps}
-                            node={n}
-                            key={n.id}
-                            scale={actualZoom.zoom}
+                        : undefined
+                }
+                onPointerMove={
+                    !disableControls
+                        ? (e: PointerEvent<SVGSVGElement>) => {
+                              setActualZoom((oldZoom) => {
+                                  if (svgRef.current) {
+                                      return pointerMove(
+                                          e,
+                                          oldZoom,
+                                          extents.current,
+                                          svgRef.current,
+                                          pointerCache.current,
+                                          movement.current
+                                      );
+                                  }
+                                  return oldZoom;
+                              });
+                          }
+                        : undefined
+                }
+                onPointerUp={
+                    !disableControls
+                        ? (e: PointerEvent<SVGSVGElement>) => {
+                              pointerCache.current.clear();
+                              if (e.pointerType === 'touch') movement.current = [0, 0];
+                          }
+                        : undefined
+                }
+                onWheel={
+                    !disableControls
+                        ? (e: WheelEvent<SVGSVGElement>) => {
+                              setActualZoom((oldZoom) => {
+                                  if (svgRef.current) {
+                                      return wheelZoom(e, svgRef.current, extents.current, oldZoom);
+                                  }
+                                  return oldZoom;
+                              });
+                          }
+                        : undefined
+                }
+            >
+                {injectStyle}
+                <g>
+                    {showLines && (
+                        <Lines
+                            linkList={linkList}
+                            linkStyles={linkStyles}
+                            defaultLinkStyle={defaultLinkStyle}
                         />
-                    ))}
-            </g>
-        </svg>
+                    )}
+                    <Nodes
+                        nodeList={nodeList}
+                        onSelect={(node: GraphNode<T>) => {
+                            if (onSelect) {
+                                if (Math.max(movement.current[0], movement.current[1]) > MOVE_THRESHOLD) {
+                                    movement.current = [0, 0];
+                                    return;
+                                }
+                                movement.current = [0, 0];
+                                onSelect(
+                                    node,
+                                    linkList.filter((l) => l.source.id === node.id || l.target.id === node.id)
+                                );
+                            }
+                        }}
+                    >
+                        {children}
+                    </Nodes>
+                    {LabelComponent &&
+                        nodeList.map((n) => (
+                            <LabelComponent
+                                {...labelProps}
+                                node={n}
+                                key={n.id}
+                                scale={actualZoom.zoom}
+                            />
+                        ))}
+                </g>
+            </svg>
+            <ProgressDialog
+                title={t('dashboard.titles.saving')}
+                open={saving}
+            />
+        </>
     );
 }

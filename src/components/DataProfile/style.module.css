@@ -21,3 +21,13 @@
     height: 100%;
     scrollbar-gutter: stable both-edges;
 }
+
+.svgContainer {
+    position: relative;
+}
+
+.svgContainer button {
+    position: absolute;
+    right: 0.5rem;
+    top: 0.5rem;
+}

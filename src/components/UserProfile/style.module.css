@@ -57,3 +57,13 @@
     border-radius: 6px;
     overflow: hidden;
 }
+
+.svgContainer {
+    position: relative;
+}
+
+.svgContainer button {
+    position: absolute;
+    right: 0.5rem;
+    top: 0.5rem;
+}

@@ -148,6 +148,7 @@
     "dashboard": {
         "titles": {
             "save": "Save",
+            "saving": "Saving",
             "settings": "Settings",
             "error": "Problem",
             "general": "General",
@@ -168,6 +169,7 @@
             "usersSelect": "Select Users"
         },
         "labels": {
+            "saveGraphImage": "Download graph as image",
             "showHeatGraph": "Display image heat maps",
             "heatmapUsers": "Select users to show",
             "refresh": "Refresh",

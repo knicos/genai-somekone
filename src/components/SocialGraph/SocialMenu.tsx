@@ -25,6 +25,8 @@ import ClusterMenu from './ClusterMenu';
 import ImageIcon from '@mui/icons-material/Image';
 import { UserNodeId } from '@knicos/genai-recom';
 import { useProfilerService } from '@genaism/hooks/services';
+import DownloadIcon from '@mui/icons-material/Download';
+import { useEventEmit } from '@genaism/hooks/events';
 
 export default function SocialMenu() {
     const { t } = useTranslation();
@@ -36,6 +38,7 @@ export default function SocialMenu() {
     const selectAction = useRecoilValue(menuNodeSelectAction);
     const userRef = useRef<UserNodeId | undefined>();
     const profiler = useProfilerService();
+    const saveGraph = useEventEmit('save_graph');
 
     useEffect(() => {
         if (selectedUser && selectedUser !== userRef.current && selectAction !== 'none') {
@@ -88,6 +91,15 @@ export default function SocialMenu() {
             </IconMenuItem>
             <Spacer />
             <ClusterMenu />
+            <IconMenuItem tooltip={t('dashboard.labels.saveGraphImage')}>
+                <IconButton
+                    color="inherit"
+                    onClick={saveGraph}
+                    aria-label={t('dashboard.labels.saveGraphImage')}
+                >
+                    <DownloadIcon />
+                </IconButton>
+            </IconMenuItem>
             {selectedUser && (
                 <>
                     <Spacer />

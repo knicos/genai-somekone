@@ -6,6 +6,11 @@ import { heatmapGrid } from './grid';
 import { ContentNodeId, WeightedNode } from '@knicos/genai-recom';
 import { useContentService } from '@genaism/hooks/services';
 import HeatLabel from './HeatLabel';
+import { useEventListen } from '@genaism/hooks/events';
+import { svgToPNG } from '@genaism/util/svgToPNG';
+import { saveAs } from 'file-saver';
+import ProgressDialog from '../ProgressDialog/ProgressDialog';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
     data: WeightedNode<ContentNodeId>[];
@@ -24,10 +29,12 @@ const ZOOM_SCALE = 60;
 const MIN_OPACITY = 0.1;
 
 export default function Heatmap({ data, dimensions, busy, label }: Props) {
+    const { t } = useTranslation();
     const [grid, setGrid] = useState<(ContentNodeId | null)[][]>();
     const svgRef = useRef<SVGSVGElement>(null);
     const [zoom, setZoom] = useState(false);
     const content = useContentService();
+    const [saving, setSaving] = useState(false);
 
     const loading = data.length === 0 || !grid || busy;
 
@@ -64,9 +71,20 @@ export default function Heatmap({ data, dimensions, busy, label }: Props) {
         }
     }, [zoom]);
 
+    useEventListen('save_heat', () => {
+        if (svgRef.current) {
+            setSaving(true);
+            svgToPNG(svgRef.current, 8, 0).then((data) => {
+                saveAs(data, label ? `heatmap_${label}.png` : 'heatmap.png');
+                setSaving(false);
+            });
+        }
+    });
+
     return (
         <div className={style.container}>
             <svg
+                xmlns="http://www.w3.org/2000/svg"
                 className={style.svg}
                 width="100%"
                 height="100%"
@@ -137,6 +155,10 @@ export default function Heatmap({ data, dimensions, busy, label }: Props) {
                     <Spinner size="large" />
                 </div>
             )}
+            <ProgressDialog
+                title={t('dashboard.titles.saving')}
+                open={saving}
+            />
         </div>
     );
 }

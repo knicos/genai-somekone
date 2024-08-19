@@ -223,6 +223,9 @@ export default function SocialGraph({ liveUsers }: Props) {
                 zoom={5}
                 center={center}
                 LabelComponent={showLabel ? UserLabel : undefined}
+                injectStyle={
+                    <style>{`.${style.cloudItem} rect {opacity: 0.2; fill: #078092;} .${style.cloudItem} text { fill: #444;}`}</style>
+                }
             >
                 {nodes.map((n) => (
                     <ProfileNode

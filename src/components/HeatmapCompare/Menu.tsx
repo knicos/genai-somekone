@@ -7,6 +7,8 @@ import GroupIcon from '@mui/icons-material/Group';
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import InvertColorsIcon from '@mui/icons-material/InvertColors';
+import DownloadIcon from '@mui/icons-material/Download';
+import { useEventEmit } from '@genaism/hooks/events';
 
 interface Props {
     onOpenUserList: () => void;
@@ -15,6 +17,8 @@ interface Props {
 
 export default function HeatmapMenu({ onOpenUserList, onRefresh }: Props) {
     const { t } = useTranslation();
+    const saveGraph = useEventEmit('save_heat');
+
     return (
         <IconMenu
             title={t('dashboard.aria.socialMenu')}
@@ -53,6 +57,15 @@ export default function HeatmapMenu({ onOpenUserList, onRefresh }: Props) {
                     aria-label={t('dashboard.labels.refresh')}
                 >
                     <RefreshIcon />
+                </IconButton>
+            </IconMenuItem>
+            <IconMenuItem tooltip={t('dashboard.labels.saveGraphImage')}>
+                <IconButton
+                    color="inherit"
+                    onClick={saveGraph}
+                    aria-label={t('dashboard.labels.saveGraphImage')}
+                >
+                    <DownloadIcon />
                 </IconButton>
             </IconMenuItem>
         </IconMenu>
