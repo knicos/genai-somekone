@@ -16,11 +16,8 @@ import {
     settingClusterColouring,
     settingDisplayLabel,
     settingIncludeAllLinks,
-    settingLinkDistanceScale,
-    settingNodeCharge,
+    settingSocialGraphScale,
     settingNodeMode,
-    settingSimilarPercent,
-    settingTopicThreshold,
 } from '@genaism/state/settingsState';
 import { SMConfig, mergeConfiguration } from '@genaism/state/smConfig';
 import { useRecoilCallback } from 'recoil';
@@ -29,10 +26,7 @@ export interface SomekoneSocialSettings {
     // displayLines?: boolean;
     includeAllLinks?: boolean;
     displayLabels?: boolean;
-    linkDistanceScale?: number;
-    similarPercent?: number;
-    nodeCharge?: number;
-    topicThreshold?: number;
+    scale?: number;
     // showOfflineUsers?: boolean;
     nodeDisplay?: NodeDisplayMode;
     clusterColouring?: number;
@@ -71,20 +65,11 @@ export function useSettingDeserialise() {
                     if (data.socialGraph.nodeDisplay !== undefined) {
                         set(settingNodeMode, data.socialGraph.nodeDisplay);
                     }
-                    if (data.socialGraph.nodeCharge !== undefined) {
-                        set(settingNodeCharge, data.socialGraph.nodeCharge);
-                    }
-                    if (data.socialGraph.linkDistanceScale !== undefined) {
-                        set(settingLinkDistanceScale, data.socialGraph.linkDistanceScale);
-                    }
-                    if (data.socialGraph.topicThreshold !== undefined) {
-                        set(settingTopicThreshold, data.socialGraph.topicThreshold);
+                    if (data.socialGraph.scale !== undefined) {
+                        set(settingSocialGraphScale, data.socialGraph.scale);
                     }
                     if (data.socialGraph.includeAllLinks !== undefined) {
                         set(settingIncludeAllLinks, data.socialGraph.includeAllLinks);
-                    }
-                    if (data.socialGraph.similarPercent !== undefined) {
-                        set(settingSimilarPercent, data.socialGraph.similarPercent);
                     }
                 }
                 if (data.applicationConfig) {
@@ -136,11 +121,8 @@ export function useSettingSerialise() {
                         displayLabels: await snapshot.getPromise(settingDisplayLabel),
                         clusterColouring: await snapshot.getPromise(settingClusterColouring),
                         nodeDisplay: await snapshot.getPromise(settingNodeMode),
-                        nodeCharge: await snapshot.getPromise(settingNodeCharge),
-                        linkDistanceScale: await snapshot.getPromise(settingLinkDistanceScale),
-                        topicThreshold: await snapshot.getPromise(settingTopicThreshold),
+                        scale: await snapshot.getPromise(settingSocialGraphScale),
                         includeAllLinks: await snapshot.getPromise(settingIncludeAllLinks),
-                        similarPercent: await snapshot.getPromise(settingSimilarPercent),
                     },
                     applicationConfig: await snapshot.getPromise(appConfiguration),
                     ui: {

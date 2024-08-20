@@ -5,7 +5,6 @@ import {
     //settingDisplayLabel,
     settingNodeMode,
     settingShrinkOfflineUsers,
-    settingTopicThreshold,
 } from '@genaism/state/settingsState';
 import WordCloud from '../WordCloud/WordCloud';
 import style from './style.module.css';
@@ -25,19 +24,32 @@ interface Props {
     onResize: (id: UserNodeId, size: number) => void;
     node: GraphNode<UserNodeId>;
     fixedSize?: boolean;
+    density?: number;
+    zoom?: number;
 }
 
 function filterTaste(taste: WeightedLabel[], threshold: number): WeightedLabel[] {
     if (taste.length === 0) return taste;
     const max = taste[0].weight;
+    console.log(threshold);
     return taste.filter((t) => t.weight >= threshold * max);
 }
 
-const ProfileNode = memo(function ProfileNode({ id, onResize, live, selected, disabled, node, fixedSize }: Props) {
+const ProfileNode = memo(function ProfileNode({
+    id,
+    onResize,
+    live,
+    selected,
+    disabled,
+    node,
+    fixedSize,
+    density = 1,
+    zoom = 1,
+}: Props) {
     const [size, setSize] = useState(100);
     const shrinkOffline = useRecoilValue(settingShrinkOfflineUsers);
     const nodeMode = useRecoilValue(settingNodeMode);
-    const topicThreshold = useRecoilValue(settingTopicThreshold);
+    //const topicThreshold = useRecoilValue(settingTopicThreshold);
     const content = useContentService();
 
     const profile = useUserProfile(id);
@@ -55,6 +67,8 @@ const ProfileNode = memo(function ProfileNode({ id, onResize, live, selected, di
     const reduced = shrinkOffline && !live;
     const asize = reduced ? size * 0.4 : size;
     const image = profile.image;
+
+    const topicThreshold = 0.1 + Math.min(1, (Math.max(1, zoom) - 1) / 2) * 0.3;
 
     const ftaste = useMemo(() => {
         /*if (node.data?.topics) {
@@ -96,10 +110,11 @@ const ProfileNode = memo(function ProfileNode({ id, onResize, live, selected, di
             {!reduced && nodeMode === 'image' && profile.affinities.contents.contents.length > 0 && (
                 <ImageCloud
                     content={profile.affinities.contents.contents}
-                    size={300}
+                    size={200 + Math.floor(100 * density)}
                     padding={3}
                     onSize={doResize}
                     className={disabled ? style.disabledImageCloud : undefined}
+                    count={4 + Math.floor(6 * density)}
                 />
             )}
             {!reduced && nodeMode === 'word' && (

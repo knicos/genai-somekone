@@ -9,6 +9,7 @@ import {
     MouseEvent,
     FunctionComponent,
     KeyboardEvent,
+    CSSProperties,
 } from 'react';
 import * as d3 from 'd3';
 import style from './style.module.css';
@@ -67,6 +68,7 @@ interface Props<T extends NodeID> extends PropsWithChildren {
     disableControls?: boolean;
     disableCenter?: boolean;
     injectStyle?: JSX.Element;
+    style?: CSSProperties;
 }
 
 interface InternalState {
@@ -111,6 +113,7 @@ export default function Graph<T extends NodeID>({
     disableControls,
     disableCenter,
     injectStyle,
+    style: cssStyle,
 }: Props<T>) {
     const { t } = useTranslation();
     const [saving, setSaving] = useState(false);
@@ -228,6 +231,7 @@ export default function Graph<T extends NodeID>({
     return (
         <>
             <svg
+                style={cssStyle}
                 xmlns="http://www.w3.org/2000/svg"
                 className={style.svg}
                 ref={svgRef}

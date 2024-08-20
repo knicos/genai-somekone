@@ -4,7 +4,6 @@ import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useRecoilState } from 'recoil';
 import { Button } from '@knicos/genai-base';
-import SocialGraphSettings from './SocialGraph';
 import FeedSettings from './Feed';
 import TopicGraphSettings from './TopicGraph';
 import GeneralSettings from './General';
@@ -39,16 +38,14 @@ export default function SettingsDialog() {
                     <Tab label={t('dashboard.titles.general')} />
                     <Tab label={t('dashboard.titles.feedApp')} />
                     <Tab label={t('dashboard.titles.recommendations')} />
-                    <Tab label={t('dashboard.titles.socialGraph')} />
                     <Tab label={t('dashboard.titles.topicGraph')} />
                     <Tab label={t('dashboard.titles.contentGraph')} />
                 </Tabs>
                 {tabNumber === 0 && <GeneralSettings />}
                 {tabNumber === 1 && <FeedSettings />}
                 {tabNumber === 2 && <RecommendationSettings />}
-                {tabNumber === 3 && <SocialGraphSettings />}
-                {tabNumber === 4 && <TopicGraphSettings />}
-                {tabNumber === 5 && <ContentGraphSettings />}
+                {tabNumber === 3 && <TopicGraphSettings />}
+                {tabNumber === 4 && <ContentGraphSettings />}
             </DialogContent>
             <DialogActions>
                 <Button

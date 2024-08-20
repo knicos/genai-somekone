@@ -37,22 +37,4 @@ describe('Settings Dialog', () => {
 
         expect(screen.getByText('dashboard.labels.disableFeedApp')).toBeVisible();
     });
-
-    it('shows social graph settings', async ({ expect }) => {
-        const user = userEvent.setup();
-
-        render(
-            <TestWrapper
-                initializeState={({ set }) => {
-                    set(menuShowSettings, true);
-                }}
-            >
-                <SettingsDialog />
-            </TestWrapper>
-        );
-
-        await user.click(screen.getByText('dashboard.titles.socialGraph'));
-
-        expect(screen.getByText('dashboard.labels.engagedImages')).toBeVisible();
-    });
 });

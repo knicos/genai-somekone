@@ -11,20 +11,30 @@ interface Props {
     colour?: string;
     borderSize?: number;
     className?: string;
+    count?: number;
     onSize?: (size: number) => void;
 }
 
 const BORDER_SIZE = 1.5;
 const MIN_SIZE = 30;
 
-const ImageCloud = memo(function Cloud({ content, size, padding, colour, borderSize, onSize, className }: Props) {
+const ImageCloud = memo(function Cloud({
+    content,
+    size,
+    padding,
+    colour,
+    borderSize,
+    onSize,
+    className,
+    count,
+}: Props) {
     const [locations, setLocations] = useState<LocationItem<ContentNodeId>[]>([]);
     const contentSrv = useContentService();
 
     useEffect(() => {
         const maxWeight = Math.max(0.01, content.length > 0 ? content[0].weight : 1);
         const sizedContent: SizedItem<ContentNodeId>[] = content
-            .filter((c) => c.weight > 0)
+            .filter((c, ix) => c.weight > 0 && (count === undefined || ix < count))
             .map((c) => {
                 const asize = Math.floor((c.weight / maxWeight) * ((size || 500) - MIN_SIZE) * 0.3) + MIN_SIZE;
                 return {
@@ -40,7 +50,7 @@ const ImageCloud = memo(function Cloud({ content, size, padding, colour, borderS
         if (onSize && floorDist !== size) onSize(floorDist);
 
         setLocations(results);
-    }, [content, padding, size, onSize]);
+    }, [content, padding, size, onSize, count]);
 
     const bsize = borderSize === undefined ? BORDER_SIZE : borderSize;
 

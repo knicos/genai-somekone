@@ -37,7 +37,7 @@ describe('SocialGraph Component', () => {
             </TestWrapper>
         );
 
-        await waitFor(() => expect(screen.getByText('TestUser1')).toBeVisible());
+        await waitFor(() => expect(screen.getByText(/TestUser1/)).toBeVisible());
     });
 
     it('allows node selection', async ({ expect }) => {

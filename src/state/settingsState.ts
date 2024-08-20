@@ -1,3 +1,4 @@
+import { SocialGraphThemes } from '@genaism/components/SocialGraph/graphTheme';
 import { SMConfig } from '@genaism/state/smConfig';
 import { UserNodeId } from '@knicos/genai-recom';
 import { atom, atomFamily, selectorFamily } from 'recoil';
@@ -23,6 +24,11 @@ export const configuration = selectorFamily<SMConfig, UserNodeId>({
 
 /* === Social Graph === */
 
+export const settingSocialGraphScale = atom<number>({
+    key: 'settingSocialGraphScale',
+    default: 1,
+});
+
 export const settingDisplayLines = atom<boolean>({
     key: 'settingdisplaylines',
     default: true,
@@ -38,25 +44,30 @@ export const settingIncludeAllLinks = atom<boolean>({
     default: true,
 });
 
-export const settingLinkDistanceScale = atom<number>({
+export const settingSocialGraphTheme = atom<SocialGraphThemes>({
+    key: 'settingsocialgraphtheme',
+    default: 'default',
+});
+
+/*export const settingLinkDistanceScale = atom<number>({
     key: 'settinglinkdistscale',
     default: 200,
-});
+});*/
 
-export const settingSimilarPercent = atom<number>({
+/*export const settingSimilarPercent = atom<number>({
     key: 'settingsimilarpercent',
     default: 0.01,
-});
+});*/
 
-export const settingNodeCharge = atom<number>({
+/*export const settingNodeCharge = atom<number>({
     key: 'settingnodecharge',
     default: 3,
-});
+});*/
 
-export const settingTopicThreshold = atom<number>({
+/*export const settingTopicThreshold = atom<number>({
     key: 'settingtopicthreshold',
     default: 0.4,
-});
+});*/
 
 export const settingShrinkOfflineUsers = atom<boolean>({
     key: 'settingshrinkofflineusers',

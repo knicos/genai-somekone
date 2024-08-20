@@ -9,10 +9,9 @@ import {
     settingDisplayLines,
     settingEgoOnSelect,
     settingIncludeAllLinks,
-    settingLinkDistanceScale,
-    settingNodeCharge,
+    settingSocialGraphScale,
     settingShowOfflineUsers,
-    settingSimilarPercent,
+    settingSocialGraphTheme,
 } from '@genaism/state/settingsState';
 // import FakeNode from '../FakeNode/FakeNode';
 import style from './style.module.css';
@@ -29,6 +28,8 @@ import { UserNodeId } from '@knicos/genai-recom';
 import { useNodeType } from '@genaism/hooks/graph';
 import { Point } from '@knicos/genai-recom/utils/embeddings/mapping';
 import { useProfilerService } from '@genaism/hooks/services';
+import { calculateParameters } from './parameters';
+import graphThemes from './graphTheme';
 
 const LINE_THICKNESS_UNSELECTED = 40;
 const MIN_LINE_THICKNESS = 10;
@@ -42,14 +43,14 @@ export default function SocialGraph({ liveUsers }: Props) {
     const [links, setLinks] = useState<GraphLink<UserNodeId, UserNodeId>[]>([]);
     const sizesRef = useRef<Map<string, number>>(new Map<string, number>());
     const [nodes, setNodes] = useState<GraphNode<UserNodeId>[]>([]);
-    const linkScale = useRecoilValue(settingLinkDistanceScale);
+    const scale = useRecoilValue(settingSocialGraphScale);
     const showLines = useRecoilValue(settingDisplayLines);
-    const charge = useRecoilValue(settingNodeCharge);
     const showOfflineUsers = useRecoilValue(settingShowOfflineUsers);
     const clusterColouring = useRecoilValue(settingClusterColouring);
     const egoSelect = useRecoilValue(settingEgoOnSelect);
     const showLabel = useRecoilValue(settingDisplayLabel);
     const allLinks = useRecoilValue(settingIncludeAllLinks);
+    const themeName = useRecoilValue(settingSocialGraphTheme);
     const users = useNodeType('user');
     const liveSet = useMemo(() => {
         const set = new Set<string>();
@@ -62,7 +63,6 @@ export default function SocialGraph({ liveUsers }: Props) {
     const [center, setCenter] = useState<[number, number] | undefined>();
     const [linkStyles, setLinkStyles] = useState<Map<UserNodeId, LinkStyle<UserNodeId>>>();
     const [connected, setConnected] = useState<Set<UserNodeId>>();
-    const similarPercent = useRecoilValue(settingSimilarPercent);
     const similar = useAllSimilarUsers(
         users,
         clusterColouring > 0,
@@ -70,6 +70,15 @@ export default function SocialGraph({ liveUsers }: Props) {
     );
     const pointMap = useRef(new Map<UserNodeId, Point>());
     const profiler = useProfilerService();
+    const currentZoom = useRef(1);
+
+    const { nodeCharge, similarPercent, linkDistance, density } = calculateParameters(
+        scale,
+        window.innerWidth * window.innerHeight,
+        nodes.length
+    );
+
+    const theme = graphThemes[themeName];
 
     useEffect(() => {
         const newLinks: GraphLink<UserNodeId, UserNodeId>[] = [];
@@ -190,24 +199,35 @@ export default function SocialGraph({ liveUsers }: Props) {
     return (
         <>
             <Graph
+                onZoom={(z: number) => {
+                    currentZoom.current = z;
+                }}
                 links={links}
                 nodes={nodes}
-                linkScale={linkScale}
+                linkScale={linkDistance}
                 linkStyles={linkStyles}
                 defaultLinkStyle={{
                     className: style.link,
                     opacity: (l: InternalGraphLink<UserNodeId, UserNodeId>) =>
-                        egoSelect && linkStyles
+                        theme.transparentLinks
+                            ? egoSelect && linkStyles
+                                ? 0
+                                : l.source.data?.label && l.source.data?.label === l.target.data?.label
+                                ? 0.5
+                                : 0.1
+                            : egoSelect && linkStyles
                             ? 0
                             : l.source.data?.label && l.source.data?.label === l.target.data?.label
-                            ? 0.5
-                            : 0.1,
+                            ? 0.8
+                            : 0.3,
                     width: (l: InternalGraphLink<UserNodeId, UserNodeId>) =>
                         MIN_LINE_THICKNESS + Math.floor(l.strength * LINE_THICKNESS_UNSELECTED),
                     colour: (l: InternalGraphLink<UserNodeId, UserNodeId>) =>
-                        l.source.data?.colour === l.target.data?.colour ? (l.source.data?.colour as string) : '#5f7377',
+                        l.source.data?.colour === l.target.data?.colour
+                            ? (l.source.data?.colour as string)
+                            : theme.linkColour || '#5f7377',
                 }}
-                charge={charge}
+                charge={nodeCharge}
                 showLines={showLines}
                 onSelect={(n: Readonly<GraphNode<UserNodeId>>) => {
                     setCenter([n.x || 0, n.y || 0]);
@@ -226,6 +246,7 @@ export default function SocialGraph({ liveUsers }: Props) {
                 injectStyle={
                     <style>{`.${style.cloudItem} rect {opacity: 0.2; fill: #078092;} .${style.cloudItem} text { fill: #444;}`}</style>
                 }
+                style={{ background: theme.background }}
             >
                 {nodes.map((n) => (
                     <ProfileNode
@@ -236,6 +257,8 @@ export default function SocialGraph({ liveUsers }: Props) {
                         live={liveSet.has(n.id)}
                         selected={n.id === focusNode}
                         disabled={egoSelect && connected ? !connected.has(n.id) : false}
+                        density={density}
+                        zoom={currentZoom.current}
                     />
                 ))}
             </Graph>

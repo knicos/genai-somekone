@@ -122,3 +122,14 @@
 .label {
     font-family: Andika;
 }
+
+.column {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-height: 0;
+}
+
+.spacer {
+    height: 1rem;
+}

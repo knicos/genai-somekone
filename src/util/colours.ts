@@ -20,7 +20,6 @@ const COLOURS = [
     '#2e6df5',
     '#fd9d32',
     '#19b1a8',
-    '#fad630',
     '#e04f66',
     '#a77bca',
     '#a2e4b8',

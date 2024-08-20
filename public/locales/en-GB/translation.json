@@ -169,6 +169,10 @@
             "usersSelect": "Select Users"
         },
         "labels": {
+            "theme": "Theme",
+            "themeDefault": "Default",
+            "themeHighContrast": "High contrast",
+            "showSocialGraphSettings": "Graph settings",
             "saveGraphImage": "Download graph as image",
             "showHeatGraph": "Display image heat maps",
             "heatmapUsers": "Select users to show",
@@ -188,7 +192,7 @@
             "showLabels": "Show user name labels",
             "showOffline": "Show offline or fake users",
             "shrinkOffline": "Reduce size of offline users",
-            "edgeScaling": "Change the distance between clusters",
+            "edgeScaling": "Change the size of the graph",
             "similarPercent": "Similarity threshold for link display",
             "nodeCharge": "Strength of separation force",
             "hideFeedMenu": "Hide menu in feed view",
@@ -229,7 +233,7 @@
             "collectResearch": "Collect research data",
             "showFeedImageLabels": "Show image labels in feed",
             "topicThreshold": "Node topic threshold",
-            "allLinks": "Show all links on select",
+            "allLinks": "Include all links",
             "showReplay": "Show replay controls",
             "stop": "Stop",
             "play": "Play",
