@@ -30,6 +30,7 @@ import { Point } from '@knicos/genai-recom/utils/embeddings/mapping';
 import { useProfilerService } from '@genaism/hooks/services';
 import { calculateParameters } from './parameters';
 import graphThemes from './graphTheme';
+import UserMenu from './UserMenu';
 
 const LINE_THICKNESS_UNSELECTED = 40;
 const MIN_LINE_THICKNESS = 10;
@@ -60,7 +61,6 @@ export default function SocialGraph({ liveUsers }: Props) {
         return set;
     }, [liveUsers]);
     const [focusNode, setFocusNode] = useRecoilState(menuSelectedUser);
-    const [center, setCenter] = useState<[number, number] | undefined>();
     const [linkStyles, setLinkStyles] = useState<Map<UserNodeId, LinkStyle<UserNodeId>>>();
     const [connected, setConnected] = useState<Set<UserNodeId>>();
     const similar = useAllSimilarUsers(
@@ -71,6 +71,8 @@ export default function SocialGraph({ liveUsers }: Props) {
     const pointMap = useRef(new Map<UserNodeId, Point>());
     const profiler = useProfilerService();
     const currentZoom = useRef(1);
+    const [userMenu, setUserMenu] = useState<[number, number] | undefined>();
+    const userElement = useRef<SVGElement>();
 
     const { nodeCharge, similarPercent, linkDistance, density } = calculateParameters(
         scale,
@@ -229,19 +231,36 @@ export default function SocialGraph({ liveUsers }: Props) {
                 }}
                 charge={nodeCharge}
                 showLines={showLines}
-                onSelect={(n: Readonly<GraphNode<UserNodeId>>) => {
-                    setCenter([n.x || 0, n.y || 0]);
-
+                onSelect={(n: Readonly<GraphNode<UserNodeId>>, _, element) => {
+                    const rect = element.getClientRects()[0];
+                    //setCenter([n.x || 0, n.y || 0]);
+                    userElement.current = element;
+                    if (rect) {
+                        setUserMenu([rect.x + rect.width / 2, rect.y + rect.height + 20]);
+                    } else {
+                        setUserMenu([0, 0]);
+                    }
                     setFocusNode(n.id);
                 }}
                 onUnselect={() => {
                     setFocusNode(undefined);
                     setConnected(undefined);
                     setLinkStyles(undefined);
+                    userElement.current = undefined;
+                    setUserMenu(undefined);
+                }}
+                onDragStop={() => {
+                    if (userElement.current) {
+                        const rect = userElement.current.getClientRects()[0];
+                        if (rect) {
+                            setUserMenu([rect.x + rect.width / 2, rect.y + rect.height + 20]);
+                        } else {
+                            setUserMenu([0, 0]);
+                        }
+                    }
                 }}
                 focusNode={focusNode}
                 zoom={5}
-                center={center}
                 LabelComponent={showLabel ? UserLabel : undefined}
                 injectStyle={
                     <style>{`.${style.cloudItem} rect {opacity: 0.2; fill: #078092;} .${style.cloudItem} text { fill: #444;}`}</style>
@@ -262,11 +281,17 @@ export default function SocialGraph({ liveUsers }: Props) {
                     />
                 ))}
             </Graph>
+            {userMenu && (
+                <UserMenu
+                    x={userMenu[0]}
+                    y={userMenu[1]}
+                />
+            )}
+            <SocialMenu />
             <FeedPanel />
             <DataPanel />
             <ProfilePanel />
             <RecommendationsPanel />
-            <SocialMenu />
         </>
     );
 }

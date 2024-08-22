@@ -31,7 +31,6 @@ interface Props {
 function filterTaste(taste: WeightedLabel[], threshold: number): WeightedLabel[] {
     if (taste.length === 0) return taste;
     const max = taste[0].weight;
-    console.log(threshold);
     return taste.filter((t) => t.weight >= threshold * max);
 }
 

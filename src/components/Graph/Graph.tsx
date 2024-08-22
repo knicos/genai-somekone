@@ -52,7 +52,7 @@ interface LabelProps<T extends NodeID> {
 interface Props<T extends NodeID> extends PropsWithChildren {
     nodes: GraphNode<T>[];
     links?: GraphLink<T, T>[];
-    onSelect?: (node: Readonly<GraphNode<T>>, links: InternalGraphLink<T, T>[]) => void;
+    onSelect?: (node: Readonly<GraphNode<T>>, links: InternalGraphLink<T, T>[], element: SVGElement) => void;
     onUnselect?: () => void;
     focusNode?: string;
     zoom?: number;
@@ -69,6 +69,7 @@ interface Props<T extends NodeID> extends PropsWithChildren {
     disableCenter?: boolean;
     injectStyle?: JSX.Element;
     style?: CSSProperties;
+    onDragStop?: () => void;
 }
 
 interface InternalState {
@@ -101,6 +102,7 @@ export default function Graph<T extends NodeID>({
     focusNode,
     zoom = 5,
     onZoom,
+    onDragStop,
     children,
     center,
     linkScale = 6,
@@ -314,6 +316,7 @@ export default function Graph<T extends NodeID>({
                         ? (e: PointerEvent<SVGSVGElement>) => {
                               pointerCache.current.clear();
                               if (e.pointerType === 'touch') movement.current = [0, 0];
+                              if (onDragStop) onDragStop();
                           }
                         : undefined
                 }
@@ -341,7 +344,7 @@ export default function Graph<T extends NodeID>({
                     )}
                     <Nodes
                         nodeList={nodeList}
-                        onSelect={(node: GraphNode<T>) => {
+                        onSelect={(node: GraphNode<T>, element: SVGElement) => {
                             if (onSelect) {
                                 if (Math.max(movement.current[0], movement.current[1]) > MOVE_THRESHOLD) {
                                     movement.current = [0, 0];
@@ -350,7 +353,8 @@ export default function Graph<T extends NodeID>({
                                 movement.current = [0, 0];
                                 onSelect(
                                     node,
-                                    linkList.filter((l) => l.source.id === node.id || l.target.id === node.id)
+                                    linkList.filter((l) => l.source.id === node.id || l.target.id === node.id),
+                                    element
                                 );
                             }
                         }}

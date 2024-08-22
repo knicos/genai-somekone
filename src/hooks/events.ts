@@ -1,9 +1,15 @@
 import EE from 'eventemitter3';
 import { createContext, useContext, useEffect, useMemo } from 'react';
 
-type ComponentEvents = {
+type RefreshEvents = {
+    refresh_graph: [];
+};
+
+type SaveEvents = {
     [key in `save_${string}`]: [];
 };
+
+type ComponentEvents = SaveEvents & RefreshEvents;
 
 export default class ComponentBroker {
     private emitter = new EE();

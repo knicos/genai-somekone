@@ -25,6 +25,7 @@ import ContentLoader from '@genaism/components/ContentLoader/ContentLoader';
 import Guidance from '@genaism/components/Guidance/Guidance';
 import ContentToolsDialog from '../dialogs/ContentToolsDialog/ContentToolsDialog';
 import HeatmapCompare from '@genaism/components/HeatmapCompare/HeatmapCompare';
+import { useEventListen } from '@genaism/hooks/events';
 
 interface Props {
     contentUrls?: string;
@@ -46,6 +47,10 @@ export function Workspace({ contentUrls, cfg, guide, experimental }: Props) {
     const showReplay = useRecoilValue(menuShowReplay);
     const setSelectedNode = useSetRecoilState(menuSelectedUser);
     const [fileToOpen, setFileToOpen] = useState<(ArrayBuffer | string)[] | undefined>();
+
+    useEventListen('refresh_graph', () => {
+        refresh();
+    });
 
     useEffect(() => {
         if (!ready) return;
@@ -96,15 +101,6 @@ export function Workspace({ contentUrls, cfg, guide, experimental }: Props) {
                 <main className={style.dashboard}>
                     {guide && <Guidance guide={guide} />}
                     <section className={style.workspace}>
-                        <div className={style.backgroundLogo}>
-                            <img
-                                src="/logo64_bw.png"
-                                width={64}
-                                height={64}
-                                alt="Somekone logo"
-                            />
-                            <h1>Somekone</h1>
-                        </div>
                         {graphMode === 'social' && (
                             <SocialGraph
                                 key={`sg-${count}`}
@@ -123,10 +119,7 @@ export function Workspace({ contentUrls, cfg, guide, experimental }: Props) {
                                 setFileToOpen(['https://store.gen-ai.fi/somekone/sm_demo1c.zip']);
                             }}
                         />
-                        <MenuPanel
-                            onOpen={doOpenFile}
-                            onRefresh={refresh}
-                        />
+                        <MenuPanel />
                         <SaveDialog />
                         <SettingsDialog />
                         <ContentToolsDialog />
@@ -147,6 +140,18 @@ export function Workspace({ contentUrls, cfg, guide, experimental }: Props) {
             />
             <ContentLoader content={fileToOpen} />
             <ErrorDialog />
+            <input
+                type="file"
+                id="openfile"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    if (e.currentTarget.files) {
+                        doOpenFile(e.currentTarget.files[0]);
+                        e.currentTarget.value = '';
+                    }
+                }}
+                hidden={true}
+                accept=".zip,application/zip"
+            />
         </>
     );
 }

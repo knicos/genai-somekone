@@ -3,24 +3,29 @@ import style from './style.module.css';
 import { IconMenuContext } from './context';
 
 interface Props extends PropsWithChildren {
-    placement?: 'left' | 'right' | 'top' | 'bottom';
+    placement?: 'free' | 'left' | 'right' | 'top' | 'bottom';
     label?: JSX.Element;
     anchor?: HTMLElement;
     selected?: boolean;
     title?: string;
+    x?: number;
+    y?: number;
 }
 
-export default function IconMenu({ placement, label, children, selected, title }: Props) {
+export default function IconMenu({ placement = 'free', x = 0, y = 0, label, children, selected, title }: Props) {
     return (
         <nav
-            className={style[placement || 'left']}
+            className={style[placement]}
             aria-label={title}
+            style={placement === 'free' ? { left: `${x}px`, top: `${y}px`, transform: 'translateX(-50%)' } : undefined}
         >
-            <IconMenuContext.Provider value={placement || 'left'}>
+            <IconMenuContext.Provider value={placement}>
                 <div
-                    className={`${placement === 'top' || placement === 'bottom' ? style.logoColumn : style.logoRow} ${
-                        selected ? style.selected : ''
-                    }`}
+                    className={`${
+                        placement === 'top' || placement === 'bottom' || placement === 'free'
+                            ? style.logoColumn
+                            : style.logoRow
+                    } ${selected ? style.selected : ''}`}
                 >
                     {label}
                 </div>

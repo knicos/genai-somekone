@@ -21,11 +21,14 @@ export default function ClusterMenu() {
 
     return (
         <>
-            <IconMenuItem tooltip={t('dashboard.labels.clusterColouring')}>
+            <IconMenuItem
+                tooltip={t('dashboard.labels.clusterColouring')}
+                selected={colouring > 0}
+            >
                 <IconButton
                     onClick={handleClick}
                     id="cluster-menu-button"
-                    color={colouring > 0 ? 'secondary' : 'inherit'}
+                    color="inherit"
                     aria-label={t('dashboard.labels.clusterColouring')}
                 >
                     <WorkspacesIcon />

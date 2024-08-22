@@ -1,4 +1,5 @@
-@value textDark, workspaceBg, backgroundDark, bgColourful1, bgSubdued1, textLight from "@knicos/genai-base/css/colours.module.css";
+@value textDark, workspaceBg, backgroundDark, bgColourful1, bgSubdued1, textLight, primary from "@knicos/genai-base/css/colours.module.css";
+@value backgroundDark2, backgroundDark3, secondaryLight from "@genaism/style/extraColours.module.css";
 
 .dashboard {
     position: absolute;
@@ -15,6 +16,23 @@
     line-height: 0;
 }
 
+.logoRow {
+    display: flex;
+    width: 100%;
+    margin-bottom: 2rem;
+    justify-content: center;
+    background: primary;
+    padding-top: 0.5rem;
+    color: white;
+    padding-bottom: 0.5rem;
+    align-items: center;
+}
+
+.logoRowOpen {
+    composes: logoRow;
+    justify-content: space-between;
+}
+
 .workspace {
     /*position: absolute;
     top: 0;
@@ -27,15 +45,72 @@
     justify-content: center;
     align-items: center;
     flex-grow: 1;
+    padding-left: 66px;
 }
 
 .backgroundLogo {
-    position: absolute;
-    bottom: 10px;
-    right: 20px;
     display: flex;
     background: none;
     align-items: center;
+    justify-content: flex-start;
     gap: 0.5rem;
-    opacity: 0.2;
+    flex-wrap: nowrap;
+    overflow: hidden;
+    max-height: 48px;
+    margin-left: 0.5rem;
+}
+
+.backgroundLogo h1 {
+    margin: 0;
+    color: white;
+}
+
+.sideNav {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background: backgroundDark2;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    box-shadow: 0 0 10px #888;
+    width: 250px;
+    transition: width 0.2s;
+    overflow: hidden;
+    padding-bottom: 0.5rem;
+}
+
+.sideNavClosed {
+    composes: sideNav;
+    width: 66px;
+}
+
+.treeItem {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.2rem 0;
+    text-wrap: nowrap;
+    overflow: hidden;
+}
+
+.treeItemSelected {
+    composes: treeItem;
+    color: secondaryLight;
+}
+
+.treeContainer {
+    width: 100%;
+    margin: 1rem 0;
+    /*border-top: 1px solid #555;
+    border-bottom: 1px solid #555;*/
+    background: backgroundDark3;
+    padding: 1rem 0;
+    min-height: 0;
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-sizing: border-box;
 }

@@ -1,14 +1,23 @@
 @value textDark, workspaceBg, bgColourful1, secondary from "@knicos/genai-base/css/colours.module.css";
+@value backgroundDark2, backgroundDark3, secondaryLight from "@genaism/style/extraColours.module.css";
 
 .menuContainer {
     position: absolute;
-    background: white;
+    background: backgroundDark2;
     border-radius: 2rem;
     box-shadow: 1px 1px 8px #888;
     display: flex;
     overflow: hidden;
     align-items: center;
-    color: textDark;
+    color: white;
+}
+
+.free {
+    composes: menuContainer;
+    width: fit-content;
+    flex-direction: row;
+    padding-right: 1rem;
+    transform: translateX(-50%);
 }
 
 .left {
@@ -62,14 +71,14 @@
 .menuSpacerRow {
     margin: 0.5rem 0;
     height: 2px;
-    background: workspaceBg;
+    background: backgroundDark3;
     align-self: stretch;
 }
 
 .menuSpacerColumn {
     margin: 0 0.5rem;
     width: 2px;
-    background: workspaceBg;
+    background: backgroundDark3;
     align-self: stretch;
 }
 
@@ -100,4 +109,26 @@
 
 .selected {
     background: secondary;
+}
+
+.selectedItem {
+    color: secondaryLight;
+}
+
+.inline {
+    display: flex;
+    align-items: center;
+    font-size: 0.8rem;
+    font-style: italic;
+    text-wrap: nowrap;
+    overflow: hidden;
+}
+
+.inlineSelected {
+    composes: inline;
+    color: secondaryLight;
+}
+
+.inlineTip {
+    color: #eee;
 }
