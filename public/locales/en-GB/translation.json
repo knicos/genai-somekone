@@ -315,7 +315,8 @@
             "data": "Data",
             "profile": "Profile",
             "recommendations": "Recommendations",
-            "post": "Post"
+            "post": "Post",
+            "print": "Print"
         },
         "messages": {
             "loading": "Finding profile data"

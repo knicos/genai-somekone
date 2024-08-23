@@ -4,17 +4,22 @@ import Card from '../DataCard/Card';
 import LogItem from './LogItem';
 import { LogEntry } from '@knicos/genai-recom';
 
+export interface ContentLogEntry {
+    content: string;
+    entry: LogEntry;
+}
+
 interface Props {
-    batch: LogEntry[];
+    batch: ContentLogEntry[];
 }
 
 export default function LogBatch({ batch }: Props) {
     const { t } = useTranslation();
     if (batch.length === 0) return null;
 
-    const message = generateMessage(batch[0], t);
+    const message = generateMessage(batch[0].entry, t);
 
-    const image = batch[0].id || 'content:unknown';
+    const image = batch[0].content;
 
     return (
         <Card
@@ -23,7 +28,7 @@ export default function LogBatch({ batch }: Props) {
         >
             {batch.slice(1).map((item, ix) => (
                 <LogItem
-                    item={item}
+                    item={item.entry}
                     key={ix}
                 />
             ))}

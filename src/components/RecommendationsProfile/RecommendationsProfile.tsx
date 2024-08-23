@@ -15,11 +15,11 @@ import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 import AppsIcon from '@mui/icons-material/Apps';
 import IconMenuItem from '../IconMenu/Item';
 import Spacer from '../IconMenu/Spacer';
-import { IconMenuContext } from '../IconMenu/context';
 import RecommendationsHeatmap from '../RecommendationsHeatmap/RecommendationsHeatmap';
 import { ContentNodeId, UserNodeId, WeightedNode } from '@knicos/genai-recom';
 import { useRecommendations } from '@genaism/hooks/recommender';
 import { useProfilerService } from '@genaism/hooks/services';
+import IconMenuInline from '../IconMenu/IconMenuInline';
 
 interface Props {
     id?: UserNodeId;
@@ -62,58 +62,56 @@ export default function RecommendationsProfile({ id, generate, noWizard }: Props
                         id={aid}
                     />
                 )}
-                <div className={style.buttonBar}>
-                    <IconMenuContext.Provider value="top">
-                        <Button
-                            onClick={() => setWizard(true)}
-                            variant="contained"
-                            color="secondary"
-                            startIcon={<DesignServicesIcon />}
-                            data-testid="start-recom-wizard"
-                            sx={{ marginLeft: '1rem' }}
-                            disabled={wizard}
+                <IconMenuInline>
+                    <Button
+                        onClick={() => setWizard(true)}
+                        variant="contained"
+                        color="secondary"
+                        startIcon={<DesignServicesIcon />}
+                        data-testid="start-recom-wizard"
+                        sx={{ marginLeft: '1rem' }}
+                        disabled={wizard}
+                    >
+                        {t('recommendations.actions.change')}
+                    </Button>
+                    <div style={{ flexGrow: 1 }} />
+                    <Spacer />
+                    <IconMenuItem tooltip={t('recommendations.labels.imageGrid')}>
+                        <IconButton
+                            color={viewMode === 'grid' ? 'secondary' : 'inherit'}
+                            onClick={() => setViewMode('grid')}
+                            aria-label={t('recommendations.aria.imageGrid')}
                         >
-                            {t('recommendations.actions.change')}
-                        </Button>
-                        <div style={{ flexGrow: 1 }} />
-                        <Spacer />
-                        <IconMenuItem tooltip={t('recommendations.labels.imageGrid')}>
-                            <IconButton
-                                color={viewMode === 'grid' ? 'secondary' : 'inherit'}
-                                onClick={() => setViewMode('grid')}
-                                aria-label={t('recommendations.aria.imageGrid')}
-                            >
-                                <AppsIcon />
-                            </IconButton>
-                        </IconMenuItem>
-                        <IconMenuItem tooltip={t('recommendations.labels.heatmap')}>
-                            <IconButton
-                                color={viewMode === 'heat' ? 'secondary' : 'inherit'}
-                                onClick={() => setViewMode('heat')}
-                                aria-label={t('recommendations.aria.heatmap')}
-                                data-testid="heatmap-button"
-                            >
-                                <LocalFireDepartmentIcon />
-                            </IconButton>
-                        </IconMenuItem>
-                        <Spacer />
-                        <IconMenuItem tooltip={t('recommendations.actions.refresh')}>
-                            <IconButton
-                                color="inherit"
-                                onClick={() => {
-                                    if (viewMode === 'grid') {
-                                        more();
-                                    } else {
-                                        refreshHeat();
-                                    }
-                                }}
-                                aria-label={t('recommendations.aria.refresh')}
-                            >
-                                <RefreshIcon />
-                            </IconButton>
-                        </IconMenuItem>
-                    </IconMenuContext.Provider>
-                </div>
+                            <AppsIcon />
+                        </IconButton>
+                    </IconMenuItem>
+                    <IconMenuItem tooltip={t('recommendations.labels.heatmap')}>
+                        <IconButton
+                            color={viewMode === 'heat' ? 'secondary' : 'inherit'}
+                            onClick={() => setViewMode('heat')}
+                            aria-label={t('recommendations.aria.heatmap')}
+                            data-testid="heatmap-button"
+                        >
+                            <LocalFireDepartmentIcon />
+                        </IconButton>
+                    </IconMenuItem>
+                    <Spacer />
+                    <IconMenuItem tooltip={t('recommendations.actions.refresh')}>
+                        <IconButton
+                            color="inherit"
+                            onClick={() => {
+                                if (viewMode === 'grid') {
+                                    more();
+                                } else {
+                                    refreshHeat();
+                                }
+                            }}
+                            aria-label={t('recommendations.aria.refresh')}
+                        >
+                            <RefreshIcon />
+                        </IconButton>
+                    </IconMenuItem>
+                </IconMenuInline>
                 {viewMode === 'heat' && (
                     <>
                         <RecommendationsHeatmap

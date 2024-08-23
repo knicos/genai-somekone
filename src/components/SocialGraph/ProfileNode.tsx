@@ -108,7 +108,10 @@ const ProfileNode = memo(function ProfileNode({
             />
             {!reduced && nodeMode === 'image' && profile.affinities.contents.contents.length > 0 && (
                 <ImageCloud
-                    content={profile.affinities.contents.contents}
+                    content={profile.affinities.contents.contents.map((c) => ({
+                        weight: c.weight,
+                        image: content.getContentData(c.id) || '',
+                    }))}
                     size={200 + Math.floor(100 * density)}
                     padding={3}
                     onSize={doResize}

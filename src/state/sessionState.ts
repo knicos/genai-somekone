@@ -1,3 +1,4 @@
+import { PrintData } from '@genaism/protocol/printProtocol';
 import { ContentInjectReason, UserEntry } from '@genaism/protocol/protocol';
 import { UserInfo } from '@genaism/views/Dashboard/userInfo';
 import { ContentNodeId, UserNodeId } from '@knicos/genai-recom';
@@ -42,4 +43,9 @@ export interface InjectContentType {
 export const injectedContent = atom<InjectContentType[]>({
     key: 'injectcontent',
     default: [],
+});
+
+export const storedPrintData = atom<PrintData | undefined>({
+    key: 'storedprintdata',
+    default: undefined,
 });

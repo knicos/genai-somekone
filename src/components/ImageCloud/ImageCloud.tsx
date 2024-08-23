@@ -1,11 +1,14 @@
 import { memo, useEffect, useState } from 'react';
 import style from './style.module.css';
 import cloudLayout, { LocationItem, SizedItem } from './cloudLayout';
-import { ContentNodeId, WeightedNode } from '@knicos/genai-recom';
-import { useContentService } from '@genaism/hooks/services';
+
+export interface WeightedImage {
+    weight: number;
+    image: string;
+}
 
 interface Props {
-    content: WeightedNode<ContentNodeId>[];
+    content: WeightedImage[];
     padding?: number;
     size?: number;
     colour?: string;
@@ -28,17 +31,16 @@ const ImageCloud = memo(function Cloud({
     className,
     count,
 }: Props) {
-    const [locations, setLocations] = useState<LocationItem<ContentNodeId>[]>([]);
-    const contentSrv = useContentService();
+    const [locations, setLocations] = useState<LocationItem<string>[]>([]);
 
     useEffect(() => {
         const maxWeight = Math.max(0.01, content.length > 0 ? content[0].weight : 1);
-        const sizedContent: SizedItem<ContentNodeId>[] = content
+        const sizedContent: SizedItem<string>[] = content
             .filter((c, ix) => c.weight > 0 && (count === undefined || ix < count))
             .map((c) => {
                 const asize = Math.floor((c.weight / maxWeight) * ((size || 500) - MIN_SIZE) * 0.3) + MIN_SIZE;
                 return {
-                    id: c.id,
+                    id: c.image,
                     width: asize,
                     height: asize,
                 };
@@ -79,7 +81,7 @@ const ImageCloud = memo(function Cloud({
                         y={0}
                         width={l.item.width}
                         height={l.item.height}
-                        href={contentSrv.getContentData(l.item.id)}
+                        href={l.item.id}
                         preserveAspectRatio="none"
                         clipPath="inset(0% round 5px)"
                     />

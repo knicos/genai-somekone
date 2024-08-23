@@ -1,28 +1,22 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Button } from '@knicos/genai-base';
 import { useTranslation } from 'react-i18next';
 import Cards from '../DataCard/Cards';
-import LogBatch from './LogBatch';
+import LogBatch, { ContentLogEntry } from './LogBatch';
 import style from './style.module.css';
-import { GraphService, LogEntry, UserNodeId } from '@knicos/genai-recom';
-import { useGraphService, useProfilerService } from '@genaism/hooks/services';
+import { UserNodeId } from '@knicos/genai-recom';
 
 interface Props {
     user?: UserNodeId;
-    log: LogEntry[];
+    log: ContentLogEntry[];
+    fixedSize?: number;
 }
 
-function batchLogs(
-    graph: GraphService,
-    user: UserNodeId,
-    log: LogEntry[],
-    size: number,
-    startOffset: number
-): LogEntry[][] {
-    const results: LogEntry[][] = [[]];
+function batchLogs(log: ContentLogEntry[], size: number, startOffset: number): ContentLogEntry[][] {
+    const results: ContentLogEntry[][] = [[]];
     if (log.length === 0) return results;
 
-    if (log[0].activity !== 'engagement') {
+    /*if (log[0].activity !== 'engagement') {
         const weight = graph.getEdgeWeights('last_engaged', user, log[0].id)[0] || 0;
         results[0].push({
             activity: 'engagement',
@@ -30,7 +24,7 @@ function batchLogs(
             value: weight,
             id: log[0].id,
         });
-    }
+    }*/
 
     let counter = size;
     for (let i = 0; i < log.length; ++i) {
@@ -38,7 +32,7 @@ function batchLogs(
 
         const current = results[results.length - 1];
 
-        if (current.length > 0 && current[0].id !== l.id) {
+        if (current.length > 0 && current[0].entry.id !== l.entry.id) {
             if (i >= startOffset) --counter;
             if (counter === 0) break;
             results.push([l]);
@@ -49,16 +43,18 @@ function batchLogs(
     return results;
 }
 
-export default function ActionLogTable({ user, log }: Props) {
+export default function ActionLogTable({ log, fixedSize }: Props) {
     const { t } = useTranslation();
-    const [size, setSize] = useState(5);
+    const [size, setSize] = useState(fixedSize || 5);
     const firstSize = useRef(log.length);
-    const graph = useGraphService();
-    const profiler = useProfilerService();
+
+    useEffect(() => {
+        setSize(fixedSize || 5);
+    }, [fixedSize]);
 
     const logLimited = useMemo(() => {
-        return batchLogs(graph, user || profiler.getCurrentUser(), log, size, log.length - firstSize.current);
-    }, [log, size, user, profiler, graph]);
+        return batchLogs(log, size, log.length - firstSize.current);
+    }, [log, size]);
 
     return (
         <Cards>
@@ -68,15 +64,17 @@ export default function ActionLogTable({ user, log }: Props) {
                     key={logLimited.length - ix}
                 />
             ))}
-            <li className={style.buttonListItem}>
-                <Button
-                    variant="outlined"
-                    onClick={() => setSize((s) => s + 5)}
-                    sx={{ margin: '1rem 0.5rem' }}
-                >
-                    {t('profile.actions.more')}
-                </Button>
-            </li>
+            {!fixedSize && (
+                <li className={style.buttonListItem}>
+                    <Button
+                        variant="outlined"
+                        onClick={() => setSize((s) => s + 5)}
+                        sx={{ margin: '1rem 0.5rem' }}
+                    >
+                        {t('profile.actions.more')}
+                    </Button>
+                </li>
+            )}
         </Cards>
     );
 }

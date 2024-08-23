@@ -15,7 +15,7 @@ import {
     ReplayService,
 } from '@knicos/genai-recom';
 
-interface Services {
+export interface Services {
     broker: ReturnType<typeof getBroker>;
     graph: GraphService;
     content: ContentService;

@@ -19,7 +19,7 @@
     overflow-y: scroll;
     align-items: center;
     height: 100%;
-    scrollbar-gutter: stable both-edges;
+    /*scrollbar-gutter: stable both-edges;*/
 }
 
 .svgContainer {
@@ -30,4 +30,10 @@
     position: absolute;
     right: 0.5rem;
     top: 0.5rem;
+}
+
+@media print {
+    .container {
+        background: white;
+    }
 }

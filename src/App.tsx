@@ -110,6 +110,23 @@ const router = createBrowserRouter(
                 />
             </Route>
             <Route
+                path="print/:code"
+                lazy={() => import('./views/Printing/Printing')}
+            >
+                <Route
+                    index
+                    loader={() => redirect('data')}
+                />
+                <Route
+                    path="data"
+                    lazy={() => import('./views/Printing/pages/PrintData')}
+                />
+                <Route
+                    path="profile"
+                    lazy={() => import('./views/Printing/pages/PrintProfile')}
+                />
+            </Route>
+            <Route
                 path="profile/:code"
                 lazy={() => import('./views/ProfileViewer/ProfileViewer')}
             >

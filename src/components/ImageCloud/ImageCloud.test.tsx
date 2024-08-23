@@ -1,11 +1,10 @@
-import { describe, it, beforeEach } from 'vitest';
+import { describe, it } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import ImageCloud from './ImageCloud';
-import { getContentService } from '@knicos/genai-recom';
+
+const TEST_IMAGE = 'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg';
 
 describe('ImageCloud component', () => {
-    beforeEach(() => getContentService().reset());
-
     it('renders with no content', async ({ expect }) => {
         render(
             <svg>
@@ -17,15 +16,9 @@ describe('ImageCloud component', () => {
     });
 
     it('renders with one item', async ({ expect }) => {
-        getContentService().addContent('https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg', {
-            id: 'image1',
-            author: 'Unknown',
-            labels: [],
-        });
-
         render(
             <svg>
-                <ImageCloud content={[{ id: 'content:image1', weight: 1 }]} />
+                <ImageCloud content={[{ image: TEST_IMAGE, weight: 1 }]} />
             </svg>
         );
 
@@ -33,19 +26,13 @@ describe('ImageCloud component', () => {
     });
 
     it('renders with three items', async ({ expect }) => {
-        getContentService().addContent('https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg', {
-            id: 'image1',
-            author: 'Unknown',
-            labels: [],
-        });
-
         render(
             <svg>
                 <ImageCloud
                     content={[
-                        { id: 'content:image1', weight: 1 },
-                        { id: 'content:image1', weight: 0.2 },
-                        { id: 'content:image1', weight: 0.5 },
+                        { image: TEST_IMAGE, weight: 1 },
+                        { image: TEST_IMAGE, weight: 0.2 },
+                        { image: TEST_IMAGE, weight: 0.5 },
                     ]}
                 />
             </svg>

@@ -35,6 +35,10 @@
         {
             "route": "/content*",
             "rewrite": "index.html"
+        },
+        {
+            "route": "/print*",
+            "rewrite": "index.html"
         }
     ]
 }

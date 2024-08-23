@@ -34,6 +34,30 @@
     filter: brightness(1.2);
 }
 
+@media print {
+    .table {
+        background: white;
+        display: block;
+    }
+
+    .item {
+        border: 1px solid primary;
+        margin-bottom: 1rem;
+        break-inside: avoid;
+    }
+
+    .header {
+        background: bgSubdued1;
+        border-bottom: 4px solid primary;
+        color: #444;
+        font-weight: bold;
+    }
+
+    .header:hover {
+        filter: unset;
+    }
+}
+
 .header img {
     overflow: hidden;
     line-height: 0;

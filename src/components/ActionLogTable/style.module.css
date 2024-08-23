@@ -26,3 +26,18 @@
     display: flex;
     justify-content: center;
 }
+
+@media print {
+    .logItem {
+        flex-direction: row;
+        justify-content: space-between;
+        background: white;
+        border-top: 1px solid primary;
+        color: black;
+        margin-top: 0;
+    }
+
+    .time {
+        color: black;
+    }
+}

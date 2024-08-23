@@ -132,3 +132,14 @@
 .inlineTip {
     color: #eee;
 }
+
+.inlineBar {
+    background: white;
+    color: #444;
+    padding: 0.5rem;
+    box-shadow: 1px 1px 8px #888;
+    display: flex;
+    gap: 0.5rem;
+    margin: 1rem;
+    border-radius: 2rem;
+}

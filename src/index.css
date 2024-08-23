@@ -23,3 +23,15 @@
     flex-direction: column;
     overflow: hidden;
 }
+
+@media print {
+    #root {
+        position: initial;
+        overflow: auto;
+    }
+
+    body {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+}

@@ -28,7 +28,7 @@
     overflow-y: scroll;
     align-items: center;
     height: 100%;
-    scrollbar-gutter: stable both-edges;
+    /*scrollbar-gutter: stable both-edges;*/
 }
 
 .similarUser {
