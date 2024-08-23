@@ -11,9 +11,10 @@ interface Props {
     user: UserNodeId;
     dimensions: number;
     showName?: boolean;
+    invert?: boolean;
 }
 
-export default function RecommendationsHeatmap({ user, dimensions, showName }: Props) {
+export default function RecommendationsHeatmap({ user, dimensions, showName, invert }: Props) {
     const config = useRecoilValue(configuration(user));
     const images = useRef<ContentNodeId[]>();
     const [heats, setHeats] = useState<WeightedNode<ContentNodeId>[]>();
@@ -39,6 +40,7 @@ export default function RecommendationsHeatmap({ user, dimensions, showName }: P
             busy={loading}
             dimensions={dimensions}
             label={showName ? profile.name : undefined}
+            invert={invert}
         />
     );
 }

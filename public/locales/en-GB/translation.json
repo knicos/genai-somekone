@@ -328,7 +328,8 @@
             "continue": "Continue",
             "close": "Close",
             "change": "Change",
-            "refresh": "Refresh view"
+            "refresh": "Refresh view",
+            "invert": "Invert"
         },
         "labels": {
             "topicCandidate": "Found from #{{topic}}.",

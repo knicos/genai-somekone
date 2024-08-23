@@ -9,6 +9,7 @@ export default function HeatmapCompare() {
     const [openUserList, setOpenUserList] = useState(true);
     const [users, setUser] = useState<UserNodeId[]>([]);
     const [count, refresh] = useReducer((old) => old + 1, 0);
+    const [invert, setInvert] = useState(false);
 
     return (
         <>
@@ -22,6 +23,7 @@ export default function HeatmapCompare() {
                         dimensions={25}
                         user={user}
                         showName
+                        invert={invert}
                     />
                 ))}
             </div>
@@ -35,6 +37,8 @@ export default function HeatmapCompare() {
             <HeatmapMenu
                 onOpenUserList={() => setOpenUserList(true)}
                 onRefresh={refresh}
+                onInvert={() => setInvert((o) => !o)}
+                inverted={invert}
             />
         </>
     );

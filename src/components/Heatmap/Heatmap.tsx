@@ -17,6 +17,7 @@ interface Props {
     dimensions: number;
     busy?: boolean;
     label?: string;
+    invert?: boolean;
 }
 
 /*function heatMapColorforValue(value: number) {
@@ -28,7 +29,7 @@ interface Props {
 const ZOOM_SCALE = 60;
 const MIN_OPACITY = 0.1;
 
-export default function Heatmap({ data, dimensions, busy, label }: Props) {
+export default function Heatmap({ data, dimensions, busy, label, invert }: Props) {
     const { t } = useTranslation();
     const [grid, setGrid] = useState<(ContentNodeId | null)[][]>();
     const svgRef = useRef<SVGSVGElement>(null);
@@ -118,8 +119,9 @@ export default function Heatmap({ data, dimensions, busy, label }: Props) {
                 <g>
                     {grid?.map((row, ix) => (
                         <g key={ix}>
-                            {row.map((img, ix2) =>
-                                img ? (
+                            {row.map((img, ix2) => {
+                                const heat = img ? (heats.get(img) || 0) * (1 - MIN_OPACITY) + MIN_OPACITY : 0;
+                                return img ? (
                                     <Fragment key={ix2}>
                                         <image
                                             data-testid="heatmap-image"
@@ -134,14 +136,14 @@ export default function Heatmap({ data, dimensions, busy, label }: Props) {
                                             y={ix * size}
                                             width={size}
                                             height={size}
-                                            opacity={1 - ((heats.get(img) || 0) * (1 - MIN_OPACITY) + MIN_OPACITY)}
+                                            opacity={invert ? heat : 1 - heat}
                                             fill="white"
                                             stroke="white"
                                             strokeWidth={0.5}
                                         />
                                     </Fragment>
-                                ) : null
-                            )}
+                                ) : null;
+                            })}
                         </g>
                     ))}
                 </g>

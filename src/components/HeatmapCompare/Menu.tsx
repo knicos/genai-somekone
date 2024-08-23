@@ -13,9 +13,11 @@ import { useEventEmit } from '@genaism/hooks/events';
 interface Props {
     onOpenUserList: () => void;
     onRefresh: () => void;
+    onInvert: () => void;
+    inverted?: boolean;
 }
 
-export default function HeatmapMenu({ onOpenUserList, onRefresh }: Props) {
+export default function HeatmapMenu({ onOpenUserList, onRefresh, onInvert, inverted }: Props) {
     const { t } = useTranslation();
     const saveGraph = useEventEmit('save_heat');
 
@@ -39,10 +41,13 @@ export default function HeatmapMenu({ onOpenUserList, onRefresh }: Props) {
                     <GroupIcon />
                 </IconButton>
             </IconMenuItem>
-            <IconMenuItem tooltip={t('dashboard.labels.invertHeatmap')}>
+            <IconMenuItem
+                tooltip={t('dashboard.labels.invertHeatmap')}
+                selected={inverted}
+            >
                 <IconButton
                     color={'inherit'}
-                    onClick={onRefresh}
+                    onClick={onInvert}
                     data-testid="heatmap-menu-invert"
                     aria-label={t('dashboard.labels.invertHeatmap')}
                 >

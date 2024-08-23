@@ -20,6 +20,7 @@ import { ContentNodeId, UserNodeId, WeightedNode } from '@knicos/genai-recom';
 import { useRecommendations } from '@genaism/hooks/recommender';
 import { useProfilerService } from '@genaism/hooks/services';
 import IconMenuInline from '../IconMenu/IconMenuInline';
+import InvertColorsIcon from '@mui/icons-material/InvertColors';
 
 interface Props {
     id?: UserNodeId;
@@ -37,6 +38,7 @@ export default function RecommendationsProfile({ id, generate, noWizard }: Props
     const [wizard, setWizard] = useState(false);
     const [viewMode, setViewMode] = useState<'grid' | 'heat'>('grid');
     const [heatCount, refreshHeat] = useReducer((v) => v + 1, 0);
+    const [invert, setInvert] = useState(false);
 
     const recomNodes: WeightedNode<ContentNodeId>[] = recommendations.map((r) => ({
         id: r.contentId,
@@ -96,6 +98,20 @@ export default function RecommendationsProfile({ id, generate, noWizard }: Props
                         </IconButton>
                     </IconMenuItem>
                     <Spacer />
+                    <IconMenuItem tooltip={t('recommendations.actions.invert')}>
+                        <IconButton
+                            color={invert ? 'secondary' : 'inherit'}
+                            disabled={viewMode !== 'heat'}
+                            onClick={() => {
+                                if (viewMode === 'heat') {
+                                    setInvert((old) => !old);
+                                }
+                            }}
+                            aria-label={t('recommendations.aria.invert')}
+                        >
+                            <InvertColorsIcon />
+                        </IconButton>
+                    </IconMenuItem>
                     <IconMenuItem tooltip={t('recommendations.actions.refresh')}>
                         <IconButton
                             color="inherit"
@@ -118,6 +134,7 @@ export default function RecommendationsProfile({ id, generate, noWizard }: Props
                             user={aid}
                             dimensions={25}
                             key={`heat-${heatCount}`}
+                            invert={invert}
                         />
                         {
                             <div className={style.infoBar}>
