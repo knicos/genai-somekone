@@ -41,12 +41,6 @@ export const menuShowFeedActions = atom<boolean>({
     default: true,
 });
 
-export type GraphTypes = 'social' | 'topic' | 'content' | 'ego' | 'grid' | 'heat';
-export const menuGraphType = atom<GraphTypes>({
-    key: 'menugraphtype',
-    default: 'social',
-});
-
 export const menuSelectedUser = atom<UserNodeId | undefined>({
     key: 'menuselecteduser',
     default: undefined,

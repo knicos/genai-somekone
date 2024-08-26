@@ -1,7 +1,5 @@
 import {
-    GraphTypes,
     UserPanel,
-    menuGraphType,
     menuMainMenu,
     menuNodeSelectAction,
     menuShowGridMenu,
@@ -38,7 +36,6 @@ export interface SomekoneUISettings {
     showUserPanel?: UserPanel;
     showShareCode?: boolean;
     showSaveDialog?: boolean;
-    showGraph?: GraphTypes;
     showMainMenu?: boolean;
     showGridMenu?: boolean;
     showSocialMenu?: boolean;
@@ -86,9 +83,6 @@ export function useSettingDeserialise() {
                     if (data.ui.showShareCode !== undefined) {
                         set(menuShowShare, data.ui.showShareCode);
                     }
-                    if (data.ui.showGraph !== undefined) {
-                        set(menuGraphType, data.ui.showGraph);
-                    }
                     if (data.ui.showSaveDialog !== undefined) {
                         set(menuShowSave, data.ui.showSaveDialog);
                     }
@@ -127,7 +121,6 @@ export function useSettingSerialise() {
                     applicationConfig: await snapshot.getPromise(appConfiguration),
                     ui: {
                         showUserPanel: await snapshot.getPromise(menuShowUserPanel),
-                        showGraph: await snapshot.getPromise(menuGraphType),
                         showSaveDialog: await snapshot.getPromise(menuShowSave),
                         showShareCode: await snapshot.getPromise(menuShowShare),
                         showSocialMenu: await snapshot.getPromise(menuShowSocialMenu),

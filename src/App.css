@@ -58,6 +58,16 @@ h1 {
     transform: translate(30px, 0);
 }
 
+.MuiDataGrid-toolbarContainer {
+    border-radius: 2rem;
+    background: #444;
+    color: white;
+    padding: 0;
+    align-items: center;
+    padding-right: 2rem;
+    margin-bottom: 1rem;
+}
+
 .MuiChartsLegend-series text {
     font-size: 0.8rem !important;
 }
@@ -65,4 +75,16 @@ h1 {
 .MuiSimpleTreeView-root {
     align-self: flex-start;
     width: 100%;
+}
+
+.MuiDataGrid-columnHeaderTitle {
+    font-weight: bold;
+}
+
+.MuiDataGrid-root {
+    border-style: none;
+}
+
+.MuiButtonBase-root {
+    text-transform: none;
 }

@@ -1,31 +1,26 @@
-import { useState, useEffect, useCallback, useReducer } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { SMConfig } from '../../state/smConfig';
 import { decompressFromEncodedURIComponent } from 'lz-string';
 import style from './style.module.css';
 import StartDialog from '../dialogs/StartDialog/StartDialog';
 import DEFAULT_CONFIG from '../Genagram/defaultConfig.json';
 import MenuPanel from './MenuPanel';
-import SocialGraph from '@genaism/components/SocialGraph/SocialGraph';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { menuGraphType, menuSelectedUser, menuShowReplay } from '@genaism/state/menuState';
+import { menuShowReplay } from '@genaism/state/menuState';
 import SaveDialog from '../dialogs/SaveDialog/SaveDialog';
 import SettingsDialog from '../dialogs/SettingsDialog/SettingsDialog';
 import Loading from '@genaism/components/Loading/Loading';
 import ErrorDialog from '../dialogs/ErrorDialog/ErrorDialog';
 import { errorNotification } from '@genaism/state/errorState';
 import { appConfiguration } from '@genaism/state/settingsState';
-import TopicGraph from '@genaism/components/TopicGraph/TopicGraph';
-import ContentGraph from '@genaism/components/ContentGraph/ContentGraph';
 import { useID } from '@knicos/genai-base';
-import UserGrid from '@genaism/components/UserGrid/UserGrid';
 import Replay from '@genaism/components/Replay/Replay';
 import { onlineUsers } from '@genaism/state/sessionState';
 import ServerProtocol from './ServerProtocol';
 import ContentLoader from '@genaism/components/ContentLoader/ContentLoader';
 import Guidance from '@genaism/components/Guidance/Guidance';
 import ContentToolsDialog from '../dialogs/ContentToolsDialog/ContentToolsDialog';
-import HeatmapCompare from '@genaism/components/HeatmapCompare/HeatmapCompare';
-import { useEventListen } from '@genaism/hooks/events';
+import { Outlet } from 'react-router';
 
 interface Props {
     contentUrls?: string;
@@ -41,16 +36,10 @@ export function Workspace({ contentUrls, cfg, guide, experimental }: Props) {
     const [loaded, setLoaded] = useState(false);
     const setError = useSetRecoilState(errorNotification);
     const MYCODE = useID(5);
-    const graphMode = useRecoilValue(menuGraphType);
-    const [count, refresh] = useReducer((a) => ++a, 0);
+
     const [ready, setReady] = useState(false);
     const showReplay = useRecoilValue(menuShowReplay);
-    const setSelectedNode = useSetRecoilState(menuSelectedUser);
     const [fileToOpen, setFileToOpen] = useState<(ArrayBuffer | string)[] | undefined>();
-
-    useEventListen('refresh_graph', () => {
-        refresh();
-    });
 
     useEffect(() => {
         if (!ready) return;
@@ -90,28 +79,13 @@ export function Workspace({ contentUrls, cfg, guide, experimental }: Props) {
         setLoaded(true);
     }, []);
 
-    // Always unselect user when changing graphs.
-    useEffect(() => {
-        setSelectedNode(undefined);
-    }, [graphMode, setSelectedNode]);
-
     return (
         <>
             <Loading loading={!loaded}>
                 <main className={style.dashboard}>
                     {guide && <Guidance guide={guide} />}
                     <section className={style.workspace}>
-                        {graphMode === 'social' && (
-                            <SocialGraph
-                                key={`sg-${count}`}
-                                liveUsers={users.map((u) => u.id)}
-                            />
-                        )}
-                        {graphMode === 'topic' && <TopicGraph key={`tg-${count}`} />}
-                        {graphMode === 'content' && <ContentGraph key={`cg-${count}`} />}
-                        {graphMode === 'grid' && <UserGrid key={`ug-${count}`} />}
-                        {graphMode === 'heat' && <HeatmapCompare key={`hm-${count}`} />}
-
+                        <Outlet />
                         <StartDialog
                             users={users}
                             code={MYCODE}

@@ -169,6 +169,11 @@
             "usersSelect": "Select Users"
         },
         "labels": {
+            "showActionLog": "Action Log",
+            "showUserTable": "User Table",
+            "showContentEngage": "Content Engagements",
+            "showTopicTable": "Topic Engagements",
+            "tables": "Data Tables",
             "theme": "Theme",
             "themeDefault": "Default",
             "themeHighContrast": "High contrast",
@@ -430,6 +435,17 @@
         },
         "labels": {
             "enterCode": "Enter Code"
+        }
+    },
+    "tables": {
+        "titles": {
+            "actionlog": "Action Log",
+            "userstats": "User Table",
+            "contentengage": "Content Engagements",
+            "topictable": "Topic Engagements"
+        },
+        "columns": {
+            "engagement": "Engagement"
         }
     }
 }

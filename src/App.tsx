@@ -158,7 +158,48 @@ const router = createBrowserRouter(
             <Route
                 path="dashboard"
                 lazy={() => import('./views/Dashboard/Dashboard')}
-            />
+            >
+                <Route
+                    index
+                    loader={() => redirect('socialgraph')}
+                />
+                <Route
+                    path="socialgraph"
+                    lazy={() => import('./views/Dashboard/subviews/SocialGraph')}
+                />
+                <Route
+                    path="contentgraph"
+                    lazy={() => import('./views/Dashboard/subviews/ContentGraph')}
+                />
+                <Route
+                    path="heatmaps"
+                    lazy={() => import('./views/Dashboard/subviews/HeatmapCompare')}
+                />
+                <Route
+                    path="actionlog"
+                    lazy={() => import('./views/Dashboard/subviews/LogTable')}
+                />
+                <Route
+                    path="topicgraph"
+                    lazy={() => import('./views/Dashboard/subviews/TopicGraph')}
+                />
+                <Route
+                    path="userstats"
+                    lazy={() => import('./views/Dashboard/subviews/UserTable')}
+                />
+                <Route
+                    path="usergrid"
+                    lazy={() => import('./views/Dashboard/subviews/UserGrid')}
+                />
+                <Route
+                    path="contentengage"
+                    lazy={() => import('./views/Dashboard/subviews/ContentEngagements')}
+                />
+                <Route
+                    path="topictable"
+                    lazy={() => import('./views/Dashboard/subviews/TopicTable')}
+                />
+            </Route>
             <Route
                 path="guided/:guide"
                 lazy={() => import('./views/Guided/Guided')}
