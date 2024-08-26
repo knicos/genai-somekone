@@ -169,6 +169,9 @@
             "usersSelect": "Select Users"
         },
         "labels": {
+            "heatmapGlobal": "Image popularity",
+            "heatmapEngagement": "Past image engagement",
+            "heatmapRecommendation": "Image recommendation probability",
             "showActionLog": "Action Log",
             "showUserTable": "User Table",
             "showContentEngage": "Content Engagements",

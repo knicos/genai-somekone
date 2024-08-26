@@ -9,15 +9,23 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import InvertColorsIcon from '@mui/icons-material/InvertColors';
 import DownloadIcon from '@mui/icons-material/Download';
 import { useEventEmit } from '@genaism/hooks/events';
+import PublicIcon from '@mui/icons-material/Public';
+import Spacer from '../IconMenu/Spacer';
+import ImageSearchIcon from '@mui/icons-material/ImageSearch';
+import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
+
+export type HeatmapMode = 'global' | 'engagement' | 'recommendation';
 
 interface Props {
     onOpenUserList: () => void;
+    onMode: (mode: HeatmapMode) => void;
     onRefresh: () => void;
     onInvert: () => void;
     inverted?: boolean;
+    mode: HeatmapMode;
 }
 
-export default function HeatmapMenu({ onOpenUserList, onRefresh, onInvert, inverted }: Props) {
+export default function HeatmapMenu({ mode, onMode, onOpenUserList, onRefresh, onInvert, inverted }: Props) {
     const { t } = useTranslation();
     const saveGraph = useEventEmit('save_heat');
 
@@ -31,9 +39,50 @@ export default function HeatmapMenu({ onOpenUserList, onRefresh, onInvert, inver
                 </div>
             }
         >
+            <IconMenuItem
+                tooltip={t('dashboard.labels.heatmapGlobal')}
+                selected={mode === 'global'}
+            >
+                <IconButton
+                    color={'inherit'}
+                    onClick={() => onMode('global')}
+                    data-testid="heatmap-menu-global"
+                    aria-label={t('dashboard.labels.heatmapGlobal')}
+                >
+                    <PublicIcon />
+                </IconButton>
+            </IconMenuItem>
+            <IconMenuItem
+                tooltip={t('dashboard.labels.heatmapEngagement')}
+                selected={mode === 'engagement'}
+            >
+                <IconButton
+                    color={'inherit'}
+                    onClick={() => onMode('engagement')}
+                    data-testid="heatmap-menu-engagement"
+                    aria-label={t('dashboard.labels.heatmapEngagement')}
+                >
+                    <EmojiEmotionsIcon />
+                </IconButton>
+            </IconMenuItem>
+            <IconMenuItem
+                tooltip={t('dashboard.labels.heatmapRecommendation')}
+                selected={mode === 'recommendation'}
+            >
+                <IconButton
+                    color={'inherit'}
+                    onClick={() => onMode('recommendation')}
+                    data-testid="heatmap-menu-global"
+                    aria-label={t('dashboard.labels.heatmapRecommendation')}
+                >
+                    <ImageSearchIcon />
+                </IconButton>
+            </IconMenuItem>
+            <Spacer />
             <IconMenuItem tooltip={t('dashboard.labels.heatmapUsers')}>
                 <IconButton
                     color={'inherit'}
+                    disabled={mode === 'global'}
                     onClick={onOpenUserList}
                     data-testid="heatmap-menu-openusers"
                     aria-label={t('dashboard.labels.heatmapUsers')}
@@ -41,6 +90,7 @@ export default function HeatmapMenu({ onOpenUserList, onRefresh, onInvert, inver
                     <GroupIcon />
                 </IconButton>
             </IconMenuItem>
+            <Spacer />
             <IconMenuItem
                 tooltip={t('dashboard.labels.invertHeatmap')}
                 selected={inverted}
