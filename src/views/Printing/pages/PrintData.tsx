@@ -12,7 +12,8 @@ export function Component() {
             <DataProfileRaw
                 content={printData.weightedImages}
                 log={printData.actionLog}
-                fixedSize={50}
+                fixedSize={100}
+                cloudSize={500}
             />
         </div>
     ) : null;

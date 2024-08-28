@@ -18,6 +18,8 @@ export function Component() {
                 engagement={printData.engagement}
                 summary={printData.summary}
                 wordCloud={printData.wordCloud}
+                wordCloudSize={800}
+                imageCloudSize={800}
             />
         </div>
     ) : null;

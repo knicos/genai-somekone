@@ -12,10 +12,11 @@ export interface TopicData {
 
 interface Props {
     data: TopicData;
+    size?: number;
 }
 
-export default function TopicDetail({ data }: Props) {
-    const [wcSize, setWCSize] = useState(200);
+export default function TopicDetail({ data, size = 200 }: Props) {
+    const [wcSize, setWCSize] = useState(size);
     const doResize = useCallback((size: number) => {
         setWCSize(size);
     }, []);
@@ -32,12 +33,12 @@ export default function TopicDetail({ data }: Props) {
             >
                 <svg
                     width="100%"
-                    height="200px"
+                    height={`${size}px`}
                     viewBox={`${-(wcSize * 1.67)} ${-wcSize} ${wcSize * 1.67 * 2} ${wcSize * 2}`}
                 >
                     <ImageCloud
                         content={data.images.slice(0, 10)}
-                        size={200}
+                        size={size}
                         onSize={doResize}
                     />
                 </svg>

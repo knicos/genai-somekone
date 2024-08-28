@@ -12,11 +12,12 @@ interface Props {
     log: ContentLogEntry[];
     content: WeightedImage[];
     fixedSize?: number;
+    cloudSize?: number;
 }
 
-export default function DataProfilePure({ onSave, log, content, fixedSize }: Props) {
+export default function DataProfilePure({ cloudSize = 300, onSave, log, content, fixedSize }: Props) {
     const svgRef = useRef<SVGSVGElement>(null);
-    const [wcSize, setWCSize] = useState(300);
+    const [wcSize, setWCSize] = useState(cloudSize);
     const doResize = useCallback((size: number) => {
         setWCSize(size);
     }, []);
@@ -35,13 +36,13 @@ export default function DataProfilePure({ onSave, log, content, fixedSize }: Pro
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="100%"
-                    height="300px"
+                    height={`${cloudSize}px`}
                     viewBox={`${-(wcSize * 1.67)} ${-wcSize} ${wcSize * 1.67 * 2} ${wcSize * 2}`}
                     ref={svgRef}
                 >
                     <ImageCloud
                         content={content}
-                        size={300}
+                        size={cloudSize}
                         onSize={doResize}
                     />
                 </svg>

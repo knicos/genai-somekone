@@ -18,11 +18,21 @@ interface Props {
     topics: TopicData[];
     wordCloud: WeightedLabel[];
     summary: TopicSummary;
+    wordCloudSize?: number;
+    imageCloudSize?: number;
 }
 
-export function UserProfilePure({ engagement, topics, wordCloud, summary, onSave }: Props) {
+export function UserProfilePure({
+    wordCloudSize = 300,
+    imageCloudSize = 200,
+    engagement,
+    topics,
+    wordCloud,
+    summary,
+    onSave,
+}: Props) {
     const { t } = useTranslation();
-    const [wcSize, setWCSize] = useState(300);
+    const [wcSize, setWCSize] = useState(wordCloudSize);
     const svgRef = useRef<SVGSVGElement>(null);
 
     const doSave = () => {
@@ -43,14 +53,14 @@ export function UserProfilePure({ engagement, topics, wordCloud, summary, onSave
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="100%"
-                    height="300px"
+                    height={`${wordCloudSize}px`}
                     ref={svgRef}
                     viewBox={`${-(wcSize * 1.67)} ${-wcSize} ${wcSize * 1.67 * 2} ${wcSize * 2}`}
                 >
                     <style>{'rect {opacity: 0.9; fill: #5f7377;} text { fill: white;}'}</style>
                     <WordCloud
                         content={wordCloud}
-                        size={300}
+                        size={wordCloudSize}
                         className={style.word}
                         onSize={doResize}
                     />
@@ -70,6 +80,7 @@ export function UserProfilePure({ engagement, topics, wordCloud, summary, onSave
                     <TopicDetail
                         key={t.topic}
                         data={t}
+                        size={imageCloudSize}
                     />
                 ))}
                 <TopicPie
