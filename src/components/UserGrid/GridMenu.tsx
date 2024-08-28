@@ -18,6 +18,8 @@ import DeleteDialog from '../SocialGraph/DeleteDialog';
 import { menuNodeSelectAction, menuSelectedUser, menuShowGridMenu, menuShowUserPanel } from '@genaism/state/menuState';
 import { UserNodeId } from '@knicos/genai-recom';
 import { useServices } from '@genaism/hooks/services';
+import ImageIcon from '@mui/icons-material/Image';
+import ClusterMenu from '../SocialGraph/ClusterMenu';
 
 export default function GridMenu() {
     const { t } = useTranslation();
@@ -49,9 +51,25 @@ export default function GridMenu() {
                 </div>
             }
         >
-            <IconMenuItem tooltip={t('dashboard.labels.engagedImages')}>
+            <IconMenuItem
+                tooltip={t('dashboard.labels.profileImage')}
+                selected={nodeMode === 'profileImage'}
+            >
                 <IconButton
-                    color={nodeMode === 'image' ? 'secondary' : 'inherit'}
+                    color="inherit"
+                    onClick={() => setNodeMode('profileImage')}
+                    data-testid="social-menu-profileImage"
+                    aria-label={t('dashboard.labels.profileImage')}
+                >
+                    <ImageIcon />
+                </IconButton>
+            </IconMenuItem>
+            <IconMenuItem
+                tooltip={t('dashboard.labels.engagedImages')}
+                selected={nodeMode === 'image'}
+            >
+                <IconButton
+                    color={'inherit'}
                     onClick={() => setNodeMode('image')}
                     data-testid="social-menu-images"
                     aria-label={t('dashboard.labels.engagedImages')}
@@ -59,78 +77,99 @@ export default function GridMenu() {
                     <CollectionsIcon />
                 </IconButton>
             </IconMenuItem>
-            <IconMenuItem tooltip={t('dashboard.labels.topicCloud')}>
+            <IconMenuItem
+                tooltip={t('dashboard.labels.topicCloud')}
+                selected={nodeMode === 'word'}
+            >
                 <IconButton
-                    color={nodeMode === 'word' ? 'secondary' : 'inherit'}
+                    color={'inherit'}
                     onClick={() => setNodeMode('word')}
                     aria-label={t('dashboard.labels.topicCloud')}
                 >
                     <TextFieldsIcon />
                 </IconButton>
             </IconMenuItem>
+            <Spacer />
+            <ClusterMenu />
+
+            <Spacer />
+            <IconMenuItem
+                tooltip={t('dashboard.labels.showFeed')}
+                selected={panel === 'feed'}
+            >
+                <IconButton
+                    disabled={!selectedUser}
+                    data-testid="social-menu-feed-button"
+                    color={'inherit'}
+                    onClick={() => setPanel('feed')}
+                    aria-label={t('dashboard.labels.showFeed')}
+                >
+                    <PhoneAndroidIcon />
+                </IconButton>
+            </IconMenuItem>
+            <IconMenuItem
+                tooltip={t('dashboard.labels.showData')}
+                selected={panel === 'data'}
+            >
+                <IconButton
+                    disabled={!selectedUser}
+                    data-testid="social-menu-data-button"
+                    color={'inherit'}
+                    onClick={() => setPanel('data')}
+                    aria-label={t('dashboard.labels.showData')}
+                >
+                    <QueryStatsIcon />
+                </IconButton>
+            </IconMenuItem>
+            <IconMenuItem
+                tooltip={t('dashboard.labels.showProfile')}
+                selected={panel === 'profile'}
+            >
+                <IconButton
+                    disabled={!selectedUser}
+                    data-testid="social-menu-profile-button"
+                    color={'inherit'}
+                    onClick={() => setPanel('profile')}
+                    aria-label={t('dashboard.labels.showProfile')}
+                >
+                    <PersonIcon />
+                </IconButton>
+            </IconMenuItem>
+            <IconMenuItem
+                tooltip={t('dashboard.labels.showRecommendations')}
+                selected={panel === 'recommendations'}
+            >
+                <IconButton
+                    disabled={!selectedUser}
+                    data-testid="social-menu-recom-button"
+                    color={'inherit'}
+                    onClick={() => setPanel('recommendations')}
+                    aria-label={t('dashboard.labels.showRecommendations')}
+                >
+                    <ImageSearchIcon />
+                </IconButton>
+            </IconMenuItem>
+            <Spacer />
+            <IconMenuItem tooltip={t('dashboard.labels.deleteUser')}>
+                <IconButton
+                    disabled={!selectedUser}
+                    color="inherit"
+                    onClick={() => setShowDelete(true)}
+                    aria-label={t('dashboard.labels.deleteUser')}
+                >
+                    <DeleteForeverIcon />
+                </IconButton>
+            </IconMenuItem>
             {selectedUser && (
-                <>
-                    <Spacer />
-                    <IconMenuItem tooltip={t('dashboard.labels.showFeed')}>
-                        <IconButton
-                            data-testid="social-menu-feed-button"
-                            color={panel === 'feed' ? 'secondary' : 'inherit'}
-                            onClick={() => setPanel('feed')}
-                            aria-label={t('dashboard.labels.showFeed')}
-                        >
-                            <PhoneAndroidIcon />
-                        </IconButton>
-                    </IconMenuItem>
-                    <IconMenuItem tooltip={t('dashboard.labels.showData')}>
-                        <IconButton
-                            data-testid="social-menu-data-button"
-                            color={panel === 'data' ? 'secondary' : 'inherit'}
-                            onClick={() => setPanel('data')}
-                            aria-label={t('dashboard.labels.showData')}
-                        >
-                            <QueryStatsIcon />
-                        </IconButton>
-                    </IconMenuItem>
-                    <IconMenuItem tooltip={t('dashboard.labels.showProfile')}>
-                        <IconButton
-                            data-testid="social-menu-profile-button"
-                            color={panel === 'profile' ? 'secondary' : 'inherit'}
-                            onClick={() => setPanel('profile')}
-                            aria-label={t('dashboard.labels.showProfile')}
-                        >
-                            <PersonIcon />
-                        </IconButton>
-                    </IconMenuItem>
-                    <IconMenuItem tooltip={t('dashboard.labels.showRecommendations')}>
-                        <IconButton
-                            data-testid="social-menu-recom-button"
-                            color={panel === 'recommendations' ? 'secondary' : 'inherit'}
-                            onClick={() => setPanel('recommendations')}
-                            aria-label={t('dashboard.labels.showRecommendations')}
-                        >
-                            <ImageSearchIcon />
-                        </IconButton>
-                    </IconMenuItem>
-                    <Spacer />
-                    <IconMenuItem tooltip={t('dashboard.labels.deleteUser')}>
-                        <IconButton
-                            color="inherit"
-                            onClick={() => setShowDelete(true)}
-                            aria-label={t('dashboard.labels.deleteUser')}
-                        >
-                            <DeleteForeverIcon />
-                        </IconButton>
-                    </IconMenuItem>
-                    <DeleteDialog
-                        name={profiler.getUserData(selectedUser)?.name || 'No Name'}
-                        open={showDelete}
-                        onClose={() => setShowDelete(false)}
-                        onDelete={() => {
-                            graph.removeNode(selectedUser);
-                            setShowDelete(false);
-                        }}
-                    />
-                </>
+                <DeleteDialog
+                    name={profiler.getUserData(selectedUser)?.name || 'No Name'}
+                    open={showDelete}
+                    onClose={() => setShowDelete(false)}
+                    onDelete={() => {
+                        graph.removeNode(selectedUser);
+                        setShowDelete(false);
+                    }}
+                />
             )}
         </IconMenu>
     );

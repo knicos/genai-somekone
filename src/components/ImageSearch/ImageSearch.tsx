@@ -63,7 +63,7 @@ export default function ImageSearch({ onAdd, columns, selected, onSelect, disabl
         (data: ImageResult) => {
             if (onSelect) onSelect(data.id);
             canvasFromURL(data.url, 500).then((canvas) => {
-                onAdd(canvas.toDataURL(), data);
+                onAdd(canvas.toDataURL('image/jpeg', 0.95), data);
             });
         },
         [onAdd, onSelect]
