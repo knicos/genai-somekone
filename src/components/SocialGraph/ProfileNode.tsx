@@ -58,9 +58,10 @@ const ProfileNode = memo(function ProfileNode({
             if (!fixedSize) {
                 setSize(s + 20);
                 onResize(id, s + 20);
+                node.size = s + 20;
             }
         },
-        [onResize, id, fixedSize]
+        [onResize, id, fixedSize, node]
     );
 
     const reduced = shrinkOffline && !live;
@@ -85,6 +86,13 @@ const ProfileNode = memo(function ProfileNode({
         }
     }, [profile, topicThreshold]);
 
+    const contents = useMemo(() => {
+        return profile.affinities.contents.contents.map((c) => ({
+            weight: c.weight,
+            image: content.getContentData(c.id) || '',
+        }));
+    }, [profile, content]);
+
     useEffect(() => {
         if (nodeMode === 'profileImage') {
             doResize(Math.floor(profile.engagement * 2) + 50);
@@ -108,10 +116,7 @@ const ProfileNode = memo(function ProfileNode({
             />
             {!reduced && nodeMode === 'image' && profile.affinities.contents.contents.length > 0 && (
                 <ImageCloud
-                    content={profile.affinities.contents.contents.map((c) => ({
-                        weight: c.weight,
-                        image: content.getContentData(c.id) || '',
-                    }))}
+                    content={contents}
                     size={200 + Math.floor(100 * density)}
                     padding={3}
                     onSize={doResize}

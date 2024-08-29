@@ -9,6 +9,10 @@ interface Props<T extends NodeID> {
     defaultLinkStyle?: LinkStyle<T>;
 }
 
+function round2(v?: number) {
+    return v ? Math.round(v * 100) / 100 : v;
+}
+
 export default function Lines<T extends NodeID>({ linkList, linkStyles, defaultLinkStyle }: Props<T>) {
     return (
         <g>
@@ -23,12 +27,14 @@ export default function Lines<T extends NodeID>({ linkList, linkStyles, defaultL
                                 : styles?.className || style.link
                         }
                         key={ix}
-                        x1={l.source.x}
-                        y1={l.source.y}
-                        x2={l.target.x}
-                        y2={l.target.y}
-                        opacity={typeof styles?.opacity === 'function' ? styles.opacity(l) : styles?.opacity}
-                        strokeWidth={typeof styles?.width === 'function' ? styles.width(l) : styles?.width}
+                        x1={Math.floor(l.source.x || 0)}
+                        y1={Math.floor(l.source.y || 0)}
+                        x2={Math.floor(l.target.x || 0)}
+                        y2={Math.floor(l.target.y || 0)}
+                        opacity={round2(typeof styles?.opacity === 'function' ? styles.opacity(l) : styles?.opacity)}
+                        strokeWidth={Math.ceil(
+                            (typeof styles?.width === 'function' ? styles.width(l) : styles?.width) || 0
+                        )}
                         stroke={
                             typeof styles?.colour === 'function' ? styles.colour(l) : styles?.colour || colours.primary
                         }

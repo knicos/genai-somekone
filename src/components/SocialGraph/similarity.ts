@@ -1,7 +1,10 @@
 import { useProfilerService } from '@genaism/hooks/services';
+import { debounce } from '@genaism/util/debounce';
 import { findSimilarUsers, ProfilerService, UserNodeId, WeightedLabel, WeightedNode } from '@knicos/genai-recom';
 import clusterUsers from '@knicos/genai-recom/helpers/clusterUsers';
 import { useEffect, useRef, useState } from 'react';
+
+const MAX_RATE = 1000; // ms
 
 function getSimilar(
     profiler: ProfilerService,
@@ -36,15 +39,16 @@ export function useAllSimilarUsers(users: UserNodeId[], cluster?: boolean, k?: n
     }, [users, cluster, k, profiler]);
 
     useEffect(() => {
-        const handler = (id: UserNodeId) => {
+        const [handler, cancel] = debounce((id: UserNodeId) => {
             getSimilar(profiler, id, simRef.current);
             setResult({
                 similar: simRef.current,
                 topics: cluster ? clusterUsers(profiler, users, k || 2) : undefined,
             });
-        };
+        }, MAX_RATE);
         profiler.broker.on('profile', handler);
         return () => {
+            cancel();
             profiler.broker.off('profile', handler);
         };
     }, [users, cluster, k, profiler]);

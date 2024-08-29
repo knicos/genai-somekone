@@ -26,6 +26,7 @@ import { saveAs } from 'file-saver';
 import { svgToPNG } from '@genaism/util/svgToPNG';
 import ProgressDialog from '../ProgressDialog/ProgressDialog';
 import { useTranslation } from 'react-i18next';
+import { Spinner } from '@knicos/genai-base';
 
 interface Extents {
     minX: number;
@@ -49,7 +50,7 @@ interface LabelProps<T extends NodeID> {
     scale: number;
 }
 
-interface Props<T extends NodeID> extends PropsWithChildren {
+export interface Props<T extends NodeID> extends PropsWithChildren {
     nodes: GraphNode<T>[];
     links?: GraphLink<T, T>[];
     onSelect?: (node: Readonly<GraphNode<T>>, links: InternalGraphLink<T, T>[], element: SVGElement) => void;
@@ -376,6 +377,7 @@ export default function Graph<T extends NodeID>({
                 title={t('dashboard.titles.saving')}
                 open={saving}
             />
+            {nodeList.length === 0 && <Spinner />}
         </>
     );
 }

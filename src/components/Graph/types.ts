@@ -11,6 +11,7 @@ export interface GraphNode<T extends NodeID> {
     fx?: number;
     fy?: number;
     data?: Record<string, string | number | boolean | object | undefined>;
+    original?: GraphNode<T>;
 }
 
 export interface GraphLink<A extends NodeID, B extends NodeID> {

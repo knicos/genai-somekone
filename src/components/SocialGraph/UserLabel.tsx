@@ -1,17 +1,18 @@
 import { UserNodeId } from '@knicos/genai-recom';
 import { GraphNode } from '../Graph/types';
-import Label from './Label';
 import { isLight } from '@genaism/util/colours';
 import { useRecoilValue } from 'recoil';
 import { settingSocialGraphTheme } from '@genaism/state/settingsState';
 import graphThemes from './graphTheme';
+import { memo } from 'react';
+import LabelContent from './LabelContent';
 
 interface Props {
     node: GraphNode<UserNodeId>;
     scale: number;
 }
 
-export default function UserLabel({ node, scale }: Props) {
+const UserLabelContent = memo(function UserLabelContent({ node, scale }: Props) {
     const themeName = useRecoilValue(settingSocialGraphTheme);
     const maxLength = 5 + Math.floor(20 / scale);
     const name = node.label || 'None';
@@ -21,14 +22,27 @@ export default function UserLabel({ node, scale }: Props) {
     if (!name) return null;
 
     return (
-        <Label
+        <LabelContent
             label={shortName}
-            x={node.x || 0}
-            y={(node.y || 0) + node.size + 10}
             fill={colour || '#5f7377'}
             color={isLight(colour || '#5f7377') ? 'black' : 'white'}
             padding={5}
             scale={Math.max(1, Math.min(scale, 4))}
         />
+    );
+});
+
+export default function UserLabel({ node, scale }: Props) {
+    const size = node.original?.size || node.size;
+    const x = node.x || 0;
+    const y = (node.y || 0) + size + 10;
+
+    return (
+        <g transform={`translate(${Math.floor(x)}, ${Math.floor(y)})`}>
+            <UserLabelContent
+                node={node}
+                scale={scale}
+            />
+        </g>
     );
 }
