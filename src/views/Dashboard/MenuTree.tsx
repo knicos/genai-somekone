@@ -15,6 +15,10 @@ import PersonIcon from '@mui/icons-material/Person';
 import HandymanIcon from '@mui/icons-material/Handyman';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import { useLocation, useNavigate } from 'react-router';
+import { useSearchParams } from 'react-router-dom';
+import AutoStoriesIcon from '@mui/icons-material/AutoStories';
+import ImportContactsIcon from '@mui/icons-material/ImportContacts';
+import NotInterestedIcon from '@mui/icons-material/NotInterested';
 
 interface Props {
     open?: boolean;
@@ -22,47 +26,61 @@ interface Props {
 
 export default function MenuTree({ open }: Props) {
     const { t } = useTranslation();
-    const location = useLocation();
+    const { pathname, search } = useLocation();
     const navigate = useNavigate();
+    const [params, setParams] = useSearchParams();
 
-    const page = location.pathname.split('/').pop();
+    const page = pathname.split('/').pop();
 
     const doClick = useCallback(
         (_: unknown, item: string) => {
             switch (item) {
                 case 'graphs-social':
-                    navigate('socialgraph');
+                    navigate('socialgraph' + search);
                     break;
                 case 'graphs-heatmap':
-                    navigate('heatmaps');
+                    navigate('heatmaps' + search);
                     break;
                 case 'graphs-grid':
-                    navigate('usergrid');
+                    navigate('usergrid' + search);
                     break;
                 case 'graphs-content':
-                    navigate('contentgraph');
+                    navigate('contentgraph' + search);
                     break;
                 case 'graphs-topic':
-                    navigate('topicgraph');
+                    navigate('topicgraph' + search);
                     break;
                 case 'tables-actionlog':
-                    navigate('actionlog');
+                    navigate('actionlog' + search);
                     break;
                 case 'tables-user':
-                    navigate('userstats');
+                    navigate('userstats' + search);
                     break;
                 case 'tables-content':
-                    navigate('contentengage');
+                    navigate('contentengage' + search);
                     break;
                 case 'tables-topics':
-                    navigate('topictable');
+                    navigate('topictable' + search);
                     break;
                 case 'tools-contentwizard':
-                    navigate('contentwizard');
+                    navigate('contentwizard' + search);
+                    break;
+                case 'guides-default':
+                    setParams((prev) => {
+                        prev.set('guide', 'default');
+                        return prev;
+                    });
+                    break;
+                case 'guides-none':
+                    setParams((prev) => {
+                        prev.delete('guide');
+                        prev.delete('page');
+                        return prev;
+                    });
                     break;
             }
         },
-        [navigate]
+        [navigate, setParams, search]
     );
 
     return (
@@ -79,7 +97,7 @@ export default function MenuTree({ open }: Props) {
                     label={
                         <div className={style.treeItem}>
                             <BubbleChartIcon />
-                            {t('dashboard.labels.viewOptions')}
+                            {t('menu.vis.title')}
                         </div>
                     }
                 >
@@ -88,7 +106,7 @@ export default function MenuTree({ open }: Props) {
                         label={
                             <div className={page === 'socialgraph' ? style.treeItemSelected : style.treeItem}>
                                 <PeopleIcon />
-                                {t('dashboard.labels.showSocialGraph')}
+                                {t('menu.vis.socialgraph')}
                             </div>
                         }
                     />
@@ -97,7 +115,7 @@ export default function MenuTree({ open }: Props) {
                         label={
                             <div className={page === 'heatmaps' ? style.treeItemSelected : style.treeItem}>
                                 <LocalFireDepartmentIcon />
-                                {t('dashboard.labels.showHeatGraph')}
+                                {t('menu.vis.heatmap')}
                             </div>
                         }
                     />
@@ -106,7 +124,7 @@ export default function MenuTree({ open }: Props) {
                         label={
                             <div className={page === 'usergrid' ? style.treeItemSelected : style.treeItem}>
                                 <AppsIcon />
-                                {t('dashboard.labels.showUserGrid')}
+                                {t('menu.vis.usergrid')}
                             </div>
                         }
                     />
@@ -115,7 +133,7 @@ export default function MenuTree({ open }: Props) {
                         label={
                             <div className={page === 'contentgraph' ? style.treeItemSelected : style.treeItem}>
                                 <CollectionsIcon />
-                                {t('dashboard.labels.showContentGraph')}
+                                {t('menu.vis.coengagement')}
                             </div>
                         }
                     />
@@ -124,7 +142,7 @@ export default function MenuTree({ open }: Props) {
                         label={
                             <div className={page === 'topicgraph' ? style.treeItemSelected : style.treeItem}>
                                 <TagIcon />
-                                {t('dashboard.labels.showTopicGraph')}
+                                {t('menu.vis.topics')}
                             </div>
                         }
                     />
@@ -134,7 +152,7 @@ export default function MenuTree({ open }: Props) {
                     label={
                         <div className={style.treeItem}>
                             <TableViewIcon />
-                            {t('dashboard.labels.tables')}
+                            {t('menu.tables.title')}
                         </div>
                     }
                 >
@@ -143,7 +161,7 @@ export default function MenuTree({ open }: Props) {
                         label={
                             <div className={page === 'actionlog' ? style.treeItemSelected : style.treeItem}>
                                 <PhoneAndroidIcon />
-                                {t('dashboard.labels.showActionLog')}
+                                {t('menu.tables.actionlog')}
                             </div>
                         }
                     />
@@ -152,7 +170,7 @@ export default function MenuTree({ open }: Props) {
                         label={
                             <div className={page === 'userstats' ? style.treeItemSelected : style.treeItem}>
                                 <PersonIcon />
-                                {t('dashboard.labels.showUserTable')}
+                                {t('menu.tables.userstats')}
                             </div>
                         }
                     />
@@ -161,7 +179,7 @@ export default function MenuTree({ open }: Props) {
                         label={
                             <div className={page === 'contentengage' ? style.treeItemSelected : style.treeItem}>
                                 <PersonIcon />
-                                {t('dashboard.labels.showContentEngage')}
+                                {t('menu.tables.contentengage')}
                             </div>
                         }
                     />
@@ -170,7 +188,37 @@ export default function MenuTree({ open }: Props) {
                         label={
                             <div className={page === 'topictable' ? style.treeItemSelected : style.treeItem}>
                                 <TagIcon />
-                                {t('dashboard.labels.showTopicTable')}
+                                {t('menu.tables.topicengage')}
+                            </div>
+                        }
+                    />
+                </TreeItem>
+                <TreeItem
+                    itemId="guides"
+                    label={
+                        <div className={style.treeItem}>
+                            <AutoStoriesIcon />
+                            {t('menu.guides.title')}
+                        </div>
+                    }
+                >
+                    <TreeItem
+                        itemId="guides-none"
+                        label={
+                            <div className={params.get('guide') === null ? style.treeItemSelected : style.treeItem}>
+                                <NotInterestedIcon />
+                                {t('menu.guides.none')}
+                            </div>
+                        }
+                    />
+                    <TreeItem
+                        itemId="guides-default"
+                        label={
+                            <div
+                                className={params.get('guide') === 'default' ? style.treeItemSelected : style.treeItem}
+                            >
+                                <ImportContactsIcon />
+                                {t('menu.guides.default')}
                             </div>
                         }
                     />
@@ -180,7 +228,7 @@ export default function MenuTree({ open }: Props) {
                     label={
                         <div className={style.treeItem}>
                             <HandymanIcon />
-                            {t('dashboard.labels.tools')}
+                            {t('menu.tools.title')}
                         </div>
                     }
                 >
@@ -189,7 +237,7 @@ export default function MenuTree({ open }: Props) {
                         label={
                             <div className={page === 'contentwizard' ? style.treeItemSelected : style.treeItem}>
                                 <AddPhotoAlternateIcon />
-                                {t('dashboard.labels.showContentWizard')}
+                                {t('menu.tools.addcontent')}
                             </div>
                         }
                     />

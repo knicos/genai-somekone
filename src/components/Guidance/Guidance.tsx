@@ -1,12 +1,11 @@
 import { getGuidance } from '@genaism/services/guidance/guidance';
-import { IconButton, MenuItem, MenuList } from '@mui/material';
+import { MenuItem, MenuList } from '@mui/material';
 import style from './style.module.css';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useSettingDeserialise } from '@genaism/hooks/settings';
-import { Settings } from '@mui/icons-material';
-import { useSetRecoilState } from 'recoil';
-import { menuShowSettings } from '@genaism/state/menuState';
 import ActionButton from './ActionButton';
+import { useLocation, useNavigate } from 'react-router';
+import { useSearchParams } from 'react-router-dom';
 
 interface Props {
     guide: string;
@@ -14,9 +13,12 @@ interface Props {
 
 export default function Guidance({ guide }: Props) {
     const data = getGuidance(guide);
-    const [index, setIndex] = useState(0);
     const deserial = useSettingDeserialise();
-    const setShowSettings = useSetRecoilState(menuShowSettings);
+    const navigate = useNavigate();
+    const { search } = useLocation();
+    const [params, setParams] = useSearchParams();
+    const page = params.get('page');
+    const index = page !== null ? parseInt(page) : 0;
 
     useEffect(() => {
         if (data && index >= 0 && index < data.steps.length) {
@@ -24,8 +26,12 @@ export default function Guidance({ guide }: Props) {
             if (settings) {
                 deserial(settings);
             }
+            const url = data.steps[index].url;
+            if (url) {
+                navigate(url + search);
+            }
         }
-    }, [index, data, deserial]);
+    }, [index, data, deserial, navigate, search]);
 
     const currentStep = data?.steps[index];
 
@@ -35,7 +41,12 @@ export default function Guidance({ guide }: Props) {
                 {data?.steps.map((step, ix) => (
                     <MenuItem
                         selected={ix === index}
-                        onClick={() => setIndex(ix)}
+                        onClick={() =>
+                            setParams((prev) => {
+                                prev.set('page', `${ix}`);
+                                return prev;
+                            })
+                        }
                         key={ix}
                     >
                         {step.title}
@@ -47,17 +58,6 @@ export default function Guidance({ guide }: Props) {
                     <ActionButton action={currentStep.action} />
                 </div>
             )}
-            <div className={style.advanced}>
-                <IconButton
-                    color="inherit"
-                    onClick={() => setShowSettings(true)}
-                >
-                    <Settings
-                        color="inherit"
-                        fontSize="large"
-                    />
-                </IconButton>
-            </div>
         </nav>
     );
 }

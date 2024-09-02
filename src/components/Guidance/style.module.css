@@ -4,12 +4,12 @@
     background: bgColourful1;
     color: white;
     padding-top: 2rem;
-    min-width: 200px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     gap: 2rem;
     font-size: 1rem;
+    z-index: 11;
 }
 
 @media screen and (min-width: 2000px) {
@@ -45,7 +45,7 @@
     top: 0.5rem;
     right: 0.5rem;
     color: textDark;
-    z-index: 5;
+    z-index: 12;
 }
 
 .actionContainer {

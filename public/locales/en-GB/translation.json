@@ -145,6 +145,32 @@
             "restoreUser": "Restore a previous session"
         }
     },
+    "menu": {
+        "vis": {
+            "title": "Visualizations",
+            "socialgraph": "Social Network",
+            "heatmap": "Heatmaps",
+            "usergrid": "User Grid",
+            "coengagement": "Content Relationships",
+            "topics": "Topic Relationships"
+        },
+        "tables": {
+            "title": "Data Tables",
+            "actionlog": "Action Log",
+            "userstats": "User Table",
+            "contentengage": "Content Engagements",
+            "topicengage": "Topic Engagements"
+        },
+        "guides": {
+            "title": "Guided Interfaces",
+            "default": "Core Concepts",
+            "none": "None"
+        },
+        "tools": {
+            "title": "Tools",
+            "addcontent": "Add Content"
+        }
+    },
     "dashboard": {
         "titles": {
             "save": "Save",

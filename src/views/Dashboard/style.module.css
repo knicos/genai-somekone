@@ -21,7 +21,7 @@
     width: 100%;
     margin-bottom: 2rem;
     justify-content: center;
-    background: primary;
+    background: bgColourful1;
     padding-top: 0.5rem;
     color: white;
     padding-bottom: 0.5rem;
@@ -45,7 +45,7 @@
     justify-content: center;
     align-items: center;
     flex-grow: 1;
-    padding-left: 57px;
+    /*padding-left: 57px;*/
 }
 
 .backgroundLogo {
@@ -66,9 +66,7 @@
 }
 
 .sideNav {
-    position: absolute;
-    left: 0;
-    top: 0;
+    height: 100%;
     bottom: 0;
     background: backgroundDark2;
     color: white;
@@ -76,16 +74,20 @@
     flex-direction: column;
     align-items: flex-start;
     box-shadow: 0 0 10px #888;
-    width: 280px;
-    transition: width 0.2s;
+    /*width: 280px;*/
+    transition: flex 0.2s;
     overflow: hidden;
     padding-bottom: 0.5rem;
     z-index: 10;
+    box-sizing: border-box;
+    overflow: hidden;
+    flex: 0 0 280px;
 }
 
 .sideNavClosed {
     composes: sideNav;
-    width: 57px;
+    /*width: 57px;*/
+    flex: 0 0 57px;
 }
 
 .treeItem {

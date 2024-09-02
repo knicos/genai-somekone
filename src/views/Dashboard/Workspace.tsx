@@ -83,6 +83,7 @@ export function Workspace({ contentUrls, cfg, guide, experimental }: Props) {
         <>
             <Loading loading={!loaded}>
                 <main className={style.dashboard}>
+                    <MenuPanel />
                     {guide && <Guidance guide={guide} />}
                     <section className={style.workspace}>
                         <Outlet />
@@ -93,7 +94,6 @@ export function Workspace({ contentUrls, cfg, guide, experimental }: Props) {
                                 setFileToOpen(['https://store.gen-ai.fi/somekone/sm_demo1c.zip']);
                             }}
                         />
-                        <MenuPanel />
                         <SaveDialog />
                         <SettingsDialog />
                         <ContentToolsDialog />

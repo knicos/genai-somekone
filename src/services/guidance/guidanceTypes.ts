@@ -4,6 +4,7 @@ export type GuidanceAction = 'pause' | 'sharecode';
 
 export interface GuidanceStep {
     settings?: SomekoneSettings;
+    url?: string;
     title: string;
     action?: GuidanceAction;
 }
