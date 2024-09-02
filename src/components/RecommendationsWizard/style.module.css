@@ -1,3 +1,5 @@
+@value bgSubdued1, textDark, primary, secondary, workspaceBg, textDark from "@knicos/genai-base/css/colours.module.css";
+
 .wizard {
     background: bgSubdued1;
     color: textDark;

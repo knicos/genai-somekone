@@ -18,11 +18,25 @@ export function useNodeType<T extends NodeType>(type: T): NodeID<T>[] {
     const [count, trigger] = useReducer((a) => ++a, 0);
     useEffect(() => {
         const handler = () => {
-            console.log('NEW NODE');
             trigger();
         };
         broker.on(`newnodetype-${type}`, handler);
         return () => broker.off(`newnodetype-${type}`, handler);
+    }, [type, broker]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    return useMemo(() => graph.getNodesByType(type), [type, count, graph]);
+}
+
+export function useChangeNodeType<T extends NodeType>(type: T): NodeID<T>[] {
+    const broker = useBroker();
+    const graph = useGraphService();
+    const [count, trigger] = useReducer((a) => ++a, 0);
+    useEffect(() => {
+        const handler = () => {
+            trigger();
+        };
+        broker.on(`nodetype-${type}`, handler);
+        return () => broker.off(`nodetype-${type}`, handler);
     }, [type, broker]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     return useMemo(() => graph.getNodesByType(type), [type, count, graph]);

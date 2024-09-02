@@ -169,6 +169,8 @@
             "usersSelect": "Select Users"
         },
         "labels": {
+            "tools": "Tools",
+            "showContentWizard": "Add Content",
             "heatmapGlobal": "Image popularity",
             "heatmapEngagement": "Past image engagement",
             "heatmapRecommendation": "Image recommendation probability",

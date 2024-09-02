@@ -199,6 +199,10 @@ const router = createBrowserRouter(
                     path="topictable"
                     lazy={() => import('./views/Dashboard/subviews/TopicTable')}
                 />
+                <Route
+                    path="contentwizard"
+                    lazy={() => import('./views/Dashboard/subviews/ContentWizard')}
+                />
             </Route>
             <Route
                 path="guided/:guide"

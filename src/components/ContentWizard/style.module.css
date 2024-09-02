@@ -1,0 +1,46 @@
+@value bgSubdued1, textDark, primary, secondary, workspaceBg, textDark from "@knicos/genai-base/css/colours.module.css";
+
+.wizard {
+    background: bgSubdued1;
+    padding: 2rem;
+    border-top: 4px solid primary;
+    border-bottom: 4px solid primary;
+    margin: 2rem 0;
+}
+
+.controls {
+    align-self: flex-start;
+    background: white;
+    padding: 0.5rem;
+    border-radius: 10px;
+    margin-left: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.controlsContainer {
+    display: flex;
+    width: 100%;
+    gap: 2rem;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+
+.imageGrid {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    gap: 0.5rem;
+    line-height: 0;
+    max-width: 550px;
+    margin: 2rem auto;
+}
+
+.container {
+    overflow-y: auto;
+    min-height: 100%;
+    background: white;
+    box-shadow: 0 0 10px #aaa;
+}

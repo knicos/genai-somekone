@@ -12,6 +12,8 @@ import { useCallback } from 'react';
 import TableViewIcon from '@mui/icons-material/TableView';
 import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid';
 import PersonIcon from '@mui/icons-material/Person';
+import HandymanIcon from '@mui/icons-material/Handyman';
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import { useLocation, useNavigate } from 'react-router';
 
 interface Props {
@@ -54,6 +56,9 @@ export default function MenuTree({ open }: Props) {
                     break;
                 case 'tables-topics':
                     navigate('topictable');
+                    break;
+                case 'tools-contentwizard':
+                    navigate('contentwizard');
                     break;
             }
         },
@@ -166,6 +171,25 @@ export default function MenuTree({ open }: Props) {
                             <div className={page === 'topictable' ? style.treeItemSelected : style.treeItem}>
                                 <TagIcon />
                                 {t('dashboard.labels.showTopicTable')}
+                            </div>
+                        }
+                    />
+                </TreeItem>
+                <TreeItem
+                    itemId="tools"
+                    label={
+                        <div className={style.treeItem}>
+                            <HandymanIcon />
+                            {t('dashboard.labels.tools')}
+                        </div>
+                    }
+                >
+                    <TreeItem
+                        itemId="tools-contentwizard"
+                        label={
+                            <div className={page === 'contentwizard' ? style.treeItemSelected : style.treeItem}>
+                                <AddPhotoAlternateIcon />
+                                {t('dashboard.labels.showContentWizard')}
                             </div>
                         }
                     />

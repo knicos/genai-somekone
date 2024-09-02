@@ -4,9 +4,10 @@ import { pexelsSearch } from './pexels';
 
 export type SearchSource = 'pixabay' | 'pexels';
 
-interface Options {
+export interface Options {
     source?: SearchSource;
     page?: number;
+    order?: 'latest' | 'popular';
 }
 
 export interface ImageResult {
@@ -30,14 +31,15 @@ const DEFAULT_RESULT: ImageSearchResult = {
     results: [],
 };
 
-export default function useImageSearch(q: string, options?: Options): ImageSearchResult {
+export default function useImageSearch(q?: string, options?: Options): ImageSearchResult {
     const [results, setResults] = useState<ImageSearchResult>(DEFAULT_RESULT);
     const source = options?.source || 'pixabay';
     const page = options?.page || 0;
 
     useEffect(() => {
+        if (!q) return;
         if (source === 'pixabay') {
-            pixabaySearch(q, { page, perPage: 20 }).then((r) => {
+            pixabaySearch(q, { page, perPage: 20, order: options?.order }).then((r) => {
                 setResults({
                     total: r.totalHits,
                     pages: Math.ceil(r.totalHits / 20),
@@ -67,7 +69,7 @@ export default function useImageSearch(q: string, options?: Options): ImageSearc
                 });
             });
         }
-    }, [q, source, page]);
+    }, [q, source, page, options]);
 
     return results;
 }

@@ -45,7 +45,7 @@
     justify-content: center;
     align-items: center;
     flex-grow: 1;
-    padding-left: 66px;
+    padding-left: 57px;
 }
 
 .backgroundLogo {
@@ -85,7 +85,7 @@
 
 .sideNavClosed {
     composes: sideNav;
-    width: 66px;
+    width: 57px;
 }
 
 .treeItem {
