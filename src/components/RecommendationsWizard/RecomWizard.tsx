@@ -17,12 +17,14 @@ import DiversityOptions from './DiversityOptions';
 import { UserNodeId } from '@knicos/genai-recom';
 
 interface Props {
-    id: UserNodeId;
+    id?: UserNodeId;
     active?: boolean;
     onClose: () => void;
+    hideClose?: boolean;
+    variant?: 'plain' | 'styled';
 }
 
-export default function RecomWizard({ id, active, onClose }: Props) {
+export default function RecomWizard({ id, active, onClose, hideClose, variant = 'styled' }: Props) {
     const { t } = useTranslation();
     const [page, setPage] = useState(0);
     const [height, setHeight] = useState(0);
@@ -43,7 +45,15 @@ export default function RecomWizard({ id, active, onClose }: Props) {
 
     return (
         <section
-            className={!active ? style.wizardClosed : style.wizard}
+            className={
+                variant === 'styled'
+                    ? !active
+                        ? style.wizardClosed
+                        : style.wizard
+                    : !active
+                    ? style.plainwizardClosed
+                    : style.plainwizard
+            }
             style={{ height: `${height}px` }}
             data-testid="recom-wizard"
         >
@@ -104,7 +114,7 @@ export default function RecomWizard({ id, active, onClose }: Props) {
                     changePage={setNextPage}
                 />
             </SlideShow>
-            {page > 0 && (
+            {page > 0 && !hideClose && (
                 <IconButton
                     sx={{ position: 'absolute', top: '5px', right: '5px' }}
                     size="small"

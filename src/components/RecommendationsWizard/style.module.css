@@ -18,6 +18,17 @@
     flex-grow: 0;
 }
 
+.plainwizard {
+    composes: wizard;
+    background: none;
+    border: none;
+}
+
+.plainwizardClosed {
+    composes: plainwizard;
+    flex-grow: 0;
+}
+
 .wizard h2 {
     font-size: 1.1rem;
     font-weight: bold;

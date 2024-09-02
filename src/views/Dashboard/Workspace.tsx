@@ -22,6 +22,7 @@ import Guidance from '@genaism/components/Guidance/Guidance';
 import ContentToolsDialog from '../dialogs/ContentToolsDialog/ContentToolsDialog';
 import { Outlet } from 'react-router';
 import AppSettingsDialog from '../dialogs/AppSettingsDialog/AppSettingsDialog';
+import RecomSettingsDialog from '../dialogs/RecomSettingsDialog/RecomSettingsDialog';
 
 interface Props {
     contentUrls?: string;
@@ -99,6 +100,7 @@ export function Workspace({ contentUrls, cfg, guide, experimental }: Props) {
                         <SettingsDialog />
                         <ContentToolsDialog />
                         <AppSettingsDialog />
+                        <RecomSettingsDialog />
                         {showReplay && <Replay />}
                     </section>
                 </main>

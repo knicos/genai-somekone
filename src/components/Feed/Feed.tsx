@@ -15,9 +15,10 @@ interface Props {
     onLog?: () => void;
     noLog?: boolean;
     noActions?: boolean;
+    alwaysActive?: boolean;
 }
 
-export default function Feed({ onProfile, onLog, onRecommend, id, noLog, noActions }: Props) {
+export default function Feed({ onProfile, onLog, onRecommend, id, noLog, noActions, alwaysActive }: Props) {
     const [feedList, setFeedList] = useState<FeedEntry[]>([]);
     const moreState = useRef(true);
     const profiler = useProfilerService();
@@ -73,7 +74,7 @@ export default function Feed({ onProfile, onLog, onRecommend, id, noLog, noActio
                 onLog={doLog}
                 noActions={noActions}
                 showLabels={appConfig?.showTopicLabels}
-                alwaysActive={appConfig?.alwaysActive}
+                alwaysActive={appConfig?.alwaysActive || alwaysActive}
             />
 
             <div className={style.footerOuter}></div>

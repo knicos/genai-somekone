@@ -1,4 +1,4 @@
-import { configuration, userConfiguration } from '@genaism/state/settingsState';
+import { appConfiguration, configuration, userConfiguration } from '@genaism/state/settingsState';
 import { useTranslation } from 'react-i18next';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import style from './style.module.css';
@@ -56,14 +56,15 @@ const templates: ScoringTemplate = {
 };
 
 interface Props {
-    id: UserNodeId;
+    id?: UserNodeId;
     changePage: (v: number) => void;
 }
 
 export default function ScoringOptions({ id, changePage }: Props) {
     const { t } = useTranslation();
-    const config = useRecoilValue(configuration(id));
-    const setConfig = useSetRecoilState(userConfiguration(id));
+    const config = useRecoilValue(id ? configuration(id) : appConfiguration);
+    const setConfig = useSetRecoilState(userConfiguration(id || 'user:none'));
+    const setGlobalConfig = useSetRecoilState(appConfiguration);
 
     const value = mapScoring(config.recommendations);
 
@@ -84,12 +85,22 @@ export default function ScoringOptions({ id, changePage }: Props) {
                     name="radio-buttons-group"
                     value={value}
                     onChange={(_, value: string) => {
-                        setConfig({
-                            recommendations: {
-                                ...config.recommendations,
-                                ...templates[value as ScoringTemplateType],
-                            },
-                        });
+                        if (id) {
+                            setConfig({
+                                recommendations: {
+                                    ...config.recommendations,
+                                    ...templates[value as ScoringTemplateType],
+                                },
+                            });
+                        } else {
+                            setGlobalConfig((cfg) => ({
+                                ...cfg,
+                                recommendations: {
+                                    ...cfg.recommendations,
+                                    ...templates[value as ScoringTemplateType],
+                                },
+                            }));
+                        }
                     }}
                 >
                     <WizardOption

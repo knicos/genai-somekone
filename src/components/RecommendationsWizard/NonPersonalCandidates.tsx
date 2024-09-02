@@ -1,4 +1,4 @@
-import { configuration, userConfiguration } from '@genaism/state/settingsState';
+import { appConfiguration, configuration, userConfiguration } from '@genaism/state/settingsState';
 import { useTranslation } from 'react-i18next';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import style from './style.module.css';
@@ -8,7 +8,7 @@ import WizardOption from './WizardOption';
 import { RecommendationOptions, UserNodeId } from '@knicos/genai-recom';
 
 interface Props {
-    id: UserNodeId;
+    id?: UserNodeId;
     changePage: (v: number) => void;
 }
 
@@ -49,8 +49,9 @@ function mapToValue(options: RecommendationOptions): CandidateTemplateType {
 
 export default function NonPersonalCandidates({ id, changePage }: Props) {
     const { t } = useTranslation();
-    const config = useRecoilValue(configuration(id));
-    const setConfig = useSetRecoilState(userConfiguration(id));
+    const config = useRecoilValue(id ? configuration(id) : appConfiguration);
+    const setConfig = useSetRecoilState(userConfiguration(id || 'user:none'));
+    const setGlobalConfig = useSetRecoilState(appConfiguration);
 
     useEffect(() => {
         changePage(4);
@@ -69,12 +70,22 @@ export default function NonPersonalCandidates({ id, changePage }: Props) {
                     name="radio-buttons-group"
                     value={mapToValue(config.recommendations)}
                     onChange={(_, value: string) => {
-                        setConfig({
-                            recommendations: {
-                                ...config.recommendations,
-                                ...templates[value as CandidateTemplateType],
-                            },
-                        });
+                        if (id) {
+                            setConfig({
+                                recommendations: {
+                                    ...config.recommendations,
+                                    ...templates[value as CandidateTemplateType],
+                                },
+                            });
+                        } else {
+                            setGlobalConfig((cfg) => ({
+                                ...cfg,
+                                recommendations: {
+                                    ...cfg.recommendations,
+                                    ...templates[value as CandidateTemplateType],
+                                },
+                            }));
+                        }
                     }}
                 >
                     <WizardOption

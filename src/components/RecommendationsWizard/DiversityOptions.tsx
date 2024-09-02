@@ -1,4 +1,4 @@
-import { configuration, userConfiguration } from '@genaism/state/settingsState';
+import { appConfiguration, configuration, userConfiguration } from '@genaism/state/settingsState';
 import { useTranslation } from 'react-i18next';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import style from './style.module.css';
@@ -8,14 +8,15 @@ import { useEffect } from 'react';
 import { UserNodeId } from '@knicos/genai-recom';
 
 interface Props {
-    id: UserNodeId;
+    id?: UserNodeId;
     changePage: (v: number) => void;
 }
 
 export default function DiversityOptions({ id, changePage }: Props) {
     const { t } = useTranslation();
-    const config = useRecoilValue(configuration(id));
-    const setConfig = useSetRecoilState(userConfiguration(id));
+    const config = useRecoilValue(id ? configuration(id) : appConfiguration);
+    const setConfig = useSetRecoilState(userConfiguration(id || 'user:none'));
+    const setGlobalConfig = useSetRecoilState(appConfiguration);
 
     const value = config.recommendations.selection;
 
@@ -36,12 +37,22 @@ export default function DiversityOptions({ id, changePage }: Props) {
                     name="radio-buttons-group"
                     value={value || 'distribution'}
                     onChange={(_, value: string) => {
-                        setConfig({
-                            recommendations: {
-                                ...config.recommendations,
-                                selection: value as 'rank' | 'distribution',
-                            },
-                        });
+                        if (id) {
+                            setConfig({
+                                recommendations: {
+                                    ...config.recommendations,
+                                    selection: value as 'rank' | 'distribution',
+                                },
+                            });
+                        } else {
+                            setGlobalConfig((cfg) => ({
+                                ...cfg,
+                                recommendations: {
+                                    ...cfg.recommendations,
+                                    selection: value as 'rank' | 'distribution',
+                                },
+                            }));
+                        }
                     }}
                 >
                     <WizardOption

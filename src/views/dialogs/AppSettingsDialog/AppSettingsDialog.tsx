@@ -1,11 +1,13 @@
 import { menuSettingsDialog } from '@genaism/state/menuState';
 import { appConfiguration } from '@genaism/state/settingsState';
-import { Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel } from '@mui/material';
+import { Checkbox, Dialog, DialogContent, DialogTitle, FormControlLabel, IconButton } from '@mui/material';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useRecoilState } from 'recoil';
 import style from './style.module.css';
-import { Button } from '@knicos/genai-base';
+import CloseIcon from '@mui/icons-material/Close';
+import Feed from '@genaism/components/Feed/Feed';
+import AppNavigation from '@genaism/views/Genagram/AppNavigation';
 
 export default function AppSettingsDialog() {
     const { t } = useTranslation();
@@ -19,11 +21,27 @@ export default function AppSettingsDialog() {
             open={showDialog === 'app'}
             onClose={doClose}
             scroll="paper"
-            maxWidth="xs"
+            maxWidth="sm"
             fullWidth
         >
             <DialogTitle>{t('settings.titles.app')}</DialogTitle>
+            <IconButton
+                aria-label="close"
+                onClick={doClose}
+                sx={{
+                    position: 'absolute',
+                    right: 8,
+                    top: 8,
+                    color: (theme) => theme.palette.grey[500],
+                }}
+            >
+                <CloseIcon />
+            </IconButton>
             <DialogContent sx={{ display: 'flex', padding: 0, maxHeight: '600px' }}>
+                <div className={style.feedView}>
+                    <Feed alwaysActive />
+                    {!config.hideActionsButton && <AppNavigation code="x" />}
+                </div>
                 <div className={style.column}>
                     <FormControlLabel
                         control={
@@ -101,14 +119,6 @@ export default function AppSettingsDialog() {
                     />
                 </div>
             </DialogContent>
-            <DialogActions>
-                <Button
-                    variant="outlined"
-                    onClick={doClose}
-                >
-                    {t('settings.actions.close')}
-                </Button>
-            </DialogActions>
         </Dialog>
     );
 }
