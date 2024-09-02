@@ -22,51 +22,6 @@ export default function FeedSettings() {
             <FormControlLabel
                 control={
                     <Checkbox
-                        checked={config?.hideActionsButton || false}
-                        onChange={(_, checked) => setConfig((old) => ({ ...old, hideActionsButton: checked }))}
-                    />
-                }
-                label={t('dashboard.labels.hideFeedMenu')}
-            />
-            <FormControlLabel
-                control={
-                    <Checkbox
-                        checked={config?.hideDataView || false}
-                        onChange={(_, checked) => setConfig((old) => ({ ...old, hideDataView: checked }))}
-                    />
-                }
-                label={t('dashboard.labels.hideDataView')}
-            />
-            <FormControlLabel
-                control={
-                    <Checkbox
-                        checked={config?.hideProfileView || false}
-                        onChange={(_, checked) => setConfig((old) => ({ ...old, hideProfileView: checked }))}
-                    />
-                }
-                label={t('dashboard.labels.hideProfileView')}
-            />
-            <FormControlLabel
-                control={
-                    <Checkbox
-                        checked={config?.hideRecommendationsView || false}
-                        onChange={(_, checked) => setConfig((old) => ({ ...old, hideRecommendationsView: checked }))}
-                    />
-                }
-                label={t('dashboard.labels.hideRecommendationsView')}
-            />
-            <FormControlLabel
-                control={
-                    <Checkbox
-                        checked={config?.showTopicLabels || false}
-                        onChange={(_, checked) => setConfig((old) => ({ ...old, showTopicLabels: checked }))}
-                    />
-                }
-                label={t('dashboard.labels.showFeedImageLabels')}
-            />
-            <FormControlLabel
-                control={
-                    <Checkbox
                         checked={config?.alwaysActive || false}
                         onChange={(_, checked) => setConfig((old) => ({ ...old, alwaysActive: checked }))}
                     />

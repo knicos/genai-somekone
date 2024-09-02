@@ -19,6 +19,11 @@ import { useSearchParams } from 'react-router-dom';
 import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 import ImportContactsIcon from '@mui/icons-material/ImportContacts';
 import NotInterestedIcon from '@mui/icons-material/NotInterested';
+import SettingsIcon from '@mui/icons-material/Settings';
+import { useRecoilState } from 'recoil';
+import { menuSettingsDialog } from '@genaism/state/menuState';
+import AppSettingsAltIcon from '@mui/icons-material/AppSettingsAlt';
+import TuneIcon from '@mui/icons-material/Tune';
 
 interface Props {
     open?: boolean;
@@ -29,6 +34,7 @@ export default function MenuTree({ open }: Props) {
     const { pathname, search } = useLocation();
     const navigate = useNavigate();
     const [params, setParams] = useSearchParams();
+    const [settingsDialog, setSettingsDialog] = useRecoilState(menuSettingsDialog);
 
     const page = pathname.split('/').pop();
 
@@ -78,9 +84,15 @@ export default function MenuTree({ open }: Props) {
                         return prev;
                     });
                     break;
+                case 'settings-recom':
+                    setSettingsDialog('recommendation');
+                    break;
+                case 'settings-app':
+                    setSettingsDialog('app');
+                    break;
             }
         },
-        [navigate, setParams, search]
+        [navigate, setParams, search, setSettingsDialog]
     );
 
     return (
@@ -238,6 +250,38 @@ export default function MenuTree({ open }: Props) {
                             <div className={page === 'contentwizard' ? style.treeItemSelected : style.treeItem}>
                                 <AddPhotoAlternateIcon />
                                 {t('menu.tools.addcontent')}
+                            </div>
+                        }
+                    />
+                </TreeItem>
+                <TreeItem
+                    itemId="settings"
+                    label={
+                        <div className={style.treeItem}>
+                            <SettingsIcon />
+                            {t('menu.settings.title')}
+                        </div>
+                    }
+                >
+                    <TreeItem
+                        itemId="settings-app"
+                        label={
+                            <div className={settingsDialog === 'app' ? style.treeItemSelected : style.treeItem}>
+                                <AppSettingsAltIcon />
+                                {t('menu.settings.app')}
+                            </div>
+                        }
+                    />
+                    <TreeItem
+                        itemId="settings-recom"
+                        label={
+                            <div
+                                className={
+                                    settingsDialog === 'recommendation' ? style.treeItemSelected : style.treeItem
+                                }
+                            >
+                                <TuneIcon />
+                                {t('menu.settings.recommendation')}
                             </div>
                         }
                     />

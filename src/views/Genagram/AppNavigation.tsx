@@ -12,6 +12,8 @@ import { useRecoilValue } from 'recoil';
 import { uiDarkMode } from '@genaism/state/uiState';
 import { useProfilerService } from '@genaism/hooks/services';
 import { MouseEvent } from 'react';
+import { appConfiguration } from '@genaism/state/settingsState';
+import { SMConfig } from '@genaism/state/smConfig';
 
 interface Props {
     code: string;
@@ -22,6 +24,7 @@ export default function AppNavigation({ code }: Props) {
     const navigate = useNavigate();
     const darkMode = useRecoilValue(uiDarkMode);
     const profiler = useProfilerService();
+    const config = useRecoilValue<SMConfig>(appConfiguration);
 
     const currentView = location.pathname.split('/').pop();
 
@@ -39,72 +42,84 @@ export default function AppNavigation({ code }: Props) {
                 >
                     <HomeIcon fontSize="inherit" />
                 </IconButton>
-                <IconButton
-                    color={currentView === 'post' ? 'secondary' : 'inherit'}
-                    size="large"
-                    onClick={(e: MouseEvent) => {
-                        navigate('post', { replace: currentView !== 'feed' });
-                        e.preventDefault();
-                    }}
-                    href="post"
-                >
-                    <AddAPhotoIcon fontSize="inherit" />
-                </IconButton>
-                <IconButton
-                    color={currentView === 'data' ? 'secondary' : 'inherit'}
-                    size="large"
-                    onClick={(e: MouseEvent) => {
-                        navigate('data', { replace: currentView !== 'feed' });
-                        e.preventDefault();
-                    }}
-                    href="data"
-                >
-                    <QueryStatsIcon fontSize="inherit" />
-                </IconButton>
-                <IconButton
-                    color={currentView === 'profile' ? 'secondary' : 'inherit'}
-                    size="large"
-                    onClick={(e: MouseEvent) => {
-                        navigate('profile', { replace: currentView !== 'feed' });
-                        e.preventDefault();
-                    }}
-                    href="profile"
-                >
-                    <PersonIcon fontSize="inherit" />
-                </IconButton>
-                <IconButton
-                    color={currentView === 'recommendations' ? 'secondary' : 'inherit'}
-                    size="large"
-                    onClick={(e: MouseEvent) => {
-                        navigate('recommendations', { replace: currentView !== 'feed' });
-                        e.preventDefault();
-                    }}
-                    href="recommendations"
-                >
-                    <ImageSearchIcon fontSize="inherit" />
-                </IconButton>
-                <IconButton
-                    color={currentView === profiler.getCurrentUser() ? 'secondary' : 'inherit'}
-                    size="large"
-                    onClick={(e: MouseEvent) => {
-                        navigate(`public/${profiler.getCurrentUser()}`, { replace: currentView !== 'feed' });
-                        e.preventDefault();
-                    }}
-                    href={`public/${profiler.getCurrentUser()}`}
-                >
-                    <AccountCircleIcon fontSize="inherit" />
-                </IconButton>
-                <IconButton
-                    size="large"
-                    color={currentView === 'share' ? 'secondary' : 'inherit'}
-                    onClick={(e: MouseEvent) => {
-                        navigate(`share?code=${code}`, { replace: currentView !== 'feed' });
-                        e.preventDefault();
-                    }}
-                    href={`share?code=${code}`}
-                >
-                    <ShareIcon fontSize="inherit" />
-                </IconButton>
+                {!config.hidePostContent && (
+                    <IconButton
+                        color={currentView === 'post' ? 'secondary' : 'inherit'}
+                        size="large"
+                        onClick={(e: MouseEvent) => {
+                            navigate('post', { replace: currentView !== 'feed' });
+                            e.preventDefault();
+                        }}
+                        href="post"
+                    >
+                        <AddAPhotoIcon fontSize="inherit" />
+                    </IconButton>
+                )}
+                {!config.hideDataView && (
+                    <IconButton
+                        color={currentView === 'data' ? 'secondary' : 'inherit'}
+                        size="large"
+                        onClick={(e: MouseEvent) => {
+                            navigate('data', { replace: currentView !== 'feed' });
+                            e.preventDefault();
+                        }}
+                        href="data"
+                    >
+                        <QueryStatsIcon fontSize="inherit" />
+                    </IconButton>
+                )}
+                {!config.hideProfileView && (
+                    <IconButton
+                        color={currentView === 'profile' ? 'secondary' : 'inherit'}
+                        size="large"
+                        onClick={(e: MouseEvent) => {
+                            navigate('profile', { replace: currentView !== 'feed' });
+                            e.preventDefault();
+                        }}
+                        href="profile"
+                    >
+                        <PersonIcon fontSize="inherit" />
+                    </IconButton>
+                )}
+                {!config.hideRecommendationsView && (
+                    <IconButton
+                        color={currentView === 'recommendations' ? 'secondary' : 'inherit'}
+                        size="large"
+                        onClick={(e: MouseEvent) => {
+                            navigate('recommendations', { replace: currentView !== 'feed' });
+                            e.preventDefault();
+                        }}
+                        href="recommendations"
+                    >
+                        <ImageSearchIcon fontSize="inherit" />
+                    </IconButton>
+                )}
+                {!config.hideOwnProfile && (
+                    <IconButton
+                        color={currentView === profiler.getCurrentUser() ? 'secondary' : 'inherit'}
+                        size="large"
+                        onClick={(e: MouseEvent) => {
+                            navigate(`public/${profiler.getCurrentUser()}`, { replace: currentView !== 'feed' });
+                            e.preventDefault();
+                        }}
+                        href={`public/${profiler.getCurrentUser()}`}
+                    >
+                        <AccountCircleIcon fontSize="inherit" />
+                    </IconButton>
+                )}
+                {!config.hideShareProfile && (
+                    <IconButton
+                        size="large"
+                        color={currentView === 'share' ? 'secondary' : 'inherit'}
+                        onClick={(e: MouseEvent) => {
+                            navigate(`share?code=${code}`, { replace: currentView !== 'feed' });
+                            e.preventDefault();
+                        }}
+                        href={`share?code=${code}`}
+                    >
+                        <ShareIcon fontSize="inherit" />
+                    </IconButton>
+                )}
             </nav>
         </div>
     );

@@ -6,6 +6,12 @@ export interface SMConfig {
     hideProfileView?: boolean;
     hideActionsButton?: boolean;
     hideRecommendationsView?: boolean;
+    hidePostContent?: boolean;
+    hideOwnProfile?: boolean;
+    disableComments?: boolean;
+    disableSharing?: boolean;
+    disableLiking?: boolean;
+    disableFollowing?: boolean;
     disableFeedApp?: boolean;
     recommendations: RecommendationOptions;
     collectResearchData?: boolean;

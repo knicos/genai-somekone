@@ -169,6 +169,29 @@
         "tools": {
             "title": "Tools",
             "addcontent": "Add Content"
+        },
+        "settings": {
+            "title": "Settings",
+            "app": "App Interface",
+            "recommendation": "Recommendations"
+        }
+    },
+    "settings": {
+        "titles": {
+            "app": "App Interface Settings"
+        },
+        "app": {
+            "hideFeedMenu": "Hide the bottom menu",
+            "hideDataView": "Disable the data view",
+            "hideProfileView": "Disable the profile view",
+            "hideRecommendationsView": "Disable the recommendations view",
+            "hidePostContent": "Disable posting content",
+            "hideOwnProfile": "Disable own profile page",
+            "showFeedImageLabels": "Show hashtags on images",
+            "hideSharing": "Disable sharing"
+        },
+        "actions": {
+            "close": "Close"
         }
     },
     "dashboard": {
@@ -277,7 +300,7 @@
             "viewOptions": "Visualizations",
             "appOptions": "Feed app options",
             "none": "none",
-            "showSettings": "Application settings",
+            "showSettings": "Advanced Settings",
             "showTools": "Show advanced tools menu",
             "toolsMenu": "Advanced Tools",
             "toolAnonymise": "Anonymise all data",

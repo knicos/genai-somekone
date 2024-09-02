@@ -60,7 +60,7 @@ export function Component() {
                         <>
                             <Outlet />
                             <BlockDialog />
-                            <AppNavigation code={MYCODE} />
+                            {!config.hideActionsButton && <AppNavigation code={MYCODE} />}
                         </>
                     )}
                 </main>
