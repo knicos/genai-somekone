@@ -78,18 +78,24 @@ export default function RecommendationsProfile({ id, generate, noWizard }: Props
                     </Button>
                     <div style={{ flexGrow: 1 }} />
                     <Spacer />
-                    <IconMenuItem tooltip={t('recommendations.labels.imageGrid')}>
+                    <IconMenuItem
+                        tooltip={t('recommendations.labels.imageGrid')}
+                        selected={viewMode === 'grid'}
+                    >
                         <IconButton
-                            color={viewMode === 'grid' ? 'secondary' : 'inherit'}
+                            color="inherit"
                             onClick={() => setViewMode('grid')}
                             aria-label={t('recommendations.aria.imageGrid')}
                         >
                             <AppsIcon />
                         </IconButton>
                     </IconMenuItem>
-                    <IconMenuItem tooltip={t('recommendations.labels.heatmap')}>
+                    <IconMenuItem
+                        tooltip={t('recommendations.labels.heatmap')}
+                        selected={viewMode === 'heat'}
+                    >
                         <IconButton
-                            color={viewMode === 'heat' ? 'secondary' : 'inherit'}
+                            color="inherit"
                             onClick={() => setViewMode('heat')}
                             aria-label={t('recommendations.aria.heatmap')}
                             data-testid="heatmap-button"
@@ -98,9 +104,12 @@ export default function RecommendationsProfile({ id, generate, noWizard }: Props
                         </IconButton>
                     </IconMenuItem>
                     <Spacer />
-                    <IconMenuItem tooltip={t('recommendations.actions.invert')}>
+                    <IconMenuItem
+                        tooltip={t('recommendations.actions.invert')}
+                        selected={invert}
+                    >
                         <IconButton
-                            color={invert ? 'secondary' : 'inherit'}
+                            color="inherit"
                             disabled={viewMode !== 'heat'}
                             onClick={() => {
                                 if (viewMode === 'heat') {

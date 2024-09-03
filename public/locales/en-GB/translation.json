@@ -127,7 +127,7 @@
             "like": "Liked the image",
             "share_public": "Shared the image",
             "comment": "Comment of length {{length}}",
-            "engagement": "Engagement {{score}}/10",
+            "engagement": "Engagement",
             "end": "Stopped using the app",
             "unreact": "Unreacted"
         },

@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import Cards from '../DataCard/Cards';
 import LogBatch, { ContentLogEntry } from './LogBatch';
 import style from './style.module.css';
-import { UserNodeId } from '@knicos/genai-recom';
+import { engagementFromLog, UserNodeId } from '@knicos/genai-recom';
 
 interface Props {
     user?: UserNodeId;
@@ -15,16 +15,6 @@ interface Props {
 function batchLogs(log: ContentLogEntry[], size: number, startOffset: number): ContentLogEntry[][] {
     const results: ContentLogEntry[][] = [[]];
     if (log.length === 0) return results;
-
-    /*if (log[0].activity !== 'engagement') {
-        const weight = graph.getEdgeWeights('last_engaged', user, log[0].id)[0] || 0;
-        results[0].push({
-            activity: 'engagement',
-            timestamp: log[0].timestamp,
-            value: weight,
-            id: log[0].id,
-        });
-    }*/
 
     let counter = size;
     for (let i = 0; i < log.length; ++i) {
@@ -40,6 +30,21 @@ function batchLogs(log: ContentLogEntry[], size: number, startOffset: number): C
             current.push(l);
         }
     }
+
+    // The first result may not have engagement
+    if (log[0].entry.activity !== 'engagement') {
+        const weight = engagementFromLog(results[0].map((l) => l.entry));
+        results[0].unshift({
+            entry: {
+                activity: 'engagement',
+                timestamp: log[0].entry.timestamp,
+                value: weight,
+                id: log[0].entry.id,
+            },
+            content: log[0].content,
+        });
+    }
+
     return results;
 }
 

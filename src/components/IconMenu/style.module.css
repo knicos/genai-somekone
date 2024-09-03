@@ -139,12 +139,12 @@
 }
 
 .inlineBar {
-    background: white;
-    color: #444;
+    background: backgroundDark2;
+    color: white;
     padding: 0.5rem;
     box-shadow: 1px 1px 8px #888;
     display: flex;
-    gap: 0.5rem;
+    /*gap: 0.5rem;*/
     margin: 1rem;
     border-radius: 2rem;
 }

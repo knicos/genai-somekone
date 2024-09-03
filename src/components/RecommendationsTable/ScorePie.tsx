@@ -10,6 +10,7 @@ interface Props {
     showValue?: boolean;
     size?: number;
     color?: string;
+    bgColor?: string;
     valueFormat?: 'percent' | 'raw';
 }
 
@@ -20,6 +21,7 @@ export default function ScorePie({
     size = 80,
     showValue,
     color = '#444444',
+    bgColor = colors.bgSubdued1,
     valueFormat = 'percent',
 }: Props) {
     //const { t } = useTranslation();
@@ -52,7 +54,7 @@ export default function ScorePie({
                             },
                             {
                                 value: maxValue - value,
-                                color: colors.bgSubdued1,
+                                color: bgColor,
                             },
                         ],
                     },

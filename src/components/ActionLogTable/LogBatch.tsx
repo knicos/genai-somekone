@@ -25,6 +25,7 @@ export default function LogBatch({ batch }: Props) {
         <Card
             message={message}
             image={image}
+            score={batch[0].entry.value || 0}
         >
             {batch.slice(1).map((item, ix) => (
                 <LogItem

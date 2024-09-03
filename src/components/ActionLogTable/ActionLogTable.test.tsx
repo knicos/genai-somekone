@@ -31,7 +31,7 @@ describe('ActionLogTable component', () => {
 
         expect(screen.getByTestId('data-cards')).toBeInTheDocument();
         expect(screen.getByTestId('data-card')).toBeInTheDocument();
-        expect(screen.getAllByTestId('log-item')).toHaveLength(2);
+        expect(screen.getAllByTestId('log-item')).toHaveLength(3);
         expect(screen.getByText('feed.actionlog.like')).toBeVisible();
         expect(screen.getByText('feed.actionlog.dwell')).toBeVisible();
     });

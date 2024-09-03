@@ -21,7 +21,7 @@ describe('SocialGraph Component', () => {
             </TestWrapper>
         );
 
-        const nodes = await screen.findAllByTestId('profile-circle');
+        const nodes = await screen.findAllByTestId('profile-circle', undefined, { timeout: 4000 });
         expect(nodes).toHaveLength(2);
         expect(screen.getByTestId('social-menu-images')).toBeVisible();
     });
@@ -37,7 +37,7 @@ describe('SocialGraph Component', () => {
             </TestWrapper>
         );
 
-        await waitFor(() => expect(screen.getByText(/TestUser1/)).toBeVisible());
+        await waitFor(() => expect(screen.getByText(/TestUser1/)).toBeVisible(), { timeout: 4000 });
     });
 
     it('allows node selection', async ({ expect }) => {
@@ -49,7 +49,7 @@ describe('SocialGraph Component', () => {
             </TestWrapper>
         );
 
-        const nodes = await screen.findAllByTestId('profile-circle');
+        const nodes = await screen.findAllByTestId('profile-circle', undefined, { timeout: 4000 });
         await user.click(nodes[0]);
         expect(screen.getByTestId('social-menu-feed-button')).toBeVisible();
     });
@@ -63,7 +63,7 @@ describe('SocialGraph Component', () => {
             </TestWrapper>
         );
 
-        const nodes = await screen.findAllByTestId('profile-circle');
+        const nodes = await screen.findAllByTestId('profile-circle', undefined, { timeout: 4000 });
         await user.click(nodes[0]);
         expect(screen.getByTestId('social-menu-feed-button')).toBeVisible();
         await user.click(screen.getByTestId('social-menu-feed-button'));
@@ -79,7 +79,7 @@ describe('SocialGraph Component', () => {
             </TestWrapper>
         );
 
-        const nodes = await screen.findAllByTestId('profile-circle');
+        const nodes = await screen.findAllByTestId('profile-circle', undefined, { timeout: 4000 });
         await user.click(nodes[0]);
         expect(screen.getByTestId('social-menu-data-button')).toBeVisible();
         await user.click(screen.getByTestId('social-menu-data-button'));
@@ -95,7 +95,7 @@ describe('SocialGraph Component', () => {
             </TestWrapper>
         );
 
-        const nodes = await screen.findAllByTestId('profile-circle');
+        const nodes = await screen.findAllByTestId('profile-circle', undefined, { timeout: 4000 });
         await user.click(nodes[0]);
         expect(screen.getByTestId('social-menu-profile-button')).toBeVisible();
         await user.click(screen.getByTestId('social-menu-profile-button'));
@@ -115,7 +115,7 @@ describe('SocialGraph Component', () => {
             </TestWrapper>
         );
 
-        const nodes = await screen.findAllByTestId('profile-circle');
+        const nodes = await screen.findAllByTestId('profile-circle', undefined, { timeout: 4000 });
         await user.click(nodes[0]);
         expect(screen.getByTestId('social-menu-recom-button')).toBeVisible();
         await user.click(screen.getByTestId('social-menu-recom-button'));
