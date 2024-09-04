@@ -24,13 +24,29 @@ interface Props {
     images: FeedEntry[];
     noActions?: boolean;
     showLabels?: boolean;
+    noComments?: boolean;
+    noLike?: boolean;
+    noShare?: boolean;
+    noFollow?: boolean;
     onView?: (index: number, time: number) => void;
     onMore?: () => void;
     onLog: (e: LogEntry) => void;
     alwaysActive?: boolean;
 }
 
-export default function ImageFeed({ images, onView, onMore, onLog, noActions, showLabels, alwaysActive }: Props) {
+export default function ImageFeed({
+    images,
+    onView,
+    onMore,
+    onLog,
+    noActions,
+    showLabels,
+    alwaysActive,
+    noComments,
+    noLike,
+    noFollow,
+    noShare,
+}: Props) {
     const { t } = useTranslation();
     const containerRef = useRef<HTMLDivElement>(null);
     const [viewed, setViewed] = useState(0);
@@ -239,6 +255,10 @@ export default function ImageFeed({ images, onView, onMore, onLog, noActions, sh
                         onUnfollow={doUnfollow}
                         onShare={doShare}
                         onComment={doComment}
+                        noComments={noComments}
+                        noLike={noLike}
+                        noFollow={noFollow}
+                        noShare={noShare}
                         active={activeState && (ix === viewed || (ix === 0 && viewed === -1))}
                         visible={Math.abs(ix - viewed) < 5}
                         noActions={noActions}

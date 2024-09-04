@@ -75,6 +75,10 @@ export default function Feed({ onProfile, onLog, onRecommend, id, noLog, noActio
                 noActions={noActions}
                 showLabels={appConfig?.showTopicLabels}
                 alwaysActive={appConfig?.alwaysActive || alwaysActive}
+                noComments={appConfig?.disableComments}
+                noLike={appConfig?.disableLiking}
+                noFollow={appConfig?.disableFollowing}
+                noShare={appConfig?.disableSharing}
             />
 
             <div className={style.footerOuter}></div>

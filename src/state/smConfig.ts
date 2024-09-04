@@ -22,6 +22,10 @@ export interface SMConfig {
     showScoringWizard?: boolean;
     showCandidateWizard?: boolean;
     showCandidateRefinementWizard?: boolean;
+    hideRecommendationMenu?: boolean;
+    hideCandidateOrigin?: boolean;
+    hideExplainedScores?: boolean;
+    disablePrinting?: boolean;
 }
 
 export function mergeConfiguration(a: SMConfig, b: Partial<SMConfig>): SMConfig {

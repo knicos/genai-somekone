@@ -28,6 +28,10 @@ interface Props {
     noActions?: boolean;
     showLabels?: boolean;
     reason?: string;
+    noComments?: boolean;
+    noLike?: boolean;
+    noShare?: boolean;
+    noFollow?: boolean;
     onClick?: (id: ContentNodeId) => void;
     onLike?: (id: ContentNodeId, kind: LikeKind) => void;
     onShare?: (id: ContentNodeId, kind: ShareKind, user?: UserNodeId) => void;
@@ -79,6 +83,10 @@ export default function FeedImage({
     noActions,
     showLabels,
     reason,
+    noComments,
+    noLike,
+    noFollow,
+    noShare,
 }: Props) {
     const { t } = useTranslation();
     const content = useContentService();
@@ -158,7 +166,7 @@ export default function FeedImage({
                     <div className={style.name}>
                         <Avatar {...stringAvatar(contentMeta.author || 'Unknown')} />
                         <span className={style.author}>{contentMeta.author || 'Unknown'}</span>
-                        {!noActions && (
+                        {!noActions && !noFollow && (
                             <IconButton
                                 color="inherit"
                                 onClick={doFollow}
@@ -194,52 +202,58 @@ export default function FeedImage({
                         className={style.buttonRow}
                         onClick={doClick}
                     >
-                        <IconButtonDot
-                            count={reactions}
-                            className={liked !== 'none' ? style.liked : ''}
-                            onClick={() => doLike()}
-                            color="inherit"
-                            data-testid="feed-image-like-button"
-                            aria-label={t('feed.aria.showLikeOptions')}
-                        >
-                            {liked !== 'none' ? (
-                                <FavoriteIcon
+                        {!noLike && (
+                            <IconButtonDot
+                                count={reactions}
+                                className={liked !== 'none' ? style.liked : ''}
+                                onClick={() => doLike()}
+                                color="inherit"
+                                data-testid="feed-image-like-button"
+                                aria-label={t('feed.aria.showLikeOptions')}
+                            >
+                                {liked !== 'none' ? (
+                                    <FavoriteIcon
+                                        color="inherit"
+                                        fontSize="large"
+                                    />
+                                ) : (
+                                    <FavoriteBorderIcon
+                                        color="inherit"
+                                        fontSize="large"
+                                    />
+                                )}
+                            </IconButtonDot>
+                        )}
+                        {!noComments && (
+                            <IconButtonDot
+                                count={content.getComments(id).length}
+                                color="inherit"
+                                onClick={doShowComments}
+                                data-testid="feed-image-comment-button"
+                                aria-label={t('feed.aria.showComments')}
+                            >
+                                <ChatBubbleOutlineIcon
                                     color="inherit"
                                     fontSize="large"
                                 />
-                            ) : (
-                                <FavoriteBorderIcon
+                            </IconButtonDot>
+                        )}
+                        {!noShare && (
+                            <IconButtonDot
+                                count={shares}
+                                position="left"
+                                color="inherit"
+                                onClick={doShowSharePanel}
+                                data-testid="feed-image-share-button"
+                                aria-label={t('feed.aria.showShareOptions')}
+                            >
+                                <ReplyIcon
                                     color="inherit"
                                     fontSize="large"
+                                    style={{ transform: 'scaleX(-1)' }}
                                 />
-                            )}
-                        </IconButtonDot>
-                        <IconButtonDot
-                            count={content.getComments(id).length}
-                            color="inherit"
-                            onClick={doShowComments}
-                            data-testid="feed-image-comment-button"
-                            aria-label={t('feed.aria.showComments')}
-                        >
-                            <ChatBubbleOutlineIcon
-                                color="inherit"
-                                fontSize="large"
-                            />
-                        </IconButtonDot>
-                        <IconButtonDot
-                            count={shares}
-                            position="left"
-                            color="inherit"
-                            onClick={doShowSharePanel}
-                            data-testid="feed-image-share-button"
-                            aria-label={t('feed.aria.showShareOptions')}
-                        >
-                            <ReplyIcon
-                                color="inherit"
-                                fontSize="large"
-                                style={{ transform: 'scaleX(-1)' }}
-                            />
-                        </IconButtonDot>
+                            </IconButtonDot>
+                        )}
                     </div>
                 )}
                 {active && showLabels && activePanel === 'none' && (

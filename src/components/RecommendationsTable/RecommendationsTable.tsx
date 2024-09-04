@@ -7,18 +7,29 @@ import { ScoredRecommendation, UserNodeId } from '@knicos/genai-recom';
 interface Props {
     recommendation: ScoredRecommendation;
     userId: UserNodeId;
+    hideExplain?: boolean;
+    hideCandidate?: boolean;
+    hideScores?: boolean;
 }
 
-export default function RecommendationsTable({ userId, recommendation }: Props) {
+export default function RecommendationsTable({
+    userId,
+    recommendation,
+    hideExplain,
+    hideCandidate,
+    hideScores,
+}: Props) {
     return (
         <div>
             <ul className={style.tableList}>
-                <CandidateItem
-                    item={recommendation}
-                    userId={userId}
-                />
-                <ScoresItem item={recommendation} />
-                <ExplainItem item={recommendation} />
+                {!hideCandidate && (
+                    <CandidateItem
+                        item={recommendation}
+                        userId={userId}
+                    />
+                )}
+                {!hideScores && <ScoresItem item={recommendation} />}
+                {!hideExplain && <ExplainItem item={recommendation} />}
             </ul>
         </div>
     );

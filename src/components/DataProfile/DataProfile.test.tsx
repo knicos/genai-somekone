@@ -2,6 +2,7 @@ import { describe, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import DataProfile from './DataProfile';
 import { createEmptyProfile, LogEntry, UserNodeData } from '@knicos/genai-recom';
+import { TestWrapper } from '@knicos/genai-base';
 
 const { mockProfile, mockLog } = vi.hoisted(() => ({
     mockProfile: vi.fn<unknown[], UserNodeData>(() => ({
@@ -26,7 +27,7 @@ describe('DataProfile component', () => {
 
         mockProfile.mockImplementation(() => profile);
         mockLog.mockImplementation(() => []);
-        render(<DataProfile />);
+        render(<DataProfile />, { wrapper: TestWrapper });
 
         expect(await screen.findByTestId('cloud-group')).toBeInTheDocument();
     });
@@ -37,7 +38,7 @@ describe('DataProfile component', () => {
 
         mockProfile.mockImplementation(() => profile);
         mockLog.mockImplementation(() => [{ id: 'content:ggg', activity: 'like', timestamp: Date.now() } as LogEntry]);
-        render(<DataProfile />);
+        render(<DataProfile />, { wrapper: TestWrapper });
 
         expect(await screen.findByTestId('cloud-image')).toBeInTheDocument();
         expect(screen.getByText('feed.actionlog.like')).toBeInTheDocument();

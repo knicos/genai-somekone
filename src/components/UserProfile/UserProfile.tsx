@@ -11,6 +11,8 @@ import PrintButton from '../PrintButton/PrintButton';
 import IconMenuInline from '../IconMenu/IconMenuInline';
 import IconMenuItem from '../IconMenu/Item';
 import { useTranslation } from 'react-i18next';
+import { useRecoilValue } from 'recoil';
+import { appConfiguration } from '@genaism/state/settingsState';
 
 interface Props {
     id?: UserNodeId;
@@ -21,6 +23,7 @@ export default function Profile({ id }: Props) {
     const profiler = useProfilerService();
     const aid = id || profiler.getCurrentUser();
     const profile = useUserProfile(aid);
+    const appConfig = useRecoilValue(appConfiguration);
 
     const doSave = (data: string) => {
         saveAs(data, `wordcloud_${profile.name}.png`);
@@ -78,22 +81,27 @@ export default function Profile({ id }: Props) {
                 className={style.container}
                 tabIndex={0}
             >
-                <IconMenuInline>
-                    <IconMenuItem tooltip={t('profile.actions.print')}>
-                        <PrintButton
-                            data={() => {
-                                return {
-                                    title: profile.name,
-                                    summary,
-                                    topics,
-                                    engagement: Math.min(1, profile.engagement / (profiler.getBestEngagement() || 1)),
-                                    wordCloud: profile.affinities.topics.topics,
-                                };
-                            }}
-                            path="profile"
-                        />
-                    </IconMenuItem>
-                </IconMenuInline>
+                {!appConfig?.disablePrinting && (
+                    <IconMenuInline>
+                        <IconMenuItem tooltip={t('profile.actions.print')}>
+                            <PrintButton
+                                data={() => {
+                                    return {
+                                        title: profile.name,
+                                        summary,
+                                        topics,
+                                        engagement: Math.min(
+                                            1,
+                                            profile.engagement / (profiler.getBestEngagement() || 1)
+                                        ),
+                                        wordCloud: profile.affinities.topics.topics,
+                                    };
+                                }}
+                                path="profile"
+                            />
+                        </IconMenuItem>
+                    </IconMenuInline>
+                )}
                 <UserProfilePure
                     onSave={doSave}
                     topics={topics}

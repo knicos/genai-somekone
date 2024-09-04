@@ -64,79 +64,86 @@ export default function RecommendationsProfile({ id, generate, noWizard }: Props
                         id={aid}
                     />
                 )}
-                <IconMenuInline>
-                    <Button
-                        onClick={() => setWizard(true)}
-                        variant="contained"
-                        color="secondary"
-                        startIcon={<DesignServicesIcon />}
-                        data-testid="start-recom-wizard"
-                        sx={{ marginLeft: '1rem' }}
-                        disabled={wizard}
-                    >
-                        {t('recommendations.actions.change')}
-                    </Button>
-                    <div style={{ flexGrow: 1 }} />
-                    <Spacer />
-                    <IconMenuItem
-                        tooltip={t('recommendations.labels.imageGrid')}
-                        selected={viewMode === 'grid'}
-                    >
-                        <IconButton
-                            color="inherit"
-                            onClick={() => setViewMode('grid')}
-                            aria-label={t('recommendations.aria.imageGrid')}
+                {!appConfig.hideRecommendationMenu && (
+                    <IconMenuInline>
+                        {appConfig.showRecommendationWizard && !noWizard && (
+                            <>
+                                <Button
+                                    onClick={() => setWizard(true)}
+                                    variant="contained"
+                                    color="secondary"
+                                    startIcon={<DesignServicesIcon />}
+                                    data-testid="start-recom-wizard"
+                                    sx={{ marginLeft: '1rem' }}
+                                    disabled={wizard}
+                                >
+                                    {t('recommendations.actions.change')}
+                                </Button>
+                                <div style={{ flexGrow: 1 }} />
+                                <Spacer />
+                            </>
+                        )}
+
+                        <IconMenuItem
+                            tooltip={t('recommendations.labels.imageGrid')}
+                            selected={viewMode === 'grid'}
                         >
-                            <AppsIcon />
-                        </IconButton>
-                    </IconMenuItem>
-                    <IconMenuItem
-                        tooltip={t('recommendations.labels.heatmap')}
-                        selected={viewMode === 'heat'}
-                    >
-                        <IconButton
-                            color="inherit"
-                            onClick={() => setViewMode('heat')}
-                            aria-label={t('recommendations.aria.heatmap')}
-                            data-testid="heatmap-button"
+                            <IconButton
+                                color="inherit"
+                                onClick={() => setViewMode('grid')}
+                                aria-label={t('recommendations.aria.imageGrid')}
+                            >
+                                <AppsIcon />
+                            </IconButton>
+                        </IconMenuItem>
+                        <IconMenuItem
+                            tooltip={t('recommendations.labels.heatmap')}
+                            selected={viewMode === 'heat'}
                         >
-                            <LocalFireDepartmentIcon />
-                        </IconButton>
-                    </IconMenuItem>
-                    <Spacer />
-                    <IconMenuItem
-                        tooltip={t('recommendations.actions.invert')}
-                        selected={invert}
-                    >
-                        <IconButton
-                            color="inherit"
-                            disabled={viewMode !== 'heat'}
-                            onClick={() => {
-                                if (viewMode === 'heat') {
-                                    setInvert((old) => !old);
-                                }
-                            }}
-                            aria-label={t('recommendations.aria.invert')}
+                            <IconButton
+                                color="inherit"
+                                onClick={() => setViewMode('heat')}
+                                aria-label={t('recommendations.aria.heatmap')}
+                                data-testid="heatmap-button"
+                            >
+                                <LocalFireDepartmentIcon />
+                            </IconButton>
+                        </IconMenuItem>
+                        <Spacer />
+                        <IconMenuItem
+                            tooltip={t('recommendations.actions.invert')}
+                            selected={invert}
                         >
-                            <InvertColorsIcon />
-                        </IconButton>
-                    </IconMenuItem>
-                    <IconMenuItem tooltip={t('recommendations.actions.refresh')}>
-                        <IconButton
-                            color="inherit"
-                            onClick={() => {
-                                if (viewMode === 'grid') {
-                                    more();
-                                } else {
-                                    refreshHeat();
-                                }
-                            }}
-                            aria-label={t('recommendations.aria.refresh')}
-                        >
-                            <RefreshIcon />
-                        </IconButton>
-                    </IconMenuItem>
-                </IconMenuInline>
+                            <IconButton
+                                color="inherit"
+                                disabled={viewMode !== 'heat'}
+                                onClick={() => {
+                                    if (viewMode === 'heat') {
+                                        setInvert((old) => !old);
+                                    }
+                                }}
+                                aria-label={t('recommendations.aria.invert')}
+                            >
+                                <InvertColorsIcon />
+                            </IconButton>
+                        </IconMenuItem>
+                        <IconMenuItem tooltip={t('recommendations.actions.refresh')}>
+                            <IconButton
+                                color="inherit"
+                                onClick={() => {
+                                    if (viewMode === 'grid') {
+                                        more();
+                                    } else {
+                                        refreshHeat();
+                                    }
+                                }}
+                                aria-label={t('recommendations.aria.refresh')}
+                            >
+                                <RefreshIcon />
+                            </IconButton>
+                        </IconMenuItem>
+                    </IconMenuInline>
+                )}
                 {viewMode === 'heat' && (
                     <>
                         <RecommendationsHeatmap
@@ -170,6 +177,8 @@ export default function RecommendationsProfile({ id, generate, noWizard }: Props
                             <RecommendationsTable
                                 userId={aid}
                                 recommendation={selectedRecom}
+                                hideCandidate={appConfig.hideCandidateOrigin}
+                                hideExplain={appConfig.hideExplainedScores}
                             />
                         )}
                     </>

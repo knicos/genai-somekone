@@ -31,7 +31,12 @@ export function Component() {
                     <ContentItem
                         title={t('library.public.title')}
                         image="/images/publicDemo.jpg"
-                        url="/dashboard/usergrid"
+                        url={`/dashboard/usergrid?${createSearchParams({
+                            cfg: compressToEncodedURIComponent(
+                                JSON.stringify({ applicationConfig: { disablePrinting: true } })
+                            ),
+                            noSession: 'true',
+                        })}`}
                         description={t('library.public.description')}
                     />
                     <ContentItem

@@ -10,6 +10,8 @@ import { useMemo } from 'react';
 import IconMenuInline from '../IconMenu/IconMenuInline';
 import IconMenuItem from '../IconMenu/Item';
 import { useTranslation } from 'react-i18next';
+import { useRecoilValue } from 'recoil';
+import { appConfiguration } from '@genaism/state/settingsState';
 
 interface Props {
     id?: UserNodeId;
@@ -20,6 +22,7 @@ export default function Profile({ id }: Props) {
     const profile = useUserProfile(id);
     const profiler = useProfilerService();
     const log = useActionLog(id || profiler.getCurrentUser());
+    const appConfig = useRecoilValue(appConfiguration);
 
     const weightedImages = useMemo(
         () =>
@@ -45,20 +48,22 @@ export default function Profile({ id }: Props) {
                 className={style.container}
                 tabIndex={0}
             >
-                <IconMenuInline>
-                    <IconMenuItem tooltip={t('profile.actions.print')}>
-                        <PrintButton
-                            data={() => {
-                                return {
-                                    title: profile.name,
-                                    weightedImages,
-                                    actionLog,
-                                };
-                            }}
-                            path="data"
-                        />
-                    </IconMenuItem>
-                </IconMenuInline>
+                {!appConfig?.disablePrinting && (
+                    <IconMenuInline>
+                        <IconMenuItem tooltip={t('profile.actions.print')}>
+                            <PrintButton
+                                data={() => {
+                                    return {
+                                        title: profile.name,
+                                        weightedImages,
+                                        actionLog,
+                                    };
+                                }}
+                                path="data"
+                            />
+                        </IconMenuItem>
+                    </IconMenuInline>
+                )}
                 <DataProfileRaw
                     content={weightedImages}
                     log={actionLog}
