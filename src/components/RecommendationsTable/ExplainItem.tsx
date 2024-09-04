@@ -5,6 +5,7 @@ import style from './style.module.css';
 import gColors from '../../style/graphColours.json';
 import LightbulbIcon from '@mui/icons-material/Lightbulb';
 import { ScoredRecommendation, Scores } from '@knicos/genai-recom';
+import sColors from '@knicos/genai-base/css/colours.module.css';
 
 const SCORE_SCALE = 20;
 const MIN_SCORE_SIZE = 60;
@@ -47,6 +48,7 @@ export default function ExplainItem({ item }: Props) {
         <li data-testid="explain-item">
             <div className={style.listIcon}>
                 <LightbulbIcon fontSize="large" />
+                <h2>{t('recommendations.titles.explainScore')}</h2>
             </div>
             <div className={style.listColumn}>
                 {scores.map((k, ix) =>
@@ -60,6 +62,7 @@ export default function ExplainItem({ item }: Props) {
                                 maxValue={1}
                                 showValue
                                 color={gColors[ix % gColors.length]}
+                                bgColor={sColors.bgSubdued1}
                                 size={
                                     sigDiff > 0
                                         ? k.significance * SCORE_SCALE + MIN_SCORE_SIZE

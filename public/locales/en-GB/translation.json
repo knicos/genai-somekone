@@ -1,4 +1,27 @@
 {
+    "library": {
+        "title": "Select Content",
+        "generic": {
+            "title": "Generic Content",
+            "description": "Over 700 free images of animals, nature, cars, food and people selected by children from Pixabay."
+        },
+        "guidedDefault": {
+            "title": "Core Concepts",
+            "description": "Introduce key social media mechanisms with a structured step-by-step interface for the classroom."
+        },
+        "public": {
+            "title": "Public Demonstration",
+            "description": "Use a safer restricted social network when presenting to larger public audiences."
+        },
+        "example": {
+            "title": "Example Data",
+            "description": "Demonstrate using anonymised example data from 19 children in a classroom environment."
+        },
+        "blank": {
+            "title": "Blank",
+            "description": "Add your own photos or select from the web to create custom social media content for the app."
+        }
+    },
     "about": {
         "back": "Back",
         "title": "Generation AI",
@@ -434,7 +457,10 @@
             "scoringOptions": "How can we rank the images?",
             "candidatesPersonal": "Which personal candidates?",
             "candidatesNonPersonal": "How to select non-personal candidates?",
-            "diversityOptions": "Should there be diversity?"
+            "diversityOptions": "Should there be diversity?",
+            "candidateOrigin": "Where it was found",
+            "predictedScore": "Predicted engagement",
+            "explainScore": "Why you might engage"
         },
         "descriptions": {
             "selectHint": "Select an image to see why it is suggested.",

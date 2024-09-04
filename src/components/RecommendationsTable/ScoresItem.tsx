@@ -16,8 +16,12 @@ export default function ScoresItem({ item }: Props) {
         <li data-testid="score-item">
             <div className={style.listIcon}>
                 <EmojiEventsIcon fontSize="large" />
+                <h2>{t('recommendations.titles.predictedScore')}</h2>
             </div>
-            <div className={style.listColumn}>
+            <div
+                className={style.listColumn}
+                style={{ alignItems: 'center' }}
+            >
                 <div className={style.scoreList}>
                     <ScorePie
                         value={item.score || 0}
@@ -26,6 +30,7 @@ export default function ScoresItem({ item }: Props) {
                         showValue
                         color={sColors.secondary}
                         size={100}
+                        bgColor={sColors.bgSubdued1}
                     />
                     <ScorePie
                         value={item.diversity || 0}
@@ -34,6 +39,7 @@ export default function ScoresItem({ item }: Props) {
                         showValue
                         color={sColors.primary}
                         size={70}
+                        bgColor={sColors.bgSubdued1}
                     />
                 </div>
             </div>

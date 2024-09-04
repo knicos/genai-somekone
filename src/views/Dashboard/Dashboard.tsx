@@ -6,6 +6,7 @@ export function Component() {
 
     const content = params.get('content');
     const guide = params.get('guide');
+    const noSession = params.get('noSession') === 'true';
 
     return (
         <Workspace
@@ -13,6 +14,7 @@ export function Component() {
             cfg={params.get('cfg') || undefined}
             experimental={!!params.get('experimental')}
             guide={guide || undefined}
+            noSession={noSession}
         />
     );
 }

@@ -43,16 +43,18 @@
     margin: 0;
     margin-top: 1rem;
     margin-bottom: 1rem;
-    background: workspaceBg;
+    background: white;
 }
 
 .tableList li {
     list-style: none;
     background: white;
-    margin-bottom: 0.5rem;
+    margin: 1rem;
     display: flex;
+    flex-direction: column;
     gap: 1rem;
     align-items: center;
+    margin-top: 2rem;
 }
 
 .scoreBox {
@@ -100,11 +102,20 @@
 }
 
 .listIcon {
-    background: primary;
-    color: white;
+    background: white;
+    color: textDark;
     align-self: stretch;
     display: flex;
-    padding: 1rem;
+    padding: 0.2rem;
+    border-bottom: 2px solid primary;
+    align-items: center;
+}
+
+.listIcon h2 {
+    margin: 0;
+    margin-left: 1rem;
+    font-size: 1.1rem;
+    font-weight: bold;
 }
 
 .listColumn {
@@ -112,8 +123,9 @@
     flex-direction: column;
     flex-grow: 1;
     gap: 1rem;
-    margin-top: 1rem;
+    margin-top: 0;
     margin-bottom: 1rem;
+    width: 100%;
 }
 
 .units {

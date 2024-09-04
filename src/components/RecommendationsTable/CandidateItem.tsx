@@ -48,6 +48,7 @@ export default function CandidateItem({ item, userId }: Props) {
         <li data-testid="candidate-item">
             <div className={style.listIcon}>
                 <ImageSearchIcon fontSize="large" />
+                <h2>{t('recommendations.titles.candidateOrigin')}</h2>
             </div>
             <div className={style.listColumn}>
                 {generateCandidateMessage(profiler, item, t)}

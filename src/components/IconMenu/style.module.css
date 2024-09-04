@@ -148,3 +148,7 @@
     margin: 1rem;
     border-radius: 2rem;
 }
+
+.inlineBar :global .Mui-disabled {
+    color: rgba(255, 255, 255, 0.26);
+}

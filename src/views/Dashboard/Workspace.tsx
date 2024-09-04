@@ -23,21 +23,24 @@ import ContentToolsDialog from '../dialogs/ContentToolsDialog/ContentToolsDialog
 import { Outlet } from 'react-router';
 import AppSettingsDialog from '../dialogs/AppSettingsDialog/AppSettingsDialog';
 import RecomSettingsDialog from '../dialogs/RecomSettingsDialog/RecomSettingsDialog';
+import { SomekoneSettings, useSettingDeserialise } from '@genaism/hooks/settings';
 
 interface Props {
     contentUrls?: string;
     cfg?: string;
     guide?: string;
     experimental?: boolean;
+    noSession?: boolean;
 }
 
-export function Workspace({ contentUrls, cfg, guide, experimental }: Props) {
+export function Workspace({ contentUrls, cfg, guide, experimental, noSession }: Props) {
     const setConfig = useSetRecoilState<SMConfig>(appConfiguration);
     const [content, setContent] = useState<(ArrayBuffer | string)[]>();
     const users = useRecoilValue(onlineUsers);
     const [loaded, setLoaded] = useState(false);
     const setError = useSetRecoilState(errorNotification);
     const MYCODE = useID(5);
+    const deserial = useSettingDeserialise();
 
     const [ready, setReady] = useState(false);
     const showReplay = useRecoilValue(menuShowReplay);
@@ -45,18 +48,14 @@ export function Workspace({ contentUrls, cfg, guide, experimental }: Props) {
 
     useEffect(() => {
         if (!ready) return;
-        let configObj: SMConfig = { ...(DEFAULT_CONFIG.configuration as SMConfig) };
+        setConfig({ ...(DEFAULT_CONFIG.configuration as SMConfig), experimental });
         let contentObj: (ArrayBuffer | string)[] = DEFAULT_CONFIG.content;
         const configParam = cfg;
         if (configParam) {
             const component = decompressFromEncodedURIComponent(configParam);
-            configObj = { ...configObj, ...(JSON.parse(component) as SMConfig) };
+            const configObj: SomekoneSettings = { ...(JSON.parse(component) as SomekoneSettings) };
             // TODO: Validate the config
-        }
-
-        if (experimental !== undefined) {
-            configObj.experimental = experimental;
-            console.warn('Experimental mode');
+            deserial(configObj);
         }
 
         const contentParam = contentUrls;
@@ -68,8 +67,8 @@ export function Workspace({ contentUrls, cfg, guide, experimental }: Props) {
         }
 
         setContent(contentObj);
-        setConfig(configObj);
-    }, [contentUrls, cfg, ready, setConfig, setError, experimental]);
+        //setConfig(configObj);
+    }, [contentUrls, cfg, ready, setConfig, setError, experimental, deserial]);
 
     const doOpenFile = useCallback((data: Blob) => {
         data.arrayBuffer().then((c) => {
@@ -115,6 +114,7 @@ export function Workspace({ contentUrls, cfg, guide, experimental }: Props) {
             <ContentLoader
                 content={content}
                 onLoaded={doLoaded}
+                noSession={noSession}
             />
             <ContentLoader content={fileToOpen} />
             <ErrorDialog />

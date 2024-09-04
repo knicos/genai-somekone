@@ -11,9 +11,10 @@ type LoadingStatus = 'waiting' | 'downloading' | 'loading' | 'failed-download' |
 interface Props {
     content?: (ArrayBuffer | string)[];
     onLoaded?: () => void;
+    noSession?: boolean;
 }
 
-export default function ContentLoader({ content, onLoaded }: Props) {
+export default function ContentLoader({ content, onLoaded, noSession }: Props) {
     const contentRef = useRef(new Set<string>());
     const [status, setStatus] = useState<LoadingStatus>('waiting');
     const [progress, setProgress] = useState<number | undefined>();
@@ -55,7 +56,7 @@ export default function ContentLoader({ content, onLoaded }: Props) {
                                 if (setting) deserial(setting);
                             });
                             setStatus('done');
-                            loadSession(contentSvc.graph, actionLog);
+                            if (!noSession) loadSession(contentSvc.graph, actionLog);
                             if (onLoaded) onLoaded();
                         })
                         .catch((e) => {
@@ -69,12 +70,12 @@ export default function ContentLoader({ content, onLoaded }: Props) {
                 });
         } else if (content) {
             setStatus('done');
-            loadSession(contentSvc.graph, actionLog);
+            if (!noSession) loadSession(contentSvc.graph, actionLog);
             if (onLoaded) onLoaded();
         } else {
             setStatus('waiting');
         }
-    }, [content, onLoaded, deserial, contentSvc, actionLog]);
+    }, [content, onLoaded, deserial, contentSvc, actionLog, noSession]);
 
     return (
         <>

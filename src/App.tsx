@@ -152,6 +152,10 @@ const router = createBrowserRouter(
                 lazy={() => import('./views/Start/Start')}
             />
             <Route
+                path="library"
+                lazy={() => import('./views/Library/Library')}
+            />
+            <Route
                 path="about"
                 element={<About />}
             />

@@ -12,9 +12,9 @@
 
 .wizardClosed {
     composes: wizard;
-    background: workspaceBg;
-    border-top: 6px solid workspaceBg;
-    border-bottom: 6px solid workspaceBg;
+    background: white;
+    border-top: 6px solid white;
+    border-bottom: 6px solid white;
     flex-grow: 0;
 }
 

@@ -9,6 +9,10 @@
             "rewrite": "index.html"
         },
         {
+            "route": "/library*",
+            "rewrite": "index.html"
+        },
+        {
             "route": "/create*",
             "rewrite": "index.html"
         },

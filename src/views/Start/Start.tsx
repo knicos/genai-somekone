@@ -5,6 +5,8 @@ import { Button, TextField } from '@mui/material';
 import { useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LangSelect from '@genaism/components/LangSelect/LangSelect';
+import { Privacy } from '@knicos/genai-base';
+import gitInfo from '../../generatedGitInfo.json';
 
 export function Component() {
     const { t } = useTranslation();
@@ -66,13 +68,17 @@ export function Component() {
                 <div className={style.spacer} />
                 <Button
                     variant="outlined"
-                    href="/dashboard"
+                    href="/library"
                     className={style.createButton}
                 >
                     {t('start.actions.createNew')}
                 </Button>
                 <ErrorDialog />
             </div>
+            <Privacy
+                appName="somekone"
+                tag={gitInfo.gitTag || 'notag'}
+            />
         </div>
     );
 }
