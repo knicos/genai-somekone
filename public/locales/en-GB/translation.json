@@ -204,7 +204,8 @@
             "app": "App Interface Settings",
             "feed": "Feed Actions",
             "appmenu": "Menu Items",
-            "recom": "Recommendations"
+            "recom": "Recommendations",
+            "visualisation": "Visualisations"
         },
         "app": {
             "hideFeedMenu": "Hide the bottom menu",
@@ -223,6 +224,10 @@
             "hideRecommendationMenu": "Hide menu",
             "hideExplainedScores": "Hide score explanation",
             "hideCandidateOrigin": "Hide image origin"
+        },
+        "vis": {
+            "socialMenu": "Show social network menu",
+            "gridMenu": "Show user grid menu"
         },
         "actions": {
             "close": "Close"
@@ -252,6 +257,8 @@
             "usersSelect": "Select Users"
         },
         "labels": {
+            "usePopularCandidates": "Use popular candidates",
+            "popularityScore": "Use popularity",
             "tools": "Tools",
             "showContentWizard": "Add Content",
             "heatmapGlobal": "Image popularity",

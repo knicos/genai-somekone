@@ -100,6 +100,25 @@ export default function RecommendationSettings() {
                     max={5}
                     step={0.1}
                 />
+                <div
+                    id="popular-candidates-label"
+                    className={style.label}
+                >
+                    {t('dashboard.labels.usePopularCandidates')}
+                </div>
+                <Slider
+                    aria-labelledby="popular-candidates-label"
+                    value={localConfig?.recommendations.popular || 0}
+                    onChange={(_, value) =>
+                        setLocalConfig((old) => ({
+                            ...old,
+                            recommendations: { ...old.recommendations, popular: value as number },
+                        }))
+                    }
+                    min={0}
+                    max={5}
+                    step={0.1}
+                />
             </FormControl>
             <div className={style.spacer} />
             <FormControl sx={{ marginTop: '1rem' }}>
@@ -215,6 +234,20 @@ export default function RecommendationSettings() {
                         />
                     }
                     label={t('dashboard.labels.viewingScore')}
+                />
+                <FormControlLabel
+                    control={
+                        <Checkbox
+                            checked={!(localConfig?.recommendations?.noPopularity || false)}
+                            onChange={(_, checked) =>
+                                setLocalConfig((old) => ({
+                                    ...old,
+                                    recommendations: { ...old.recommendations, noPopularity: !checked },
+                                }))
+                            }
+                        />
+                    }
+                    label={t('dashboard.labels.popularityScore')}
                 />
             </FormControl>
             <div className={style.spacer} />
