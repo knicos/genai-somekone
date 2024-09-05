@@ -511,7 +511,8 @@
             "viewing": "Likely to view",
             "lastSeen": "Not seen recently",
             "popularity": "Popularity",
-            "reaction": "Likely to react"
+            "reaction": "Likely to react",
+            "lastEngaged": "Not engaged with"
         },
         "aria": {
             "imageSelect": "Select recommendation number {{number}}",
