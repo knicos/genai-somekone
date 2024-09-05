@@ -49,6 +49,7 @@ export function Component() {
                                 onUsername={(name: string) => {
                                     setUsername(name);
                                 }}
+                                autoUsername={config.automaticUsername}
                             />
                             <Privacy
                                 appName="somekone"

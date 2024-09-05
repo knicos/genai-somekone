@@ -160,5 +160,5 @@ stages:
                       cwd: $(Pipeline.Workspace)
                       skip_api_build: true
                       skip_app_build: true
-                      azure_static_web_apps_api_token: $(deployment_token)
-                      deployment_environment: nextVersion
+                      azure_static_web_apps_api_token: $(deployment_token2)
+                      #deployment_environment: nextVersion

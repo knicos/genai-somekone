@@ -33,7 +33,13 @@ export function Component() {
                         image="/images/publicDemo.jpg"
                         url={`/dashboard/usergrid?${createSearchParams({
                             cfg: compressToEncodedURIComponent(
-                                JSON.stringify({ applicationConfig: { disablePrinting: true } })
+                                JSON.stringify({
+                                    applicationConfig: {
+                                        disablePrinting: true,
+                                        automaticUsername: true,
+                                        limitSessions: true,
+                                    },
+                                })
                             ),
                             noSession: 'true',
                         })}`}

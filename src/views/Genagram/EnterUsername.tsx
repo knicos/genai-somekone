@@ -1,6 +1,6 @@
 import { LargeButton } from '@knicos/genai-base';
 import { Alert, IconButton, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import style from './style.module.css';
 import { useTranslation } from 'react-i18next';
 import { useLogger } from '@genaism/hooks/logger';
@@ -8,11 +8,18 @@ import { useRecoilValue } from 'recoil';
 import { availableUsers } from '@genaism/state/sessionState';
 import RestoreIcon from '@mui/icons-material/Restore';
 import { useDuplicateTabCheck } from '@genaism/hooks/duplicateTab';
-import { UserNodeId } from '@knicos/genai-recom';
+import { anonUsername, UserNodeId } from '@knicos/genai-recom';
 import { useProfilerService } from '@genaism/hooks/services';
+
+function generateUsername() {
+    const iter = Math.floor(Math.random() * 20);
+    for (let i = 0; i < iter; ++i) anonUsername();
+    return anonUsername();
+}
 
 interface Props {
     onUsername: (name: string) => void;
+    autoUsername?: boolean;
 }
 
 interface FormErrors {
@@ -20,7 +27,7 @@ interface FormErrors {
     fullname?: 'missing' | 'bad';
 }
 
-export default function EnterUsername({ onUsername }: Props) {
+export default function EnterUsername({ onUsername, autoUsername }: Props) {
     const { t } = useTranslation();
     const ref = useRef<HTMLInputElement>(null);
     const nameref = useRef<HTMLInputElement>(null);
@@ -30,6 +37,11 @@ export default function EnterUsername({ onUsername }: Props) {
     const [showRestore, setShowRestore] = useState(false);
     const foundTab = useDuplicateTabCheck();
     const profiler = useProfilerService();
+
+    const anonName = useMemo(
+        () => (autoUsername ? `${generateUsername()}${Math.floor(Math.random() * 100)}` : ''),
+        [autoUsername]
+    );
 
     const doUsernameKey = useCallback(
         (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -62,14 +74,25 @@ export default function EnterUsername({ onUsername }: Props) {
     return (
         <div className={style.userContainer}>
             {foundTab && <Alert severity="warning">{t('feed.messages.alreadyOpen')}</Alert>}
-            <TextField
-                inputRef={ref}
-                label={t('feed.labels.enterUsername')}
-                onKeyDown={doUsernameKey}
-                required
-                error={!!errors.username}
-                helperText={errors.username ? t(`feed.messages.usernameError.${errors.username}`) : undefined}
-            />
+            {!autoUsername ? (
+                <TextField
+                    inputRef={ref}
+                    label={t('feed.labels.enterUsername')}
+                    onKeyDown={doUsernameKey}
+                    required
+                    error={!!errors.username}
+                    helperText={errors.username ? t(`feed.messages.usernameError.${errors.username}`) : undefined}
+                />
+            ) : (
+                <TextField
+                    label={t('feed.labels.enterUsername')}
+                    required
+                    value={anonName}
+                    disabled={true}
+                    error={!!errors.username}
+                    helperText={errors.username ? t(`feed.messages.usernameError.${errors.username}`) : undefined}
+                />
+            )}
             {logger && (
                 <TextField
                     inputRef={nameref}
@@ -82,7 +105,9 @@ export default function EnterUsername({ onUsername }: Props) {
             )}
             <LargeButton
                 onClick={() => {
-                    if (ref.current) {
+                    if (autoUsername) {
+                        onUsername(anonName);
+                    } else if (ref.current) {
                         if (!ref.current.value) {
                             setErrors({ username: 'missing' });
                             return;

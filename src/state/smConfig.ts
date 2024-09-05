@@ -15,6 +15,8 @@ export interface SMConfig {
     disableFeedApp?: boolean;
     recommendations: RecommendationOptions;
     collectResearchData?: boolean;
+    automaticUsername?: boolean;
+    limitSessions?: boolean;
     showTopicLabels?: boolean;
     alwaysActive?: boolean;
     experimental?: boolean;
