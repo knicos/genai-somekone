@@ -19,7 +19,7 @@ export function Component() {
                 if (value.length === 10) {
                     navigate(`/profile/${value}`);
                 } else {
-                    navigate(`/feed/${value}`);
+                    navigate(`/app/${value}`);
                 }
             }
         },
@@ -32,7 +32,7 @@ export function Component() {
             if (value.length === 10) {
                 navigate(`/profile/${value}`);
             } else {
-                navigate(`/feed/${value}`);
+                navigate(`/app/${value}`);
             }
         }
     }, [navigate]);
