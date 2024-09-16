@@ -236,12 +236,13 @@ export default function SocialGraphElement({ liveUsers }: Props) {
                 }}
                 charge={nodeCharge}
                 showLines={showLines}
-                onSelect={(n: Readonly<GraphNode<UserNodeId>>, _, element) => {
+                onSelect={(n: Readonly<GraphNode<UserNodeId>>, _, element, parent) => {
                     const rect = element.getClientRects()[0];
                     //setCenter([n.x || 0, n.y || 0]);
                     userElement.current = element;
+                    const parentLeft = parent.getBoundingClientRect();
                     if (rect) {
-                        setUserMenu([rect.x + rect.width / 2, rect.y + rect.height + 20]);
+                        setUserMenu([rect.x + rect.width / 2 - parentLeft.left, rect.y + rect.height + 20]);
                     } else {
                         setUserMenu([0, 0]);
                     }

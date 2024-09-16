@@ -53,7 +53,12 @@ interface LabelProps<T extends NodeID> {
 export interface Props<T extends NodeID> extends PropsWithChildren {
     nodes: GraphNode<T>[];
     links?: GraphLink<T, T>[];
-    onSelect?: (node: Readonly<GraphNode<T>>, links: InternalGraphLink<T, T>[], element: SVGElement) => void;
+    onSelect?: (
+        node: Readonly<GraphNode<T>>,
+        links: InternalGraphLink<T, T>[],
+        element: SVGElement,
+        parent: SVGSVGElement
+    ) => void;
     onUnselect?: () => void;
     focusNode?: string;
     zoom?: number;
@@ -346,7 +351,7 @@ export default function Graph<T extends NodeID>({
                     <Nodes
                         nodeList={nodeList}
                         onSelect={(node: GraphNode<T>, element: SVGElement) => {
-                            if (onSelect) {
+                            if (onSelect && svgRef.current) {
                                 if (Math.max(movement.current[0], movement.current[1]) > MOVE_THRESHOLD) {
                                     movement.current = [0, 0];
                                     return;
@@ -355,7 +360,8 @@ export default function Graph<T extends NodeID>({
                                 onSelect(
                                     node,
                                     linkList.filter((l) => l.source.id === node.id || l.target.id === node.id),
-                                    element
+                                    element,
+                                    svgRef.current
                                 );
                             }
                         }}
