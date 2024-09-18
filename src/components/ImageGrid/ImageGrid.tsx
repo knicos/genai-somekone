@@ -10,6 +10,7 @@ interface Props {
     selected?: number;
     onSelect?: (ix: number) => void;
     linkPrefix?: string;
+    columns?: number;
 }
 
 interface SelectProps {
@@ -37,13 +38,14 @@ function ImageItem({ image }: { image: ContentNodeId }) {
     );
 }
 
-export default function ImageGrid({ images, selected, onSelect, linkPrefix }: Props) {
+export default function ImageGrid({ images, selected, onSelect, linkPrefix, columns = 3 }: Props) {
     const { t } = useTranslation();
 
     return (
         <div
             className={style.grid}
             data-testid="recom-image-grid"
+            style={{ gridTemplateColumns: `repeat(${columns}, 1fr)` }}
         >
             {images.map((img, ix) =>
                 onSelect ? (

@@ -30,7 +30,7 @@ export default function HeatmapCompare() {
                     {users.map((user) => (
                         <RecommendationsHeatmap
                             key={user}
-                            dimensions={25}
+                            dimensions={0}
                             user={user}
                             showName
                             invert={invert}
@@ -46,7 +46,7 @@ export default function HeatmapCompare() {
                     {users.map((user) => (
                         <EngagementHeatmap
                             key={user}
-                            dimensions={25}
+                            dimensions={0}
                             user={user}
                             showName
                             invert={invert}
@@ -60,7 +60,7 @@ export default function HeatmapCompare() {
                     key={`g${count}`}
                 >
                     <ContentHeatmap
-                        dimensions={25}
+                        dimensions={0}
                         invert={invert}
                     />
                 </div>

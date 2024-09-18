@@ -8,7 +8,7 @@ import { useProfilerService } from '@genaism/hooks/services';
 
 interface Props {
     user: UserNodeId;
-    dimensions: number;
+    dimensions?: number;
     showName?: boolean;
     invert?: boolean;
 }
@@ -50,6 +50,8 @@ export default function EngagementHeatmap({ user, dimensions, showName, invert }
     const profile = useUserProfile(user);
     const profiler = useProfilerService();
 
+    const adim = dimensions || Math.floor(Math.sqrt(profiler.content.getAllContent().length));
+
     useEffect(() => {
         setLoading(true);
         const userEngagements = profiler.getEngagedContent(user);
@@ -59,7 +61,7 @@ export default function EngagementHeatmap({ user, dimensions, showName, invert }
                 ...userEngagements.map((u) => u.id),
                 ...heatmapImageSet(
                     profiler.graph,
-                    dimensions * dimensions - userEngagements.length,
+                    adim * adim - userEngagements.length,
                     userEngagements.map((u) => u.id)
                 ),
             ];
@@ -75,7 +77,7 @@ export default function EngagementHeatmap({ user, dimensions, showName, invert }
             setHeats(engagedImages);
         }
         setLoading(false);
-    }, [dimensions, user, config, profile, profiler]);
+    }, [adim, user, config, profile, profiler]);
 
     return (
         <Heatmap

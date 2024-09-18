@@ -3,7 +3,7 @@ import style from './style.module.css';
 import { useTranslation } from 'react-i18next';
 import SearchIcon from '@mui/icons-material/Search';
 import { KeyboardEvent, useCallback, useEffect, useRef, useState } from 'react';
-import { AlertPara, canvasFromURL, LargeButton } from '@knicos/genai-base';
+import { Button, canvasFromURL, LargeButton } from '@knicos/genai-base';
 import useImageSearch, { Options } from '@genaism/services/imageSearch/hook';
 import { useContentService } from '@genaism/hooks/services';
 
@@ -45,11 +45,6 @@ export default function QueryGenerator({ onQuery, disabled }: Props) {
             if (contentSvc.hasContent(`content:${image.id}`)) return;
             canvasFromURL(image.url, 500).then((canvas) => {
                 const imageData = canvas.toDataURL('image/jpeg', 0.95);
-                /*contentSvc.addContent(imageData, {
-                    id: image.id,
-                    labels: image.tags.map((t) => ({ label: t, weight: 1 })),
-                    author: image.author,
-                });*/
                 setContent((old) => [...old, imageData]);
             });
         });
@@ -59,12 +54,14 @@ export default function QueryGenerator({ onQuery, disabled }: Props) {
         <section
             className={style.wizard}
             data-testid="content-wizard"
+            data-widget="query"
+            style={{ maxWidth: '500px' }}
         >
             <div className={style.controlsContainer}>
                 <div className={style.controls}>
                     <TextField
                         disabled={disabled}
-                        label={t('search')}
+                        label={t('creator.labels.search')}
                         type="search"
                         variant="outlined"
                         onKeyDown={doChange}
@@ -77,15 +74,14 @@ export default function QueryGenerator({ onQuery, disabled }: Props) {
                             ),
                         }}
                     />
-                    <LargeButton
+                    <Button
                         variant="contained"
                         onClick={doSearch}
                         disabled={disabled}
                     >
-                        {t('actions.go')}
-                    </LargeButton>
+                        {t('creator.actions.go')}
+                    </Button>
                 </div>
-                <AlertPara severity="info">{t('hints.imageSearch')}</AlertPara>
             </div>
             <div className={style.controlsContainer}>
                 <div className={style.controls}>
@@ -101,13 +97,13 @@ export default function QueryGenerator({ onQuery, disabled }: Props) {
                         <FormControlLabel
                             value="latest"
                             control={<Radio />}
-                            label={t('dashboard.labels.latest')}
+                            label={t('creator.labels.latest')}
                             disabled={disabled}
                         />
                         <FormControlLabel
                             value="popular"
                             control={<Radio />}
-                            label={t('dashboard.labels.popular')}
+                            label={t('creator.labels.popular')}
                             disabled={disabled}
                         />
                     </RadioGroup>
@@ -120,8 +116,8 @@ export default function QueryGenerator({ onQuery, disabled }: Props) {
                             key={ix}
                             src={c}
                             alt=""
-                            width={100}
-                            height={100}
+                            width={80}
+                            height={80}
                         />
                     );
                 })}
@@ -132,7 +128,7 @@ export default function QueryGenerator({ onQuery, disabled }: Props) {
                 onClick={() => onQuery(query || '', { order, source: 'pixabay' })}
                 color="secondary"
             >
-                {t('actions.next')}
+                {t('creator.actions.addImages')}
             </LargeButton>
         </section>
     );

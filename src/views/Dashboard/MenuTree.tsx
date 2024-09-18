@@ -24,6 +24,7 @@ import { useRecoilState } from 'recoil';
 import { menuSettingsDialog } from '@genaism/state/menuState';
 import AppSettingsAltIcon from '@mui/icons-material/AppSettingsAlt';
 import TuneIcon from '@mui/icons-material/Tune';
+import ImageSearchIcon from '@mui/icons-material/ImageSearch';
 
 interface Props {
     open?: boolean;
@@ -70,6 +71,9 @@ export default function MenuTree({ open }: Props) {
                     break;
                 case 'tools-contentwizard':
                     navigate('contentwizard' + search);
+                    break;
+                case 'tools-browser':
+                    navigate('browser' + search);
                     break;
                 case 'guides-default':
                     setParams((prev) => {
@@ -250,6 +254,15 @@ export default function MenuTree({ open }: Props) {
                             <div className={page === 'contentwizard' ? style.treeItemSelected : style.treeItem}>
                                 <AddPhotoAlternateIcon />
                                 {t('menu.tools.addcontent')}
+                            </div>
+                        }
+                    />
+                    <TreeItem
+                        itemId="tools-browser"
+                        label={
+                            <div className={page === 'browser' ? style.treeItemSelected : style.treeItem}>
+                                <ImageSearchIcon />
+                                {t('menu.tools.browseContent')}
                             </div>
                         }
                     />

@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next';
 
 interface Props {
     data: WeightedNode<ContentNodeId>[];
-    dimensions: number;
+    dimensions?: number;
     busy?: boolean;
     label?: string;
     invert?: boolean;
@@ -38,8 +38,9 @@ export default function Heatmap({ data, dimensions, busy, label, invert }: Props
     const [saving, setSaving] = useState(false);
 
     const loading = data.length === 0 || !grid || busy;
+    const adim = dimensions || Math.floor(Math.sqrt(content.getAllContent().length));
 
-    const size = 200 / dimensions;
+    const size = 200 / adim;
 
     const normData = useMemo(() => (data ? normWeights(data) : undefined), [data]);
     const heats = useMemo(() => {
@@ -53,16 +54,16 @@ export default function Heatmap({ data, dimensions, busy, label, invert }: Props
     useEffect(() => {
         if (normData && normData.length > 0) {
             setGrid((oldGrid) =>
-                oldGrid && oldGrid.length === dimensions
+                oldGrid && oldGrid.length === adim
                     ? oldGrid
                     : heatmapGrid(
                           content,
                           normData.map((n) => n.id),
-                          dimensions
+                          adim
                       )
             );
         }
-    }, [normData, dimensions, content]);
+    }, [normData, adim, content]);
 
     useEffect(() => {
         if (!zoom) {

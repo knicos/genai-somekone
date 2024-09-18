@@ -25,7 +25,7 @@ vi.mock('@knicos/genai-recom', async (importOriginal) => ({
     ...(await importOriginal<typeof import('@knicos/genai-recom')>()),
     ContentService: vi.fn(() => ({
         hasEncoder: () => true,
-        createEmbedding: mockEncode,
+        createIsolatedEmbedding: mockEncode,
         getSimilarContent: mockSimilar,
         getContentMetadata: () => ({
             labels: [
@@ -69,7 +69,7 @@ describe('ImageEdit component', () => {
             </TestWrapper>
         );
 
-        expect(mockEncode).toHaveBeenCalledWith('https://store.gen-ai.fi/somekone/images/pixabay-8165380.jpg');
+        expect(mockEncode).toHaveBeenCalledWith('https://store.gen-ai.fi/somekone/images/pixabay-8165380.jpg', []);
         expect(mockSimilar).toHaveBeenCalledOnce();
         waitFor(() => {
             expect(screen.getByText('#label1')).toBeVisible();

@@ -13,9 +13,10 @@ import {
 
 const CANDIDATE_FACTOR = 10;
 
-export function heatmapImageSet(graph: GraphService, dim: number): ContentNodeId[] {
+export function heatmapImageSet(graph: GraphService, dim?: number): ContentNodeId[] {
     const contents = graph.getNodesByType('content');
-    return uniformUniqueSubset(contents, dim * dim, (v) => v);
+    const adim = dim || Math.floor(Math.sqrt(contents.length));
+    return uniformUniqueSubset(contents, adim * adim, (v) => v);
 }
 
 export async function heatmapScores(

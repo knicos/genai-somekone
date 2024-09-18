@@ -40,7 +40,7 @@ export default function ImageEdit({ image, onDone, onCancel }: Props) {
 
     useEffect(() => {
         contentSvc
-            .createEmbedding(image)
+            .createIsolatedEmbedding(image, [])
             .then((e) => {
                 setEmbedding(e);
                 getSimilarContent(contentSvc, e).then((sim) => {

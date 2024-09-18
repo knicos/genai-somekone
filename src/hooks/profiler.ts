@@ -26,7 +26,7 @@ export function useSimilarUsers(profile: UserNodeData) {
     const profiler = useProfilerService();
     return useMemo(() => {
         return profiler
-            .getSimilarUsers(profile.embeddings.taste, 11)
+            .getSimilarUsers(profile.embeddings.taste, { count: 11 })
             .filter((s) => s.id !== profile.id && s.weight > 0);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [profile, profile.lastUpdated, profiler]);
