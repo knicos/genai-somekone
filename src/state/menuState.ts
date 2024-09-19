@@ -92,8 +92,3 @@ export const menuShowGridMenu = atom<boolean>({
     key: 'menugridmenu',
     default: true,
 });
-
-export const menuShowContentTools = atom<boolean>({
-    key: 'menucontenttools',
-    default: false,
-});

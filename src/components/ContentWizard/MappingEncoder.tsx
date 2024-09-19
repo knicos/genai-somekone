@@ -19,6 +19,8 @@ function makeFeatures(contentSvc: ContentService, nodes: ContentNodeId[]) {
 
     const clusterer = new HierarchicalEmbeddingCluster({
         k: CLUSTERS,
+        maxClusters: CLUSTERS,
+        maxDistance: 2,
         //minClusterSize: Math.floor(0.5 * (inputEmbeddings.length / CLUSTERS)),
     });
     clusterer.calculate(inputEmbeddings);
@@ -82,6 +84,7 @@ export default function MappingTool() {
     const [startTraining, setStartTraining] = useState(false);
     const [epochs, setEpochs] = useState(30);
     const [dims] = useState(2);
+    const [learningRate, setLearningRate] = useState(0.001);
     const [encoder, setEncoder] = useState<AutoEncoder>();
     const [startGenerate, setStartGenerate] = useState(false);
     const [points, setPoints] = useState<Point[]>([]);
@@ -134,7 +137,13 @@ export default function MappingTool() {
             const { features } = makeFeatures(contentSvc, contentSvc.graph.getNodesByType('content'));
 
             const e = new AutoEncoder();
-            e.create(dims, features[0].length || 20, [10]);
+            e.create(dims, features[0].length || 20, {
+                noRegularization: true,
+                outputActivation: 'sigmoid',
+                learningRate,
+                loss: 'meanSquaredError',
+                layers: [],
+            });
             setEncoder((old) => {
                 if (old) {
                     try {
@@ -156,7 +165,7 @@ export default function MappingTool() {
                 setStartGenerate(true);
             });
         }
-    }, [startTraining, epochs, contentSvc, dims]);
+    }, [startTraining, epochs, contentSvc, dims, learningRate]);
 
     return (
         <div
@@ -171,6 +180,7 @@ export default function MappingTool() {
                 <div className={style.group}>
                     <label id="autoencoder-epoch-slider">{t('creator.labels.epochs')}</label>
                     <Slider
+                        disabled={startTraining}
                         aria-labelledby="autoencoder-epoch-slider"
                         value={epochs}
                         onChange={(_, value) => {
@@ -179,6 +189,19 @@ export default function MappingTool() {
                         min={4}
                         max={100}
                         step={2}
+                        valueLabelDisplay="auto"
+                    />
+                    <label id="autoencoder-rate-slider">{t('creator.labels.learningRate')}</label>
+                    <Slider
+                        disabled={startTraining}
+                        aria-labelledby="autoencoder-rate-slider"
+                        value={learningRate}
+                        onChange={(_, value) => {
+                            setLearningRate(value as number);
+                        }}
+                        min={0.0001}
+                        max={0.002}
+                        step={0.0001}
                         valueLabelDisplay="auto"
                     />
                 </div>

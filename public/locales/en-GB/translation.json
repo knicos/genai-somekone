@@ -551,7 +551,8 @@
             "dimensions": "Dimensions",
             "useLabels": "Use the tags",
             "usePixels": "Use pixel data",
-            "useEngagement": "Use engagement data"
+            "useEngagement": "Use engagement data",
+            "learningRate": "Learning Rate"
         },
         "actions": {
             "addImages": "Add Images",

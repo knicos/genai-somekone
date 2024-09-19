@@ -19,7 +19,6 @@ import { onlineUsers } from '@genaism/state/sessionState';
 import ServerProtocol from './ServerProtocol';
 import ContentLoader from '@genaism/components/ContentLoader/ContentLoader';
 import Guidance from '@genaism/components/Guidance/Guidance';
-import ContentToolsDialog from '../dialogs/ContentToolsDialog/ContentToolsDialog';
 import { Outlet } from 'react-router';
 import AppSettingsDialog from '../dialogs/AppSettingsDialog/AppSettingsDialog';
 import RecomSettingsDialog from '../dialogs/RecomSettingsDialog/RecomSettingsDialog';
@@ -97,7 +96,6 @@ export function Workspace({ contentUrls, cfg, guide, experimental, noSession }: 
                         />
                         <SaveDialog />
                         <SettingsDialog />
-                        <ContentToolsDialog />
                         <AppSettingsDialog />
                         <RecomSettingsDialog />
                         {showReplay && <Replay />}

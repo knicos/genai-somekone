@@ -22,6 +22,7 @@ export default function EmbeddingTool() {
     const [usePixels, setUsePixels] = useState(true);
     const [useEngagement, setUseEngagement] = useState(false);
     const [history, setHistory] = useState<TrainingDataPoint[]>([]);
+    const [learningRate, setLearningRate] = useState(0.001);
 
     const valid = useMemo(() => {
         if (!startGenerate) {
@@ -42,6 +43,9 @@ export default function EmbeddingTool() {
                     noContentFeatures: !usePixels,
                     noTagFeatures: !useLabels,
                     layers: [128],
+                    loss: 'meanSquaredError',
+                    outputActivation: 'linear',
+                    learningRate,
                     epochs,
                     dims,
                     noSave: false,
@@ -54,7 +58,7 @@ export default function EmbeddingTool() {
                     setStartGenerate(false);
                 });
         }
-    }, [startGenerate, contentSvc, epochs, dims, usePixels, useLabels, useEngagement]);
+    }, [startGenerate, contentSvc, epochs, dims, usePixels, useLabels, useEngagement, learningRate]);
 
     return (
         <div
@@ -121,6 +125,19 @@ export default function EmbeddingTool() {
                         min={4}
                         max={32}
                         step={2}
+                        valueLabelDisplay="auto"
+                    />
+                    <label id="autoencoder-rate-slider">{t('creator.labels.learningRate')}</label>
+                    <Slider
+                        disabled={startGenerate}
+                        aria-labelledby="autoencoder-rate-slider"
+                        value={learningRate}
+                        onChange={(_, value) => {
+                            setLearningRate(value as number);
+                        }}
+                        min={0.0001}
+                        max={0.002}
+                        step={0.0001}
                         valueLabelDisplay="auto"
                     />
                 </div>
