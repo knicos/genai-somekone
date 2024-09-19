@@ -6,6 +6,7 @@ import { KeyboardEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { Button, canvasFromURL, LargeButton } from '@knicos/genai-base';
 import useImageSearch, { Options } from '@genaism/services/imageSearch/hook';
 import { useContentService } from '@genaism/hooks/services';
+import { Widget } from './Widget';
 
 interface Props {
     onQuery: (q: string, options: Options) => void;
@@ -51,10 +52,9 @@ export default function QueryGenerator({ onQuery, disabled }: Props) {
     }, [newimages, contentSvc]);
 
     return (
-        <section
-            className={style.wizard}
-            data-testid="content-wizard"
-            data-widget="query"
+        <Widget
+            title={t('creator.titles.query')}
+            dataWidget="query"
             style={{ maxWidth: '500px' }}
         >
             <div className={style.controlsContainer}>
@@ -130,6 +130,6 @@ export default function QueryGenerator({ onQuery, disabled }: Props) {
             >
                 {t('creator.actions.addImages')}
             </LargeButton>
-        </section>
+        </Widget>
     );
 }

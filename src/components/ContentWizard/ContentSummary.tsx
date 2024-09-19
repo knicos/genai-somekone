@@ -8,6 +8,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import { deleteTags, deleteWithTags, mergeTags, renameTag } from './contentUtilities';
 import { useTranslation } from 'react-i18next';
+import { Widget } from './Widget';
 
 interface Row {
     id: string;
@@ -111,35 +112,38 @@ export default function ContentSummary({ onFindMore }: Props) {
     }, [apiRef, onFindMore]);
 
     return (
-        <section
-            className={style.wizard}
-            data-widget="summary"
+        <Widget
+            title={t('creator.titles.summary')}
+            dataWidget="summary"
             style={{ maxWidth: '400px' }}
+            menu={
+                <div>
+                    <IconButton
+                        ref={anchorEl}
+                        onClick={() => setMenuOpen(true)}
+                    >
+                        <MenuIcon />
+                    </IconButton>
+                    <Menu
+                        anchorEl={anchorEl.current}
+                        open={menuOpen}
+                        onClose={() => setMenuOpen(false)}
+                    >
+                        <MenuItem onClick={doDeleteTags}>{t('creator.actions.deleteTags')}</MenuItem>
+                        <MenuItem onClick={doDeleteWithTags}>{t('creator.actions.deleteImagesWithTags')}</MenuItem>
+                        <MenuItem onClick={doMergeTags}>{t('creator.actions.mergeTags')}</MenuItem>
+                        <MenuItem
+                            disabled={!onFindMore}
+                            onClick={doFindMore}
+                        >
+                            {t('creator.actions.findMoreTag')}
+                        </MenuItem>
+                    </Menu>
+                </div>
+            }
         >
             <div className={style.controlsContainer}>
                 <div>{t('creator.labels.count', { count: content.length })}</div>
-                <div style={{ flexGrow: 1 }} />
-                <IconButton
-                    ref={anchorEl}
-                    onClick={() => setMenuOpen(true)}
-                >
-                    <MenuIcon />
-                </IconButton>
-                <Menu
-                    anchorEl={anchorEl.current}
-                    open={menuOpen}
-                    onClose={() => setMenuOpen(false)}
-                >
-                    <MenuItem onClick={doDeleteTags}>{t('creator.actions.deleteTags')}</MenuItem>
-                    <MenuItem onClick={doDeleteWithTags}>{t('creator.actions.deleteImagesWithTags')}</MenuItem>
-                    <MenuItem onClick={doMergeTags}>{t('creator.actions.mergeTags')}</MenuItem>
-                    <MenuItem
-                        disabled={!onFindMore}
-                        onClick={doFindMore}
-                    >
-                        {t('creator.actions.findMoreTag')}
-                    </MenuItem>
-                </Menu>
             </div>
             <DataGrid
                 apiRef={apiRef}
@@ -156,6 +160,6 @@ export default function ContentSummary({ onFindMore }: Props) {
                     return newRow;
                 }}
             />
-        </section>
+        </Widget>
     );
 }

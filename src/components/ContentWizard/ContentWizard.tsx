@@ -15,12 +15,15 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import { useTranslation } from 'react-i18next';
 import SvgLayer, { ILine } from './SvgLayer';
 import { extractNodesFromElements, generateLines, IConnection } from './lines';
+import MappingTool from './MappingEncoder';
 
 const connections: IConnection[] = [
     { start: 'query', end: 'summary', startPoint: 'right', endPoint: 'left' },
     { start: 'summary', end: 'embed', startPoint: 'right', endPoint: 'left' },
-    { start: 'embed', end: 'cluster', startPoint: 'right', endPoint: 'left' },
+    { start: 'embed', end: 'mapping', startPoint: 'right', endPoint: 'left' },
+    { start: 'mapping', end: 'cluster', startPoint: 'right', endPoint: 'left' },
     { start: 'embed', end: 'similarity', startPoint: 'bottom', endPoint: 'top' },
+    { start: 'mapping', end: 'points', startPoint: 'bottom', endPoint: 'top' },
     { start: 'cluster', end: 'clusterinstance', startPoint: 'right', endPoint: 'left' },
 ];
 
@@ -92,6 +95,7 @@ export default function ContentWizard() {
                         }}
                     />
                     <EmbeddingTool />
+                    <MappingTool />
                     <ContentClustering />
                 </div>
             </div>

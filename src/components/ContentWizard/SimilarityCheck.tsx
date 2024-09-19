@@ -19,6 +19,8 @@ export default function SimilarityChecker() {
 
         const nEmbedding = contentSvc.getContentMetadata(nodes[rnd])?.embedding || [];
 
+        console.log('Embedding', nEmbedding);
+
         const sims: WeightedNode<ContentNodeId>[] = [];
         nodes.forEach((n, ix) => {
             if (ix === rnd) return;

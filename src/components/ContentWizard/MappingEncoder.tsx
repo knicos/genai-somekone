@@ -6,14 +6,21 @@ import { findNearestSlot } from '@genaism/components/Heatmap/grid';
 import { AutoEncoder, ContentNodeId, ContentService } from '@knicos/genai-recom';
 import HierarchicalEmbeddingCluster from '@knicos/genai-recom/utils/embeddings/clustering';
 import { useContentService } from '@genaism/hooks/services';
+import gColors from '../../style/graphColours.json';
+import { Widget } from './Widget';
+import { useTranslation } from 'react-i18next';
+import TrainingGraph, { TrainingDataPoint } from '../TrainingGraph/TrainingGraph';
 
 const CLUSTERS = 5;
-const COLORS = ['blue', 'pink', 'green', 'red', 'purple', 'silver'];
+// const COLORS = ['blue', 'pink', 'green', 'red', 'purple', 'silver', 'orange', 'black', 'yellow'];
 
 function makeFeatures(contentSvc: ContentService, nodes: ContentNodeId[]) {
     const inputEmbeddings = nodes.map((n) => ({ id: n, embedding: contentSvc.getContentMetadata(n)?.embedding || [] }));
 
-    const clusterer = new HierarchicalEmbeddingCluster({ k: CLUSTERS });
+    const clusterer = new HierarchicalEmbeddingCluster({
+        k: CLUSTERS,
+        //minClusterSize: Math.floor(0.5 * (inputEmbeddings.length / CLUSTERS)),
+    });
     clusterer.calculate(inputEmbeddings);
 
     //const clusterFeatures = clusterer.createFeatureVectors();
@@ -71,16 +78,15 @@ export function rectify(images: Point[], dim: number) {
 }
 
 export default function MappingTool() {
+    const { t } = useTranslation();
     const [startTraining, setStartTraining] = useState(false);
-    const [loss, setLoss] = useState(0);
-    const [valLoss, setValLoss] = useState(0);
-    const [epochs, setEpochs] = useState(100);
-    const [epochCount, setEpochCount] = useState(0);
+    const [epochs, setEpochs] = useState(30);
     const [dims] = useState(2);
     const [encoder, setEncoder] = useState<AutoEncoder>();
     const [startGenerate, setStartGenerate] = useState(false);
     const [points, setPoints] = useState<Point[]>([]);
     const contentSvc = useContentService();
+    const [history, setHistory] = useState<TrainingDataPoint[]>([]);
 
     useEffect(() => {
         if (startGenerate) {
@@ -124,89 +130,98 @@ export default function MappingTool() {
     }, [startGenerate, encoder, contentSvc]);
 
     useEffect(() => {
-        const e = new AutoEncoder();
-        e.create(dims, 20, []);
-        setEncoder(e);
-        setEpochCount(0);
-        setLoss(0);
-        setValLoss(0);
-        return () => {
-            e.dispose();
-        };
-    }, [dims]);
-
-    useEffect(() => {
         if (startTraining) {
-            if (encoder) {
-                const { features } = makeFeatures(contentSvc, contentSvc.graph.getNodesByType('content'));
-                encoder
-                    .train(features, epochs, (_, logs) => {
-                        if (logs) {
-                            setLoss(logs.loss);
-                            setValLoss(logs.val_loss);
-                            setEpochCount((o) => o + 1);
-                        }
-                    })
-                    .then(() => {
-                        setStartTraining(false);
-                    });
-            }
+            const { features } = makeFeatures(contentSvc, contentSvc.graph.getNodesByType('content'));
+
+            const e = new AutoEncoder();
+            e.create(dims, features[0].length || 20, [10]);
+            setEncoder((old) => {
+                if (old) {
+                    try {
+                        old.dispose();
+                    } catch (e) {
+                        console.error(e);
+                    }
+                }
+                return e;
+            });
+            setHistory([]);
+
+            e.train(features, epochs, (e, logs) => {
+                if (logs) {
+                    setHistory((old) => [...old, { epoch: e + 1, loss: logs.loss, validationLoss: logs.val_loss }]);
+                }
+            }).then(() => {
+                setStartTraining(false);
+                setStartGenerate(true);
+            });
         }
-    }, [startTraining, encoder, epochs, contentSvc]);
+    }, [startTraining, epochs, contentSvc, dims]);
 
     return (
-        <div className={style.toolContainer}>
-            <div className={style.group}>
-                <label id="autoencoder-epoch-slider">Epochs</label>
-                <Slider
-                    aria-labelledby="autoencoder-epoch-slider"
-                    value={epochs}
-                    onChange={(_, value) => {
-                        setEpochs(value as number);
-                    }}
-                    min={0}
-                    max={10000}
-                    step={20}
-                    valueLabelDisplay="auto"
-                />
-            </div>
-            <Button
-                variant="outlined"
-                disabled={startTraining}
-                onClick={() => setStartTraining(true)}
+        <div
+            className={style.widgetColumn}
+            data-widget="container"
+        >
+            <Widget
+                title={t('creator.titles.mapping')}
+                dataWidget="mapping"
+                style={{ maxWidth: '300px' }}
             >
-                Train Encoder
-            </Button>
-            <div className={style.group}>
-                <div>Epochs: {epochCount}</div>
-                <div>Loss: {loss.toFixed(3)}</div>
-                <div>Validation Loss: {valLoss.toFixed(3)}</div>
-            </div>
-            <Button
-                variant="outlined"
-                disabled={startGenerate}
-                onClick={() => setStartGenerate(true)}
+                <div className={style.group}>
+                    <label id="autoencoder-epoch-slider">{t('creator.labels.epochs')}</label>
+                    <Slider
+                        aria-labelledby="autoencoder-epoch-slider"
+                        value={epochs}
+                        onChange={(_, value) => {
+                            setEpochs(value as number);
+                        }}
+                        min={4}
+                        max={100}
+                        step={2}
+                        valueLabelDisplay="auto"
+                    />
+                </div>
+                <div className={style.group}>
+                    <Button
+                        variant="contained"
+                        disabled={startTraining}
+                        onClick={() => setStartTraining(true)}
+                    >
+                        {t('creator.actions.train')}
+                    </Button>
+                </div>
+                <div className={style.group}>
+                    <TrainingGraph
+                        data={history}
+                        maxEpochs={epochs}
+                    />
+                </div>
+            </Widget>
+            <Widget
+                title={t('creator.titles.points')}
+                dataWidget="points"
+                style={{ maxWidth: '360px' }}
             >
-                Generate Points
-            </Button>
-            <svg
-                width={300}
-                height={300}
-                viewBox="0 0 300 300"
-            >
-                {points.map(
-                    (p, ix) =>
-                        p.x >= 0 && (
-                            <circle
-                                key={ix}
-                                r="5"
-                                fill={COLORS[p.cluster] || 'black'}
-                                cx={p.x * 300}
-                                cy={p.y * 300}
-                            />
-                        )
-                )}
-            </svg>
+                <svg
+                    width={300}
+                    height={300}
+                    viewBox="0 0 300 300"
+                >
+                    {points.map(
+                        (p, ix) =>
+                            p.x >= 0 && (
+                                <circle
+                                    key={ix}
+                                    r="5"
+                                    fill={gColors[p.cluster % gColors.length] || 'black'}
+                                    cx={p.x * 300}
+                                    cy={p.y * 300}
+                                />
+                            )
+                    )}
+                </svg>
+            </Widget>
         </div>
     );
 }

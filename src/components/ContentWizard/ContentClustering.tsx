@@ -6,6 +6,7 @@ import { clusterEmbeddings, ContentNodeId } from '@knicos/genai-recom';
 import { useContentService } from '@genaism/hooks/services';
 import ContentCluster from './ContentCluster';
 import { useTranslation } from 'react-i18next';
+import { Widget } from './Widget';
 
 export default function ContentClustering() {
     const { t } = useTranslation();
@@ -33,10 +34,10 @@ export default function ContentClustering() {
 
     return (
         <>
-            <section
-                className={style.wizard}
+            <Widget
+                title={t('creator.titles.cluster')}
+                dataWidget="cluster"
                 style={{ maxWidth: '300px' }}
-                data-widget="cluster"
             >
                 <div className={style.group}>
                     <label id="autoencoder-epoch-slider">{t('creator.labels.maxMemberDist')}</label>
@@ -86,7 +87,7 @@ export default function ContentClustering() {
                 >
                     {t('creator.actions.cluster')}
                 </Button>
-            </section>
+            </Widget>
             <div
                 className={style.widgetColumn}
                 data-widget="container"

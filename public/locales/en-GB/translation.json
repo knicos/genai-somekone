@@ -523,7 +523,14 @@
     "creator": {
         "titles": {
             "creator": "Creator",
-            "captureImages": "Capture Images"
+            "captureImages": "Capture Images",
+            "query": "Find Images",
+            "summary": "Tag Summary",
+            "embedding": "Create Embeddings",
+            "similarity": "Check Similarity",
+            "mapping": "Map to Points",
+            "points": "Image Map",
+            "cluster": "Cluster Checker"
         },
         "tooltips": {
             "resetState": "Reset the creator",
@@ -548,8 +555,8 @@
         },
         "actions": {
             "addImages": "Add Images",
-            "generateEmbed": "Generate Embeddings",
-            "saveEncoder": "Save Encoder",
+            "generateEmbed": "Generate",
+            "saveEncoder": "Save",
             "cluster": "Create Clusters",
             "go": "Find",
             "add": "Add",
@@ -557,7 +564,8 @@
             "deleteTags": "Delete Tags",
             "deleteImagesWithTags": "Delete Images with Tags",
             "mergeTags": "Merge Tags",
-            "findMoreTag": "Find More with Tags"
+            "findMoreTag": "Find More with Tags",
+            "train": "Train"
         },
         "messages": {
             "imageSearch": "Choose a query before automatically adding the images",

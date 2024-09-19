@@ -60,6 +60,15 @@ export default function ToolsMenu() {
                 >
                     <ListItemText>{t('dashboard.labels.contentTools')}</ListItemText>
                 </MenuItem>
+                <MenuItem
+                    onClick={() => {
+                        profiler.graph.getNodesByType('user').forEach((u) => {
+                            profiler.clearProfile(u);
+                        });
+                    }}
+                >
+                    <ListItemText>{t('dashboard.labels.clearProfiles')}</ListItemText>
+                </MenuItem>
             </Menu>
         </>
     );

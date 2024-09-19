@@ -7,13 +7,12 @@ import { saveAs } from 'file-saver';
 import { useChangeNodeType } from '@genaism/hooks/graph';
 import SimilarityChecker from './SimilarityCheck';
 import { useTranslation } from 'react-i18next';
+import { Widget } from './Widget';
+import TrainingGraph, { TrainingDataPoint } from '../TrainingGraph/TrainingGraph';
 
 export default function EmbeddingTool() {
     const { t } = useTranslation();
-    const [loss, setLoss] = useState(0);
-    const [valLoss, setValLoss] = useState(0);
     const [epochs, setEpochs] = useState(100);
-    const [epochCount, setEpochCount] = useState(0);
     const [dims, setDims] = useState(20);
     const [startGenerate, setStartGenerate] = useState(false);
     const contentSvc = useContentService();
@@ -22,6 +21,7 @@ export default function EmbeddingTool() {
     const [useLabels, setUseLabels] = useState(true);
     const [usePixels, setUsePixels] = useState(true);
     const [useEngagement, setUseEngagement] = useState(false);
+    const [history, setHistory] = useState<TrainingDataPoint[]>([]);
 
     const valid = useMemo(() => {
         if (!startGenerate) {
@@ -35,7 +35,7 @@ export default function EmbeddingTool() {
 
     useEffect(() => {
         if (startGenerate) {
-            setEpochCount(0);
+            setHistory([]);
             contentSvc
                 .createEncoderModel({
                     noEngagementFeatures: !useEngagement,
@@ -45,10 +45,8 @@ export default function EmbeddingTool() {
                     epochs,
                     dims,
                     noSave: false,
-                    onEpoch: (_, l, v) => {
-                        setLoss(l);
-                        setValLoss(v);
-                        setEpochCount((old) => old + 1);
+                    onEpoch: (e, l, v) => {
+                        setHistory((old) => [...old, { epoch: e + 1, loss: l, validationLoss: v }]);
                     },
                 })
                 .then((b) => {
@@ -63,10 +61,10 @@ export default function EmbeddingTool() {
             className={style.widgetColumn}
             data-widget="container"
         >
-            <section
-                className={style.wizard}
+            <Widget
+                title={t('creator.titles.embedding')}
+                dataWidget="embed"
                 style={{ maxWidth: '300px' }}
-                data-widget="embed"
             >
                 {!valid && <AlertPara severity="info">{t('creator.messages.needsRegen')}</AlertPara>}
                 <div className={style.group}>
@@ -97,6 +95,8 @@ export default function EmbeddingTool() {
                         }
                         label={t('creator.labels.useEngagement')}
                     />
+                </div>
+                <div className={style.group}>
                     <label id="autoencoder-epoch-slider">{t('creator.labels.epochs')}</label>
                     <Slider
                         disabled={startGenerate}
@@ -105,9 +105,9 @@ export default function EmbeddingTool() {
                         onChange={(_, value) => {
                             setEpochs(value as number);
                         }}
-                        min={0}
-                        max={10000}
-                        step={20}
+                        min={20}
+                        max={600}
+                        step={10}
                         valueLabelDisplay="auto"
                     />
                     <label id="autoencoder-dim-slider">{t('creator.labels.dimensions')}</label>
@@ -118,49 +118,49 @@ export default function EmbeddingTool() {
                         onChange={(_, value) => {
                             setDims(value as number);
                         }}
-                        min={2}
-                        max={100}
-                        step={1}
+                        min={4}
+                        max={32}
+                        step={2}
                         valueLabelDisplay="auto"
                     />
                 </div>
-                <div className={style.group}>
-                    <div>
-                        {t('creator.labels.epochs')}: {epochCount}
-                    </div>
-                    <div>
-                        {t('creator.labels.loss')}: {loss.toFixed(3)}
-                    </div>
-                    <div>
-                        {t('creator.labels.validationLoss')}: {valLoss.toFixed(3)}
-                    </div>
+                <div
+                    className={style.group}
+                    style={{ gap: '0.5rem' }}
+                >
+                    <Button
+                        variant="contained"
+                        disabled={startGenerate}
+                        onClick={() => setStartGenerate(true)}
+                    >
+                        {t('creator.actions.generateEmbed')}
+                    </Button>
+                    <Button
+                        disabled={!blob}
+                        variant="outlined"
+                        onClick={() => {
+                            if (blob) {
+                                saveAs(blob, 'encoder.zip');
+                            }
+                        }}
+                    >
+                        {t('creator.actions.saveEncoder')}
+                    </Button>
                 </div>
-                <Button
-                    variant="outlined"
-                    disabled={startGenerate}
-                    onClick={() => setStartGenerate(true)}
-                >
-                    {t('creator.actions.generateEmbed')}
-                </Button>
-                <Button
-                    disabled={!blob}
-                    variant="outlined"
-                    onClick={() => {
-                        if (blob) {
-                            saveAs(blob, 'encoder.zip');
-                        }
-                    }}
-                >
-                    {t('creator.actions.saveEncoder')}
-                </Button>
-            </section>
-            <section
-                className={style.wizard}
+                <div className={style.group}>
+                    <TrainingGraph
+                        data={history}
+                        maxEpochs={epochs}
+                    />
+                </div>
+            </Widget>
+            <Widget
+                title={t('creator.titles.similarity')}
+                dataWidget="similarity"
                 style={{ maxWidth: '300px' }}
-                data-widget="similarity"
             >
                 <SimilarityChecker />
-            </section>
+            </Widget>
         </div>
     );
 }
