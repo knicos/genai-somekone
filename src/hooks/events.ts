@@ -3,6 +3,7 @@ import { createContext, useContext, useEffect, useMemo } from 'react';
 
 type RefreshEvents = {
     refresh_graph: [];
+    refresh_embeddings: [];
 };
 
 type SaveEvents = {

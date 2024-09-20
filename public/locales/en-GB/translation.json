@@ -530,7 +530,9 @@
             "similarity": "Check Similarity",
             "mapping": "Map to Points",
             "points": "Image Map",
-            "cluster": "Cluster Checker"
+            "cluster": "Cluster Checker",
+            "embeddingTrain": "Embedding Training",
+            "mapTraining": "Map Training"
         },
         "tooltips": {
             "resetState": "Reset the creator",
@@ -552,7 +554,9 @@
             "useLabels": "Use the tags",
             "usePixels": "Use pixel data",
             "useEngagement": "Use engagement data",
-            "learningRate": "Learning Rate"
+            "learningRate": "Learning Rate",
+            "imageSimilarity": "Image",
+            "similarityDistrib": "Global"
         },
         "actions": {
             "addImages": "Add Images",

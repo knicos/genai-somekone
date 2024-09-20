@@ -11,7 +11,7 @@ import { Widget } from './Widget';
 import { useTranslation } from 'react-i18next';
 import TrainingGraph, { TrainingDataPoint } from '../TrainingGraph/TrainingGraph';
 
-const CLUSTERS = 5;
+const CLUSTERS = 6;
 // const COLORS = ['blue', 'pink', 'green', 'red', 'purple', 'silver', 'orange', 'black', 'yellow'];
 
 function makeFeatures(contentSvc: ContentService, nodes: ContentNodeId[]) {
@@ -19,18 +19,10 @@ function makeFeatures(contentSvc: ContentService, nodes: ContentNodeId[]) {
 
     const clusterer = new HierarchicalEmbeddingCluster({
         k: CLUSTERS,
-        maxClusters: CLUSTERS,
         maxDistance: 2,
         //minClusterSize: Math.floor(0.5 * (inputEmbeddings.length / CLUSTERS)),
     });
     clusterer.calculate(inputEmbeddings);
-
-    //const clusterFeatures = clusterer.createFeatureVectors();
-    /*const features = nodes.map((_, ix) => {
-        const f = clusterFeatures[ix];
-        return normalise([...inputEmbeddings.map((e) => e.embedding)[ix], ...f]);
-    });*/
-    const features = inputEmbeddings.map((e) => e.embedding);
 
     const clusters = clusterer.getClusters();
     const mappedClusters = new Map<ContentNodeId, number>();
@@ -38,6 +30,12 @@ function makeFeatures(contentSvc: ContentService, nodes: ContentNodeId[]) {
         c.forEach((m) => {
             mappedClusters.set(nodes[m], i);
         });
+    });
+
+    const features = nodes.map((n, ix) => {
+        const c = mappedClusters.get(n) || 0;
+        const f = new Array(clusters.length).fill(0).map((_, i) => (c === i ? 1 : 0));
+        return [...inputEmbeddings.map((e) => e.embedding)[ix], ...f];
     });
 
     return { features, clusters: mappedClusters };
@@ -92,6 +90,15 @@ export default function MappingTool() {
     const [history, setHistory] = useState<TrainingDataPoint[]>([]);
 
     useEffect(() => {
+        const nodes = contentSvc.graph.getNodesByType('content');
+        const points: Point[] = nodes.map((n) => {
+            const p = contentSvc.getContentMetadata(n)?.point;
+            return { x: p?.[0] || 0, y: p?.[1] || 0, d: 0, id: n, cluster: 0 };
+        });
+        setPoints(points);
+    }, [contentSvc]);
+
+    useEffect(() => {
         if (startGenerate) {
             if (encoder) {
                 const nodes = contentSvc.graph.getNodesByType('content');
@@ -137,12 +144,13 @@ export default function MappingTool() {
             const { features } = makeFeatures(contentSvc, contentSvc.graph.getNodesByType('content'));
 
             const e = new AutoEncoder();
-            e.create(dims, features[0].length || 20, {
+            const inSize = features[0].length || 20;
+            e.create(dims, inSize, {
                 noRegularization: true,
-                outputActivation: 'sigmoid',
+                outputActivation: 'linear',
                 learningRate,
-                loss: 'meanSquaredError',
-                layers: [],
+                loss: 'cosineProximity',
+                layers: [16],
             });
             setEncoder((old) => {
                 if (old) {
@@ -173,9 +181,33 @@ export default function MappingTool() {
             data-widget="container"
         >
             <Widget
+                title={t('creator.titles.points')}
+                dataWidget="points"
+                style={{ maxWidth: '360px' }}
+            >
+                <svg
+                    width={300}
+                    height={300}
+                    viewBox="0 0 300 300"
+                >
+                    {points.map(
+                        (p, ix) =>
+                            p.x >= 0 && (
+                                <circle
+                                    key={ix}
+                                    r="5"
+                                    fill={gColors[p.cluster % gColors.length] || 'black'}
+                                    cx={p.x * 300}
+                                    cy={p.y * 300}
+                                />
+                            )
+                    )}
+                </svg>
+            </Widget>
+            <Widget
                 title={t('creator.titles.mapping')}
                 dataWidget="mapping"
-                style={{ maxWidth: '300px' }}
+                style={{ width: '300px' }}
             >
                 <div className={style.group}>
                     <label id="autoencoder-epoch-slider">{t('creator.labels.epochs')}</label>
@@ -186,9 +218,9 @@ export default function MappingTool() {
                         onChange={(_, value) => {
                             setEpochs(value as number);
                         }}
-                        min={4}
-                        max={100}
-                        step={2}
+                        min={10}
+                        max={200}
+                        step={10}
                         valueLabelDisplay="auto"
                     />
                     <label id="autoencoder-rate-slider">{t('creator.labels.learningRate')}</label>
@@ -214,36 +246,18 @@ export default function MappingTool() {
                         {t('creator.actions.train')}
                     </Button>
                 </div>
+            </Widget>
+            <Widget
+                title={t('creator.titles.mapTraining')}
+                dataWidget="points"
+                style={{ width: '300px' }}
+            >
                 <div className={style.group}>
                     <TrainingGraph
                         data={history}
                         maxEpochs={epochs}
                     />
                 </div>
-            </Widget>
-            <Widget
-                title={t('creator.titles.points')}
-                dataWidget="points"
-                style={{ maxWidth: '360px' }}
-            >
-                <svg
-                    width={300}
-                    height={300}
-                    viewBox="0 0 300 300"
-                >
-                    {points.map(
-                        (p, ix) =>
-                            p.x >= 0 && (
-                                <circle
-                                    key={ix}
-                                    r="5"
-                                    fill={gColors[p.cluster % gColors.length] || 'black'}
-                                    cx={p.x * 300}
-                                    cy={p.y * 300}
-                                />
-                            )
-                    )}
-                </svg>
             </Widget>
         </div>
     );

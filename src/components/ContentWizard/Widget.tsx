@@ -18,6 +18,7 @@ interface Props extends React.HTMLProps<HTMLDivElement> {
     'aria-label'?: string;
     active?: boolean;
     id?: string;
+    noPadding?: boolean;
 }
 
 const TextField = styled(MTextField)({
@@ -38,6 +39,7 @@ export function Widget({
     hidden,
     dataWidget,
     id,
+    noPadding,
     active,
     ...props
 }: Props) {
@@ -140,7 +142,12 @@ export function Widget({
                     {menu && <div className={style.widget_menu}>{menu}</div>}
                 </header>
             )}
-            <div className={style.widget_content}>{children}</div>
+            <div
+                className={style.widget_content}
+                style={{ padding: noPadding ? 0 : undefined }}
+            >
+                {children}
+            </div>
         </section>
     );
 }

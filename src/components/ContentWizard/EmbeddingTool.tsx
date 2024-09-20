@@ -1,7 +1,7 @@
 import { AlertPara, Button } from '@knicos/genai-base';
 import { useEffect, useMemo, useState } from 'react';
 import style from './style.module.css';
-import { Checkbox, FormControlLabel, Slider } from '@mui/material';
+import { Checkbox, FormControlLabel, IconButton, Slider, Tab, Tabs } from '@mui/material';
 import { useContentService } from '@genaism/hooks/services';
 import { saveAs } from 'file-saver';
 import { useChangeNodeType } from '@genaism/hooks/graph';
@@ -9,6 +9,9 @@ import SimilarityChecker from './SimilarityCheck';
 import { useTranslation } from 'react-i18next';
 import { Widget } from './Widget';
 import TrainingGraph, { TrainingDataPoint } from '../TrainingGraph/TrainingGraph';
+import SimilarityDistribution from './SimilarityDistribution';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import { useEventEmit } from '@genaism/hooks/events';
 
 export default function EmbeddingTool() {
     const { t } = useTranslation();
@@ -23,6 +26,9 @@ export default function EmbeddingTool() {
     const [useEngagement, setUseEngagement] = useState(false);
     const [history, setHistory] = useState<TrainingDataPoint[]>([]);
     const [learningRate, setLearningRate] = useState(0.001);
+    const [tabNumber, setTabNumber] = useState(0);
+
+    const emitRefresh = useEventEmit('refresh_embeddings');
 
     const valid = useMemo(() => {
         if (!startGenerate) {
@@ -43,7 +49,7 @@ export default function EmbeddingTool() {
                     noContentFeatures: !usePixels,
                     noTagFeatures: !useLabels,
                     layers: [128],
-                    loss: 'meanSquaredError',
+                    loss: 'cosineProximity',
                     outputActivation: 'linear',
                     learningRate,
                     epochs,
@@ -66,9 +72,32 @@ export default function EmbeddingTool() {
             data-widget="container"
         >
             <Widget
+                title={t('creator.titles.similarity')}
+                dataWidget="similarity"
+                style={{ width: '350px', padding: '0' }}
+                noPadding
+                menu={
+                    <div>
+                        <IconButton onClick={emitRefresh}>
+                            <RefreshIcon />
+                        </IconButton>
+                    </div>
+                }
+            >
+                <Tabs
+                    value={tabNumber}
+                    onChange={(_, value) => setTabNumber(value)}
+                >
+                    <Tab label={t('creator.labels.imageSimilarity')} />
+                    <Tab label={t('creator.labels.similarityDistrib')} />
+                </Tabs>
+                {tabNumber === 0 && <SimilarityChecker />}
+                {tabNumber === 1 && <SimilarityDistribution />}
+            </Widget>
+            <Widget
                 title={t('creator.titles.embedding')}
                 dataWidget="embed"
-                style={{ maxWidth: '300px' }}
+                style={{ width: '300px' }}
             >
                 {!valid && <AlertPara severity="info">{t('creator.messages.needsRegen')}</AlertPara>}
                 <div className={style.group}>
@@ -164,19 +193,19 @@ export default function EmbeddingTool() {
                         {t('creator.actions.saveEncoder')}
                     </Button>
                 </div>
+            </Widget>
+
+            <Widget
+                title={t('creator.titles.embeddingTrain')}
+                dataWidget="similarity"
+                style={{ width: '300px', padding: '0' }}
+            >
                 <div className={style.group}>
                     <TrainingGraph
                         data={history}
                         maxEpochs={epochs}
                     />
                 </div>
-            </Widget>
-            <Widget
-                title={t('creator.titles.similarity')}
-                dataWidget="similarity"
-                style={{ maxWidth: '300px' }}
-            >
-                <SimilarityChecker />
             </Widget>
         </div>
     );

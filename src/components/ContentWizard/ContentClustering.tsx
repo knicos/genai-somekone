@@ -12,9 +12,9 @@ export default function ContentClustering() {
     const { t } = useTranslation();
     const [startCluster, setStartCluster] = useState(false);
     const [clusters, setClusters] = useState<ContentNodeId[][]>([]);
-    const [maxDistance, setMaxDistance] = useState(0.3);
+    const [maxDistance, setMaxDistance] = useState(2);
     const [minClusters, setMinClusters] = useState(2);
-    const [minSize, setMinSize] = useState(5);
+    const [minSize, setMinSize] = useState(200);
     const contentSvc = useContentService();
 
     useEffect(() => {
@@ -48,8 +48,8 @@ export default function ContentClustering() {
                             setMaxDistance(value as number);
                         }}
                         min={0}
-                        max={1}
-                        step={0.01}
+                        max={2}
+                        step={0.05}
                         valueLabelDisplay="auto"
                     />
                 </div>
