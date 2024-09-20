@@ -20,11 +20,11 @@ import MappingTool from './MappingEncoder';
 const connections: IConnection[] = [
     { start: 'query', end: 'summary', startPoint: 'right', endPoint: 'left' },
     { start: 'summary', end: 'embed', startPoint: 'right', endPoint: 'left' },
-    { start: 'embed', end: 'mapping', startPoint: 'right', endPoint: 'left' },
-    { start: 'mapping', end: 'cluster', startPoint: 'right', endPoint: 'left' },
+    { start: 'embed', end: 'cluster', startPoint: 'right', endPoint: 'left' },
+    { start: 'cluster', end: 'mapping', startPoint: 'right', endPoint: 'left' },
     { start: 'embed', end: 'similarity', startPoint: 'bottom', endPoint: 'top' },
     { start: 'mapping', end: 'points', startPoint: 'bottom', endPoint: 'top' },
-    { start: 'cluster', end: 'clusterinstance', startPoint: 'right', endPoint: 'left' },
+    { start: 'cluster', end: 'clusterinstance', startPoint: 'bottom', endPoint: 'top' },
 ];
 
 export default function ContentWizard() {
@@ -95,8 +95,8 @@ export default function ContentWizard() {
                         }}
                     />
                     <EmbeddingTool />
-                    <MappingTool />
                     <ContentClustering />
+                    <MappingTool />
                 </div>
             </div>
             <IconMenu

@@ -26,7 +26,16 @@ export default function ContentClustering() {
             });
 
             const newClusters = clusterEmbeddings(embeddings, { maxDistance, k: minClusters, minClusterSize: minSize });
-            console.log(newClusters);
+            // Update content cluster metadata
+            newClusters.forEach((cluster, i) => {
+                cluster.forEach((n) => {
+                    const node = nodes[n];
+                    const meta = contentSvc.getContentMetadata(node);
+                    if (meta) {
+                        meta.cluster = i;
+                    }
+                });
+            });
             setClusters(newClusters.map((c) => c.map((n) => nodes[n])));
             setStartCluster(false);
         }
@@ -34,77 +43,64 @@ export default function ContentClustering() {
 
     return (
         <>
-            <Widget
-                title={t('creator.titles.cluster')}
-                dataWidget="cluster"
-                style={{ maxWidth: '300px' }}
-            >
-                <div className={style.group}>
-                    <label id="autoencoder-epoch-slider">{t('creator.labels.maxMemberDist')}</label>
-                    <Slider
-                        aria-labelledby="autoencoder-epoch-slider"
-                        value={maxDistance}
-                        onChange={(_, value) => {
-                            setMaxDistance(value as number);
-                        }}
-                        min={0}
-                        max={2}
-                        step={0.05}
-                        valueLabelDisplay="auto"
-                    />
-                </div>
-                <div className={style.group}>
-                    <label id="autoencoder-epoch-slider">{t('creator.labels.minClusters')}</label>
-                    <Slider
-                        aria-labelledby="autoencoder-epoch-slider"
-                        value={minClusters}
-                        onChange={(_, value) => {
-                            setMinClusters(value as number);
-                        }}
-                        min={2}
-                        max={100}
-                        step={1}
-                        valueLabelDisplay="auto"
-                    />
-                </div>
-                <div className={style.group}>
-                    <label id="autoencoder-epoch-slider">{t('creator.labels.minClusterSize')}</label>
-                    <Slider
-                        aria-labelledby="autoencoder-epoch-slider"
-                        value={minSize}
-                        onChange={(_, value) => {
-                            setMinSize(value as number);
-                        }}
-                        min={1}
-                        max={200}
-                        step={1}
-                        valueLabelDisplay="auto"
-                    />
-                </div>
-                <Button
-                    variant="outlined"
-                    onClick={() => setStartCluster(true)}
-                >
-                    {t('creator.actions.cluster')}
-                </Button>
-            </Widget>
             <div
                 className={style.widgetColumn}
                 data-widget="container"
             >
-                {clusters.map((cluster, ix) => (
-                    <section
-                        key={ix}
-                        className={style.wizard}
-                        style={{ maxWidth: '300px' }}
-                        data-widget="clusterinstance"
-                    >
-                        <ContentCluster
-                            title={`Cluster ${ix}`}
-                            cluster={cluster}
+                <Widget
+                    title={t('creator.titles.cluster')}
+                    dataWidget="cluster"
+                    style={{ maxWidth: '300px' }}
+                >
+                    <div className={style.group}>
+                        <label id="autoencoder-memberdist-slider">{t('creator.labels.maxMemberDist')}</label>
+                        <Slider
+                            aria-labelledby="autoencoder-memberdist-slider"
+                            value={maxDistance}
+                            onChange={(_, value) => {
+                                setMaxDistance(value as number);
+                            }}
+                            min={0}
+                            max={2}
+                            step={0.05}
+                            valueLabelDisplay="auto"
                         />
-                    </section>
-                ))}
+                        <label id="autoencoder-mincluster-slider">{t('creator.labels.minClusters')}</label>
+                        <Slider
+                            aria-labelledby="autoencoder-mincluster-slider"
+                            value={minClusters}
+                            onChange={(_, value) => {
+                                setMinClusters(value as number);
+                            }}
+                            min={2}
+                            max={100}
+                            step={1}
+                            valueLabelDisplay="auto"
+                        />
+                        <label id="autoencoder-minsize-slider">{t('creator.labels.minClusterSize')}</label>
+                        <Slider
+                            aria-labelledby="autoencoder-minsize-slider"
+                            value={minSize}
+                            onChange={(_, value) => {
+                                setMinSize(value as number);
+                            }}
+                            min={1}
+                            max={200}
+                            step={1}
+                            valueLabelDisplay="auto"
+                        />
+                    </div>
+                    <div className={style.group}>
+                        <Button
+                            variant="contained"
+                            onClick={() => setStartCluster(true)}
+                        >
+                            {t('creator.actions.cluster')}
+                        </Button>
+                    </div>
+                </Widget>
+
+                <ContentCluster clusters={clusters} />
             </div>
         </>
     );

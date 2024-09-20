@@ -1,4 +1,4 @@
-import { AlertPara, Button } from '@knicos/genai-base';
+import { AlertPara, BusyButton, Button } from '@knicos/genai-base';
 import { useEffect, useMemo, useState } from 'react';
 import style from './style.module.css';
 import { Checkbox, FormControlLabel, IconButton, Slider, Tab, Tabs } from '@mui/material';
@@ -102,6 +102,7 @@ export default function EmbeddingTool() {
                 {!valid && <AlertPara severity="info">{t('creator.messages.needsRegen')}</AlertPara>}
                 <div className={style.group}>
                     <FormControlLabel
+                        disabled={startGenerate}
                         control={
                             <Checkbox
                                 checked={useLabels}
@@ -111,6 +112,7 @@ export default function EmbeddingTool() {
                         label={t('creator.labels.useLabels')}
                     />
                     <FormControlLabel
+                        disabled={startGenerate}
                         control={
                             <Checkbox
                                 checked={usePixels}
@@ -120,6 +122,7 @@ export default function EmbeddingTool() {
                         label={t('creator.labels.usePixels')}
                     />
                     <FormControlLabel
+                        disabled={startGenerate}
                         control={
                             <Checkbox
                                 checked={useEngagement}
@@ -174,13 +177,13 @@ export default function EmbeddingTool() {
                     className={style.group}
                     style={{ gap: '0.5rem' }}
                 >
-                    <Button
+                    <BusyButton
                         variant="contained"
-                        disabled={startGenerate}
+                        busy={startGenerate}
                         onClick={() => setStartGenerate(true)}
                     >
                         {t('creator.actions.generateEmbed')}
-                    </Button>
+                    </BusyButton>
                     <Button
                         disabled={!blob}
                         variant="outlined"

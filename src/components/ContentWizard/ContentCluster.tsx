@@ -1,47 +1,69 @@
 import { ContentNodeId } from '@knicos/genai-recom';
-import IconMenuInline from '../IconMenu/IconMenuInline';
 import style from './style.module.css';
 import ImageGrid from '../ImageGrid/ImageGrid';
-import IconMenuItem from '../IconMenu/Item';
-import { IconButton } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
+import { IconButton, Menu, MenuItem, Pagination } from '@mui/material';
 import { useContentService } from '@genaism/hooks/services';
-import { useCallback } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Widget } from './Widget';
+import MenuIcon from '@mui/icons-material/Menu';
 
 interface Props {
-    title: string;
-    cluster: ContentNodeId[];
+    clusters: ContentNodeId[][];
 }
 
-export default function ContentCluster({ title, cluster }: Props) {
+export default function ContentCluster({ clusters }: Props) {
     const { t } = useTranslation();
     const contentSvc = useContentService();
+    const [page, setPage] = useState(0);
+    const anchorEl = useRef<HTMLButtonElement>(null);
+    const [menuOpen, setMenuOpen] = useState(false);
 
     const doDelete = useCallback(() => {
-        cluster.forEach((img) => {
+        clusters[page].forEach((img) => {
             contentSvc.removeContent(img);
         });
-    }, [contentSvc, cluster]);
+    }, [contentSvc, clusters, page]);
 
     return (
-        <div className={style.clusterGroup}>
-            <IconMenuInline label={<div className={style.menuLogoSmall}>{title}</div>}>
-                <IconMenuItem tooltip={t('creator.tooltips.deleteTheseImages')}>
+        <Widget
+            title={t('creator.titles.clusterViewer')}
+            dataWidget="clusterinstance"
+            style={{ width: '400px' }}
+            noPadding
+            menu={
+                <div>
                     <IconButton
-                        color="inherit"
-                        onClick={doDelete}
+                        ref={anchorEl}
+                        onClick={() => setMenuOpen(true)}
                     >
-                        <DeleteIcon />
+                        <MenuIcon />
                     </IconButton>
-                </IconMenuItem>
-            </IconMenuInline>
-            <div style={{ maxHeight: '300px', overflow: 'auto' }}>
-                <ImageGrid
-                    images={cluster}
-                    columns={5}
+                    <Menu
+                        anchorEl={anchorEl.current}
+                        open={menuOpen}
+                        onClose={() => setMenuOpen(false)}
+                    >
+                        <MenuItem onClick={doDelete}>{t('creator.actions.deleteCluster')}</MenuItem>
+                    </Menu>
+                </div>
+            }
+        >
+            <div className={style.clusterGroup}>
+                <Pagination
+                    count={clusters.length}
+                    page={page + 1}
+                    onChange={(_, value) => setPage(value - 1)}
                 />
+                <div style={{ height: '300px', overflow: 'auto' }}>
+                    {page < clusters.length && (
+                        <ImageGrid
+                            images={clusters[page]}
+                            columns={5}
+                        />
+                    )}
+                </div>
             </div>
-        </div>
+        </Widget>
     );
 }

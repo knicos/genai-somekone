@@ -530,9 +530,10 @@
             "similarity": "Check Similarity",
             "mapping": "Map to Points",
             "points": "Image Map",
-            "cluster": "Cluster Checker",
+            "cluster": "Clustering",
             "embeddingTrain": "Embedding Training",
-            "mapTraining": "Map Training"
+            "mapTraining": "Map Training",
+            "clusterViewer": "Cluster Checker"
         },
         "tooltips": {
             "resetState": "Reset the creator",
@@ -544,8 +545,8 @@
             "loss": "Loss",
             "validationLoss": "Validation Loss",
             "maxMemberDist": "Maximum member distance",
-            "minClusters": "Minimum number of clusters",
-            "minClusterSize": "Minimum cluster size",
+            "minClusters": "Target number of clusters",
+            "minClusterSize": "Target cluster size",
             "count": "Count: {{count}}",
             "latest": "Latest",
             "popular": "Popular",
@@ -570,7 +571,8 @@
             "deleteImagesWithTags": "Delete Images with Tags",
             "mergeTags": "Merge Tags",
             "findMoreTag": "Find More with Tags",
-            "train": "Train"
+            "train": "Train",
+            "deleteCluster": "Delete images in cluster"
         },
         "messages": {
             "imageSearch": "Choose a query before automatically adding the images",

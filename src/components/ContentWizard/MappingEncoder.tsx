@@ -1,44 +1,48 @@
-import { Button } from '@knicos/genai-base';
+import { BusyButton } from '@knicos/genai-base';
 import { useEffect, useState } from 'react';
 import style from './style.module.css';
 import { Slider } from '@mui/material';
 import { findNearestSlot } from '@genaism/components/Heatmap/grid';
-import { AutoEncoder, ContentNodeId, ContentService } from '@knicos/genai-recom';
-import HierarchicalEmbeddingCluster from '@knicos/genai-recom/utils/embeddings/clustering';
+import { AutoEncoder, ContentNodeId, ContentService, Embedding } from '@knicos/genai-recom';
 import { useContentService } from '@genaism/hooks/services';
-import gColors from '../../style/graphColours.json';
 import { Widget } from './Widget';
 import { useTranslation } from 'react-i18next';
 import TrainingGraph, { TrainingDataPoint } from '../TrainingGraph/TrainingGraph';
+import { hslToHex } from '@genaism/util/colours';
 
-const CLUSTERS = 6;
+// const CLUSTERS = 6;
 // const COLORS = ['blue', 'pink', 'green', 'red', 'purple', 'silver', 'orange', 'black', 'yellow'];
 
 function makeFeatures(contentSvc: ContentService, nodes: ContentNodeId[]) {
-    const inputEmbeddings = nodes.map((n) => ({ id: n, embedding: contentSvc.getContentMetadata(n)?.embedding || [] }));
+    let embeddingSize = 0;
+    let clusterCount = 0;
 
-    const clusterer = new HierarchicalEmbeddingCluster({
-        k: CLUSTERS,
-        maxDistance: 2,
-        //minClusterSize: Math.floor(0.5 * (inputEmbeddings.length / CLUSTERS)),
+    nodes.forEach((n) => {
+        const meta = contentSvc.getContentMetadata(n);
+        if (meta) {
+            if (meta.embedding) {
+                embeddingSize = Math.max(embeddingSize, meta.embedding.length);
+            }
+            if (meta.cluster !== undefined) {
+                clusterCount = Math.max(clusterCount, meta.cluster + 1);
+            }
+        }
     });
-    clusterer.calculate(inputEmbeddings);
 
-    const clusters = clusterer.getClusters();
     const mappedClusters = new Map<ContentNodeId, number>();
-    clusters.forEach((c, i) => {
-        c.forEach((m) => {
-            mappedClusters.set(nodes[m], i);
-        });
+    const inputEmbeddings = nodes.map((n) => {
+        const meta = contentSvc.getContentMetadata(n);
+        if (meta) {
+            const cluster = meta?.cluster || clusterCount + 1;
+            mappedClusters.set(n, cluster);
+            const embedding: Embedding = meta.embedding || new Array<number>(embeddingSize).fill(0);
+            const f = new Array<number>(clusterCount).fill(0).map((_, i) => (cluster === i ? 1 : 0));
+            return [...embedding, ...f];
+        }
+        return [...new Array(embeddingSize).fill(0), ...new Array(clusterCount).fill(0)];
     });
 
-    const features = nodes.map((n, ix) => {
-        const c = mappedClusters.get(n) || 0;
-        const f = new Array(clusters.length).fill(0).map((_, i) => (c === i ? 1 : 0));
-        return [...inputEmbeddings.map((e) => e.embedding)[ix], ...f];
-    });
-
-    return { features, clusters: mappedClusters };
+    return { features: inputEmbeddings, clusters: mappedClusters, numberOfClusters: clusterCount };
 }
 
 interface Point {
@@ -47,6 +51,7 @@ interface Point {
     d: number;
     cluster: number;
     id: ContentNodeId;
+    colour: string;
 }
 
 export function rectify(images: Point[], dim: number) {
@@ -92,8 +97,9 @@ export default function MappingTool() {
     useEffect(() => {
         const nodes = contentSvc.graph.getNodesByType('content');
         const points: Point[] = nodes.map((n) => {
-            const p = contentSvc.getContentMetadata(n)?.point;
-            return { x: p?.[0] || 0, y: p?.[1] || 0, d: 0, id: n, cluster: 0 };
+            const meta = contentSvc.getContentMetadata(n);
+            const p = meta?.point;
+            return { x: p?.[0] || 0, y: p?.[1] || 0, d: 0, id: n, cluster: meta?.cluster || 0, colour: 'black' };
         });
         setPoints(points);
     }, [contentSvc]);
@@ -102,7 +108,7 @@ export default function MappingTool() {
         if (startGenerate) {
             if (encoder) {
                 const nodes = contentSvc.graph.getNodesByType('content');
-                const { features, clusters } = makeFeatures(contentSvc, nodes);
+                const { features, clusters, numberOfClusters } = makeFeatures(contentSvc, nodes);
 
                 const embeddings = encoder.generate(features);
 
@@ -112,6 +118,7 @@ export default function MappingTool() {
                     d: 0,
                     id: nodes[ix],
                     cluster: clusters.get(nodes[ix]) || 0,
+                    colour: hslToHex(((clusters.get(nodes[ix]) || 0) / numberOfClusters) * 360, 100, 50),
                 }));
 
                 const avgX = points.reduce((s, v) => s + v.x, 0) / points.length;
@@ -195,8 +202,8 @@ export default function MappingTool() {
                             p.x >= 0 && (
                                 <circle
                                     key={ix}
-                                    r="5"
-                                    fill={gColors[p.cluster % gColors.length] || 'black'}
+                                    r="2"
+                                    fill={p.colour}
                                     cx={p.x * 300}
                                     cy={p.y * 300}
                                 />
@@ -238,13 +245,13 @@ export default function MappingTool() {
                     />
                 </div>
                 <div className={style.group}>
-                    <Button
+                    <BusyButton
                         variant="contained"
-                        disabled={startTraining}
+                        busy={startTraining}
                         onClick={() => setStartTraining(true)}
                     >
                         {t('creator.actions.train')}
-                    </Button>
+                    </BusyButton>
                 </div>
             </Widget>
             <Widget
