@@ -16,6 +16,7 @@ import { useTranslation } from 'react-i18next';
 import SvgLayer, { ILine } from './SvgLayer';
 import { extractNodesFromElements, generateLines, IConnection } from './lines';
 import MappingTool from './MappingEncoder';
+import ContentBrowserWidget from './Browser/ContentBrowserWidget';
 
 const connections: IConnection[] = [
     { start: 'query', end: 'summary', startPoint: 'right', endPoint: 'left' },
@@ -25,6 +26,8 @@ const connections: IConnection[] = [
     { start: 'embed', end: 'similarity', startPoint: 'bottom', endPoint: 'top' },
     { start: 'mapping', end: 'points', startPoint: 'bottom', endPoint: 'top' },
     { start: 'cluster', end: 'clusterinstance', startPoint: 'bottom', endPoint: 'top' },
+    { start: 'mapping', end: 'browser', startPoint: 'right', endPoint: 'left' },
+    { start: 'browser', end: 'image', startPoint: 'bottom', endPoint: 'top' },
 ];
 
 export default function ContentWizard() {
@@ -48,7 +51,7 @@ export default function ContentWizard() {
                 }
             });
             observer.current.observe(wkspaceRef.current);
-            const children = wkspaceRef.current.children[0]?.children;
+            const children = wkspaceRef.current.children;
             if (children) {
                 for (let i = 0; i < children.length; ++i) {
                     const child = children[i];
@@ -97,6 +100,7 @@ export default function ContentWizard() {
                     <EmbeddingTool />
                     <ContentClustering />
                     <MappingTool />
+                    <ContentBrowserWidget />
                 </div>
             </div>
             <IconMenu

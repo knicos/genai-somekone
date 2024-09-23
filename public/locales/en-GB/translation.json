@@ -533,7 +533,10 @@
             "cluster": "Clustering",
             "embeddingTrain": "Embedding Training",
             "mapTraining": "Map Training",
-            "clusterViewer": "Cluster Checker"
+            "clusterViewer": "Cluster Checker",
+            "browser": "Browser",
+            "imageDetail": "Selected Image",
+            "addTag": "Add Tag"
         },
         "tooltips": {
             "resetState": "Reset the creator",
@@ -560,7 +563,8 @@
             "similarityDistrib": "Global",
             "clusterImages": "Images",
             "clusterStats": "Tags",
-            "clusterSummary": "Summary"
+            "clusterSummary": "Summary",
+            "addTag": "Tag Name"
         },
         "actions": {
             "addImages": "Add Images",
@@ -575,7 +579,9 @@
             "mergeTags": "Merge Tags",
             "findMoreTag": "Find More with Tags",
             "train": "Train",
-            "deleteCluster": "Delete images in cluster"
+            "deleteCluster": "Delete images in cluster",
+            "deleteImage": "Delete Image",
+            "cancel": "Cancel"
         },
         "messages": {
             "imageSearch": "Choose a query before automatically adding the images",

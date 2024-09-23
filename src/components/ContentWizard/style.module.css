@@ -140,3 +140,22 @@
     align-items: center;
     margin-top: 0.5rem;
 }
+
+.pointSvg {
+    background-size: 20px 20px;
+    background-image: linear-gradient(to right, white 1px, transparent 1px),
+        linear-gradient(to bottom, white 1px, bgSubdued1 1px);
+}
+
+.imageTags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    max-width: 300px;
+}
+
+.imageContainer {
+    text-align: center;
+    line-height: 0;
+    margin-bottom: 1rem;
+}

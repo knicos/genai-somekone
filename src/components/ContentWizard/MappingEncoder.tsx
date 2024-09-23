@@ -196,6 +196,7 @@ export default function MappingTool() {
                     width={300}
                     height={300}
                     viewBox="0 0 300 300"
+                    className={style.pointSvg}
                 >
                     {points.map(
                         (p, ix) =>

@@ -21,7 +21,7 @@ export default function EmbeddingTool() {
     const contentSvc = useContentService();
     const [blob, setBlob] = useState<Blob | undefined>();
     const content = useChangeNodeType('content');
-    const [useLabels, setUseLabels] = useState(true);
+    const [useLabels, setUseLabels] = useState(false);
     const [usePixels, setUsePixels] = useState(true);
     const [useEngagement, setUseEngagement] = useState(false);
     const [history, setHistory] = useState<TrainingDataPoint[]>([]);
