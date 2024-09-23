@@ -557,7 +557,10 @@
             "useEngagement": "Use engagement data",
             "learningRate": "Learning Rate",
             "imageSimilarity": "Image",
-            "similarityDistrib": "Global"
+            "similarityDistrib": "Global",
+            "clusterImages": "Images",
+            "clusterStats": "Tags",
+            "clusterSummary": "Summary"
         },
         "actions": {
             "addImages": "Add Images",

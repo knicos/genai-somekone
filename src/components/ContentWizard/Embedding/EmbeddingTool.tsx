@@ -1,14 +1,14 @@
 import { AlertPara, BusyButton, Button } from '@knicos/genai-base';
 import { useEffect, useMemo, useState } from 'react';
-import style from './style.module.css';
+import style from '../style.module.css';
 import { Checkbox, FormControlLabel, IconButton, Slider, Tab, Tabs } from '@mui/material';
 import { useContentService } from '@genaism/hooks/services';
 import { saveAs } from 'file-saver';
 import { useChangeNodeType } from '@genaism/hooks/graph';
 import SimilarityChecker from './SimilarityCheck';
 import { useTranslation } from 'react-i18next';
-import { Widget } from './Widget';
-import TrainingGraph, { TrainingDataPoint } from '../TrainingGraph/TrainingGraph';
+import { Widget } from '../Widget';
+import TrainingGraph, { TrainingDataPoint } from '../../TrainingGraph/TrainingGraph';
 import SimilarityDistribution from './SimilarityDistribution';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { useEventEmit } from '@genaism/hooks/events';

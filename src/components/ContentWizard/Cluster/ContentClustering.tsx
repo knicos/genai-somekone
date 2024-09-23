@@ -1,12 +1,12 @@
 import { Button } from '@knicos/genai-base';
-import style from './style.module.css';
+import style from '../style.module.css';
 import { useEffect, useState } from 'react';
 import { Slider } from '@mui/material';
 import { clusterEmbeddings, ContentNodeId } from '@knicos/genai-recom';
 import { useContentService } from '@genaism/hooks/services';
 import ContentCluster from './ContentCluster';
 import { useTranslation } from 'react-i18next';
-import { Widget } from './Widget';
+import { Widget } from '../Widget';
 
 export default function ContentClustering() {
     const { t } = useTranslation();
@@ -62,7 +62,7 @@ export default function ContentClustering() {
                             }}
                             min={0}
                             max={2}
-                            step={0.05}
+                            step={0.01}
                             valueLabelDisplay="auto"
                         />
                         <label id="autoencoder-mincluster-slider">{t('creator.labels.minClusters')}</label>

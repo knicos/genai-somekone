@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
-import style from './style.module.css';
 import { LineChart } from '@mui/x-charts/LineChart';
+import StatsTable from './StatsTable';
 
 export interface TrainingDataPoint {
     epoch: number;
@@ -24,22 +24,13 @@ export default function TrainingGraph({ data, maxEpochs }: Props) {
 
     return (
         <div>
-            <table className={style.statsTable}>
-                <tbody>
-                    <tr>
-                        <td className={style.heading}>{t('creator.labels.epochs')}</td>
-                        <td> {epoch}</td>
-                    </tr>
-                    <tr>
-                        <td className={style.heading}>{t('creator.labels.loss')}</td>
-                        <td> {loss.toFixed(3)}</td>
-                    </tr>
-                    <tr>
-                        <td className={style.heading}>{t('creator.labels.validationLoss')}</td>
-                        <td> {valLoss.toFixed(3)}</td>
-                    </tr>
-                </tbody>
-            </table>
+            <StatsTable
+                stats={{
+                    [t('creator.labels.epochs')]: epoch.toFixed(0),
+                    [t('creator.labels.loss')]: loss.toFixed(3),
+                    [t('creator.labels.validationLoss')]: valLoss.toFixed(3),
+                }}
+            />
             <LineChart
                 margin={{ left: 40, right: 20, top: 20, bottom: 30 }}
                 skipAnimation

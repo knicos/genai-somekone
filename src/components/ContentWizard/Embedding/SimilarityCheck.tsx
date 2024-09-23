@@ -1,12 +1,15 @@
-import style from './style.module.css';
+import style from '../style.module.css';
 import { useEffect, useReducer, useState } from 'react';
-import { embeddingSimilarity } from '@knicos/genai-recom';
+import { ContentNodeId, embeddingSimilarity, WeightedNode } from '@knicos/genai-recom';
 import { useContentService } from '@genaism/hooks/services';
+import ImageGrid from '../../ImageGrid/ImageGrid';
 import { BarChart } from '@mui/x-charts';
 import { useEventListen } from '@genaism/hooks/events';
 
-export default function SimilarityDistribution() {
+export default function SimilarityChecker() {
     const [count, bump] = useReducer((o) => o + 1, 0);
+    const [selected, setSelected] = useState<ContentNodeId>();
+    const [similar, setSimilar] = useState<WeightedNode<ContentNodeId>[]>([]);
     const [distribution, setDistribution] = useState<{ x: number; y: number }[]>([]);
     const contentSvc = useContentService();
 
@@ -16,40 +19,42 @@ export default function SimilarityDistribution() {
 
     useEffect(() => {
         const nodes = contentSvc.graph.getNodesByType('content');
+        const rnd = Math.floor(Math.random() * nodes.length);
+        setSelected(nodes[rnd]);
+
+        const nEmbedding = contentSvc.getContentMetadata(nodes[rnd])?.embedding || [];
+
+        const sims: WeightedNode<ContentNodeId>[] = [];
+        nodes.forEach((n, ix) => {
+            if (ix === rnd) return;
+            const meta = contentSvc.getContentMetadata(n);
+            if (meta && meta.embedding) {
+                const sim = embeddingSimilarity(nEmbedding, meta.embedding);
+                sims.push({ id: n, weight: sim });
+            }
+        });
+
+        sims.sort((a, b) => b.weight - a.weight);
+
         // Calc distribution
         const BUCKETS = 30;
         const dist = new Array(BUCKETS).fill(0);
         const min = -1;
         const max = 1;
         const d = max - min;
-
-        nodes.forEach((n1, i1) => {
-            const meta1 = contentSvc.getContentMetadata(n1);
-
-            if (meta1) {
-                nodes.forEach((n2, i2) => {
-                    if (i2 <= i1) return;
-                    const meta2 = contentSvc.getContentMetadata(n2);
-
-                    if (meta2 && meta1.embedding && meta2.embedding) {
-                        const sim = embeddingSimilarity(meta1.embedding, meta2.embedding);
-                        const bucket = Math.floor(((sim - min) / d) * (BUCKETS - 1) + 0.5);
-                        dist[bucket] += 1;
-                    }
-                });
-            }
+        sims.forEach((s) => {
+            const bucket = Math.floor(((s.weight - min) / d) * (BUCKETS - 1) + 0.5);
+            dist[bucket] += 1;
         });
 
         setDistribution(dist.map((d, ix) => ({ x: Math.floor(((ix / BUCKETS) * 2 - 1) * 10), y: d })));
 
-        console.log(dist);
+        setSimilar(sims.slice(0, 8));
     }, [count, contentSvc]);
 
     return (
-        <div
-            className={style.row}
-            style={{ padding: '1rem' }}
-        >
+        <div className={style.row}>
+            <ImageGrid images={[selected || 'content:none', ...similar.map((s) => s.id)]} />
             <BarChart
                 series={[{ dataKey: 'y' }]}
                 yAxis={[{ min: 0, max: distribution.reduce((m, d) => Math.max(m, d.y), 0) }]}

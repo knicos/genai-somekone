@@ -76,6 +76,18 @@
     align-items: center;
 }
 
+.container :global .MuiChartsAxis-tick {
+    stroke: primary;
+}
+
+.container :global .MuiChartsAxis-tickLabel {
+    fill: textDark;
+}
+
+.container :global .MuiChartsAxis-line {
+    stroke: primary;
+}
+
 .svglayer {
     position: absolute;
     left: 0;
