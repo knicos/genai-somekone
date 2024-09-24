@@ -34,7 +34,7 @@ export default function RecommendationsProfile({ id, generate, noWizard }: Props
     const aid = id || profiler.getCurrentUser();
     const appConfig = useRecoilValue(configuration(aid));
     const { recommendations, more } = useRecommendations(9, id, appConfig?.recommendations);
-    const [selected, setSelected] = useState(-1);
+    const [selected, setSelected] = useState<ContentNodeId | undefined>();
     const [wizard, setWizard] = useState(false);
     const [viewMode, setViewMode] = useState<'grid' | 'heat'>('grid');
     const [heatCount, refreshHeat] = useReducer((v) => v + 1, 0);
@@ -49,7 +49,7 @@ export default function RecommendationsProfile({ id, generate, noWizard }: Props
         if (generate) more();
     }, [generate, more]);
 
-    const selectedRecom = selected >= 0 && recommendations[selected];
+    const selectedRecom = selected && recommendations.find((p) => p.contentId === selected);
 
     return (
         <div className={style.outerContainer}>
@@ -164,7 +164,7 @@ export default function RecommendationsProfile({ id, generate, noWizard }: Props
                     <>
                         <ImageGrid
                             selected={selected}
-                            onSelect={(ix: number) => setSelected((old) => (old === ix ? -1 : ix))}
+                            onSelect={(id) => setSelected((old) => (old === id ? undefined : id))}
                             images={recomNodes.map((n) => n.id)}
                         />
                         {!selectedRecom && (

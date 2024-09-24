@@ -4,13 +4,15 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { useTranslation } from 'react-i18next';
 import { useContent } from '@genaism/hooks/content';
 import { Link } from 'react-router-dom';
+import { useMemo } from 'react';
 
 interface Props {
     images: ContentNodeId[];
-    selected?: number;
-    onSelect?: (ix: number) => void;
+    selected?: ContentNodeId | ContentNodeId[];
+    onSelect?: (item: ContentNodeId) => void;
     linkPrefix?: string;
     columns?: number;
+    multiselect?: number;
 }
 
 interface SelectProps {
@@ -38,8 +40,16 @@ function ImageItem({ image }: { image: ContentNodeId }) {
     );
 }
 
-export default function ImageGrid({ images, selected, onSelect, linkPrefix, columns = 3 }: Props) {
+export default function ImageGrid({ multiselect, images, selected, onSelect, linkPrefix, columns = 3 }: Props) {
     const { t } = useTranslation();
+
+    const selectedSet = useMemo(
+        () =>
+            selected === undefined
+                ? new Set<ContentNodeId>()
+                : new Set(Array.isArray(selected) ? selected : [selected]),
+        [selected]
+    );
 
     return (
         <div
@@ -52,11 +62,15 @@ export default function ImageGrid({ images, selected, onSelect, linkPrefix, colu
                     <button
                         key={ix}
                         className={style.gridItem}
-                        onClick={() => onSelect && onSelect(ix)}
+                        onClick={() => {
+                            if (onSelect && (!multiselect || selectedSet.size < multiselect)) {
+                                onSelect(img);
+                            }
+                        }}
                         aria-label={t('recommendations.aria.imageSelect', { number: ix + 1 })}
                     >
                         <ImageItem image={img} />
-                        <SelectButton selected={selected === ix} />
+                        <SelectButton selected={selectedSet.has(img)} />
                     </button>
                 ) : linkPrefix ? (
                     <Link

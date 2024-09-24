@@ -586,7 +586,8 @@
             "deleteCluster": "Delete images in cluster",
             "deleteImage": "Delete Image",
             "cancel": "Cancel",
-            "addTagToCluster": "Add Tag to Cluster"
+            "addTagToCluster": "Add Tag to Cluster",
+            "unselectAll": "Unselect All"
         },
         "messages": {
             "imageSearch": "Choose a query before automatically adding the images",

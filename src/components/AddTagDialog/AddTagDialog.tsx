@@ -12,8 +12,8 @@ import style from './style.module.css';
 import { Button } from '@knicos/genai-base';
 import AddIcon from '@mui/icons-material/Add';
 import TagIcon from '@mui/icons-material/Tag';
-import { useMemo, useRef, useState } from 'react';
-import { useContentService } from '@genaism/hooks/services';
+import { useRef, useState } from 'react';
+import { useContentService, useServiceEventMemo } from '@genaism/hooks/services';
 
 interface Props {
     open: boolean;
@@ -27,7 +27,7 @@ export default function AddTagDialog({ open, onClose, onAdd }: Props) {
     const [value, setValue] = useState<string | null>(null);
     const inputRef = useRef<HTMLInputElement>(null);
 
-    const allTags = useMemo(() => contentSvc.getAllLabels(), [contentSvc]);
+    const allTags = useServiceEventMemo(() => contentSvc.getAllLabels(), [contentSvc], 'contentmeta');
 
     return (
         <Dialog

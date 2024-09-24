@@ -151,11 +151,17 @@
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
-    max-width: 300px;
+    width: 350px;
+    height: 200px;
+    overflow-y: auto;
+    align-content: flex-start;
 }
 
 .imageContainer {
     text-align: center;
     line-height: 0;
     margin-bottom: 1rem;
+    width: 350px;
+    height: 350px;
+    overflow-y: auto;
 }

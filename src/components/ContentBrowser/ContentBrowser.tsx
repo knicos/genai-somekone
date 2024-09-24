@@ -8,7 +8,7 @@ import BrowserMenu from './BrowserMenu';
 export default function ContentBrowser() {
     const [images, setImages] = useState<ContentNodeId[]>([]);
     const contentSvc = useContentService();
-    const [selected, setSelected] = useState(-1);
+    const [selected, setSelected] = useState<ContentNodeId | undefined>();
     const [tags, setTags] = useState<string[]>([]);
 
     useEffect(() => {
@@ -35,9 +35,9 @@ export default function ContentBrowser() {
     return (
         <>
             <BrowserMenu
-                hasSelected={selected >= 0}
+                hasSelected={selected !== undefined}
                 onDelete={() => {
-                    const img = images[selected];
+                    const img = selected;
                     if (img) {
                         contentSvc.removeContent(img);
                         setTags((old) => [...old]);
@@ -46,7 +46,6 @@ export default function ContentBrowser() {
                 onSearch={(q: string) => {
                     const rawtags = q.split(/[ ,]+/gi);
                     const selectedTags = rawtags.map((t) => t.trim()).filter((t) => t.length > 0);
-                    console.log('TAGS', selectedTags);
                     setTags(selectedTags);
                 }}
             />
@@ -55,7 +54,7 @@ export default function ContentBrowser() {
                     images={images}
                     columns={5}
                     selected={selected}
-                    onSelect={(ix) => setSelected((old) => (old === ix ? -1 : ix))}
+                    onSelect={(id) => setSelected((old) => (old === id ? undefined : id))}
                 />
             </div>
         </>

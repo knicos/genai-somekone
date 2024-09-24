@@ -3,26 +3,45 @@ import { Widget } from '../Widget';
 import { useTranslation } from 'react-i18next';
 import { Chip, IconButton, Menu, MenuItem } from '@mui/material';
 import style from '../style.module.css';
-import { useContent } from '@genaism/hooks/content';
 import { useRef, useState } from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
-import { useContentService } from '@genaism/hooks/services';
+import { useContentService, useServiceEventMemo } from '@genaism/hooks/services';
 import AddIcon from '@mui/icons-material/Add';
 import AddTagDialog from '@genaism/components/AddTagDialog/AddTagDialog';
+import ImageGrid from '@genaism/components/ImageGrid/ImageGrid';
 
 interface Props {
-    image?: ContentNodeId;
+    images?: ContentNodeId[];
     onDeleted: () => void;
 }
 
-export default function ImageDetails({ image, onDeleted }: Props) {
+export default function ImageDetails({ images, onDeleted }: Props) {
     const { t } = useTranslation();
     const anchorEl = useRef<HTMLButtonElement>(null);
     const [menuOpen, setMenuOpen] = useState(false);
     const [tagDialog, setTagDialog] = useState(false);
     const contentSvc = useContentService();
 
-    const [meta, data] = useContent(image);
+    const labels = useServiceEventMemo(
+        () => {
+            const labelSet = new Map<string, number>();
+            if (images) {
+                images.forEach((img) => {
+                    const meta = contentSvc.getContentMetadata(img);
+                    if (meta) {
+                        meta.labels.forEach((l) => {
+                            labelSet.set(l.label, (labelSet.get(l.label) || 0) + 1);
+                        });
+                    }
+                });
+            }
+            return Array.from(labelSet);
+        },
+        [contentSvc, images],
+        'contentmeta'
+    );
+
+    const imageLength = images?.length || 0;
 
     return (
         <Widget
@@ -44,10 +63,25 @@ export default function ImageDetails({ image, onDeleted }: Props) {
                     >
                         <MenuItem
                             onClick={() => {
-                                if (image) {
-                                    contentSvc.removeContent(image);
+                                if (images && images.length > 0) {
+                                    images.forEach((image) => {
+                                        contentSvc.clearLabels(image);
+                                    });
+                                }
+                                setMenuOpen(false);
+                            }}
+                        >
+                            {t('creator.actions.deleteTags')}
+                        </MenuItem>
+                        <MenuItem
+                            onClick={() => {
+                                if (images && images.length > 0) {
+                                    images.forEach((image) => {
+                                        contentSvc.removeContent(image);
+                                    });
                                     onDeleted();
                                 }
+                                setMenuOpen(false);
                             }}
                         >
                             {t('creator.actions.deleteImage')}
@@ -60,35 +94,34 @@ export default function ImageDetails({ image, onDeleted }: Props) {
                 open={tagDialog}
                 onClose={() => setTagDialog(false)}
                 onAdd={(tag) => {
-                    if (image) {
-                        contentSvc.addLabel(image, tag, 1);
+                    if (images) {
+                        images.forEach((image) => {
+                            contentSvc.addLabel(image, tag, 1);
+                        });
                     }
                 }}
             />
             <div className={style.imageContainer}>
-                {image && (
-                    <img
-                        src={data}
-                        width="300px"
-                        height="300px"
-                        alt=""
-                    />
-                )}
-                {!image && <div style={{ width: '300px', height: '300px', background: '#ddd' }} />}
+                <ImageGrid
+                    images={images || []}
+                    columns={imageLength === 1 ? 1 : imageLength < 5 ? 2 : 3}
+                />
             </div>
             <div className={style.imageTags}>
-                {meta &&
-                    meta.labels.map((label, ix) => (
-                        <Chip
-                            variant="outlined"
-                            key={ix}
-                            label={`#${label.label}`}
-                            onDelete={() => {
-                                if (image) contentSvc.removeLabel(image, label.label);
-                            }}
-                        />
-                    ))}
-                {meta && (
+                {labels.map((label, ix) => (
+                    <Chip
+                        color={label[1] === imageLength ? 'success' : 'warning'}
+                        variant="outlined"
+                        key={ix}
+                        label={`#${label[0]}`}
+                        onDelete={() => {
+                            if (images) {
+                                images.forEach((image) => contentSvc.removeLabel(image, label[0]));
+                            }
+                        }}
+                    />
+                ))}
+                {images && (
                     <Chip
                         variant="filled"
                         color="primary"
