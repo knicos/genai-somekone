@@ -568,7 +568,14 @@
             "clusterImages": "Images",
             "clusterStats": "Tags",
             "clusterSummary": "Summary",
-            "addTag": "Tag Name"
+            "addTag": "Tag Name",
+            "selectTag": "Select Tag",
+            "selectCluster": "Select Cluster",
+            "filter": "Filter",
+            "noFilter": "None",
+            "byTag": "By Tag",
+            "byCluster": "By Cluster",
+            "noTags": "Has no tags"
         },
         "actions": {
             "addImages": "Add Images",
