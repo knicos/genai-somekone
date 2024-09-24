@@ -6,9 +6,13 @@ import { useSetRecoilState } from 'recoil';
 
 export function Component() {
     const [count, refresh] = useReducer((a) => ++a, 0);
-    useEventListen('refresh_graph', () => {
-        refresh();
-    });
+    useEventListen(
+        () => {
+            refresh();
+        },
+        [],
+        'refresh_graph'
+    );
 
     const setSelectedNode = useSetRecoilState(menuSelectedUser);
     useEffect(() => {

@@ -1,6 +1,6 @@
 import { CommentEntry, ContentMetadata, ContentNodeId } from '@knicos/genai-recom';
-import { useContentService } from './services';
-import { useEffect, useReducer, useState } from 'react';
+import { useContentService, useServiceEventMemo } from './services';
+import { useEffect, useState } from 'react';
 
 export function useContentData(id?: ContentNodeId) {
     const service = useContentService();
@@ -76,36 +76,33 @@ export function useContentStats(id: ContentNodeId) {
 
 export function useContent(id?: ContentNodeId): [ContentMetadata | undefined, string | undefined] {
     const service = useContentService();
-    const [data, setData] = useState<string | undefined>(undefined);
 
-    useEffect(() => {
-        const cid = id;
-        if (cid) {
-            const handler = () => {
-                setData(service.getContentData(cid));
-            };
-            service.broker.on(`contentupdate-${cid}`, handler);
+    const data = useServiceEventMemo(
+        () => {
+            if (id) return service.getContentData(id);
+        },
+        [service, id],
+        `contentupdate-${id || 'content:dummy'}`
+    );
 
-            setData(service.getContentData(cid));
+    const meta = useServiceEventMemo(
+        () => {
+            if (id) return service.getContentMetadata(id);
+        },
+        [service, id],
+        `contentmeta-${id || 'content:dummy'}`
+    );
 
-            return () => {
-                service.broker.off(`contentupdate-${cid}`, handler);
-            };
-        }
-    }, [service, id]);
-
-    return id ? [service.getContentMetadata(id), data] : [undefined, undefined];
+    return [meta, data];
 }
 
 export function useAllContent() {
-    const [, trigger] = useReducer((v) => v + 1, 0);
     const service = useContentService();
-    useEffect(() => {
-        const handler = () => trigger();
-        service.broker.on('contentupdate', handler);
-        return () => {
-            service.broker.off('contentupdate', handler);
-        };
-    }, [service]);
-    return service;
+    return useServiceEventMemo(
+        () => {
+            return service.getAllContent();
+        },
+        [service],
+        'contentupdate'
+    );
 }

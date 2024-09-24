@@ -9,6 +9,7 @@ import { Widget } from '../Widget';
 import MenuIcon from '@mui/icons-material/Menu';
 import ClusterSummary from './ClusterSummary';
 import ClusterTags from './ClusterTags';
+import AddTagDialog from '@genaism/components/AddTagDialog/AddTagDialog';
 
 interface Props {
     clusters: ContentNodeId[][];
@@ -21,12 +22,23 @@ export default function ContentCluster({ clusters }: Props) {
     const anchorEl = useRef<HTMLButtonElement>(null);
     const [menuOpen, setMenuOpen] = useState(false);
     const [tabNumber, setTabNumber] = useState(0);
+    const [tagDialog, setTagDialog] = useState(false);
 
     const doDelete = useCallback(() => {
+        setMenuOpen(false);
         clusters[page].forEach((img) => {
             contentSvc.removeContent(img);
         });
     }, [contentSvc, clusters, page]);
+
+    const doAddTag = useCallback(
+        (tag: string) => {
+            clusters[page].forEach((img) => {
+                contentSvc.addLabel(img, tag);
+            });
+        },
+        [clusters, page, contentSvc]
+    );
 
     return (
         <Widget
@@ -47,11 +59,30 @@ export default function ContentCluster({ clusters }: Props) {
                         open={menuOpen}
                         onClose={() => setMenuOpen(false)}
                     >
-                        <MenuItem onClick={doDelete}>{t('creator.actions.deleteCluster')}</MenuItem>
+                        <MenuItem
+                            disabled={tabNumber === 2}
+                            onClick={() => {
+                                setTagDialog(true);
+                                setMenuOpen(false);
+                            }}
+                        >
+                            {t('creator.actions.addTagToCluster')}
+                        </MenuItem>
+                        <MenuItem
+                            disabled={tabNumber === 2}
+                            onClick={doDelete}
+                        >
+                            {t('creator.actions.deleteCluster')}
+                        </MenuItem>
                     </Menu>
                 </div>
             }
         >
+            <AddTagDialog
+                open={tagDialog}
+                onClose={() => setTagDialog(false)}
+                onAdd={doAddTag}
+            />
             <Tabs
                 value={tabNumber}
                 onChange={(_, value) => setTabNumber(value)}

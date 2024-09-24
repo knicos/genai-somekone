@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Chip, IconButton, Menu, MenuItem } from '@mui/material';
 import style from '../style.module.css';
 import { useContent } from '@genaism/hooks/content';
-import { useReducer, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useContentService } from '@genaism/hooks/services';
 import AddIcon from '@mui/icons-material/Add';
@@ -17,7 +17,6 @@ interface Props {
 
 export default function ImageDetails({ image, onDeleted }: Props) {
     const { t } = useTranslation();
-    const [, trigger] = useReducer((a) => a + 1, 0);
     const anchorEl = useRef<HTMLButtonElement>(null);
     const [menuOpen, setMenuOpen] = useState(false);
     const [tagDialog, setTagDialog] = useState(false);
@@ -62,11 +61,7 @@ export default function ImageDetails({ image, onDeleted }: Props) {
                 onClose={() => setTagDialog(false)}
                 onAdd={(tag) => {
                     if (image) {
-                        const meta = contentSvc.getContentMetadata(image);
-                        if (meta) {
-                            meta.labels.push({ label: tag, weight: 1 });
-                            trigger();
-                        }
+                        contentSvc.addLabel(image, tag, 1);
                     }
                 }}
             />
@@ -89,8 +84,7 @@ export default function ImageDetails({ image, onDeleted }: Props) {
                             key={ix}
                             label={`#${label.label}`}
                             onDelete={() => {
-                                meta.labels = meta.labels.filter((l) => l !== label);
-                                trigger();
+                                if (image) contentSvc.removeLabel(image, label.label);
                             }}
                         />
                     ))}

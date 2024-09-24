@@ -12,9 +12,8 @@ import style from './style.module.css';
 import { Button } from '@knicos/genai-base';
 import AddIcon from '@mui/icons-material/Add';
 import TagIcon from '@mui/icons-material/Tag';
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useContentService } from '@genaism/hooks/services';
-import { ContentService } from '@knicos/genai-recom';
 
 interface Props {
     open: boolean;
@@ -22,27 +21,13 @@ interface Props {
     onAdd: (tag: string) => void;
 }
 
-function getAllTags(contentSvc: ContentService) {
-    const tags = new Set<string>();
-    const content = contentSvc.getAllContent();
-    content.forEach((c) => {
-        const meta = contentSvc.getContentMetadata(c);
-        if (meta) {
-            meta.labels.forEach((l) => {
-                tags.add(l.label);
-            });
-        }
-    });
-    console.log(tags);
-    return Array.from(tags);
-}
-
 export default function AddTagDialog({ open, onClose, onAdd }: Props) {
     const { t } = useTranslation();
     const contentSvc = useContentService();
     const [value, setValue] = useState<string | null>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
 
-    const allTags = useMemo(() => getAllTags(contentSvc), [contentSvc]);
+    const allTags = useMemo(() => contentSvc.getAllLabels(), [contentSvc]);
 
     return (
         <Dialog
@@ -53,15 +38,21 @@ export default function AddTagDialog({ open, onClose, onAdd }: Props) {
             <DialogContent>
                 <div className={style.column}>
                     <Autocomplete
+                        selectOnFocus
                         sx={{ width: '300px' }}
                         freeSolo
                         value={value}
                         onChange={(_, newValue: string | null) => {
                             setValue(newValue);
+                            if (newValue) {
+                                onAdd(newValue);
+                                onClose();
+                            }
                         }}
                         renderInput={(params) => (
                             <TextField
                                 {...params}
+                                inputRef={inputRef}
                                 label={t('creator.labels.addTag')}
                                 InputProps={{
                                     ...params.InputProps,
@@ -82,8 +73,9 @@ export default function AddTagDialog({ open, onClose, onAdd }: Props) {
                     variant="contained"
                     startIcon={<AddIcon />}
                     onClick={() => {
-                        if (value && value.length > 2) {
-                            onAdd(value);
+                        const v = inputRef.current?.value || '';
+                        if (v.length > 2) {
+                            onAdd(v);
                             onClose();
                         }
                     }}

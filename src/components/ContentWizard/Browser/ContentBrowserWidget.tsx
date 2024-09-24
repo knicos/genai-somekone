@@ -6,6 +6,7 @@ import { ContentNodeId } from '@knicos/genai-recom';
 import { useContentService } from '@genaism/hooks/services';
 import ImageDetails from './ImageDetails';
 import style from '../style.module.css';
+import { useAllContent } from '@genaism/hooks/content';
 
 export default function ContentBrowserWidget() {
     const { t } = useTranslation();
@@ -13,10 +14,11 @@ export default function ContentBrowserWidget() {
     const contentSvc = useContentService();
     const [selected, setSelected] = useState(-1);
     // const [tags, setTags] = useState<string[]>([]);
+    const allContent = useAllContent();
 
     useEffect(() => {
-        setImages(contentSvc.getAllContent());
-    }, [contentSvc]);
+        setImages(allContent);
+    }, [contentSvc, allContent]);
 
     return (
         <div

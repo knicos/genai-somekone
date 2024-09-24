@@ -10,9 +10,13 @@ export default function SimilarityDistribution() {
     const [distribution, setDistribution] = useState<{ x: number; y: number }[]>([]);
     const contentSvc = useContentService();
 
-    useEventListen('refresh_embeddings', () => {
-        bump();
-    });
+    useEventListen(
+        () => {
+            bump();
+        },
+        [],
+        'refresh_embeddings'
+    );
 
     useEffect(() => {
         const nodes = contentSvc.graph.getNodesByType('content');

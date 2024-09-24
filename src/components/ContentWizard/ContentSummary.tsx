@@ -1,8 +1,8 @@
 import { useChangeNodeType } from '@genaism/hooks/graph';
 import style from './style.module.css';
 import { ContentNodeId, ContentService } from '@knicos/genai-recom';
-import { useCallback, useMemo, useReducer, useRef, useState } from 'react';
-import { useContentService } from '@genaism/hooks/services';
+import { useCallback, useRef, useState } from 'react';
+import { useContentService, useServiceEventMemo } from '@genaism/hooks/services';
 import { DataGrid, GridColDef, useGridApiRef } from '@mui/x-data-grid';
 import MenuIcon from '@mui/icons-material/Menu';
 import { IconButton, Menu, MenuItem } from '@mui/material';
@@ -54,12 +54,14 @@ export default function ContentSummary({ onFindMore }: Props) {
     const apiRef = useGridApiRef();
     const anchorEl = useRef<HTMLButtonElement>(null);
     const [menuOpen, setMenuOpen] = useState(false);
-    const [counter, trigger] = useReducer((a) => a + 1, 0);
 
-    const tags = useMemo(() => {
-        return analyseTags(contentSvc, content);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [contentSvc, content, counter]);
+    const tags = useServiceEventMemo(
+        () => {
+            return analyseTags(contentSvc, content);
+        },
+        [contentSvc, content],
+        'contentmeta'
+    );
 
     const doDeleteTags = useCallback(() => {
         if (apiRef.current) {
@@ -70,7 +72,7 @@ export default function ContentSummary({ onFindMore }: Props) {
             });
             console.log('Deletes', tags);
             deleteTags(contentSvc, tags);
-            trigger();
+            //trigger();
         }
     }, [contentSvc, apiRef]);
 
@@ -83,7 +85,7 @@ export default function ContentSummary({ onFindMore }: Props) {
             });
 
             deleteWithTags(contentSvc, tags);
-            trigger();
+            //trigger();
         }
     }, [contentSvc, apiRef]);
 
@@ -96,7 +98,7 @@ export default function ContentSummary({ onFindMore }: Props) {
             });
 
             mergeTags(contentSvc, tags);
-            trigger();
+            //trigger();
         }
     }, [contentSvc, apiRef]);
 

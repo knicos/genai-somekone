@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react';
+import { createContext, useContext, useEffect, useMemo, useReducer } from 'react';
 import {
     ActionLogService,
     ContentService,
@@ -13,6 +13,7 @@ import {
     ProfilerService,
     RecommenderService,
     ReplayService,
+    ServiceEvents,
 } from '@knicos/genai-recom';
 
 export interface Services {
@@ -65,4 +66,26 @@ export function useActionLogService() {
 
 export function useBroker() {
     return useServices().broker;
+}
+
+export function useServiceEventMemo<TEventName extends keyof ServiceEvents & string, T>(
+    f: () => T,
+    deps: unknown[],
+    name: TEventName
+) {
+    const [state, dispatch] = useReducer((a) => a + 1, 0);
+    const service = useBroker();
+
+    useEffect(() => {
+        const handler = () => {
+            dispatch();
+        };
+        service.on(name, handler);
+        return () => {
+            service.off(name, handler);
+        };
+    }, [service, name]);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    return useMemo(f, [state, ...deps]);
 }

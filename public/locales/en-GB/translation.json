@@ -581,7 +581,8 @@
             "train": "Train",
             "deleteCluster": "Delete images in cluster",
             "deleteImage": "Delete Image",
-            "cancel": "Cancel"
+            "cancel": "Cancel",
+            "addTagToCluster": "Add Tag to Cluster"
         },
         "messages": {
             "imageSearch": "Choose a query before automatically adding the images",

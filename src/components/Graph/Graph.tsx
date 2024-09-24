@@ -144,15 +144,19 @@ export default function Graph<T extends NodeID>({
     const movement = useRef<[number, number]>([0, 0]);
     const pointerCache = useRef(new Map<number, PointerEvent<SVGSVGElement>>());
     const drawCount = useRef(0);
-    useEventListen('save_graph', () => {
-        if (svgRef.current) {
-            setSaving(true);
-            svgToPNG(svgRef.current).then((data) => {
-                saveAs(data, 'graph.png');
-                setSaving(false);
-            });
-        }
-    });
+    useEventListen(
+        () => {
+            if (svgRef.current) {
+                setSaving(true);
+                svgToPNG(svgRef.current).then((data) => {
+                    saveAs(data, 'graph.png');
+                    setSaving(false);
+                });
+            }
+        },
+        [],
+        'save_graph'
+    );
 
     internalState.current.focusNode = focusNode;
 

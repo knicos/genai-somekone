@@ -32,7 +32,7 @@ export function mergeTags(contentSvc: ContentService, tags: string[]) {
                 }
             }
 
-            meta.labels = uniqueSubset(meta.labels, (n) => n.label);
+            contentSvc.updateMeta(c, { labels: uniqueSubset(meta.labels, (n) => n.label) });
         }
     });
 
@@ -51,7 +51,7 @@ export function renameTag(contentSvc: ContentService, oldName: string, newName: 
                 }
             }
 
-            meta.labels = uniqueSubset(meta.labels, (n) => n.label);
+            contentSvc.updateMeta(c, { labels: uniqueSubset(meta.labels, (n) => n.label) });
         }
     });
 
@@ -65,7 +65,7 @@ export function deleteTags(contentSvc: ContentService, tags: string[]) {
     allContent.forEach((c) => {
         const meta = contentSvc.getContentMetadata(c);
         if (meta) {
-            meta.labels = meta.labels.filter((l) => !tagSet.has(l.label));
+            contentSvc.updateMeta(c, { labels: meta.labels.filter((l) => !tagSet.has(l.label)) });
         }
     });
 

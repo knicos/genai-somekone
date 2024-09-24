@@ -46,9 +46,9 @@ export function useEventEmitter() {
 }
 
 export function useEventListen<TEventName extends keyof ComponentEvents & string>(
-    name: TEventName,
     handler: (...eventArg: ComponentEvents[TEventName]) => void,
-    deps?: unknown[]
+    deps: unknown[],
+    name: TEventName
 ) {
     const ee = useEventEmitter();
     useEffect(() => {

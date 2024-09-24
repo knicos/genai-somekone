@@ -73,15 +73,19 @@ export default function Heatmap({ data, dimensions, busy, label, invert }: Props
         }
     }, [zoom]);
 
-    useEventListen('save_heat', () => {
-        if (svgRef.current) {
-            setSaving(true);
-            svgToPNG(svgRef.current, 8, 0).then((data) => {
-                saveAs(data, label ? `heatmap_${label}.png` : 'heatmap.png');
-                setSaving(false);
-            });
-        }
-    });
+    useEventListen(
+        () => {
+            if (svgRef.current) {
+                setSaving(true);
+                svgToPNG(svgRef.current, 8, 0).then((data) => {
+                    saveAs(data, label ? `heatmap_${label}.png` : 'heatmap.png');
+                    setSaving(false);
+                });
+            }
+        },
+        [label],
+        'save_heat'
+    );
 
     return (
         <div className={style.container}>
