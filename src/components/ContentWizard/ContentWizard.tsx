@@ -1,6 +1,6 @@
 import style from './style.module.css';
 import QueryGenerator from './QueryGenerator';
-import { useEffect, useReducer, useRef, useState } from 'react';
+import { useCallback, useEffect, useReducer, useRef, useState } from 'react';
 import { Options } from '@genaism/services/imageSearch/hook';
 import ContentSummary from './ContentSummary';
 import BlockIcon from '@mui/icons-material/Block';
@@ -9,7 +9,7 @@ import CaptureDialog from './CaptureDialog';
 import IconMenu from '../IconMenu/IconMenu';
 import IconMenuItem from '../IconMenu/Item';
 import { IconButton } from '@mui/material';
-import { useContentService } from '@genaism/hooks/services';
+import { useServices } from '@genaism/hooks/services';
 import ContentClustering from './Cluster/ContentClustering';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { useTranslation } from 'react-i18next';
@@ -17,6 +17,11 @@ import SvgLayer, { ILine } from './SvgLayer';
 import { extractNodesFromElements, generateLines, IConnection } from './lines';
 import MappingTool from './MappingEncoder';
 import ContentBrowserWidget from './Browser/ContentBrowserWidget';
+import DownloadIcon from '@mui/icons-material/Download';
+import { saveFile } from '@genaism/services/saver/fileSaver';
+import { useSettingSerialise } from '@genaism/hooks/settings';
+import { useSetRecoilState } from 'recoil';
+import { errorNotification } from '@genaism/state/errorState';
 
 const connections: IConnection[] = [
     { start: 'query', end: 'summary', startPoint: 'right', endPoint: 'left' },
@@ -36,11 +41,13 @@ export default function ContentWizard() {
     const [options, setOptions] = useState<Options>();
     const [captureOpen, setCaptureOpen] = useState(false);
     const [tags, setTags] = useState<string[] | undefined>();
-    const contentSvc = useContentService();
+    const { content: contentSvc, profiler: profilerSvc, actionLog } = useServices();
     const [counter, refresh] = useReducer((a) => a + 1, 0);
     const [lines, setLines] = useState<ILine[]>([]);
     const wkspaceRef = useRef<HTMLDivElement>(null);
     const observer = useRef<ResizeObserver>();
+    const serial = useSettingSerialise();
+    const setError = useSetRecoilState(errorNotification);
 
     useEffect(() => {
         if (wkspaceRef.current) {
@@ -63,6 +70,57 @@ export default function ContentWizard() {
             };
         }
     }, []);
+
+    const doSave = useCallback(async () => {
+        // Validate all metadata
+        let valid = true;
+        contentSvc.getAllContent().forEach((content) => {
+            const meta = contentSvc.getContentMetadata(content);
+            if (!meta) {
+                setError((err) => {
+                    const e = new Set(err);
+                    e.add('content_not_found');
+                    valid = false;
+                    return e;
+                });
+            } else {
+                if (!meta.embedding) {
+                    setError((err) => {
+                        const e = new Set(err);
+                        e.add('missing_embeddings');
+                        valid = false;
+                        return e;
+                    });
+                }
+                if (meta.cluster === undefined) {
+                    setError((err) => {
+                        const e = new Set(err);
+                        e.add('missing_cluster');
+                        valid = false;
+                        return e;
+                    });
+                }
+                if (!meta.point) {
+                    setError((err) => {
+                        const e = new Set(err);
+                        e.add('missing_points');
+                        valid = false;
+                        return e;
+                    });
+                }
+            }
+        });
+
+        if (!valid) return;
+
+        saveFile(profilerSvc, contentSvc, actionLog, {
+            includeContent: true,
+            includeProfiles: false,
+            includeLogs: false,
+            includeGraph: false,
+            settings: await serial(),
+        });
+    }, [actionLog, contentSvc, profilerSvc, serial, setError]);
 
     return (
         <>
@@ -107,6 +165,14 @@ export default function ContentWizard() {
                 placement="top"
                 label={<div className={style.menuLogo}>{t('creator.titles.creator')}</div>}
             >
+                <IconMenuItem tooltip={t('creator.tooltips.download')}>
+                    <IconButton
+                        color="inherit"
+                        onClick={doSave}
+                    >
+                        <DownloadIcon />
+                    </IconButton>
+                </IconMenuItem>
                 <IconMenuItem tooltip={t('creator.tooltips.resetState')}>
                     <IconButton
                         color="inherit"

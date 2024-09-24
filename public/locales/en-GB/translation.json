@@ -381,7 +381,10 @@
             "peer_nortc": "Unable to start peer-2-peer, do you have an internet connection?",
             "peer_no_peer": "The peer was not found",
             "peer_nowebcam": "You must allow use of the webcam to create the conference call",
-            "missing_dependency": "This file depends on missing content"
+            "missing_dependency": "This file depends on missing content",
+            "missing_embeddings": "Images are missing embeddings",
+            "missing_points": "Images are not mapped",
+            "missing_cluster": "Images have no cluster"
         },
         "aria": {
             "linkForFeed": "Link for a new user feed",
@@ -540,7 +543,8 @@
         },
         "tooltips": {
             "resetState": "Reset the creator",
-            "deleteAll": "Delete all images"
+            "deleteAll": "Delete all images",
+            "download": "Download content Zip"
         },
         "labels": {
             "search": "Search",

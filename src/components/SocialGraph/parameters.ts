@@ -22,6 +22,6 @@ export function calculateParameters(scale: number, resolution: number, nodeCount
 
     const linkDistance = interp(finalScale, MIN_LINK_DIST, MAX_LINK_DIST);
     const nodeCharge = interp(finalScale, MIN_NODE_CHARGE, MAX_NODE_CHARGE);
-    const similarPercent = 0.01; // interp(finalScale, MIN_SIM_PERCENT, MAX_SIM_PERCENT);
+    const similarPercent = 0.1; // interp(finalScale, MIN_SIM_PERCENT, MAX_SIM_PERCENT);
     return { linkDistance, nodeCharge, similarPercent, density: screenScale };
 }

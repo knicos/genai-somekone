@@ -42,18 +42,24 @@ async function generateBlob(
 
     if (includeContent) {
         const imageFolder = zip.folder('images');
+        let count = 0;
 
         if (imageFolder) {
             const content = contentSvc.graph.getNodesByType('content');
             content.forEach((d) => {
                 const data = contentSvc.getContentData(d);
-                if (data) {
+                if (data && !data.startsWith('http')) {
                     imageFolder.file(`${d.split(':')[1]}.jpg`, data.split(';base64,')[1], { base64: true });
+                    ++count;
                 }
             });
 
             const meta = content.map((c) => contentSvc.getContentMetadata(c));
             zip.file('content.json', JSON.stringify(meta, undefined, 4));
+        }
+
+        if (count === 0) {
+            zip.remove('images');
         }
     }
 
