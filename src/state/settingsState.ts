@@ -41,7 +41,7 @@ export const settingDisplayLabel = atom<boolean>({
 
 export const settingIncludeAllLinks = atom<boolean>({
     key: 'settingalllinks',
-    default: true,
+    default: false,
 });
 
 export const settingSocialGraphTheme = atom<SocialGraphThemes>({
@@ -54,15 +54,15 @@ export const settingSocialGraphTheme = atom<SocialGraphThemes>({
     default: 200,
 });*/
 
-/*export const settingSimilarPercent = atom<number>({
+export const settingSimilarPercent = atom<number>({
     key: 'settingsimilarpercent',
-    default: 0.01,
-});*/
+    default: 0.1,
+});
 
-/*export const settingNodeCharge = atom<number>({
-    key: 'settingnodecharge',
-    default: 3,
-});*/
+export const settingLinkLimit = atom<number>({
+    key: 'settinglinklimit',
+    default: 5,
+});
 
 /*export const settingTopicThreshold = atom<number>({
     key: 'settingtopicthreshold',

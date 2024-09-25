@@ -18,6 +18,8 @@ import {
     settingDisplayLines,
     settingEgoOnSelect,
     settingIncludeAllLinks,
+    settingLinkLimit,
+    settingSimilarPercent,
     settingSocialGraphScale,
     settingSocialGraphTheme,
 } from '@genaism/state/settingsState';
@@ -37,6 +39,8 @@ export default function SocialSettingsDialog({ open, onClose }: Props) {
     const [egoSelect, setEgoSelect] = useRecoilState(settingEgoOnSelect);
     const [allLinks, setAllLinks] = useRecoilState(settingIncludeAllLinks);
     const [graphTheme, setGraphTheme] = useRecoilState(settingSocialGraphTheme);
+    const [similarity, setSimilarity] = useRecoilState(settingSimilarPercent);
+    const [limit, setLimit] = useRecoilState(settingLinkLimit);
 
     const doScale = useCallback((_: unknown, value: number | number[]) => setScale(value as number), [setScale]);
 
@@ -126,6 +130,37 @@ export default function SocialSettingsDialog({ open, onClose }: Props) {
                         min={0.1}
                         max={2}
                         step={0.1}
+                        valueLabelDisplay="auto"
+                    />
+                    <div
+                        id="social-similarity-label"
+                        className={style.label}
+                    >
+                        {t('dashboard.labels.similarityThreshold')}
+                    </div>
+                    <Slider
+                        aria-labelledby="social-similarity-label"
+                        value={similarity}
+                        onChange={(_: unknown, value: number | number[]) => setSimilarity(value as number)}
+                        min={0.01}
+                        max={0.5}
+                        step={0.01}
+                        valueLabelDisplay="auto"
+                    />
+                    <div
+                        id="social-limit-label"
+                        className={style.label}
+                    >
+                        {t('dashboard.labels.limitLinks')}
+                    </div>
+                    <Slider
+                        aria-labelledby="social-limit-label"
+                        value={limit}
+                        onChange={(_: unknown, value: number | number[]) => setLimit(value as number)}
+                        min={1}
+                        max={10}
+                        step={1}
+                        valueLabelDisplay="auto"
                     />
                 </div>
             </DialogContent>

@@ -16,6 +16,8 @@ import {
     settingIncludeAllLinks,
     settingSocialGraphScale,
     settingNodeMode,
+    settingLinkLimit,
+    settingSimilarPercent,
 } from '@genaism/state/settingsState';
 import { SMConfig, mergeConfiguration } from '@genaism/state/smConfig';
 import { useRecoilCallback } from 'recoil';
@@ -28,6 +30,8 @@ export interface SomekoneSocialSettings {
     // showOfflineUsers?: boolean;
     nodeDisplay?: NodeDisplayMode;
     clusterColouring?: number;
+    similarityThreshold?: number;
+    linkLimit?: number;
 }
 
 export interface SomekoneGeneralSettings {}
@@ -64,6 +68,12 @@ export function useSettingDeserialise() {
                     }
                     if (data.socialGraph.scale !== undefined) {
                         set(settingSocialGraphScale, data.socialGraph.scale);
+                    }
+                    if (data.socialGraph.linkLimit !== undefined) {
+                        set(settingLinkLimit, data.socialGraph.linkLimit);
+                    }
+                    if (data.socialGraph.similarityThreshold !== undefined) {
+                        set(settingSimilarPercent, data.socialGraph.similarityThreshold);
                     }
                     if (data.socialGraph.includeAllLinks !== undefined) {
                         set(settingIncludeAllLinks, data.socialGraph.includeAllLinks);
@@ -117,6 +127,8 @@ export function useSettingSerialise() {
                         nodeDisplay: await snapshot.getPromise(settingNodeMode),
                         scale: await snapshot.getPromise(settingSocialGraphScale),
                         includeAllLinks: await snapshot.getPromise(settingIncludeAllLinks),
+                        linkLimit: await snapshot.getPromise(settingLinkLimit),
+                        similarityThreshold: await snapshot.getPromise(settingSimilarPercent),
                     },
                     applicationConfig: await snapshot.getPromise(appConfiguration),
                     ui: {

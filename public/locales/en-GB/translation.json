@@ -353,7 +353,9 @@
             "allowFeedActions": "Allow actions in dashboard feed",
             "alwaysActive": "Keep current image active",
             "contentTools": "Content Tools",
-            "profileImage": "Profile Images"
+            "profileImage": "Profile Images",
+            "similarityThreshold": "Similarity difference threshold",
+            "limitLinks": "Maximum links per node"
         },
         "messages": {
             "connection": "Go to the address below and enter the code <Code>{{codeText}}</Code>, or use the QR code.",

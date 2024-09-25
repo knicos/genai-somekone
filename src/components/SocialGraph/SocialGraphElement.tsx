@@ -11,6 +11,8 @@ import {
     settingSocialGraphScale,
     settingShowOfflineUsers,
     settingSocialGraphTheme,
+    settingSimilarPercent,
+    settingLinkLimit,
 } from '@genaism/state/settingsState';
 // import FakeNode from '../FakeNode/FakeNode';
 import style from './style.module.css';
@@ -26,6 +28,7 @@ import { calculateParameters } from './parameters';
 import graphThemes from './graphTheme';
 import UserMenu from './UserMenu';
 import DebounceGraph from '../Graph/DebounceGraph';
+import { generateLinks, isFullyConnected } from './links';
 
 const DEBOUNCE = 1000;
 const LINE_THICKNESS_UNSELECTED = 40;
@@ -44,6 +47,8 @@ export default function SocialGraphElement({ liveUsers }: Props) {
     const showLines = useRecoilValue(settingDisplayLines);
     const showOfflineUsers = useRecoilValue(settingShowOfflineUsers);
     const clusterColouring = useRecoilValue(settingClusterColouring);
+    const similarPercent = useRecoilValue(settingSimilarPercent);
+    const linkLimit = useRecoilValue(settingLinkLimit);
     const egoSelect = useRecoilValue(settingEgoOnSelect);
     const showLabel = useRecoilValue(settingDisplayLabel);
     const allLinks = useRecoilValue(settingIncludeAllLinks);
@@ -70,7 +75,7 @@ export default function SocialGraphElement({ liveUsers }: Props) {
     const [userMenu, setUserMenu] = useState<[number, number] | undefined>();
     const userElement = useRef<SVGElement>();
 
-    const { nodeCharge, similarPercent, linkDistance, density } = calculateParameters(
+    const { nodeCharge, linkDistance, density } = calculateParameters(
         scale,
         window.innerWidth * window.innerHeight,
         nodes.length
@@ -79,29 +84,14 @@ export default function SocialGraphElement({ liveUsers }: Props) {
     const theme = graphThemes[themeName];
 
     useEffect(() => {
-        const newLinks: GraphLink<UserNodeId, UserNodeId>[] = [];
-        let globalMin = 1;
-        similar.similar.forEach((s) => {
-            globalMin = Math.min(globalMin, s[0]?.weight || 1);
-        });
-        globalMin = globalMin * (1 - similarPercent);
-
-        similar.similar.forEach((s, id) => {
-            const maxWeight = s[0]?.weight || 0;
-            s.forEach((node) => {
-                if (allLinks || node.weight >= maxWeight * (1 - similarPercent)) {
-                    const astrength = Math.max(0, (node.weight - globalMin) / (1 - globalMin));
-                    newLinks.push({
-                        source: id,
-                        target: node.id,
-                        strength: node.weight >= maxWeight * (1 - similarPercent) ? astrength : 0,
-                        actualStrength: astrength,
-                    });
-                }
-            });
-        });
-        setLinks(newLinks);
-    }, [similar, similarPercent, allLinks]);
+        const newLinks = generateLinks(similar.similar, allLinks, similarPercent, linkLimit);
+        const connected = isFullyConnected(newLinks);
+        if (connected) {
+            setLinks(newLinks);
+        } else {
+            setLinks(generateLinks(similar.similar, true, similarPercent, linkLimit));
+        }
+    }, [similar, similarPercent, allLinks, linkLimit]);
 
     const doRedrawNodes = useCallback(async () => {
         // Initialising using an autoencoder is of limited value

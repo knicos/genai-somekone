@@ -29,7 +29,7 @@ export function createSimulation<T extends NodeID>(charge: number, linkScale: nu
             'link',
             d3
                 .forceLink<GraphNode<T>, InternalGraphLink<T, T>>()
-                .strength((d) => d.strength * d.strength * 0.5 + 0.1)
+                .strength((d) => d.strength)
                 .distance((d) => Math.max(0, (1 - d.strength) * linkScale + (d.source.size + d.target.size)) + 10)
         );
 
