@@ -51,12 +51,22 @@ export function Component() {
                         url={`/dashboard/socialgraph?${createSearchParams({
                             content: compressToEncodedURIComponent(
                                 JSON.stringify([
-                                    'https://store.gen-ai.fi/somekone/imageSet1b_embed_points.zip',
+                                    'https://store.gen-ai.fi/somekone/imageSet1c.zip',
                                     'https://store.gen-ai.fi/somekone/sm_demo1c.zip',
                                 ])
                             ),
                         })}`}
                         description={t('library.example.description')}
+                    />
+                    <ContentItem
+                        title={t('library.food.title')}
+                        image="/images/food.jpg"
+                        url={`/dashboard/socialgraph?${createSearchParams({
+                            content: compressToEncodedURIComponent(
+                                JSON.stringify(['https://store.gen-ai.fi/somekone/imageSet_food.zip'])
+                            ),
+                        })}`}
+                        description={t('library.food.description')}
                     />
                     <ContentItem
                         title={t('library.blank.title')}

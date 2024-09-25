@@ -20,6 +20,10 @@
         "blank": {
             "title": "Blank",
             "description": "Add your own photos or select from the web to create custom social media content for the app."
+        },
+        "food": {
+            "title": "Food Images",
+            "description": "A selection of 400 food images including meat, vegetables, deserts and fruit."
         }
     },
     "about": {
