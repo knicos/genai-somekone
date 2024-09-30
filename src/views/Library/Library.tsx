@@ -69,6 +69,36 @@ export function Component() {
                         description={t('library.food.description')}
                     />
                     <ContentItem
+                        title={t('library.dogs.title')}
+                        image="/images/dogs.jpg"
+                        url={`/dashboard/socialgraph?${createSearchParams({
+                            content: compressToEncodedURIComponent(
+                                JSON.stringify(['https://store.gen-ai.fi/somekone/imageSet_dogs.zip'])
+                            ),
+                        })}`}
+                        description={t('library.dogs.description')}
+                    />
+                    <ContentItem
+                        title={t('library.agility.title')}
+                        image="/images/agility.jpg"
+                        url={`/dashboard/socialgraph?${createSearchParams({
+                            content: compressToEncodedURIComponent(
+                                JSON.stringify(['https://store.gen-ai.fi/somekone/imageSet_agility.zip'])
+                            ),
+                        })}`}
+                        description={t('library.agility.description')}
+                    />
+                    <ContentItem
+                        title={t('library.flowerforest.title')}
+                        image="/images/flowerForest.jpg"
+                        url={`/dashboard/socialgraph?${createSearchParams({
+                            content: compressToEncodedURIComponent(
+                                JSON.stringify(['https://store.gen-ai.fi/somekone/imageSet_flowerforest.zip'])
+                            ),
+                        })}`}
+                        description={t('library.flowerforest.description')}
+                    />
+                    <ContentItem
                         title={t('library.blank.title')}
                         image="/images/blank.jpg"
                         url={`/dashboard/contentwizard?${createSearchParams({

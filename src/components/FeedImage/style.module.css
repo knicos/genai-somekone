@@ -54,7 +54,7 @@
 
 .imageContainer {
     position: relative;
-    filter: brightness(0.4);
+    filter: brightness(0.3);
     transition: filter 0.4s;
     /*border-radius: 10px;*/
     overflow: hidden;

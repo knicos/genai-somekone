@@ -24,6 +24,18 @@
         "food": {
             "title": "Food Images",
             "description": "A selection of 400 food images including meat, vegetables, deserts and fruit."
+        },
+        "dogs": {
+            "title": "Dogs",
+            "description": "Images of dogs to explore if some characteristics of images are more engaging than others."
+        },
+        "agility": {
+            "title": "Agility",
+            "description": "Mostly portraits of dogs but with some agility photos."
+        },
+        "flowerforest": {
+            "title": "Flowers & Forests",
+            "description": "Flower wallpaper photos with a few forest landscapes."
         }
     },
     "about": {
