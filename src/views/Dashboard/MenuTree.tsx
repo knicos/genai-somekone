@@ -21,10 +21,11 @@ import ImportContactsIcon from '@mui/icons-material/ImportContacts';
 import NotInterestedIcon from '@mui/icons-material/NotInterested';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { useRecoilState } from 'recoil';
-import { menuSettingsDialog } from '@genaism/state/menuState';
+import { menuSettingsDialog, menuShowSimulator } from '@genaism/state/menuState';
 import AppSettingsAltIcon from '@mui/icons-material/AppSettingsAlt';
 import TuneIcon from '@mui/icons-material/Tune';
 import ImageSearchIcon from '@mui/icons-material/ImageSearch';
+import PsychologyIcon from '@mui/icons-material/Psychology';
 
 interface Props {
     open?: boolean;
@@ -36,6 +37,7 @@ export default function MenuTree({ open }: Props) {
     const navigate = useNavigate();
     const [params, setParams] = useSearchParams();
     const [settingsDialog, setSettingsDialog] = useRecoilState(menuSettingsDialog);
+    const [simulator, setSimulator] = useRecoilState(menuShowSimulator);
 
     const page = pathname.split('/').pop();
 
@@ -94,9 +96,12 @@ export default function MenuTree({ open }: Props) {
                 case 'settings-app':
                     setSettingsDialog('app');
                     break;
+                case 'tools-simulator':
+                    setSimulator(true);
+                    break;
             }
         },
-        [navigate, setParams, search, setSettingsDialog]
+        [navigate, setParams, search, setSettingsDialog, setSimulator]
     );
 
     return (
@@ -263,6 +268,15 @@ export default function MenuTree({ open }: Props) {
                             <div className={page === 'browser' ? style.treeItemSelected : style.treeItem}>
                                 <ImageSearchIcon />
                                 {t('menu.tools.browseContent')}
+                            </div>
+                        }
+                    />
+                    <TreeItem
+                        itemId="tools-simulator"
+                        label={
+                            <div className={simulator ? style.treeItemSelected : style.treeItem}>
+                                <PsychologyIcon />
+                                {t('menu.tools.simulator')}
                             </div>
                         }
                     />

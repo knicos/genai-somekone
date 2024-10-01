@@ -39,13 +39,16 @@ export function useAllSimilarUsers(users: UserNodeId[], cluster?: boolean, k?: n
     }, [users, cluster, k, profiler]);
 
     useEffect(() => {
-        const [handler, cancel] = debounce((id: UserNodeId) => {
-            getSimilar(profiler, id, simRef.current);
+        const [updater, cancel] = debounce(() => {
             setResult({
                 similar: simRef.current,
                 topics: cluster ? clusterUsers(profiler, users, k || 2) : undefined,
             });
         }, MAX_RATE);
+        const handler = (id: UserNodeId) => {
+            getSimilar(profiler, id, simRef.current);
+            updater();
+        };
         profiler.broker.on('profile', handler);
         return () => {
             cancel();

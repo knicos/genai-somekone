@@ -23,6 +23,7 @@ import { Outlet } from 'react-router';
 import AppSettingsDialog from '../dialogs/AppSettingsDialog/AppSettingsDialog';
 import RecomSettingsDialog from '../dialogs/RecomSettingsDialog/RecomSettingsDialog';
 import { SomekoneSettings, useSettingDeserialise } from '@genaism/hooks/settings';
+import Simulator from '@genaism/components/Simulator/Simulator';
 
 interface Props {
     contentUrls?: string;
@@ -99,6 +100,7 @@ export function Workspace({ contentUrls, cfg, guide, experimental, noSession }: 
                         <AppSettingsDialog />
                         <RecomSettingsDialog />
                         {showReplay && <Replay />}
+                        <Simulator />
                     </section>
                 </main>
             </Loading>

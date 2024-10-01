@@ -78,6 +78,11 @@ export const menuShowTools = atom<boolean>({
     default: false,
 });
 
+export const menuShowSimulator = atom<boolean>({
+    key: 'menushowsimulator',
+    default: false,
+});
+
 export const menuMainMenu = atom<boolean>({
     key: 'menumainmenu',
     default: true,

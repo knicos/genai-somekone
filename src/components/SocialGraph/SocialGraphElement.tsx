@@ -47,7 +47,7 @@ export default function SocialGraphElement({ liveUsers }: Props) {
     const showLines = useRecoilValue(settingDisplayLines);
     const showOfflineUsers = useRecoilValue(settingShowOfflineUsers);
     const clusterColouring = useRecoilValue(settingClusterColouring);
-    const similarPercent = useRecoilValue(settingSimilarPercent);
+    const [similarPercent, setSimilarPercent] = useRecoilState(settingSimilarPercent);
     const linkLimit = useRecoilValue(settingLinkLimit);
     const egoSelect = useRecoilValue(settingEgoOnSelect);
     const showLabel = useRecoilValue(settingDisplayLabel);
@@ -86,12 +86,11 @@ export default function SocialGraphElement({ liveUsers }: Props) {
     useEffect(() => {
         const newLinks = generateLinks(similar.similar, allLinks, similarPercent, linkLimit);
         const connected = isFullyConnected(newLinks);
-        if (connected) {
-            setLinks(newLinks);
-        } else {
-            setLinks(generateLinks(similar.similar, true, similarPercent, linkLimit));
+        setLinks(newLinks);
+        if (!connected) {
+            setTimeout(() => setSimilarPercent((old) => 1.1 * old), 500);
         }
-    }, [similar, similarPercent, allLinks, linkLimit]);
+    }, [similar, similarPercent, allLinks, linkLimit, setSimilarPercent]);
 
     const doRedrawNodes = useCallback(async () => {
         // Initialising using an autoencoder is of limited value
