@@ -88,6 +88,16 @@ export const menuMainMenu = atom<boolean>({
     default: true,
 });
 
+export const menuTreeMenu = atom<boolean>({
+    key: 'menutreemenu',
+    default: true,
+});
+
+export const menuDisabledTreeItems = atom<string[]>({
+    key: 'menudisabledtree',
+    default: [],
+});
+
 export const menuShowSocialMenu = atom<boolean>({
     key: 'menusocialmenu',
     default: true,

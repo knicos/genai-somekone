@@ -1,6 +1,6 @@
 import { SomekoneSettings } from '@genaism/hooks/settings';
 
-export type GuidanceAction = 'pause' | 'sharecode';
+export type GuidanceAction = 'pause' | 'sharecode' | 'download';
 
 export interface GuidanceStep {
     settings?: SomekoneSettings;

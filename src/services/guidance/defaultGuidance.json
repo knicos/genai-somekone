@@ -13,9 +13,10 @@
                     },
                     "ui": {
                         "showShareCode": true,
-                        "showMainMenu": true,
+                        "showMainMenu": false,
                         "showGridMenu": false,
-                        "nodeSelectAction": "feed"
+                        "nodeSelectAction": "feed",
+                        "disabledTreeItems": ["tables", "tools"]
                     },
                     "applicationConfig": {
                         "hideActionsButton": true,
@@ -34,7 +35,7 @@
                     },
                     "ui": {
                         "showShareCode": false,
-                        "showMainMenu": true,
+                        "showMainMenu": false,
                         "showGridMenu": false,
                         "nodeSelectAction": "data"
                     },
@@ -60,7 +61,7 @@
                         "clusterColouring": 5
                     },
                     "ui": {
-                        "showMainMenu": true,
+                        "showMainMenu": false,
                         "showGridMenu": false,
                         "nodeSelectAction": "profile"
                     },
@@ -86,7 +87,7 @@
                         "topicThreshold": 0.1
                     },
                     "ui": {
-                        "showMainMenu": true,
+                        "showMainMenu": false,
                         "showSocialMenu": true,
                         "nodeSelectAction": "none"
                     },
@@ -106,7 +107,7 @@
                         "topicThreshold": 0.4
                     },
                     "ui": {
-                        "showMainMenu": true,
+                        "showMainMenu": false,
                         "showSocialMenu": false,
                         "nodeSelectAction": "recommendations"
                     },
@@ -122,9 +123,10 @@
             },
             {
                 "title": "6. Finish",
+                "action": "download",
                 "settings": {
                     "ui": {
-                        "showSaveDialog": true
+                        "showMainMenu": true
                     },
                     "applicationConfig": {
                         "disableFeedApp": true

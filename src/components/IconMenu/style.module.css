@@ -141,7 +141,8 @@
 .inlineBar {
     background: backgroundDark2;
     color: white;
-    /*padding: 0.5rem;*/
+    padding: 0.2rem 0.5rem;
+    flex: 0 0 42px;
     /*box-shadow: 1px 1px 8px #888;*/
     display: flex;
     /*gap: 0.5rem;*/

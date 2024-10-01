@@ -1,5 +1,6 @@
 import {
     UserPanel,
+    menuDisabledTreeItems,
     menuMainMenu,
     menuNodeSelectAction,
     menuShowGridMenu,
@@ -7,6 +8,7 @@ import {
     menuShowShare,
     menuShowSocialMenu,
     menuShowUserPanel,
+    menuTreeMenu,
 } from '@genaism/state/menuState';
 import {
     NodeDisplayMode,
@@ -44,6 +46,8 @@ export interface SomekoneUISettings {
     showGridMenu?: boolean;
     showSocialMenu?: boolean;
     nodeSelectAction?: UserPanel;
+    showTreeMenu?: boolean;
+    disabledTreeItems?: string[];
 }
 
 export interface SomekoneSettings {
@@ -87,6 +91,12 @@ export function useSettingDeserialise() {
                     });
                 }
                 if (data.ui) {
+                    if (data.ui.showTreeMenu !== undefined) {
+                        set(menuTreeMenu, data.ui.showTreeMenu);
+                    }
+                    if (data.ui.disabledTreeItems !== undefined) {
+                        set(menuDisabledTreeItems, data.ui.disabledTreeItems);
+                    }
                     if (data.ui.showUserPanel !== undefined) {
                         set(menuShowUserPanel, data.ui.showUserPanel);
                     }
@@ -138,6 +148,8 @@ export function useSettingSerialise() {
                         showSocialMenu: await snapshot.getPromise(menuShowSocialMenu),
                         showGridMenu: await snapshot.getPromise(menuShowGridMenu),
                         nodeSelectAction: await snapshot.getPromise(menuNodeSelectAction),
+                        showTreeMenu: await snapshot.getPromise(menuTreeMenu),
+                        disabledTreeItems: await snapshot.getPromise(menuDisabledTreeItems),
                     },
                 };
             },

@@ -12,6 +12,14 @@
     display: flex;
 }
 
+.miniSettings {
+    position: absolute;
+    left: 0.5rem;
+    bottom: 0.5rem;
+    z-index: 12;
+    color: white;
+}
+
 .logo {
     line-height: 0;
 }

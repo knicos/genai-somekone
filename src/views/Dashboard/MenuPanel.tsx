@@ -4,7 +4,14 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import QrCode2Icon from '@mui/icons-material/QrCode2';
 import { useCallback, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { menuMainMenu, menuShowSave, menuShowSettings, menuShowShare, menuShowTools } from '@genaism/state/menuState';
+import {
+    menuMainMenu,
+    menuShowSave,
+    menuShowSettings,
+    menuShowShare,
+    menuShowTools,
+    menuTreeMenu,
+} from '@genaism/state/menuState';
 import { useTranslation } from 'react-i18next';
 import IconMenuItem from '@genaism/components/IconMenu/Item';
 import { appConfiguration } from '@genaism/state/settingsState';
@@ -26,6 +33,7 @@ export default function MenuPanel() {
     const [showSave, setShowSave] = useRecoilState(menuShowSave);
     const showTools = useRecoilValue(menuShowTools);
     const showMainMenu = useRecoilValue(menuMainMenu);
+    const showTree = useRecoilValue(menuTreeMenu);
 
     const doShowShare = useCallback(() => setShowShare((s) => !s), [setShowShare]);
     const doShowSettings = useCallback(() => setShowSettings((s) => !s), [setShowSettings]);
@@ -109,7 +117,7 @@ export default function MenuPanel() {
                 </MenuButton>
             </IconMenuItem>
 
-            <MenuTree open={open} />
+            {showTree && <MenuTree open={open} />}
 
             {showTools && <ToolsMenu />}
             <div style={{ flexGrow: 1 }} />
