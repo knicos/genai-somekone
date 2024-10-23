@@ -68,6 +68,16 @@ export const menuShowReplay = atom<boolean>({
     default: false,
 });
 
+export const menuShowReplayControls = atom<boolean>({
+    key: 'menushowreplaycontrols',
+    default: true,
+});
+
+export const menuReplaySpeed = atom<number>({
+    key: 'menureplayspeed',
+    default: 16,
+});
+
 export const menuAllowFeedActions = atom<boolean>({
     key: 'menuallowfeedactions',
     default: false,

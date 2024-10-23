@@ -3,7 +3,10 @@ import {
     menuDisabledTreeItems,
     menuMainMenu,
     menuNodeSelectAction,
+    menuReplaySpeed,
     menuShowGridMenu,
+    menuShowReplay,
+    menuShowReplayControls,
     menuShowSave,
     menuShowShare,
     menuShowSocialMenu,
@@ -48,6 +51,9 @@ export interface SomekoneUISettings {
     nodeSelectAction?: UserPanel;
     showTreeMenu?: boolean;
     disabledTreeItems?: string[];
+    showReplay?: boolean;
+    enableReplayControls?: boolean;
+    replaySpeed?: number;
 }
 
 export interface SomekoneSettings {
@@ -115,6 +121,15 @@ export function useSettingDeserialise() {
                     if (data.ui.showGridMenu !== undefined) {
                         set(menuShowGridMenu, data.ui.showGridMenu);
                     }
+                    if (data.ui.showReplay !== undefined) {
+                        set(menuShowReplay, data.ui.showReplay);
+                    }
+                    if (data.ui.enableReplayControls !== undefined) {
+                        set(menuShowReplayControls, data.ui.enableReplayControls);
+                    }
+                    if (data.ui.replaySpeed !== undefined) {
+                        set(menuReplaySpeed, data.ui.replaySpeed);
+                    }
                     if (data.ui.nodeSelectAction !== undefined) {
                         set(menuNodeSelectAction, data.ui.nodeSelectAction);
                     }
@@ -150,6 +165,9 @@ export function useSettingSerialise() {
                         nodeSelectAction: await snapshot.getPromise(menuNodeSelectAction),
                         showTreeMenu: await snapshot.getPromise(menuTreeMenu),
                         disabledTreeItems: await snapshot.getPromise(menuDisabledTreeItems),
+                        showReplay: await snapshot.getPromise(menuShowReplay),
+                        enableReplayControls: await snapshot.getPromise(menuShowReplayControls),
+                        replaySpeed: await snapshot.getPromise(menuReplaySpeed),
                     },
                 };
             },

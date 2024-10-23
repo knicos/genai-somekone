@@ -71,7 +71,7 @@ export function useBroker() {
 export function useServiceEventMemo<TEventName extends keyof ServiceEvents & string, T>(
     f: () => T,
     deps: unknown[],
-    name: TEventName
+    name: TEventName | TEventName[]
 ) {
     const [state, dispatch] = useReducer((a) => a + 1, 0);
     const service = useBroker();
@@ -80,10 +80,17 @@ export function useServiceEventMemo<TEventName extends keyof ServiceEvents & str
         const handler = () => {
             dispatch();
         };
-        service.on(name, handler);
-        return () => {
-            service.off(name, handler);
-        };
+        if (Array.isArray(name)) {
+            name.forEach((n) => service.on(n, handler));
+            return () => {
+                name.forEach((n) => service.off(n, handler));
+            };
+        } else {
+            service.on(name, handler);
+            return () => {
+                service.off(name, handler);
+            };
+        }
     }, [service, name]);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

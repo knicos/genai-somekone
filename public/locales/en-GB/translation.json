@@ -273,7 +273,8 @@
             "contentTools": "Content Tools",
             "userSelect": "Select User",
             "usersSelect": "Select Users",
-            "simulator": "User Simulator"
+            "simulator": "User Simulator",
+            "replay": "Replay"
         },
         "labels": {
             "usePopularCandidates": "Use popular candidates",
@@ -374,7 +375,8 @@
             "profileImage": "Profile Images",
             "similarityThreshold": "Similarity difference threshold",
             "limitLinks": "Maximum links per node",
-            "agentCount": "Number of Agents"
+            "agentCount": "Number of Agents",
+            "playbackSpeed": "Speed"
         },
         "messages": {
             "connection": "Go to the address below and enter the code <Code>{{codeText}}</Code>, or use the QR code.",
