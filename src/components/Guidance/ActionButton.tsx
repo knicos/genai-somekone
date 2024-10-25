@@ -1,4 +1,4 @@
-import { GuidanceAction } from '@genaism/services/guidance/guidanceTypes';
+import { GuidanceAction } from '@genaism/hooks/guidance';
 import { appConfiguration } from '@genaism/state/settingsState';
 import { IconButton } from '@mui/material';
 import { useCallback } from 'react';

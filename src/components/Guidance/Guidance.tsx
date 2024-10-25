@@ -1,4 +1,4 @@
-import { getGuidance } from '@genaism/services/guidance/guidance';
+import { useGuide } from '@genaism/hooks/guidance';
 import { MenuItem, MenuList } from '@mui/material';
 import style from './style.module.css';
 import { useEffect } from 'react';
@@ -12,7 +12,7 @@ interface Props {
 }
 
 export default function Guidance({ guide }: Props) {
-    const data = getGuidance(guide);
+    const data = useGuide(guide);
     const deserial = useSettingDeserialise();
     const navigate = useNavigate();
     const { search } = useLocation();
