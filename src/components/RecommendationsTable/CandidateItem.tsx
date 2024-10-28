@@ -2,9 +2,9 @@ import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import ImageSearchIcon from '@mui/icons-material/ImageSearch';
 import style from './style.module.css';
-import MiniUserGraph from '../MiniUserGraph/MiniUserGraph';
-import MiniTopicGraph from '../MiniTopicGraph/MiniTopicGraph';
-import MiniCoengGraph from '../MiniCoengGraph/MiniCoengGraph';
+import MiniUserGraph from '@genaism/visualisations/MiniUserGraph/MiniUserGraph';
+import MiniTopicGraph from '@genaism/visualisations/MiniTopicGraph/MiniTopicGraph';
+import MiniCoengGraph from '@genaism/visualisations/MiniCoengGraph/MiniCoengGraph';
 import { ProfilerService, ScoredRecommendation, UserNodeId } from '@knicos/genai-recom';
 import { useProfilerService } from '@genaism/hooks/services';
 

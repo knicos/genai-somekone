@@ -1,6 +1,6 @@
 import { generateMessage } from './message';
 import { useTranslation } from 'react-i18next';
-import Card from '../DataCard/Card';
+import { Card } from '../DataCard';
 import LogItem from './LogItem';
 import { LogEntry } from '@knicos/genai-recom';
 

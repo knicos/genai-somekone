@@ -1,4 +1,4 @@
-import { SocialGraphThemes } from '@genaism/components/SocialGraph/graphTheme';
+import { SocialGraphThemes } from '@genaism/visualisations/SocialGraph/graphTheme';
 import { SMConfig } from '@genaism/state/smConfig';
 import { UserNodeId } from '@knicos/genai-recom';
 import { atom, atomFamily, selectorFamily } from 'recoil';

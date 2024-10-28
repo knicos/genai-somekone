@@ -12,7 +12,7 @@ import { RecoilRoot } from 'recoil';
 import './App.css';
 import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 import Loading from './components/Loading/Loading';
-import About from './views/About/About';
+import About from './pages/About/About';
 import { theme } from '@knicos/genai-base';
 import { defaultServices, ServiceProvider } from './hooks/services';
 
@@ -70,7 +70,7 @@ const router = createBrowserRouter(
             />
             <Route
                 path="app/:code"
-                lazy={() => import('./views/Genagram/Genagram')}
+                lazy={() => import('./pages/Genagram/Genagram')}
             >
                 <Route
                     index
@@ -78,40 +78,40 @@ const router = createBrowserRouter(
                 />
                 <Route
                     path="feed"
-                    lazy={() => import('./views/Genagram/subviews/FeedView')}
+                    lazy={() => import('./pages/Genagram/subviews/FeedView')}
                 />
                 <Route
                     path="data"
-                    lazy={() => import('./views/Genagram/subviews/DataView')}
+                    lazy={() => import('./pages/Genagram/subviews/DataView')}
                 />
                 <Route
                     path="post"
-                    lazy={() => import('./views/Genagram/subviews/PostView')}
+                    lazy={() => import('./pages/Genagram/subviews/PostView')}
                 />
                 <Route
                     path="image/:contentId"
-                    lazy={() => import('./views/Genagram/subviews/ImageView')}
+                    lazy={() => import('./pages/Genagram/subviews/ImageView')}
                 />
                 <Route
                     path="profile"
-                    lazy={() => import('./views/Genagram/subviews/ProfileView')}
+                    lazy={() => import('./pages/Genagram/subviews/ProfileView')}
                 />
                 <Route
                     path="recommendations"
-                    lazy={() => import('./views/Genagram/subviews/RecommendationView')}
+                    lazy={() => import('./pages/Genagram/subviews/RecommendationView')}
                 />
                 <Route
                     path="share"
-                    lazy={() => import('./views/Genagram/subviews/ShareView')}
+                    lazy={() => import('./pages/Genagram/subviews/ShareView')}
                 />
                 <Route
                     path="public/:userId"
-                    lazy={() => import('./views/Genagram/subviews/PublicView')}
+                    lazy={() => import('./pages/Genagram/subviews/PublicView')}
                 />
             </Route>
             <Route
                 path="print/:code"
-                lazy={() => import('./views/Printing/Printing')}
+                lazy={() => import('./pages/Printing/Printing')}
             >
                 <Route
                     index
@@ -119,16 +119,16 @@ const router = createBrowserRouter(
                 />
                 <Route
                     path="data"
-                    lazy={() => import('./views/Printing/pages/PrintData')}
+                    lazy={() => import('./pages/Printing/pages/PrintData')}
                 />
                 <Route
                     path="profile"
-                    lazy={() => import('./views/Printing/pages/PrintProfile')}
+                    lazy={() => import('./pages/Printing/pages/PrintProfile')}
                 />
             </Route>
             <Route
                 path="profile/:code"
-                lazy={() => import('./views/ProfileViewer/ProfileViewer')}
+                lazy={() => import('./pages/ProfileViewer/ProfileViewer')}
             >
                 <Route
                     index
@@ -136,24 +136,24 @@ const router = createBrowserRouter(
                 />
                 <Route
                     path="data"
-                    lazy={() => import('./views/Genagram/subviews/DataView')}
+                    lazy={() => import('./pages/Genagram/subviews/DataView')}
                 />
                 <Route
                     path="profile"
-                    lazy={() => import('./views/Genagram/subviews/ProfileView')}
+                    lazy={() => import('./pages/Genagram/subviews/ProfileView')}
                 />
                 <Route
                     path="recommendations"
-                    lazy={() => import('./views/Genagram/subviews/RecommendationView')}
+                    lazy={() => import('./pages/Genagram/subviews/RecommendationView')}
                 />
             </Route>
             <Route
                 path="start"
-                lazy={() => import('./views/Start/Start')}
+                lazy={() => import('./pages/Start/Start')}
             />
             <Route
                 path="library"
-                lazy={() => import('./views/Library/Library')}
+                lazy={() => import('./pages/Library/Library')}
             />
             <Route
                 path="about"
@@ -161,7 +161,7 @@ const router = createBrowserRouter(
             />
             <Route
                 path="dashboard"
-                lazy={() => import('./views/Dashboard/Dashboard')}
+                lazy={() => import('./pages/Dashboard/Dashboard')}
             >
                 <Route
                     index
@@ -169,52 +169,52 @@ const router = createBrowserRouter(
                 />
                 <Route
                     path="socialgraph"
-                    lazy={() => import('./views/Dashboard/subviews/SocialGraph')}
+                    lazy={() => import('./pages/Dashboard/subviews/SocialGraph')}
                 />
                 <Route
                     path="contentgraph"
-                    lazy={() => import('./views/Dashboard/subviews/ContentGraph')}
+                    lazy={() => import('./pages/Dashboard/subviews/ContentGraph')}
                 />
                 <Route
                     path="heatmaps"
-                    lazy={() => import('./views/Dashboard/subviews/HeatmapCompare')}
+                    lazy={() => import('./pages/Dashboard/subviews/HeatmapCompare')}
                 />
                 <Route
                     path="actionlog"
-                    lazy={() => import('./views/Dashboard/subviews/LogTable')}
+                    lazy={() => import('./pages/Dashboard/subviews/LogTable')}
                 />
                 <Route
                     path="topicgraph"
-                    lazy={() => import('./views/Dashboard/subviews/TopicGraph')}
+                    lazy={() => import('./pages/Dashboard/subviews/TopicGraph')}
                 />
                 <Route
                     path="userstats"
-                    lazy={() => import('./views/Dashboard/subviews/UserTable')}
+                    lazy={() => import('./pages/Dashboard/subviews/UserTable')}
                 />
                 <Route
                     path="usergrid"
-                    lazy={() => import('./views/Dashboard/subviews/UserGrid')}
+                    lazy={() => import('./pages/Dashboard/subviews/UserGrid')}
                 />
                 <Route
                     path="contentengage"
-                    lazy={() => import('./views/Dashboard/subviews/ContentEngagements')}
+                    lazy={() => import('./pages/Dashboard/subviews/ContentEngagements')}
                 />
                 <Route
                     path="topictable"
-                    lazy={() => import('./views/Dashboard/subviews/TopicTable')}
+                    lazy={() => import('./pages/Dashboard/subviews/TopicTable')}
                 />
                 <Route
                     path="contentwizard"
-                    lazy={() => import('./views/Dashboard/subviews/ContentWizard')}
+                    lazy={() => import('./pages/Dashboard/subviews/ContentWizard')}
                 />
                 <Route
                     path="browser"
-                    lazy={() => import('./views/Dashboard/subviews/ContentBrowser')}
+                    lazy={() => import('./pages/Dashboard/subviews/ContentBrowser')}
                 />
             </Route>
             <Route
                 path="content"
-                lazy={() => import('./views/ContentTool/ContentTool')}
+                lazy={() => import('./pages/ContentTool/ContentTool')}
             />
         </Route>
     )

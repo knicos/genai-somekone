@@ -1,8 +1,8 @@
 import { PieChart } from '@mui/x-charts';
-import { TopicSummaryItem } from '../UserProfile/topicSummary';
+import { TopicSummaryItem } from '@genaism/views/UserProfile/topicSummary';
 import style from './style.module.css';
 import gcolours from '@genaism/style/graphColours.json';
-import Card from '../DataCard/Card';
+import { Card } from '../DataCard';
 
 interface Props {
     title: string;

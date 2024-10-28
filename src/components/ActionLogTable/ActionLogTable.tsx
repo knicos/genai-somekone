@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Button } from '@knicos/genai-base';
 import { useTranslation } from 'react-i18next';
-import Cards from '../DataCard/Cards';
+import { Cards } from '../DataCard';
 import LogBatch, { ContentLogEntry } from './LogBatch';
 import style from './style.module.css';
 import { engagementFromLog, UserNodeId } from '@knicos/genai-recom';

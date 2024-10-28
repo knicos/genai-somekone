@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import style from './style.module.css';
 import ActionPanel from './ActionPanel';
 import { useTranslation } from 'react-i18next';
-import UserListing from '../UserListing/UserListing';
+import UserListing from '../../views/UserListing/UserListing';
 import { UserNodeId } from '@knicos/genai-recom';
 
 export type ShareKind = 'none' | 'public';

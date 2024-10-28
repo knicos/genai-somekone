@@ -1,6 +1,6 @@
 import { PrintData } from '@genaism/protocol/printProtocol';
 import { ContentInjectReason, UserEntry } from '@genaism/protocol/protocol';
-import { UserInfo } from '@genaism/views/Dashboard/userInfo';
+import { UserInfo } from '@genaism/pages/Dashboard/userInfo';
 import { ContentNodeId, UserNodeId } from '@knicos/genai-recom';
 import { atom } from 'recoil';
 

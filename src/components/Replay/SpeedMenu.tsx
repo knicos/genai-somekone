@@ -1,4 +1,4 @@
-import IconMenuItem from '@genaism/components/IconMenu/Item';
+import { IconMenuItem } from '@genaism/components/IconMenu';
 import { IconButton, Popover, Slider } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';

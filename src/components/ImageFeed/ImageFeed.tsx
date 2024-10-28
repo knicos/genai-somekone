@@ -1,8 +1,6 @@
 import React, { useRef, useCallback, useState, useEffect, FocusEvent } from 'react';
-import IImage from '../FeedImage/FeedImage';
 import style from './style.module.css';
-import { LikeKind } from '@genaism/components/FeedImage/FeedImage';
-import { ShareKind } from '@genaism/components/FeedImage/SharePanel';
+import { FeedImage as IImage, LikeKind, ShareKind } from '@genaism/components/FeedImage';
 import FeedSpacer from './FeedSpacer';
 import { useTabActive } from '@genaism/hooks/interaction';
 import { useTranslation } from 'react-i18next';

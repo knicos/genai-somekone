@@ -1,9 +1,8 @@
-@value workspaceBg, borderGrey, textDark from "@knicos/genai-base/css/colours.module.css";
+@value borderGrey, textDark from "@knicos/genai-base/css/colours.module.css";
 
 .panel {
     position: absolute;
     aspect-ratio: 9/16;
-    /*max-width: calc(0.6 * 80vh);*/
     max-height: 80vh;
     box-sizing: border-box;
     width: 500px;
