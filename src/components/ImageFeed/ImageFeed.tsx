@@ -137,7 +137,7 @@ export default function ImageFeed({
             const imgIndex = Math.floor(scrollTop / imageHeight + 0.2);
 
             const now = Date.now();
-            if (now - lastRef.current > INTERACTION_TIMEOUT) {
+            if (images.length > 0 && now - lastRef.current > INTERACTION_TIMEOUT) {
                 onLog({
                     activity: 'inactive',
                     value: now - lastRef.current,

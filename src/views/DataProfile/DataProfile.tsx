@@ -5,12 +5,15 @@ import { useProfilerService } from '@genaism/hooks/services';
 import { useActionLog } from '@genaism/hooks/actionLog';
 import { saveAs } from 'file-saver';
 import PrintButton from '@genaism/components/PrintButton/PrintButton';
-import DataProfileRaw from './DataProfilePure';
-import { useMemo } from 'react';
+import { DataProfilePure } from './DataProfilePure';
+import { useMemo, useRef } from 'react';
 import { IconMenuInline, IconMenuItem } from '@genaism/components/IconMenu';
 import { useTranslation } from 'react-i18next';
 import { useRecoilValue } from 'recoil';
 import { appConfiguration } from '@genaism/state/settingsState';
+import { svgToPNG } from '@genaism/util/svgToPNG';
+import { IconButton } from '@mui/material';
+import DownloadIcon from '@mui/icons-material/Download';
 
 interface Props {
     id?: UserNodeId;
@@ -22,6 +25,7 @@ export default function Profile({ id }: Props) {
     const profiler = useProfilerService();
     const log = useActionLog(id || profiler.getCurrentUser());
     const appConfig = useRecoilValue(appConfiguration);
+    const svgRef = useRef<SVGSVGElement>(null);
 
     const weightedImages = useMemo(
         () =>
@@ -40,6 +44,14 @@ export default function Profile({ id }: Props) {
             })),
         [log, profiler]
     );
+
+    const doSave = () => {
+        if (svgRef.current) {
+            svgToPNG(svgRef.current, 4).then((data) => {
+                saveAs(data, `imagecloud_${profile.name}.png`);
+            });
+        }
+    };
 
     return (
         <div className={style.outerContainer}>
@@ -61,12 +73,20 @@ export default function Profile({ id }: Props) {
                                 path="data"
                             />
                         </IconMenuItem>
+                        <IconMenuItem tooltip={t('profile.actions.download')}>
+                            <IconButton
+                                onClick={doSave}
+                                color="inherit"
+                            >
+                                <DownloadIcon />
+                            </IconButton>
+                        </IconMenuItem>
                     </IconMenuInline>
                 )}
-                <DataProfileRaw
+                <DataProfilePure
+                    ref={svgRef}
                     content={weightedImages}
                     log={actionLog}
-                    onSave={(data: string) => saveAs(data, `imagecloud_${profile.name}.png`)}
                 />
             </div>
         </div>

@@ -1,4 +1,4 @@
-import { PropsWithChildren, useEffect, useState } from 'react';
+import { MouseEvent, PropsWithChildren, useEffect, useState } from 'react';
 import style from './style.module.css';
 import { IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
@@ -20,7 +20,14 @@ export default function AppPanel({ title, onClose, children, ...props }: Props) 
     }, [visible, onClose]);
 
     return (
-        <div className={visible ? style.backgroundVisible : style.backgroundInvisible}>
+        <div
+            className={visible ? style.backgroundVisible : style.backgroundInvisible}
+            onClick={(e: MouseEvent) => {
+                if (onClose && e.target === e.currentTarget) {
+                    onClose();
+                }
+            }}
+        >
             <section
                 className={style.panel}
                 {...props}

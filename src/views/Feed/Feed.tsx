@@ -65,21 +65,23 @@ export default function Feed({ onProfile, onLog, onRecommend, id, noLog, noActio
 
     return (
         <section className={style.feedView}>
-            <ImageFeed
-                images={feedList}
-                onMore={() => {
-                    moreState.current = true;
-                    more();
-                }}
-                onLog={doLog}
-                noActions={noActions}
-                showLabels={appConfig?.showTopicLabels}
-                alwaysActive={appConfig?.alwaysActive || alwaysActive}
-                noComments={appConfig?.disableComments}
-                noLike={appConfig?.disableLiking}
-                noFollow={appConfig?.disableFollowing}
-                noShare={appConfig?.disableSharing}
-            />
+            {feedList.length > 0 && (
+                <ImageFeed
+                    images={feedList}
+                    onMore={() => {
+                        moreState.current = true;
+                        more();
+                    }}
+                    onLog={doLog}
+                    noActions={noActions}
+                    showLabels={appConfig?.showTopicLabels}
+                    alwaysActive={appConfig?.alwaysActive || alwaysActive}
+                    noComments={appConfig?.disableComments}
+                    noLike={appConfig?.disableLiking}
+                    noFollow={appConfig?.disableFollowing}
+                    noShare={appConfig?.disableSharing}
+                />
+            )}
 
             <div className={style.footerOuter}></div>
         </section>

@@ -32,7 +32,7 @@ export default function cloudLayout<T extends string>(
     size: number,
     padding?: number
 ): [LocationItem<T>[], number] {
-    const start = performance.now();
+    // const start = performance.now();
     const results: LocationItem<T>[] = [];
     //let maxDist = 0;
 
@@ -94,6 +94,6 @@ export default function cloudLayout<T extends string>(
         const d = calculateDistance(r.x, r.x + r.item.width, r.y, r.y + r.item.height);
         dist.max = Math.max(dist.max, d);
     });
-    console.log('Cloud Layout', performance.now() - start);
+    // console.log('Cloud Layout', performance.now() - start);
     return [results, dist.max];
 }

@@ -247,8 +247,10 @@ export default function SocialGraphElement({ liveUsers }: Props) {
                 onDragStop={() => {
                     if (userElement.current) {
                         const rect = userElement.current.getClientRects()[0];
-                        if (rect) {
-                            setUserMenu([rect.x + rect.width / 2, rect.y + rect.height + 20]);
+                        const parent = userElement.current?.ownerSVGElement;
+                        if (rect && parent) {
+                            const parentLeft = parent.getBoundingClientRect();
+                            setUserMenu([rect.x + rect.width / 2 - parentLeft.left, rect.y + rect.height + 20]);
                         } else {
                             setUserMenu([0, 0]);
                         }

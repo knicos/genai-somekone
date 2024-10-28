@@ -66,11 +66,11 @@ export default function UserGrid({ users }: Props) {
                     );
                 })}
             </div>
+            <GridMenu />
             <FeedPanel />
             <DataPanel />
             <ProfilePanel />
             <RecommendationsPanel />
-            <GridMenu />
         </>
     );
 }

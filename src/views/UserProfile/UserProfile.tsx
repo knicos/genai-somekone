@@ -1,6 +1,6 @@
 import style from './style.module.css';
 import topicSummary from './topicSummary';
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
 import { TopicData } from './TopicDetail';
 import { ContentNodeId, getTopicLabel, UserNodeId, WeightedNode } from '@knicos/genai-recom';
 import { useProfilerService } from '@genaism/hooks/services';
@@ -12,6 +12,9 @@ import { IconMenuInline, IconMenuItem } from '@genaism/components/IconMenu';
 import { useTranslation } from 'react-i18next';
 import { useRecoilValue } from 'recoil';
 import { appConfiguration } from '@genaism/state/settingsState';
+import { svgToPNG } from '@genaism/util/svgToPNG';
+import DownloadIcon from '@mui/icons-material/Download';
+import { IconButton } from '@mui/material';
 
 interface Props {
     id?: UserNodeId;
@@ -23,10 +26,7 @@ export default function Profile({ id }: Props) {
     const aid = id || profiler.getCurrentUser();
     const profile = useUserProfile(aid);
     const appConfig = useRecoilValue(appConfiguration);
-
-    const doSave = (data: string) => {
-        saveAs(data, `wordcloud_${profile.name}.png`);
-    };
+    const svgRef = useRef<SVGSVGElement>(null);
 
     const summary = useMemo(() => {
         return topicSummary(profile);
@@ -74,6 +74,14 @@ export default function Profile({ id }: Props) {
             : [];
     }, [profile, profiler, topicContent, tasteSum]);
 
+    const doSave = () => {
+        if (svgRef.current) {
+            svgToPNG(svgRef.current, 4).then((data) => {
+                saveAs(data, `wordcloud_${profile.name}.png`);
+            });
+        }
+    };
+
     return (
         <div className={style.outerContainer}>
             <div
@@ -99,10 +107,18 @@ export default function Profile({ id }: Props) {
                                 path="profile"
                             />
                         </IconMenuItem>
+                        <IconMenuItem tooltip={t('profile.actions.download')}>
+                            <IconButton
+                                onClick={doSave}
+                                color="inherit"
+                            >
+                                <DownloadIcon />
+                            </IconButton>
+                        </IconMenuItem>
                     </IconMenuInline>
                 )}
                 <UserProfilePure
-                    onSave={doSave}
+                    ref={svgRef}
                     topics={topics}
                     summary={summary}
                     wordCloud={profile.affinities.topics.topics}

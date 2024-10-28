@@ -444,7 +444,8 @@
             "profile": "Profile",
             "recommendations": "Recommendations",
             "post": "Post",
-            "print": "Print"
+            "print": "Print",
+            "download": "Download image"
         },
         "messages": {
             "loading": "Finding profile data"
