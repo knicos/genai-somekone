@@ -28,13 +28,17 @@ export default function HeatmapCompare() {
                     key={`g${count}`}
                 >
                     {users.map((user) => (
-                        <RecommendationsHeatmap
+                        <div
                             key={user}
-                            dimensions={0}
-                            user={user}
-                            showName
-                            invert={invert}
-                        />
+                            className={style.heatCard}
+                        >
+                            <RecommendationsHeatmap
+                                dimensions={0}
+                                user={user}
+                                showName
+                                invert={invert}
+                            />
+                        </div>
                     ))}
                 </div>
             )}
@@ -44,13 +48,17 @@ export default function HeatmapCompare() {
                     key={`g${count}`}
                 >
                     {users.map((user) => (
-                        <EngagementHeatmap
+                        <div
                             key={user}
-                            dimensions={0}
-                            user={user}
-                            showName
-                            invert={invert}
-                        />
+                            className={style.heatCard}
+                        >
+                            <EngagementHeatmap
+                                dimensions={0}
+                                user={user}
+                                showName
+                                invert={invert}
+                            />
+                        </div>
                     ))}
                 </div>
             )}
@@ -59,10 +67,12 @@ export default function HeatmapCompare() {
                     className={style.grid1}
                     key={`g${count}`}
                 >
-                    <ContentHeatmap
-                        dimensions={0}
-                        invert={invert}
-                    />
+                    <div className={style.heatCard}>
+                        <ContentHeatmap
+                            dimensions={0}
+                            invert={invert}
+                        />
+                    </div>
                 </div>
             )}
             <UserDialog
