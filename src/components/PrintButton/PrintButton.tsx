@@ -11,11 +11,13 @@ interface Props {
 export default function PrintButton({ data, path }: Props) {
     const code = useRandom(5);
 
+    if (!window.BroadcastChannel) return null;
+
     return (
         <IconButton
             color="inherit"
             onClick={() => {
-                const bc = new BroadcastChannel('printing');
+                const bc = new window.BroadcastChannel('printing');
                 bc.onmessage = (ev: MessageEvent) => {
                     if (ev.data === `request_${code}`) {
                         bc.postMessage(data());

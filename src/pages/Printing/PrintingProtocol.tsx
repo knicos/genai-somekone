@@ -11,7 +11,9 @@ export function PrintingProtocol({ children, code }: Props) {
     const setPrintData = useSetRecoilState(storedPrintData);
 
     useEffect(() => {
-        const bc = new BroadcastChannel('printing');
+        if (!window.BroadcastChannel) return;
+
+        const bc = new window.BroadcastChannel('printing');
         bc.onmessage = (ev: MessageEvent) => {
             console.log(ev);
             setPrintData(ev.data);
