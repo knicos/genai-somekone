@@ -13,6 +13,8 @@ import {
     settingSocialGraphTheme,
     settingSimilarPercent,
     settingLinkLimit,
+    settingAutoCamera,
+    settingAutoEdges,
 } from '@genaism/state/settingsState';
 // import FakeNode from '../FakeNode/FakeNode';
 import style from './style.module.css';
@@ -28,12 +30,14 @@ import { calculateParameters } from './parameters';
 import graphThemes from './graphTheme';
 import UserMenu from './UserMenu';
 import DebounceGraph from '../Graph/DebounceGraph';
-import { generateLinks, isFullyConnected } from './links';
+import { generateLinks } from './links';
 
 const DEBOUNCE = 1000;
 const LINE_THICKNESS_UNSELECTED = 40;
 const MIN_LINE_THICKNESS = 10;
 const LINE_THICKNESS_SELECTED = 60;
+const DENSITY_LOW = 0.01;
+const DENSITY_HIGH = 0.03;
 
 interface Props {
     liveUsers?: UserNodeId[];
@@ -53,6 +57,8 @@ export default function SocialGraphElement({ liveUsers }: Props) {
     const showLabel = useRecoilValue(settingDisplayLabel);
     const allLinks = useRecoilValue(settingIncludeAllLinks);
     const themeName = useRecoilValue(settingSocialGraphTheme);
+    const autoCamera = useRecoilValue(settingAutoCamera);
+    const autoEdges = useRecoilValue(settingAutoEdges);
     const users = useNodeType('user');
     const liveSet = useMemo(() => {
         const set = new Set<string>();
@@ -85,28 +91,13 @@ export default function SocialGraphElement({ liveUsers }: Props) {
 
     useEffect(() => {
         const newLinks = generateLinks(similar.similar, allLinks, similarPercent, linkLimit);
-        const connected = isFullyConnected(newLinks);
         setLinks(newLinks);
-        if (!connected) {
-            setTimeout(() => setSimilarPercent((old) => 1.1 * old), 500);
-        }
-    }, [similar, similarPercent, allLinks, linkLimit, setSimilarPercent]);
+    }, [similar, similarPercent, allLinks, linkLimit]);
 
     const doRedrawNodes = useCallback(async () => {
-        // Initialising using an autoencoder is of limited value
-        /*const usersWithoutPoints = users.filter((u) => !pointMap.current.get(u));
-
-        if (usersWithoutPoints.length > 0) {
-            await mapUsersToPoints(usersWithoutPoints).then((points) => {
-                points.forEach((p) => {
-                    pointMap.current.set(p.id, p.point);
-                });
-            });
-        }*/
-
         setNodes((oldNodes) => {
             const filteredUsers = showOfflineUsers
-                ? users.filter((u) => u !== profiler.getCurrentUser())
+                ? users.filter((u) => u !== profiler.getCurrentUser() && (similar.similar.get(u)?.length || 0) > 0)
                 : users.filter((u) => liveSet.has(u) && u !== profiler.getCurrentUser());
 
             const oldMap = new Map<UserNodeId, GraphNode<UserNodeId>>();
@@ -141,6 +132,7 @@ export default function SocialGraphElement({ liveUsers }: Props) {
                     };
                 }
             });
+
             return newNodes;
         });
     }, [users, liveSet, showOfflineUsers, similar, profiler]);
@@ -191,9 +183,23 @@ export default function SocialGraphElement({ liveUsers }: Props) {
         }
     }, [focusNode, links]);
 
+    const doNodeDensity = useCallback(
+        (d: number) => {
+            const ad = d * scale;
+            if (ad > 0 && ad < DENSITY_LOW) {
+                setSimilarPercent((old) => Math.min(0.5, 1.1 * old));
+            } else if (ad > DENSITY_HIGH) {
+                setSimilarPercent((old) => Math.max(0.01, 0.9 * old));
+            }
+        },
+        [setSimilarPercent, scale]
+    );
+
     return (
         <>
             <DebounceGraph
+                onNodeDensity={autoEdges ? doNodeDensity : undefined}
+                autoCamera={autoCamera}
                 rateLimit={DEBOUNCE}
                 onZoom={(z: number) => {
                     currentZoom.current = z;

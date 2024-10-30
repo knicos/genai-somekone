@@ -12,6 +12,8 @@
         "hideProfileView": false,
         "hideActionsButton": false,
         "hideRecommendationsView": false,
+        "hidePostContent": true,
+        "hideOwnProfile": true,
         "collectResearchData": false,
         "alwaysActive": false,
         "experimental": false,

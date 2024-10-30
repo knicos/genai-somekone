@@ -7,7 +7,7 @@ export function Component() {
 
     return (
         <ViewContainer title={t('profile.titles.yourProfile')}>
-            <Profile />
+            <Profile disableMenu />
         </ViewContainer>
     );
 }

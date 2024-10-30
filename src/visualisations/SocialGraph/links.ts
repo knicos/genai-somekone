@@ -33,10 +33,11 @@ export function generateLinks(
             }
         });
     });
+
     return newLinks;
 }
 
-export function isFullyConnected(links: GraphLink<UserNodeId, UserNodeId>[]) {
+/*export function isFullyConnected(links: GraphLink<UserNodeId, UserNodeId>[]) {
     if (links.length === 0) return true;
     const nodeLinks = new Map<UserNodeId, UserNodeId[]>();
     links.forEach((link) => {
@@ -71,4 +72,4 @@ export function isFullyConnected(links: GraphLink<UserNodeId, UserNodeId>[]) {
     }
 
     return visited.size === nodeLinks.size;
-}
+}*/

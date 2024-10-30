@@ -64,6 +64,16 @@ export const settingLinkLimit = atom<number>({
     default: 5,
 });
 
+export const settingAutoCamera = atom<boolean>({
+    key: 'settingautocamera',
+    default: false,
+});
+
+export const settingAutoEdges = atom<boolean>({
+    key: 'settingautoedges',
+    default: true,
+});
+
 /*export const settingTopicThreshold = atom<number>({
     key: 'settingtopicthreshold',
     default: 0.4,

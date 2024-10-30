@@ -98,3 +98,11 @@
     composes: userNameContainer;
     background: secondary;
 }
+
+.word rect {
+    fill: white;
+}
+
+.word text {
+    fill: #444;
+}

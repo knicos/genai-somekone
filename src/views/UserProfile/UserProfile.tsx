@@ -18,9 +18,10 @@ import { IconButton } from '@mui/material';
 
 interface Props {
     id?: UserNodeId;
+    disableMenu?: boolean;
 }
 
-export default function Profile({ id }: Props) {
+export default function Profile({ id, disableMenu }: Props) {
     const { t } = useTranslation();
     const profiler = useProfilerService();
     const aid = id || profiler.getCurrentUser();
@@ -88,7 +89,7 @@ export default function Profile({ id }: Props) {
                 className={style.container}
                 tabIndex={0}
             >
-                {!appConfig?.disablePrinting && (
+                {!appConfig?.disablePrinting && !disableMenu && (
                     <IconMenuInline>
                         <IconMenuItem tooltip={t('profile.actions.print')}>
                             <PrintButton

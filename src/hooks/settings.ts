@@ -23,6 +23,8 @@ import {
     settingNodeMode,
     settingLinkLimit,
     settingSimilarPercent,
+    settingAutoCamera,
+    settingAutoEdges,
 } from '@genaism/state/settingsState';
 import { SMConfig, mergeConfiguration } from '@genaism/state/smConfig';
 import { useRecoilCallback } from 'recoil';
@@ -37,6 +39,8 @@ export interface SomekoneSocialSettings {
     clusterColouring?: number;
     similarityThreshold?: number;
     linkLimit?: number;
+    autoCamera?: boolean;
+    autoEdges?: boolean;
 }
 
 export interface SomekoneGeneralSettings {}
@@ -87,6 +91,12 @@ export function useSettingDeserialise() {
                     }
                     if (data.socialGraph.includeAllLinks !== undefined) {
                         set(settingIncludeAllLinks, data.socialGraph.includeAllLinks);
+                    }
+                    if (data.socialGraph.autoCamera !== undefined) {
+                        set(settingAutoCamera, data.socialGraph.autoCamera);
+                    }
+                    if (data.socialGraph.autoEdges !== undefined) {
+                        set(settingAutoEdges, data.socialGraph.autoEdges);
                     }
                 }
                 if (data.applicationConfig) {
@@ -154,6 +164,8 @@ export function useSettingSerialise() {
                         includeAllLinks: await snapshot.getPromise(settingIncludeAllLinks),
                         linkLimit: await snapshot.getPromise(settingLinkLimit),
                         similarityThreshold: await snapshot.getPromise(settingSimilarPercent),
+                        autoCamera: await snapshot.getPromise(settingAutoCamera),
+                        autoEdges: await snapshot.getPromise(settingAutoEdges),
                     },
                     applicationConfig: await snapshot.getPromise(appConfiguration),
                     ui: {

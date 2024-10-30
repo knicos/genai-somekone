@@ -376,7 +376,9 @@
             "similarityThreshold": "Similarity difference threshold",
             "limitLinks": "Maximum links per node",
             "agentCount": "Number of Agents",
-            "playbackSpeed": "Speed"
+            "playbackSpeed": "Speed",
+            "autoCamera": "Automatic camera",
+            "autoEdges": "Automatic link adjustment"
         },
         "messages": {
             "connection": "Go to the address below and enter the code <Code>{{codeText}}</Code>, or use the QR code.",

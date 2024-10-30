@@ -14,6 +14,8 @@ import { useTranslation } from 'react-i18next';
 import { useRecoilState } from 'recoil';
 import style from './style.module.css';
 import {
+    settingAutoCamera,
+    settingAutoEdges,
     settingDisplayLabel,
     settingDisplayLines,
     settingEgoOnSelect,
@@ -41,6 +43,8 @@ export default function SocialSettingsDialog({ open, onClose }: Props) {
     const [graphTheme, setGraphTheme] = useRecoilState(settingSocialGraphTheme);
     const [similarity, setSimilarity] = useRecoilState(settingSimilarPercent);
     const [limit, setLimit] = useRecoilState(settingLinkLimit);
+    const [autoCamera, setAutoCamera] = useRecoilState(settingAutoCamera);
+    const [autoEdges, setAutoEdges] = useRecoilState(settingAutoEdges);
 
     const doScale = useCallback((_: unknown, value: number | number[]) => setScale(value as number), [setScale]);
 
@@ -116,6 +120,24 @@ export default function SocialSettingsDialog({ open, onClose }: Props) {
                         }
                         label={t('dashboard.labels.allLinks')}
                     />
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={autoCamera}
+                                onChange={(_, checked) => setAutoCamera(checked)}
+                            />
+                        }
+                        label={t('dashboard.labels.autoCamera')}
+                    />
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={autoEdges}
+                                onChange={(_, checked) => setAutoEdges(checked)}
+                            />
+                        }
+                        label={t('dashboard.labels.autoEdges')}
+                    />
                     <div className={style.spacer} />
                     <div
                         id="social-edge-scaling-label"
@@ -146,6 +168,7 @@ export default function SocialSettingsDialog({ open, onClose }: Props) {
                         max={0.5}
                         step={0.01}
                         valueLabelDisplay="auto"
+                        disabled={autoEdges}
                     />
                     <div
                         id="social-limit-label"

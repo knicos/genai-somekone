@@ -4,14 +4,18 @@ import { render, screen, waitFor } from '@testing-library/react';
 import TestWrapper from '@genaism/util/TestWrapper';
 import userEvent from '@testing-library/user-event';
 import { appConfiguration, settingDisplayLabel } from '@genaism/state/settingsState';
-import { getGraphService } from '@knicos/genai-recom';
+import { createEmptyProfile, getGraphService } from '@knicos/genai-recom';
 
 describe('SocialGraph Component', () => {
     beforeEach(() => {
         const graph = getGraphService();
+        const p1 = createEmptyProfile('user:test1', 'TestUser1');
+        const p2 = createEmptyProfile('user:test2', 'TestUser2');
+        p1.embeddings.taste = [1, 0];
+        p2.embeddings.taste = [1, 0];
         graph.reset();
-        graph.addNode('user', 'user:test1', { name: 'TestUser1' });
-        graph.addNode('user', 'user:test2', { name: 'TestUser2' });
+        graph.addNode('user', 'user:test1', p1);
+        graph.addNode('user', 'user:test2', p2);
     });
 
     it('renders nodes', async ({ expect }) => {

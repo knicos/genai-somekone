@@ -27,23 +27,7 @@ import { svgToPNG } from '@genaism/util/svgToPNG';
 import ProgressDialog from '../../components/ProgressDialog/ProgressDialog';
 import { useTranslation } from 'react-i18next';
 import { Spinner } from '@knicos/genai-base';
-
-interface Extents {
-    minX: number;
-    minY: number;
-    maxX: number;
-    maxY: number;
-}
-
-function calculateViewBox(extents: Extents, zoom: ZoomState): [number, number, number, number] {
-    const pw = Math.max(500, extents.maxX - extents.minX);
-    const ph = Math.max(500, extents.maxY - extents.minY);
-    const w = pw * zoom.zoom;
-    const h = ph * zoom.zoom;
-    const x = zoom.cx - zoom.offsetX * w;
-    const y = zoom.cy - zoom.offsetY * h;
-    return [x, y, w, h]; //`${x} ${y} ${w} ${h}`;
-}
+import { calcAutoCamera, calcExtents, calculateViewBox, DEFAULT_EXTENTS } from './camera';
 
 interface LabelProps<T extends NodeID> {
     node: GraphNode<T>;
@@ -76,6 +60,8 @@ export interface Props<T extends NodeID> extends PropsWithChildren {
     injectStyle?: JSX.Element;
     style?: CSSProperties;
     onDragStop?: () => void;
+    autoCamera?: boolean;
+    onNodeDensity?: (density: number) => void;
 }
 
 interface InternalState {
@@ -83,13 +69,6 @@ interface InternalState {
 }
 
 const DEFAULT_STATE: InternalState = {};
-
-const DEFAULT_EXTENTS: Extents = {
-    minX: -500,
-    minY: -500,
-    maxX: 500,
-    maxY: 500,
-};
 
 const DEFAULT_LINK_STYLE = {
     className: style.link,
@@ -99,6 +78,7 @@ const MOVE_THRESHOLD = 10;
 const CAMERA_DURATION = 0.3;
 const REFRESH_COUNT = 30;
 const MOVE_SPEED = 20;
+const DENSITY_UPDATE_RATE = 20;
 
 export default function Graph<T extends NodeID>({
     nodes,
@@ -122,6 +102,8 @@ export default function Graph<T extends NodeID>({
     disableCenter,
     injectStyle,
     style: cssStyle,
+    autoCamera,
+    onNodeDensity,
 }: Props<T>) {
     const { t } = useTranslation();
     const [saving, setSaving] = useState(false);
@@ -205,17 +187,32 @@ export default function Graph<T extends NodeID>({
 
         setNodeList(lnodes);
 
+        let tickCount = 0;
+
         simRef.current.nodes(lnodes);
         simRef.current.force<d3.ForceLink<GraphNode<T>, InternalGraphLink<T, T>>>('link')?.links(llinks);
         simRef.current
             .on('tick', () => {
+                ++tickCount;
                 setNodeList([...lnodes]);
+                if (autoCamera || onNodeDensity) {
+                    const extents = calcExtents(lnodes);
+                    if (autoCamera) {
+                        setActualZoom(calcAutoCamera(extents));
+                    }
+                    if (onNodeDensity && tickCount >= DENSITY_UPDATE_RATE && tickCount % DENSITY_UPDATE_RATE === 0) {
+                        const w = extents.maxX - extents.minX;
+                        const h = extents.maxY - extents.minY;
+                        const density = lnodes.length / ((w / 100) * (h / 100));
+                        onNodeDensity(density);
+                    }
+                }
             })
             .on('end', () => {});
         simRef.current.alpha(0.3).restart();
 
         setLinkList(llinks);
-    }, [nodes, links, redraw, charge, linkScale, disableCenter]);
+    }, [nodes, links, redraw, charge, linkScale, disableCenter, autoCamera, onNodeDensity]);
 
     // Animate camera motion
     useEffect(() => {
@@ -253,7 +250,7 @@ export default function Graph<T extends NodeID>({
                 data-testid="graph-svg"
                 tabIndex={0}
                 onKeyDown={
-                    !disableControls
+                    !disableControls && !autoCamera
                         ? (e: KeyboardEvent<SVGSVGElement>) => {
                               if (e.key === '+' || e.key === '=') {
                                   setActualZoom((oldZoom) => ({
@@ -297,13 +294,13 @@ export default function Graph<T extends NodeID>({
                                   e.stopPropagation();
                                   return;
                               }
-                              if (onUnselect && focusNode) onUnselect();
+                              if (onUnselect && focusNode && e.target === e.currentTarget) onUnselect();
                               movement.current = [0, 0];
                           }
                         : undefined
                 }
                 onPointerMove={
-                    !disableControls
+                    !disableControls && !autoCamera
                         ? (e: PointerEvent<SVGSVGElement>) => {
                               setActualZoom((oldZoom) => {
                                   if (svgRef.current) {
@@ -331,7 +328,7 @@ export default function Graph<T extends NodeID>({
                         : undefined
                 }
                 onWheel={
-                    !disableControls
+                    !disableControls && !autoCamera
                         ? (e: WheelEvent<SVGSVGElement>) => {
                               setActualZoom((oldZoom) => {
                                   if (svgRef.current) {
