@@ -18,21 +18,18 @@ import {
 } from '@genaism/state/settingsState';
 // import FakeNode from '../FakeNode/FakeNode';
 import style from './style.module.css';
-import { useAllSimilarUsers } from './similarity';
 import UserLabel from './UserLabel';
 import { menuSelectedUser } from '@genaism/state/menuState';
-import { colourLabel } from './colourise';
 import { UserNodeId } from '@knicos/genai-recom';
-import { useNodeType } from '@genaism/hooks/graph';
-import { Point } from '@knicos/genai-recom/utils/embeddings/mapping';
-import { useProfilerService } from '@genaism/hooks/services';
+import { useServices } from '@genaism/hooks/services';
 import { calculateParameters } from './parameters';
 import graphThemes from './graphTheme';
 import UserMenu from './UserMenu';
-import DebounceGraph from '../Graph/DebounceGraph';
 import { generateLinks } from './links';
+import Graph from '../Graph/Graph';
+import { useSimilarityData } from '@genaism/hooks/similarity';
+import { patchNodes } from './nodes';
 
-const DEBOUNCE = 1000;
 const LINE_THICKNESS_UNSELECTED = 40;
 const MIN_LINE_THICKNESS = 10;
 const LINE_THICKNESS_SELECTED = 60;
@@ -44,14 +41,26 @@ interface Props {
 }
 
 export default function SocialGraphElement({ liveUsers }: Props) {
-    const [links, setLinks] = useState<GraphLink<UserNodeId, UserNodeId>[]>([]);
+    // Internal refs
     const sizesRef = useRef<Map<string, number>>(new Map<string, number>());
+    const currentZoom = useRef(1);
+    const userElement = useRef<SVGElement>();
+
+    // State
+    const [links, setLinks] = useState<GraphLink<UserNodeId, UserNodeId>[]>([]);
     const [nodes, setNodes] = useState<GraphNode<UserNodeId>[]>([]);
+    const [linkStyles, setLinkStyles] = useState<Map<UserNodeId, LinkStyle<UserNodeId>>>();
+    const [connected, setConnected] = useState<Set<UserNodeId>>();
+    const [userMenu, setUserMenu] = useState<[number, number] | undefined>();
+
+    // Global state
+    const [focusNode, setFocusNode] = useRecoilState(menuSelectedUser);
+
+    // Settings
     const scale = useRecoilValue(settingSocialGraphScale);
     const showLines = useRecoilValue(settingDisplayLines);
     const showOfflineUsers = useRecoilValue(settingShowOfflineUsers);
     const clusterColouring = useRecoilValue(settingClusterColouring);
-    const [similarPercent, setSimilarPercent] = useRecoilState(settingSimilarPercent);
     const linkLimit = useRecoilValue(settingLinkLimit);
     const egoSelect = useRecoilValue(settingEgoOnSelect);
     const showLabel = useRecoilValue(settingDisplayLabel);
@@ -59,7 +68,12 @@ export default function SocialGraphElement({ liveUsers }: Props) {
     const themeName = useRecoilValue(settingSocialGraphTheme);
     const autoCamera = useRecoilValue(settingAutoCamera);
     const autoEdges = useRecoilValue(settingAutoEdges);
-    const users = useNodeType('user');
+
+    const [similarPercent, setSimilarPercent] = useRecoilState(settingSimilarPercent);
+
+    // External or calculated data
+    const similar = useSimilarityData();
+    const users = similar.users;
     const liveSet = useMemo(() => {
         const set = new Set<string>();
         liveUsers?.forEach((x) => {
@@ -67,19 +81,7 @@ export default function SocialGraphElement({ liveUsers }: Props) {
         });
         return set;
     }, [liveUsers]);
-    const [focusNode, setFocusNode] = useRecoilState(menuSelectedUser);
-    const [linkStyles, setLinkStyles] = useState<Map<UserNodeId, LinkStyle<UserNodeId>>>();
-    const [connected, setConnected] = useState<Set<UserNodeId>>();
-    const similar = useAllSimilarUsers(
-        users,
-        clusterColouring > 0,
-        clusterColouring > 0 ? clusterColouring : undefined
-    );
-    const pointMap = useRef(new Map<UserNodeId, Point>());
-    const profiler = useProfilerService();
-    const currentZoom = useRef(1);
-    const [userMenu, setUserMenu] = useState<[number, number] | undefined>();
-    const userElement = useRef<SVGElement>();
+    const { profiler, similarity } = useServices();
 
     const { nodeCharge, linkDistance, density } = calculateParameters(
         scale,
@@ -89,73 +91,46 @@ export default function SocialGraphElement({ liveUsers }: Props) {
 
     const theme = graphThemes[themeName];
 
+    // Update cluster K setting
+    useEffect(() => {
+        similarity.setK(clusterColouring);
+    }, [similarity, clusterColouring]);
+
+    // Update links if link parameters or inputs change
     useEffect(() => {
         const newLinks = generateLinks(similar.similar, allLinks, similarPercent, linkLimit);
         setLinks(newLinks);
-    }, [similar, similarPercent, allLinks, linkLimit]);
+    }, [similar, similarPercent, allLinks, linkLimit, setLinks]);
 
-    const doRedrawNodes = useCallback(async () => {
+    // Update nodes if node data changes
+    useEffect(() => {
         setNodes((oldNodes) => {
             const filteredUsers = showOfflineUsers
                 ? users.filter((u) => u !== profiler.getCurrentUser() && (similar.similar.get(u)?.length || 0) > 0)
                 : users.filter((u) => liveSet.has(u) && u !== profiler.getCurrentUser());
 
-            const oldMap = new Map<UserNodeId, GraphNode<UserNodeId>>();
-            oldNodes.map((on) => oldMap.set(on.id, on));
-
-            const newNodes = filteredUsers.map((u) => {
-                const newSize = sizesRef.current.get(u) || 100;
-                const topicData = similar.topics?.get(u);
-                const newColour = topicData
-                    ? colourLabel(topicData?.label || '')
-                    : liveSet.has(u)
-                    ? '#008297'
-                    : '#5f7377';
-
-                const old = oldMap.get(u);
-                if (old && old.size === newSize && old.data?.colour === newColour) {
-                    return old;
-                } else {
-                    const p = pointMap.current.get(u);
-                    return {
-                        id: u,
-                        x: p ? p.x * 4000 - 2000 : undefined,
-                        y: p ? p.y * 4000 - 2000 : undefined,
-                        label: profiler.getUserName(u),
-                        size: newSize,
-                        strength: similar.similar.get(u)?.length || 0,
-                        data: {
-                            topics: topicData || [],
-                            colour: newColour,
-                            label: topicData?.label || false,
-                        },
-                    };
-                }
-            });
-
-            return newNodes;
+            return patchNodes(profiler, oldNodes, filteredUsers, sizesRef.current, similar);
         });
-    }, [users, liveSet, showOfflineUsers, similar, profiler]);
+    }, [users, liveSet, showOfflineUsers, similar, profiler, setNodes]);
 
-    const doResize = useCallback((id: string, size: number) => {
-        if (Math.abs(size - (sizesRef.current.get(id) || 100)) <= 1) return;
-        sizesRef.current.set(id, size);
+    const doResize = useCallback(
+        (id: string, size: number) => {
+            if (Math.abs(size - (sizesRef.current.get(id) || 100)) <= 1) return;
+            sizesRef.current.set(id, size);
 
-        setNodes((oldNodes) =>
-            oldNodes.map((node) => {
-                if (node.id === id) {
-                    node.size = size;
-                    return { ...node };
-                } else {
-                    return node;
-                }
-            })
-        );
-    }, []);
-
-    useEffect(() => {
-        doRedrawNodes();
-    }, [doRedrawNodes]);
+            setNodes((oldNodes) =>
+                oldNodes.map((node) => {
+                    if (node.id === id) {
+                        node.size = size;
+                        return { ...node };
+                    } else {
+                        return node;
+                    }
+                })
+            );
+        },
+        [setNodes]
+    );
 
     useEffect(() => {
         if (focusNode) {
@@ -197,10 +172,9 @@ export default function SocialGraphElement({ liveUsers }: Props) {
 
     return (
         <>
-            <DebounceGraph
+            <Graph
                 onNodeDensity={autoEdges ? doNodeDensity : undefined}
                 autoCamera={autoCamera}
-                rateLimit={DEBOUNCE}
                 onZoom={(z: number) => {
                     currentZoom.current = z;
                 }}
@@ -283,7 +257,7 @@ export default function SocialGraphElement({ liveUsers }: Props) {
                         zoom={currentZoom.current}
                     />
                 ))}
-            </DebounceGraph>
+            </Graph>
             {userMenu && (
                 <UserMenu
                     x={userMenu[0]}

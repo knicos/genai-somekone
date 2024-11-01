@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { describe, it, vi } from 'vitest';
 import UserListing from './UserListing';
 import userEvent from '@testing-library/user-event';
+import { getSimilarityService } from '@genaism/services/similarity';
 
 describe('UserListing component', () => {
     it('displays all users in the system', async ({ expect }) => {
@@ -18,7 +19,7 @@ describe('UserListing component', () => {
 
         render(<UserListing onSelect={() => {}} />);
 
-        expect(screen.getByLabelText('Test1')).toBeVisible();
+        expect(await screen.findByLabelText('Test1')).toBeVisible();
         expect(screen.getByLabelText('Test2')).toBeVisible();
         expect(screen.getByLabelText('Test3')).toBeVisible();
     });
@@ -35,6 +36,9 @@ describe('UserListing component', () => {
         const p3 = profilerSvc.createUserProfile('user:3', 'Test3');
         p3.embeddings.taste = [1];
 
+        const simService = getSimilarityService();
+        simService.reset();
+
         const select = vi.fn();
 
         render(
@@ -44,7 +48,7 @@ describe('UserListing component', () => {
             />
         );
 
-        await user.click(screen.getByLabelText('Test1'));
+        await user.click(await screen.findByLabelText('Test1'));
         await user.click(screen.getByLabelText('Test3'));
         await user.click(screen.getByTestId('user-select-button'));
         expect(select).toHaveBeenCalledWith(['user:1', 'user:3']);

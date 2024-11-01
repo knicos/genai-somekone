@@ -177,7 +177,7 @@ describe('FeedImage component', () => {
         );
 
         await user.click(screen.getByTestId('feed-image-share-button'));
-        await user.click(screen.getByLabelText('NoName1'));
+        await user.click(await screen.findByLabelText('NoName1'));
         expect(sharefn).toHaveBeenCalledWith('content:xyz', 'public', 'user:1');
     });
 

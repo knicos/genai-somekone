@@ -125,4 +125,21 @@ describe('debounce()', () => {
         await wait(200);
         expect(test).toBe(20);
     });
+
+    it('can always call the first time', async ({ expect }) => {
+        let test = 0;
+        const [f] = debounce(
+            (v: number) => {
+                test = v;
+            },
+            100,
+            true
+        );
+
+        f(10);
+        f(20);
+        expect(test).toBe(10);
+        await wait(200);
+        expect(test).toBe(20);
+    });
 });

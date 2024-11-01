@@ -1,25 +1,27 @@
 import { createEmptyProfile, UserNodeData, UserNodeId } from '@knicos/genai-recom';
-import { useEffect, useMemo, useReducer } from 'react';
-import { useBroker, useProfilerService } from './services';
+import { useEffect, useMemo } from 'react';
+import { useProfilerService } from './services';
+import { useDebouncedState } from './debounce';
 
 export function useUserProfile(id?: UserNodeId): UserNodeData {
-    const broker = useBroker();
     const profiler = useProfilerService();
     const aid = id || profiler.getCurrentUser();
-    const [count, trigger] = useReducer((a) => ++a, 0);
+    const [profile, setProfile] = useDebouncedState<UserNodeData | undefined>(undefined, 500);
+
     useEffect(() => {
-        const handler = () => trigger();
-        broker.on(`profile-${aid}`, handler);
-        return () => broker.off(`profile-${aid}`, handler);
-    }, [aid, broker]);
-    return useMemo(() => {
-        try {
-            return profiler.getUserProfile(aid);
-        } catch (e) {
-            return createEmptyProfile(aid, '');
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [profiler, aid, count]);
+        const handler = () => {
+            try {
+                setProfile({ ...profiler.getUserProfile(aid) });
+            } catch (e) {
+                console.error(e);
+                setProfile(createEmptyProfile(aid, 'NoName'));
+            }
+        };
+        handler();
+        profiler.broker.on(`profile-${aid}`, handler);
+        return () => profiler.broker.off(`profile-${aid}`, handler);
+    }, [aid, profiler, setProfile]);
+    return profile || createEmptyProfile(aid, 'NoName');
 }
 
 export function useSimilarUsers(profile: UserNodeData) {

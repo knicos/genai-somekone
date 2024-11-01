@@ -2,6 +2,7 @@ import { beforeEach, describe, it, vi } from 'vitest';
 import ServerProtocol from './ServerProtocol';
 import { render } from '@testing-library/react';
 import TestWrapper from '@genaism/util/TestWrapper';
+import { getGraphService } from '@knicos/genai-recom';
 
 const { mockPeer } = vi.hoisted(() => ({
     mockPeer: vi.fn(),
@@ -15,6 +16,7 @@ vi.mock('@knicos/genai-base', async (importOriginal) => ({
 describe('ServerProtocol Component', () => {
     beforeEach(() => {
         vi.resetAllMocks();
+        getGraphService().reset();
     });
 
     it('responds with ready if connected', async ({ expect }) => {

@@ -1,6 +1,4 @@
 import { UserNodeId, WeightedLabel, WeightedNode } from '@knicos/genai-recom';
-import { useAllSimilarUsers } from '@genaism/visualisations/SocialGraph/similarity';
-import { useNodeType } from '@genaism/hooks/graph';
 import UserItem from './UserItem';
 import style from './style.module.css';
 import { colourLabel } from '@genaism/visualisations/SocialGraph/colourise';
@@ -8,6 +6,7 @@ import { useProfilerService } from '@genaism/hooks/services';
 import { useEffect, useState } from 'react';
 import { Button } from '@knicos/genai-base';
 import { useTranslation } from 'react-i18next';
+import { useSimilarityData } from '@genaism/hooks/similarity';
 
 function buildList(
     id: UserNodeId,
@@ -44,12 +43,12 @@ interface Props {
 
 export default function UserListing({ onSelect, multiple, preSelected }: Props) {
     const { t } = useTranslation();
-    const users = useNodeType('user');
-    const similar = useAllSimilarUsers(users, true, 5);
+    const similar = useSimilarityData();
+    const users = similar.users;
     const profiler = useProfilerService();
     const [selected, setSelected] = useState(new Set<UserNodeId>());
 
-    const sorted = buildList(profiler.getCurrentUser(), users, similar.similar, similar.topics);
+    const sorted = buildList(profiler.getCurrentUser(), users, similar.similar, similar.clusters);
 
     useEffect(() => {
         if (preSelected) {
@@ -83,7 +82,7 @@ export default function UserListing({ onSelect, multiple, preSelected }: Props) 
                             }
                         }}
                         selected={selected?.has(user)}
-                        colour={colourLabel(similar.topics?.get(user)?.label || 'nocluster')}
+                        colour={colourLabel(similar.clusters.get(user)?.label || 'nocluster')}
                     />
                 ))}
             </ul>

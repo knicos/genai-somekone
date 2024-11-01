@@ -76,7 +76,7 @@ describe('ImageFeed component', () => {
         );
 
         await user.click(screen.getByTestId('feed-image-share-button'));
-        await user.click(screen.getByLabelText('NoName2'));
+        await user.click(await screen.findByLabelText('NoName2'));
 
         expect(logfn).toHaveBeenCalledWith({
             activity: 'share_public',

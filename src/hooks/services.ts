@@ -15,6 +15,8 @@ import {
     ReplayService,
     ServiceEvents,
 } from '@knicos/genai-recom';
+import SimilarityService from '@genaism/services/similarity/similarityService';
+import { getSimilarityService } from '@genaism/services/similarity';
 
 export interface Services {
     broker: ReturnType<typeof getBroker>;
@@ -24,6 +26,7 @@ export interface Services {
     recommender: RecommenderService;
     actionLog: ActionLogService;
     replay: ReplayService;
+    similarity: SimilarityService;
 }
 
 export const defaultServices = {
@@ -34,6 +37,7 @@ export const defaultServices = {
     recommender: getRecommenderService(),
     actionLog: getActionLogService(),
     replay: getReplayService(),
+    similarity: getSimilarityService(),
 };
 
 const ServiceContext = createContext<Services>(defaultServices);
@@ -62,6 +66,10 @@ export function useRecommenderService() {
 
 export function useActionLogService() {
     return useServices().actionLog;
+}
+
+export function useSimilarityService() {
+    return useServices().similarity;
 }
 
 export function useBroker() {

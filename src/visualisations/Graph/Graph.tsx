@@ -78,7 +78,7 @@ const MOVE_THRESHOLD = 10;
 const CAMERA_DURATION = 0.3;
 const REFRESH_COUNT = 30;
 const MOVE_SPEED = 20;
-const DENSITY_UPDATE_RATE = 20;
+const DENSITY_UPDATE_RATE = 50;
 
 export default function Graph<T extends NodeID>({
     nodes,
@@ -200,7 +200,7 @@ export default function Graph<T extends NodeID>({
                     if (autoCamera) {
                         setActualZoom(calcAutoCamera(extents));
                     }
-                    if (onNodeDensity && tickCount >= DENSITY_UPDATE_RATE && tickCount % DENSITY_UPDATE_RATE === 0) {
+                    if (onNodeDensity && tickCount === DENSITY_UPDATE_RATE) {
                         const w = extents.maxX - extents.minX;
                         const h = extents.maxY - extents.minY;
                         const density = lnodes.length / ((w / 100) * (h / 100));
@@ -209,7 +209,7 @@ export default function Graph<T extends NodeID>({
                 }
             })
             .on('end', () => {});
-        simRef.current.alpha(0.3).restart();
+        simRef.current.alpha(0.2).restart();
 
         setLinkList(llinks);
     }, [nodes, links, redraw, charge, linkScale, disableCenter, autoCamera, onNodeDensity]);

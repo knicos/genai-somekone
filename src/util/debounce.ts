@@ -1,4 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type Debouncer<T extends (...args: any[]) => void> = [(...args: Parameters<T>) => void, () => void];
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function debounce_leading<T extends (...args: any[]) => void>(
     f: T,
     rate: number
@@ -38,16 +41,22 @@ export function debounce_leading<T extends (...args: any[]) => void>(
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function debounce<T extends (...args: any[]) => void>(
     f: T,
-    rate: number
+    rate: number,
+    alwaysFirst?: boolean
 ): [(...args: Parameters<T>) => void, () => void] {
     let timeout = -1;
     let lastArgs: Parameters<T>;
 
     return [
         (...args: Parameters<T>) => {
+            const wasMissing = !lastArgs;
             lastArgs = args;
 
             if (timeout >= 0) {
+                return;
+            }
+            if (alwaysFirst && args && wasMissing) {
+                f(...lastArgs);
                 return;
             }
 

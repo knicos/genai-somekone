@@ -61,7 +61,7 @@ describe('UserGrid component', () => {
 
         expect(screen.getByTestId('user-grid-item-user:1')).toBeVisible();
         expect(screen.getByTestId('user-grid-item-user:2')).toBeVisible();
-        expect(screen.getByText('TestUser2')).toBeInTheDocument();
+        expect(await screen.findByText('TestUser2')).toBeInTheDocument();
     });
 
     it('can switch to image cloud', async ({ expect }) => {
@@ -85,6 +85,6 @@ describe('UserGrid component', () => {
         const imageButton = screen.getByTestId('social-menu-images');
         expect(imageButton).toBeVisible();
         await user.click(imageButton);
-        expect(screen.getByTestId('imagecloud-user:1')).toBeVisible();
+        expect(await screen.findByTestId('imagecloud-user:1')).toBeVisible();
     });
 });

@@ -12,6 +12,7 @@ import {
     ReplayService,
     ServiceBroker,
 } from '@knicos/genai-recom';
+import { SimilarityService } from '@genaism/services/similarity';
 
 const { mockEncode, mockSimilar } = vi.hoisted(() => ({
     mockEncode: vi.fn(() => new Promise((resolve) => resolve([1, 1, 1]))),
@@ -45,6 +46,7 @@ describe('ImageEdit component', () => {
         const actionLog = new ActionLogService(broker);
         const recommender = new RecommenderService(broker, graph, content, profiler);
         const replay = new ReplayService(profiler, content, actionLog);
+        const similarity = new SimilarityService(profiler);
 
         const doneFn = vi.fn();
         render(
@@ -58,6 +60,7 @@ describe('ImageEdit component', () => {
                         actionLog,
                         recommender,
                         replay,
+                        similarity,
                     }}
                 >
                     <ImageEdit
