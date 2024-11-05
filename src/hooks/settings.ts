@@ -4,6 +4,7 @@ import {
     menuMainMenu,
     menuNodeSelectAction,
     menuReplaySpeed,
+    menuSelectedUser,
     menuShowGridMenu,
     menuShowReplay,
     menuShowReplayControls,
@@ -27,6 +28,7 @@ import {
     settingAutoEdges,
 } from '@genaism/state/settingsState';
 import { SMConfig, mergeConfiguration } from '@genaism/state/smConfig';
+import { UserNodeId } from '@knicos/genai-recom';
 import { useRecoilCallback } from 'recoil';
 
 export interface SomekoneSocialSettings {
@@ -58,6 +60,7 @@ export interface SomekoneUISettings {
     showReplay?: boolean;
     enableReplayControls?: boolean;
     replaySpeed?: number;
+    selectedUser?: UserNodeId;
 }
 
 export interface SomekoneSettings {
@@ -142,6 +145,9 @@ export function useSettingDeserialise() {
                     }
                     if (data.ui.nodeSelectAction !== undefined) {
                         set(menuNodeSelectAction, data.ui.nodeSelectAction);
+                    }
+                    if (data.ui.selectedUser !== undefined) {
+                        set(menuSelectedUser, data.ui.selectedUser);
                     }
                 }
             },

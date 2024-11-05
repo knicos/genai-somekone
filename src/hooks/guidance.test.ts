@@ -16,6 +16,7 @@ describe('loadGuide()', () => {
         const fakeGuide: GuidanceData = {
             name: 'fake',
             locales: ['en-GB'],
+            actions: {},
             steps: [],
         };
         zip.file('guide.json', JSON.stringify(fakeGuide));
@@ -35,9 +36,11 @@ describe('loadGuide()', () => {
         const fakeGuide: GuidanceData = {
             name: 'fake',
             locales: ['en-GB'],
+            actions: {},
             steps: [
                 {
                     title: 'title1',
+                    actions: [],
                 },
             ],
         };

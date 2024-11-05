@@ -86,6 +86,12 @@ export default function MenuTree({ open }: Props) {
                         return prev;
                     });
                     break;
+                case 'guides-kiosk':
+                    setParams((prev) => {
+                        prev.set('guide', 'kiosk');
+                        return prev;
+                    });
+                    break;
                 case 'guides-none':
                     setParams((prev) => {
                         prev.delete('guide');
@@ -260,6 +266,19 @@ export default function MenuTree({ open }: Props) {
                                 >
                                     <ImportContactsIcon />
                                     {t('menu.guides.default')}
+                                </div>
+                            }
+                        />
+                        <TreeItem
+                            itemId="guides-kiosk"
+                            label={
+                                <div
+                                    className={
+                                        params.get('guide') === 'kiosk' ? style.treeItemSelected : style.treeItem
+                                    }
+                                >
+                                    <ImportContactsIcon />
+                                    {t('menu.guides.kiosk')}
                                 </div>
                             }
                         />

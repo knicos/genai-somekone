@@ -11,14 +11,16 @@ import SaveAltIcon from '@mui/icons-material/SaveAlt';
 
 interface Props {
     action: GuidanceAction;
+    onAction?: () => void;
 }
 
-export default function ActionButton({ action }: Props) {
+export default function ActionButton({ action, onAction }: Props) {
     const [config, setConfig] = useRecoilState(appConfiguration);
     const setShowShare = useSetRecoilState(menuShowShare);
     const setShowSave = useSetRecoilState(menuShowSave);
 
     const doClick = useCallback(() => {
+        if (onAction) onAction();
         if (action === 'pause') {
             setConfig((old) => ({ ...old, disableFeedApp: !old.disableFeedApp }));
         } else if (action === 'sharecode') {
@@ -26,7 +28,7 @@ export default function ActionButton({ action }: Props) {
         } else if (action === 'download') {
             setShowSave(true);
         }
-    }, [action, setConfig, setShowShare, setShowSave]);
+    }, [action, setConfig, setShowShare, setShowSave, onAction]);
 
     return (
         <IconButton

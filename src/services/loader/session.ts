@@ -7,6 +7,13 @@ const GRAPH_KEY = 'genai_somekone_graph';
 const LOG_KEY = 'genai_somekone_logs';
 
 let addedHandler = false;
+const saverState = {
+    save: true,
+};
+
+export function cancelSessionSave() {
+    saverState.save = false;
+}
 
 export function loadSession(graphSvc: GraphService, logger: ActionLogService) {
     const sessionGraph = window.sessionStorage.getItem(GRAPH_KEY);
@@ -33,13 +40,15 @@ export function loadSession(graphSvc: GraphService, logger: ActionLogService) {
 
     if (!addedHandler) {
         window.addEventListener('beforeunload', () => {
-            try {
-                window.sessionStorage.setItem(GRAPH_KEY, compress(JSON.stringify(graphSvc.dumpNodes())));
-                const users = graphSvc.getNodesByType('user');
-                const logs = users.map((u) => ({ id: u, log: logger.getActionLog(u) }));
-                window.sessionStorage.setItem(LOG_KEY, compress(JSON.stringify(logs)));
-            } catch (e) {
-                console.log('Save error', e);
+            if (saverState.save) {
+                try {
+                    window.sessionStorage.setItem(GRAPH_KEY, compress(JSON.stringify(graphSvc.dumpNodes())));
+                    const users = graphSvc.getNodesByType('user');
+                    const logs = users.map((u) => ({ id: u, log: logger.getActionLog(u) }));
+                    window.sessionStorage.setItem(LOG_KEY, compress(JSON.stringify(logs)));
+                } catch (e) {
+                    console.log('Save error', e);
+                }
             }
         });
         addedHandler = true;

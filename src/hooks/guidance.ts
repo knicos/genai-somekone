@@ -7,23 +7,34 @@ import { SomekoneSettings } from '@genaism/hooks/settings';
 
 export type GuidanceAction = 'pause' | 'sharecode' | 'download';
 
-export interface GuidanceStep {
-    settings?: SomekoneSettings;
+export interface GuideAction extends SomekoneSettings {
     url?: string;
-    title: string;
-    action?: GuidanceAction;
+    replay?: boolean;
+    autoPlay?: number;
+}
+
+export interface GuidanceStep {
+    title?: string;
+    actions: string[];
+    actionButton?: GuidanceAction;
+    next?: number;
 }
 
 export interface GuidanceData {
     name: string;
     locales: string[];
+    actions: Record<string, GuideAction>;
     steps: GuidanceStep[];
+    firstStep?: number;
+    initActions?: string[];
+    reloadOnReplayEnd?: boolean;
 }
 
 const DEFAULT_LOCALE = 'en-GB';
 
 const KNOWN_GUIDES: Record<string, string> = {
-    default: 'https://store.gen-ai.fi/somekone/guides/guide1.zip',
+    default: 'https://store.gen-ai.fi/somekone/guides/guide1_update1.zip',
+    kiosk: 'https://store.gen-ai.fi/somekone/guides/kiosk1.zip',
 };
 
 export async function loadGuide(url: string, locale = DEFAULT_LOCALE) {
@@ -52,7 +63,9 @@ export async function loadGuide(url: string, locale = DEFAULT_LOCALE) {
 
     // Patch with the locale.
     guideData.steps.forEach((step) => {
-        step.title = localeData[step.title];
+        if (step.title) {
+            step.title = localeData[step.title];
+        }
     });
 
     return guideData;

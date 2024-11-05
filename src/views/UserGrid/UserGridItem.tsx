@@ -49,7 +49,7 @@ export default function UserGridItem({ id, colour }: Props) {
                     />
                 )}
                 {nodeMode === 'profileImage' && !image && <div className={style.placeholder} />}
-                {nodeMode === 'image' && profile.affinities.contents.contents.length > 0 && (
+                {nodeMode === 'image' && (
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="100%"
@@ -69,7 +69,7 @@ export default function UserGridItem({ id, colour }: Props) {
                         />
                     </svg>
                 )}
-                {nodeMode === 'word' && profile.affinities.topics.topics.length > 0 && (
+                {nodeMode === 'word' && (
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="100%"

@@ -28,6 +28,7 @@ export function Component() {
                         url="/dashboard/usergrid?guide=default"
                         description={t('library.guidedDefault.description')}
                     />
+
                     <ContentItem
                         title={t('library.public.title')}
                         image="/images/publicDemo.jpg"
@@ -97,6 +98,20 @@ export function Component() {
                             ),
                         })}`}
                         description={t('library.flowerforest.description')}
+                    />
+                    <ContentItem
+                        title={t('library.kiosk.title')}
+                        image="/images/kiosk.jpg"
+                        url={`/dashboard/usergrid?${createSearchParams({
+                            content: compressToEncodedURIComponent(
+                                JSON.stringify([
+                                    'https://store.gen-ai.fi/somekone/imageSet1c.zip',
+                                    'https://store.gen-ai.fi/somekone/sm_demo1c.zip',
+                                ])
+                            ),
+                            guide: 'kiosk',
+                        })}`}
+                        description={t('library.kiosk.description')}
                     />
                     <ContentItem
                         title={t('library.blank.title')}

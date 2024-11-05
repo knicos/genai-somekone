@@ -99,6 +99,10 @@
     background: secondary;
 }
 
+.word {
+    transition: transform 1s;
+}
+
 .word rect {
     fill: white;
 }

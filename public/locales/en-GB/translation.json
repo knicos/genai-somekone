@@ -9,6 +9,10 @@
             "title": "Core Concepts",
             "description": "Introduce key social media mechanisms with a structured step-by-step interface for the classroom."
         },
+        "kiosk": {
+            "title": "Kiosk Demo",
+            "description": "An automated demonstration running in a loop until the user interacts."
+        },
         "public": {
             "title": "Public Demonstration",
             "description": "Use a safer restricted social network when presenting to larger public audiences."
@@ -203,6 +207,7 @@
         "guides": {
             "title": "Guided Interfaces",
             "default": "Core Concepts",
+            "kiosk": "Kiosk",
             "none": "None"
         },
         "tools": {
