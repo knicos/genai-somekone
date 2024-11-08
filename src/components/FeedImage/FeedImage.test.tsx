@@ -123,7 +123,7 @@ describe('FeedImage component', () => {
 
         await user.click(screen.getByTestId('feed-image-comment-button'));
 
-        expect(screen.getByText('testcomment')).toBeVisible();
+        expect(await screen.findByText('testcomment')).toBeVisible();
     });
 
     it('can display multiple comments', async ({ expect }) => {

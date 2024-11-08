@@ -24,11 +24,11 @@ export default function GridMenu() {
     const [nodeMode, setNodeMode] = useRecoilState(settingNodeMode);
     const [showDelete, setShowDelete] = useState(false);
     const [panel, setPanel] = useRecoilState(menuShowUserPanel);
-    const selectedUser = useRecoilValue(menuSelectedUser);
+    const [selectedUser, setSelectedUser] = useRecoilState(menuSelectedUser);
     const showMenu = useRecoilValue(menuShowGridMenu);
     const selectAction = useRecoilValue(menuNodeSelectAction);
     const userRef = useRef<UserNodeId | undefined>();
-    const { graph, profiler } = useServices();
+    const { profiler, actionLog, similarity } = useServices();
 
     useEffect(() => {
         if (selectedUser && selectedUser !== userRef.current && selectAction !== 'none') {
@@ -164,7 +164,10 @@ export default function GridMenu() {
                     open={showDelete}
                     onClose={() => setShowDelete(false)}
                     onDelete={() => {
-                        graph.removeNode(selectedUser);
+                        profiler.removeProfile(selectedUser);
+                        actionLog.removeLogs(selectedUser);
+                        similarity.reset();
+                        setSelectedUser(undefined);
                         setShowDelete(false);
                     }}
                 />

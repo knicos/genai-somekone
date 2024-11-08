@@ -1,5 +1,5 @@
 import { IconMenu, IconMenuItem, Spacer } from '@genaism/components/IconMenu';
-import { useProfilerService } from '@genaism/hooks/services';
+import { useServices } from '@genaism/hooks/services';
 import style from './style.module.css';
 import { useTranslation } from 'react-i18next';
 import { IconButton } from '@mui/material';
@@ -10,7 +10,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid';
 import DeleteDialog from './DeleteDialog';
 import { useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { menuSelectedUser, menuShowUserPanel } from '@genaism/state/menuState';
 
 interface Props {
@@ -20,10 +20,10 @@ interface Props {
 
 export default function UserMenu({ x, y }: Props) {
     const { t } = useTranslation();
-    const profiler = useProfilerService();
+    const { profiler, actionLog, similarity } = useServices();
     const [showDelete, setShowDelete] = useState(false);
     const [panel, setPanel] = useRecoilState(menuShowUserPanel);
-    const selectedUser = useRecoilValue(menuSelectedUser);
+    const [selectedUser, setSelectedUser] = useRecoilState(menuSelectedUser);
 
     if (!selectedUser) return null;
 
@@ -107,7 +107,10 @@ export default function UserMenu({ x, y }: Props) {
                 open={showDelete}
                 onClose={() => setShowDelete(false)}
                 onDelete={() => {
-                    // removeUser(selectedUser);
+                    profiler.removeProfile(selectedUser);
+                    actionLog.removeLogs(selectedUser);
+                    similarity.reset();
+                    setSelectedUser(undefined);
                     setShowDelete(false);
                 }}
             />

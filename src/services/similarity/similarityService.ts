@@ -22,6 +22,14 @@ function getSimilar(
     );
 }
 
+function safeGetProfile(profiler: ProfilerService, user: UserNodeId) {
+    try {
+        return profiler.getUserProfile(user);
+    } catch {
+        return null;
+    }
+}
+
 export default class SimilarityService extends EE {
     private profiler: ProfilerService;
     private debouncer: Debouncer<() => void>;
@@ -57,7 +65,7 @@ export default class SimilarityService extends EE {
         const clusters = new Map<UserNodeId, WeightedLabel>();
 
         const userEmbeddings = this.users
-            .map((user) => ({ id: user, embedding: this.profiler.getUserProfile(user)?.embeddings.taste || [] }))
+            .map((user) => ({ id: user, embedding: safeGetProfile(this.profiler, user)?.embeddings.taste || [] }))
             .filter((u) => u.embedding.length > 0);
         const rawClusters = clusterEmbeddings(userEmbeddings, { k: this.k });
 
