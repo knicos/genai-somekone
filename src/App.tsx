@@ -57,6 +57,12 @@ const router = createBrowserRouter(
         <Route
             path="/"
             ErrorBoundary={ErrorComponent}
+            element={
+                <div style={{ padding: '2rem' }}>
+                    Somekone is unavailable due to problems at our service provider. We hope to have it working by the
+                    end of the day. (14th November 2024)
+                </div>
+            }
         >
             <Route
                 index
