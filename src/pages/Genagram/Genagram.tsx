@@ -69,6 +69,7 @@ export function Component() {
             <ContentLoader
                 content={content}
                 onLoaded={doLoaded}
+                noConfig
             />
             <ErrorDialog />
             <TabBlocker />

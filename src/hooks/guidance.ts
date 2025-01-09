@@ -33,7 +33,7 @@ export interface GuidanceData {
 const DEFAULT_LOCALE = 'en-GB';
 
 const KNOWN_GUIDES: Record<string, string> = {
-    default: 'https://store.gen-ai.fi/somekone/guides/guide1_update1.zip',
+    default: 'https://store.gen-ai.fi/somekone/guides/guide1_update2.zip',
     kiosk: 'https://store.gen-ai.fi/somekone/guides/kiosk1.zip',
 };
 

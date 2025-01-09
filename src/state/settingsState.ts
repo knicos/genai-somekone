@@ -111,6 +111,11 @@ export const settingSocialSelectAction = atom<boolean>({
     default: true,
 });
 
+export const settingSocialNodeMenu = atom<boolean>({
+    key: 'settingnodemenu',
+    default: true,
+});
+
 /* === Topic Graph === */
 
 export const settingTopicDisplayLines = atom<boolean>({

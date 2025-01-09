@@ -12,9 +12,10 @@ interface Props {
     content?: (ArrayBuffer | string)[];
     onLoaded?: () => void;
     noSession?: boolean;
+    noConfig?: boolean;
 }
 
-export default function ContentLoader({ content, onLoaded, noSession }: Props) {
+export default function ContentLoader({ content, onLoaded, noSession, noConfig }: Props) {
     const contentRef = useRef(new Set<string>());
     const [status, setStatus] = useState<LoadingStatus>('waiting');
     const [progress, setProgress] = useState<number | undefined>();
@@ -52,9 +53,11 @@ export default function ContentLoader({ content, onLoaded, noSession }: Props) {
                     const loadPromises = blobs.map((blob) => loadFile(contentSvc, actionLog, blob));
                     Promise.all(loadPromises)
                         .then((r) => {
-                            r.forEach((setting) => {
-                                if (setting) deserial(setting);
-                            });
+                            if (!noConfig) {
+                                r.forEach((setting) => {
+                                    if (setting) deserial(setting);
+                                });
+                            }
                             setStatus('done');
                             if (!noSession) loadSession(contentSvc.graph, actionLog);
                             if (onLoaded) onLoaded();
@@ -75,7 +78,7 @@ export default function ContentLoader({ content, onLoaded, noSession }: Props) {
         } else {
             setStatus('waiting');
         }
-    }, [content, onLoaded, deserial, contentSvc, actionLog, noSession]);
+    }, [content, onLoaded, deserial, contentSvc, actionLog, noSession, noConfig]);
 
     return (
         <>

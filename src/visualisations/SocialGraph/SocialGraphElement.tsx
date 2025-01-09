@@ -15,6 +15,7 @@ import {
     settingLinkLimit,
     settingAutoCamera,
     settingAutoEdges,
+    settingSocialNodeMenu,
 } from '@genaism/state/settingsState';
 // import FakeNode from '../FakeNode/FakeNode';
 import style from './style.module.css';
@@ -68,6 +69,7 @@ export default function SocialGraphElement({ liveUsers }: Props) {
     const themeName = useRecoilValue(settingSocialGraphTheme);
     const autoCamera = useRecoilValue(settingAutoCamera);
     const autoEdges = useRecoilValue(settingAutoEdges);
+    const showNodeMenu = useRecoilValue(settingSocialNodeMenu);
 
     const [similarPercent, setSimilarPercent] = useRecoilState(settingSimilarPercent);
 
@@ -258,7 +260,7 @@ export default function SocialGraphElement({ liveUsers }: Props) {
                     />
                 ))}
             </Graph>
-            {userMenu && (
+            {userMenu && showNodeMenu && (
                 <UserMenu
                     x={userMenu[0]}
                     y={userMenu[1]}

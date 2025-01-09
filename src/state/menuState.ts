@@ -117,3 +117,13 @@ export const menuShowGridMenu = atom<boolean>({
     key: 'menugridmenu',
     default: true,
 });
+
+export const menuHideGridMenuActions = atom<boolean>({
+    key: 'menugridmenuactions',
+    default: false,
+});
+
+export const menuHideGridMenuContent = atom<boolean>({
+    key: 'menugridmenucontent',
+    default: false,
+});

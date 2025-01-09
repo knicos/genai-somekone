@@ -1,6 +1,8 @@
 import {
     UserPanel,
     menuDisabledTreeItems,
+    menuHideGridMenuActions,
+    menuHideGridMenuContent,
     menuMainMenu,
     menuNodeSelectAction,
     menuReplaySpeed,
@@ -26,6 +28,7 @@ import {
     settingSimilarPercent,
     settingAutoCamera,
     settingAutoEdges,
+    settingSocialNodeMenu,
 } from '@genaism/state/settingsState';
 import { SMConfig, mergeConfiguration } from '@genaism/state/smConfig';
 import { UserNodeId } from '@knicos/genai-recom';
@@ -43,6 +46,7 @@ export interface SomekoneSocialSettings {
     linkLimit?: number;
     autoCamera?: boolean;
     autoEdges?: boolean;
+    showNodeMenu?: boolean;
 }
 
 export interface SomekoneGeneralSettings {}
@@ -53,6 +57,8 @@ export interface SomekoneUISettings {
     showSaveDialog?: boolean;
     showMainMenu?: boolean;
     showGridMenu?: boolean;
+    hideGridMenuActions?: boolean;
+    hideGridMenuContent?: boolean;
     showSocialMenu?: boolean;
     nodeSelectAction?: UserPanel;
     showTreeMenu?: boolean;
@@ -101,6 +107,9 @@ export function useSettingDeserialise() {
                     if (data.socialGraph.autoEdges !== undefined) {
                         set(settingAutoEdges, data.socialGraph.autoEdges);
                     }
+                    if (data.socialGraph.showNodeMenu !== undefined) {
+                        set(settingSocialNodeMenu, data.socialGraph.showNodeMenu);
+                    }
                 }
                 if (data.applicationConfig) {
                     snapshot.getPromise(appConfiguration).then((cfg) => {
@@ -133,6 +142,12 @@ export function useSettingDeserialise() {
                     }
                     if (data.ui.showGridMenu !== undefined) {
                         set(menuShowGridMenu, data.ui.showGridMenu);
+                    }
+                    if (data.ui.hideGridMenuActions !== undefined) {
+                        set(menuHideGridMenuActions, data.ui.hideGridMenuActions);
+                    }
+                    if (data.ui.hideGridMenuContent !== undefined) {
+                        set(menuHideGridMenuContent, data.ui.hideGridMenuContent);
                     }
                     if (data.ui.showReplay !== undefined) {
                         set(menuShowReplay, data.ui.showReplay);
@@ -172,6 +187,7 @@ export function useSettingSerialise() {
                         similarityThreshold: await snapshot.getPromise(settingSimilarPercent),
                         autoCamera: await snapshot.getPromise(settingAutoCamera),
                         autoEdges: await snapshot.getPromise(settingAutoEdges),
+                        showNodeMenu: await snapshot.getPromise(settingSocialNodeMenu),
                     },
                     applicationConfig: await snapshot.getPromise(appConfiguration),
                     ui: {
@@ -180,6 +196,8 @@ export function useSettingSerialise() {
                         showShareCode: await snapshot.getPromise(menuShowShare),
                         showSocialMenu: await snapshot.getPromise(menuShowSocialMenu),
                         showGridMenu: await snapshot.getPromise(menuShowGridMenu),
+                        hideGridMenuActions: await snapshot.getPromise(menuHideGridMenuActions),
+                        hideGridMenuContent: await snapshot.getPromise(menuHideGridMenuContent),
                         nodeSelectAction: await snapshot.getPromise(menuNodeSelectAction),
                         showTreeMenu: await snapshot.getPromise(menuTreeMenu),
                         disabledTreeItems: await snapshot.getPromise(menuDisabledTreeItems),
