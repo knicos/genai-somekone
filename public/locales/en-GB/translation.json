@@ -571,7 +571,8 @@
             "clusterViewer": "Cluster Checker",
             "browser": "Browser",
             "imageDetail": "Selected Image",
-            "addTag": "Add Tag"
+            "addTag": "Add Tag",
+            "local": "Upload"
         },
         "tooltips": {
             "resetState": "Reset the creator",

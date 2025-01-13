@@ -253,7 +253,7 @@ export async function loadFile(
                 v.labels[i].weight *= 0.1;
             }
         }
-        contentSvc.addContent(images.get(v.id) || `${STATIC_PATH}/${v.id}.jpg`, v);
+        contentSvc.addContent(images.get(`${v.id}`) || `${STATIC_PATH}/${v.id}.jpg`, v);
     });
 
     /*store.users.forEach((u) => {

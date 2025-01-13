@@ -1,16 +1,13 @@
 import style from './style.module.css';
 import QueryGenerator from './QueryGenerator';
-import { useCallback, useEffect, useReducer, useRef, useState } from 'react';
-import { Options } from '@genaism/services/imageSearch/hook';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import ContentSummary from './ContentSummary';
 import BlockIcon from '@mui/icons-material/Block';
 import EmbeddingTool from './Embedding/EmbeddingTool';
-import CaptureDialog from './CaptureDialog';
 import { IconMenu, IconMenuItem } from '@genaism/components/IconMenu';
 import { IconButton } from '@mui/material';
 import { useServices } from '@genaism/hooks/services';
 import ContentClustering from './Cluster/ContentClustering';
-import RefreshIcon from '@mui/icons-material/Refresh';
 import { useTranslation } from 'react-i18next';
 import SvgLayer, { ILine } from './SvgLayer';
 import { extractNodesFromElements, generateLines, IConnection } from './lines';
@@ -36,12 +33,7 @@ const connections: IConnection[] = [
 
 export default function ContentWizard() {
     const { t } = useTranslation();
-    const [query, setQuery] = useState<string | undefined>();
-    const [options, setOptions] = useState<Options>();
-    const [captureOpen, setCaptureOpen] = useState(false);
-    const [tags, setTags] = useState<string[] | undefined>();
     const { content: contentSvc, profiler: profilerSvc, actionLog } = useServices();
-    const [counter, refresh] = useReducer((a) => a + 1, 0);
     const [lines, setLines] = useState<ILine[]>([]);
     const wkspaceRef = useRef<HTMLDivElement>(null);
     const observer = useRef<ResizeObserver>();
@@ -129,29 +121,10 @@ export default function ContentWizard() {
                     ref={wkspaceRef}
                 >
                     <SvgLayer lines={lines} />
-                    <QueryGenerator
-                        disabled={false}
-                        onQuery={(q: string, options: Options) => {
-                            setQuery(q);
-                            setOptions(options);
-                            setTags(undefined);
-                            setCaptureOpen(true);
-                        }}
-                    />
-                    <CaptureDialog
-                        key={`capture-${counter}`}
-                        open={captureOpen}
-                        onClose={() => setCaptureOpen(false)}
-                        query={query || ''}
-                        options={options || {}}
-                        onComplete={() => {}}
-                        tags={tags}
-                    />
+                    <QueryGenerator disabled={false} />
                     <ContentSummary
-                        onFindMore={(tags) => {
+                        onFindMore={() => {
                             // setQuery(tags.join(' '));
-                            setTags(tags);
-                            setCaptureOpen(true);
                         }}
                     />
                     <EmbeddingTool />
@@ -170,14 +143,6 @@ export default function ContentWizard() {
                         onClick={doSave}
                     >
                         <DownloadIcon />
-                    </IconButton>
-                </IconMenuItem>
-                <IconMenuItem tooltip={t('creator.tooltips.resetState')}>
-                    <IconButton
-                        color="inherit"
-                        onClick={refresh}
-                    >
-                        <RefreshIcon />
                     </IconButton>
                 </IconMenuItem>
                 <IconMenuItem tooltip={t('creator.tooltips.deleteAll')}>
