@@ -138,7 +138,13 @@
         },
         "titles": {
             "shareWith": "Share with",
-            "main": "Somekone"
+            "main": "Somekone",
+            "home": "Image Feed",
+            "data": "Your Data",
+            "share": "Share with others",
+            "profile": "Your Profile",
+            "recommendations": "Your Recommendations",
+            "post": "Post Content"
         },
         "placeholders": {
             "comment": "write a comment here..."

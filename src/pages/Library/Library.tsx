@@ -100,6 +100,16 @@ export function Component() {
                         description={t('library.flowerforest.description')}
                     />
                     <ContentItem
+                        title={t('library.reetta.title')}
+                        image="/images/flowerForest.jpg"
+                        url={`/dashboard/socialgraph?${createSearchParams({
+                            content: compressToEncodedURIComponent(
+                                JSON.stringify(['https://store.gen-ai.fi/somekone/reettaSet1.zip'])
+                            ),
+                        })}`}
+                        description={t('library.reetta.description')}
+                    />
+                    <ContentItem
                         title={t('library.kiosk.title')}
                         image="/images/kiosk.jpg"
                         url={`/dashboard/usergrid?${createSearchParams({

@@ -5,7 +5,7 @@ import ImageSearchIcon from '@mui/icons-material/ImageSearch';
 import HomeIcon from '@mui/icons-material/Home';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { IconButton } from '@mui/material';
+import { IconButton, Tooltip } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router';
 import style from './style.module.css';
 import { useRecoilValue } from 'recoil';
@@ -14,12 +14,14 @@ import { useProfilerService } from '@genaism/hooks/services';
 import { MouseEvent } from 'react';
 import { appConfiguration } from '@genaism/state/settingsState';
 import { SMConfig } from '@genaism/state/smConfig';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
     code: string;
 }
 
 export default function AppNavigation({ code }: Props) {
+    const { t } = useTranslation();
     const location = useLocation();
     const navigate = useNavigate();
     const darkMode = useRecoilValue(uiDarkMode);
@@ -31,68 +33,98 @@ export default function AppNavigation({ code }: Props) {
     return (
         <div className={darkMode ? style.darkNavOuter : style.navOuter}>
             <nav className={style.appNav}>
-                <IconButton
-                    color={currentView === 'feed' ? 'secondary' : 'inherit'}
-                    size="large"
-                    onClick={(e: MouseEvent) => {
-                        navigate('feed', { replace: true });
-                        e.preventDefault();
-                    }}
-                    href="feed"
+                <Tooltip
+                    title={t('feed.titles.home')}
+                    arrow
+                    placement="top"
                 >
-                    <HomeIcon fontSize="inherit" />
-                </IconButton>
-                {!config.hidePostContent && (
                     <IconButton
-                        color={currentView === 'post' ? 'secondary' : 'inherit'}
+                        color={currentView === 'feed' ? 'secondary' : 'inherit'}
                         size="large"
                         onClick={(e: MouseEvent) => {
-                            navigate('post', { replace: currentView !== 'feed' });
+                            navigate('feed', { replace: true });
                             e.preventDefault();
                         }}
-                        href="post"
+                        href="feed"
                     >
-                        <AddAPhotoIcon fontSize="inherit" />
+                        <HomeIcon fontSize="inherit" />
                     </IconButton>
+                </Tooltip>
+                {!config.hidePostContent && (
+                    <Tooltip
+                        title={t('feed.titles.post')}
+                        arrow
+                        placement="top"
+                    >
+                        <IconButton
+                            color={currentView === 'post' ? 'secondary' : 'inherit'}
+                            size="large"
+                            onClick={(e: MouseEvent) => {
+                                navigate('post', { replace: currentView !== 'feed' });
+                                e.preventDefault();
+                            }}
+                            href="post"
+                        >
+                            <AddAPhotoIcon fontSize="inherit" />
+                        </IconButton>
+                    </Tooltip>
                 )}
                 {!config.hideDataView && (
-                    <IconButton
-                        color={currentView === 'data' ? 'secondary' : 'inherit'}
-                        size="large"
-                        onClick={(e: MouseEvent) => {
-                            navigate('data', { replace: currentView !== 'feed' });
-                            e.preventDefault();
-                        }}
-                        href="data"
+                    <Tooltip
+                        title={t('feed.titles.data')}
+                        arrow
+                        placement="top"
                     >
-                        <QueryStatsIcon fontSize="inherit" />
-                    </IconButton>
+                        <IconButton
+                            color={currentView === 'data' ? 'secondary' : 'inherit'}
+                            size="large"
+                            onClick={(e: MouseEvent) => {
+                                navigate('data', { replace: currentView !== 'feed' });
+                                e.preventDefault();
+                            }}
+                            href="data"
+                        >
+                            <QueryStatsIcon fontSize="inherit" />
+                        </IconButton>
+                    </Tooltip>
                 )}
                 {!config.hideProfileView && (
-                    <IconButton
-                        color={currentView === 'profile' ? 'secondary' : 'inherit'}
-                        size="large"
-                        onClick={(e: MouseEvent) => {
-                            navigate('profile', { replace: currentView !== 'feed' });
-                            e.preventDefault();
-                        }}
-                        href="profile"
+                    <Tooltip
+                        title={t('feed.titles.profile')}
+                        arrow
+                        placement="top"
                     >
-                        <PersonIcon fontSize="inherit" />
-                    </IconButton>
+                        <IconButton
+                            color={currentView === 'profile' ? 'secondary' : 'inherit'}
+                            size="large"
+                            onClick={(e: MouseEvent) => {
+                                navigate('profile', { replace: currentView !== 'feed' });
+                                e.preventDefault();
+                            }}
+                            href="profile"
+                        >
+                            <PersonIcon fontSize="inherit" />
+                        </IconButton>
+                    </Tooltip>
                 )}
                 {!config.hideRecommendationsView && (
-                    <IconButton
-                        color={currentView === 'recommendations' ? 'secondary' : 'inherit'}
-                        size="large"
-                        onClick={(e: MouseEvent) => {
-                            navigate('recommendations', { replace: currentView !== 'feed' });
-                            e.preventDefault();
-                        }}
-                        href="recommendations"
+                    <Tooltip
+                        title={t('feed.titles.recommendations')}
+                        arrow
+                        placement="top"
                     >
-                        <ImageSearchIcon fontSize="inherit" />
-                    </IconButton>
+                        <IconButton
+                            color={currentView === 'recommendations' ? 'secondary' : 'inherit'}
+                            size="large"
+                            onClick={(e: MouseEvent) => {
+                                navigate('recommendations', { replace: currentView !== 'feed' });
+                                e.preventDefault();
+                            }}
+                            href="recommendations"
+                        >
+                            <ImageSearchIcon fontSize="inherit" />
+                        </IconButton>
+                    </Tooltip>
                 )}
                 {!config.hideOwnProfile && (
                     <IconButton
@@ -108,17 +140,23 @@ export default function AppNavigation({ code }: Props) {
                     </IconButton>
                 )}
                 {!config.hideShareProfile && (
-                    <IconButton
-                        size="large"
-                        color={currentView === 'share' ? 'secondary' : 'inherit'}
-                        onClick={(e: MouseEvent) => {
-                            navigate(`share?code=${code}`, { replace: currentView !== 'feed' });
-                            e.preventDefault();
-                        }}
-                        href={`share?code=${code}`}
+                    <Tooltip
+                        title={t('feed.titles.share')}
+                        arrow
+                        placement="top"
                     >
-                        <ShareIcon fontSize="inherit" />
-                    </IconButton>
+                        <IconButton
+                            size="large"
+                            color={currentView === 'share' ? 'secondary' : 'inherit'}
+                            onClick={(e: MouseEvent) => {
+                                navigate(`share?code=${code}`, { replace: currentView !== 'feed' });
+                                e.preventDefault();
+                            }}
+                            href={`share?code=${code}`}
+                        >
+                            <ShareIcon fontSize="inherit" />
+                        </IconButton>
+                    </Tooltip>
                 )}
             </nav>
         </div>
