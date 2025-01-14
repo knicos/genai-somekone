@@ -6,11 +6,6 @@ export const menuShowShare = atom<boolean>({
     default: true,
 });
 
-export const menuShowSave = atom<boolean>({
-    key: 'menushowsave',
-    default: false,
-});
-
 export type SettingsDialogs = 'none' | 'app' | 'recommendation';
 export const menuSettingsDialog = atom<SettingsDialogs>({
     key: 'menusettingsdialog',

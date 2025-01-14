@@ -4,14 +4,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import QrCode2Icon from '@mui/icons-material/QrCode2';
 import { useCallback, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import {
-    menuMainMenu,
-    menuShowSave,
-    menuShowSettings,
-    menuShowShare,
-    menuShowTools,
-    menuTreeMenu,
-} from '@genaism/state/menuState';
+import { menuMainMenu, menuShowSettings, menuShowShare, menuShowTools, menuTreeMenu } from '@genaism/state/menuState';
 import { useTranslation } from 'react-i18next';
 import { IconMenuItem } from '@genaism/components/IconMenu';
 import { appConfiguration } from '@genaism/state/settingsState';
@@ -23,6 +16,9 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import MenuIcon from '@mui/icons-material/Menu';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import { MenuButton } from './MenuButton';
+import { saveFile } from '@genaism/services/saver/fileSaver';
+import { useSettingSerialise } from '@genaism/hooks/settings';
+import { useServices } from '@genaism/hooks/services';
 
 export default function MenuPanel() {
     const { t } = useTranslation();
@@ -30,13 +26,25 @@ export default function MenuPanel() {
     const [showShare, setShowShare] = useRecoilState(menuShowShare);
     const [showSettings, setShowSettings] = useRecoilState(menuShowSettings);
     const [config, setConfig] = useRecoilState(appConfiguration);
-    const [showSave, setShowSave] = useRecoilState(menuShowSave);
     const showTools = useRecoilValue(menuShowTools);
     const showMainMenu = useRecoilValue(menuMainMenu);
     const showTree = useRecoilValue(menuTreeMenu);
+    const serial = useSettingSerialise();
+    const { content: contentSvc, profiler: profilerSvc, actionLog } = useServices();
 
     const doShowShare = useCallback(() => setShowShare((s) => !s), [setShowShare]);
     const doShowSettings = useCallback(() => setShowSettings((s) => !s), [setShowSettings]);
+
+    const doSave = useCallback(async () => {
+        saveFile(profilerSvc, contentSvc, actionLog, {
+            includeContent: false,
+            includeProfiles: true,
+            includeLogs: true,
+            includeGraph: true,
+            configuration: config,
+            settings: await serial(),
+        });
+    }, [config, profilerSvc, contentSvc, actionLog, serial]);
 
     if (!showMainMenu) return null;
 
@@ -101,12 +109,11 @@ export default function MenuPanel() {
             <IconMenuItem
                 tooltip={t('dashboard.labels.saveTip')}
                 hideTip={open}
-                selected={showSave}
                 fullWidth
             >
                 <MenuButton
                     color="inherit"
-                    onClick={() => setShowSave((s) => !s)}
+                    onClick={doSave}
                     aria-label={t('dashboard.labels.saveTip')}
                     size="large"
                     variant="text"

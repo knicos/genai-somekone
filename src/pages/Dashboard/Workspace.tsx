@@ -7,7 +7,6 @@ import DEFAULT_CONFIG from '../Genagram/defaultConfig.json';
 import MenuPanel from './MenuPanel';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { menuShowReplay } from '@genaism/state/menuState';
-import SaveDialog from '../dialogs/SaveDialog/SaveDialog';
 import SettingsDialog from '../dialogs/SettingsDialog/SettingsDialog';
 import Loading from '@genaism/components/Loading/Loading';
 import ErrorDialog from '../dialogs/ErrorDialog/ErrorDialog';
@@ -95,7 +94,6 @@ export function Workspace({ contentUrls, cfg, guide, experimental, noSession }: 
                                 setFileToOpen(['https://store.gen-ai.fi/somekone/sm_demo1c.zip']);
                             }}
                         />
-                        <SaveDialog />
                         <SettingsDialog />
                         <AppSettingsDialog />
                         <RecomSettingsDialog />

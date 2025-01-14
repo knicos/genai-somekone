@@ -10,7 +10,6 @@ import {
     menuShowGridMenu,
     menuShowReplay,
     menuShowReplayControls,
-    menuShowSave,
     menuShowShare,
     menuShowSocialMenu,
     menuShowUserPanel,
@@ -54,7 +53,6 @@ export interface SomekoneGeneralSettings {}
 export interface SomekoneUISettings {
     showUserPanel?: UserPanel;
     showShareCode?: boolean;
-    showSaveDialog?: boolean;
     showMainMenu?: boolean;
     showGridMenu?: boolean;
     hideGridMenuActions?: boolean;
@@ -131,9 +129,6 @@ export function useSettingDeserialise() {
                     if (data.ui.showShareCode !== undefined) {
                         set(menuShowShare, data.ui.showShareCode);
                     }
-                    if (data.ui.showSaveDialog !== undefined) {
-                        set(menuShowSave, data.ui.showSaveDialog);
-                    }
                     if (data.ui.showMainMenu !== undefined) {
                         set(menuMainMenu, data.ui.showMainMenu);
                     }
@@ -192,7 +187,6 @@ export function useSettingSerialise() {
                     applicationConfig: await snapshot.getPromise(appConfiguration),
                     ui: {
                         showUserPanel: await snapshot.getPromise(menuShowUserPanel),
-                        showSaveDialog: await snapshot.getPromise(menuShowSave),
                         showShareCode: await snapshot.getPromise(menuShowShare),
                         showSocialMenu: await snapshot.getPromise(menuShowSocialMenu),
                         showGridMenu: await snapshot.getPromise(menuShowGridMenu),

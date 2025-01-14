@@ -6,8 +6,11 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import PauseIcon from '@mui/icons-material/Pause';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import QrCode2Icon from '@mui/icons-material/QrCode2';
-import { menuShowSave, menuShowShare } from '@genaism/state/menuState';
+import { menuShowShare } from '@genaism/state/menuState';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
+import { saveFile } from '@genaism/services/saver/fileSaver';
+import { useSettingSerialise } from '@genaism/hooks/settings';
+import { useServices } from '@genaism/hooks/services';
 
 interface Props {
     action: GuidanceAction;
@@ -17,7 +20,19 @@ interface Props {
 export default function ActionButton({ action, onAction }: Props) {
     const [config, setConfig] = useRecoilState(appConfiguration);
     const setShowShare = useSetRecoilState(menuShowShare);
-    const setShowSave = useSetRecoilState(menuShowSave);
+    const serial = useSettingSerialise();
+    const { content: contentSvc, profiler: profilerSvc, actionLog } = useServices();
+
+    const doSave = useCallback(async () => {
+        saveFile(profilerSvc, contentSvc, actionLog, {
+            includeContent: false,
+            includeProfiles: true,
+            includeLogs: true,
+            includeGraph: true,
+            configuration: config,
+            settings: await serial(),
+        });
+    }, [config, profilerSvc, contentSvc, actionLog, serial]);
 
     const doClick = useCallback(() => {
         if (onAction) onAction();
@@ -26,9 +41,9 @@ export default function ActionButton({ action, onAction }: Props) {
         } else if (action === 'sharecode') {
             setShowShare((old) => !old);
         } else if (action === 'download') {
-            setShowSave(true);
+            doSave();
         }
-    }, [action, setConfig, setShowShare, setShowSave, onAction]);
+    }, [action, setConfig, setShowShare, onAction, doSave]);
 
     return (
         <IconButton

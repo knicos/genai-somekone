@@ -17,18 +17,33 @@ export function Component() {
                 </header>
                 <ul className={style.grid}>
                     <ContentItem
+                        title={t('library.reetta.title')}
+                        image="/images/reetta1.jpg"
+                        url={`/dashboard/socialgraph?${createSearchParams({
+                            content: compressToEncodedURIComponent(
+                                JSON.stringify(['https://store.gen-ai.fi/somekone/reettaSet1.zip'])
+                            ),
+                        })}`}
+                        description={t('library.reetta.description')}
+                    />
+
+                    <ContentItem
+                        title={t('library.guidedDefault.title')}
+                        image="/images/guidedDefault.jpg"
+                        url={`/dashboard/socialgraph?${createSearchParams({
+                            guide: 'default',
+                            content: compressToEncodedURIComponent(
+                                JSON.stringify(['https://store.gen-ai.fi/somekone/reettaSet1.zip'])
+                            ),
+                        })}`}
+                        description={t('library.guidedDefault.description')}
+                    />
+                    <ContentItem
                         title={t('library.generic.title')}
                         image="/images/defaultContent.jpg"
                         url="/dashboard"
                         description={t('library.generic.description')}
                     />
-                    <ContentItem
-                        title={t('library.guidedDefault.title')}
-                        image="/images/guidedDefault.jpg"
-                        url="/dashboard/usergrid?guide=default"
-                        description={t('library.guidedDefault.description')}
-                    />
-
                     <ContentItem
                         title={t('library.public.title')}
                         image="/images/publicDemo.jpg"
@@ -58,56 +73,6 @@ export function Component() {
                             ),
                         })}`}
                         description={t('library.example.description')}
-                    />
-                    <ContentItem
-                        title={t('library.food.title')}
-                        image="/images/food.jpg"
-                        url={`/dashboard/socialgraph?${createSearchParams({
-                            content: compressToEncodedURIComponent(
-                                JSON.stringify(['https://store.gen-ai.fi/somekone/imageSet_food.zip'])
-                            ),
-                        })}`}
-                        description={t('library.food.description')}
-                    />
-                    <ContentItem
-                        title={t('library.dogs.title')}
-                        image="/images/dogs.jpg"
-                        url={`/dashboard/socialgraph?${createSearchParams({
-                            content: compressToEncodedURIComponent(
-                                JSON.stringify(['https://store.gen-ai.fi/somekone/imageSet_dogs.zip'])
-                            ),
-                        })}`}
-                        description={t('library.dogs.description')}
-                    />
-                    <ContentItem
-                        title={t('library.agility.title')}
-                        image="/images/agility.jpg"
-                        url={`/dashboard/socialgraph?${createSearchParams({
-                            content: compressToEncodedURIComponent(
-                                JSON.stringify(['https://store.gen-ai.fi/somekone/imageSet_agility.zip'])
-                            ),
-                        })}`}
-                        description={t('library.agility.description')}
-                    />
-                    <ContentItem
-                        title={t('library.flowerforest.title')}
-                        image="/images/flowerForest.jpg"
-                        url={`/dashboard/socialgraph?${createSearchParams({
-                            content: compressToEncodedURIComponent(
-                                JSON.stringify(['https://store.gen-ai.fi/somekone/imageSet_flowerforest.zip'])
-                            ),
-                        })}`}
-                        description={t('library.flowerforest.description')}
-                    />
-                    <ContentItem
-                        title={t('library.reetta.title')}
-                        image="/images/flowerForest.jpg"
-                        url={`/dashboard/socialgraph?${createSearchParams({
-                            content: compressToEncodedURIComponent(
-                                JSON.stringify(['https://store.gen-ai.fi/somekone/reettaSet1.zip'])
-                            ),
-                        })}`}
-                        description={t('library.reetta.description')}
                     />
                     <ContentItem
                         title={t('library.kiosk.title')}

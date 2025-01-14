@@ -2,8 +2,8 @@
     "library": {
         "title": "Select Content",
         "generic": {
-            "title": "Generic Content",
-            "description": "Over 700 free images of animals, nature, cars, food and people selected by children from Pixabay."
+            "title": "Original Content",
+            "description": "The original Somekone dataset selected by children."
         },
         "guidedDefault": {
             "title": "Core Concepts",
@@ -25,21 +25,9 @@
             "title": "Blank",
             "description": "Add your own photos or select from the web to create custom social media content for the app."
         },
-        "food": {
-            "title": "Food Images",
-            "description": "A selection of 400 food images including meat, vegetables, deserts and fruit."
-        },
-        "dogs": {
-            "title": "Dogs",
-            "description": "Images of dogs to explore if some characteristics of images are more engaging than others."
-        },
-        "agility": {
-            "title": "Agility",
-            "description": "Mostly portraits of dogs but with some agility photos."
-        },
-        "flowerforest": {
-            "title": "Flowers & Forests",
-            "description": "Flower wallpaper photos with a few forest landscapes."
+        "reetta": {
+            "title": "Generic Content",
+            "description": "Over 700 carefully selected free images in 7 main categories, food, hobbies, animals, lifestyle, fashion, sports and landscapes."
         }
     },
     "about": {
