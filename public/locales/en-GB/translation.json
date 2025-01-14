@@ -244,6 +244,10 @@
             "disableFollowing": "Disable following",
             "disableSharing": "Disable sharing",
             "showRecommendationWizard": "Show wizard",
+            "showCandidateWizard": "Personal or Non-personal",
+            "showCandidateRefinementWizard": "Show more candidate options",
+            "showScoringWizard": "Show scoring options",
+            "showDiversityWizard": "Show diversity options",
             "hideRecommendationMenu": "Hide menu",
             "hideExplainedScores": "Hide score explanation",
             "hideCandidateOrigin": "Hide image origin"

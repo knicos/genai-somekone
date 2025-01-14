@@ -76,6 +76,7 @@ describe('RecommendationsProfile component', () => {
                     snap.set(appConfiguration, (p) => ({
                         ...p,
                         showRecommendationWizard: true,
+                        showCandidateWizard: true,
                         experimental: true,
                         recommendations: { random: 1, taste: 1, similarUsers: 1, coengaged: 1, popular: 1 },
                     }));

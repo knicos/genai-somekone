@@ -40,6 +40,48 @@ export default function RecomSettings() {
                 <FormControlLabel
                     control={
                         <Checkbox
+                            disabled={config?.showRecommendationWizard === false}
+                            checked={config?.showCandidateWizard || false}
+                            onChange={(_, checked) => setConfig((old) => ({ ...old, showCandidateWizard: checked }))}
+                        />
+                    }
+                    label={t('settings.app.showCandidateWizard')}
+                />
+                <FormControlLabel
+                    control={
+                        <Checkbox
+                            disabled={config?.showRecommendationWizard === false}
+                            checked={config?.showCandidateRefinementWizard || false}
+                            onChange={(_, checked) =>
+                                setConfig((old) => ({ ...old, showCandidateRefinementWizard: checked }))
+                            }
+                        />
+                    }
+                    label={t('settings.app.showCandidateRefinementWizard')}
+                />
+                <FormControlLabel
+                    control={
+                        <Checkbox
+                            disabled={config?.showRecommendationWizard === false}
+                            checked={config?.showScoringWizard || false}
+                            onChange={(_, checked) => setConfig((old) => ({ ...old, showScoringWizard: checked }))}
+                        />
+                    }
+                    label={t('settings.app.showScoringWizard')}
+                />
+                <FormControlLabel
+                    control={
+                        <Checkbox
+                            disabled={config?.showRecommendationWizard === false}
+                            checked={config?.showDiversityWizard || false}
+                            onChange={(_, checked) => setConfig((old) => ({ ...old, showDiversityWizard: checked }))}
+                        />
+                    }
+                    label={t('settings.app.showDiversityWizard')}
+                />
+                <FormControlLabel
+                    control={
+                        <Checkbox
                             checked={config?.hideCandidateOrigin || false}
                             onChange={(_, checked) => setConfig((old) => ({ ...old, hideCandidateOrigin: checked }))}
                         />

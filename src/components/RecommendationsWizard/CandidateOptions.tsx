@@ -50,8 +50,28 @@ export default function CandidateOptions({ id, changePage }: Props) {
     const value = mapPersonalisation(config.recommendations);
 
     useEffect(() => {
-        changePage(value === 'personal' ? 2 : value === 'nonpersonal' ? 3 : 4);
-    }, [value, changePage]);
+        if (config.showCandidateRefinementWizard) {
+            if (value === 'personal') changePage(2);
+            else if (value === 'nonpersonal') changePage(3);
+            else {
+                if (config.showScoringWizard) {
+                    changePage(4);
+                } else if (config.showDiversityWizard) {
+                    changePage(5);
+                } else {
+                    changePage(0);
+                }
+            }
+        } else {
+            if (config.showScoringWizard) {
+                changePage(4);
+            } else if (config.showDiversityWizard) {
+                changePage(5);
+            } else {
+                changePage(0);
+            }
+        }
+    }, [value, changePage, config]);
 
     return (
         <section

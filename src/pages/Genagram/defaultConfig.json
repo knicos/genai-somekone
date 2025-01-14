@@ -20,7 +20,8 @@
         "showRecommendationWizard": true,
         "showScoringWizard": true,
         "showCandidateWizard": true,
-        "showCandidateRefinementWizard": true
+        "showCandidateRefinementWizard": true,
+        "showDiversityWizard": true
     },
     "content": ["https://store.gen-ai.fi/somekone/imageSet1c.zip"]
 }

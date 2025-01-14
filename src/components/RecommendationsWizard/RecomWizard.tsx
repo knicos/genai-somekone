@@ -15,6 +15,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useTranslation } from 'react-i18next';
 import DiversityOptions from './DiversityOptions';
 import { UserNodeId } from '@knicos/genai-recom';
+import { useRecoilValue } from 'recoil';
+import { appConfiguration, configuration } from '@genaism/state/settingsState';
 
 interface Props {
     id?: UserNodeId;
@@ -30,10 +32,15 @@ export default function RecomWizard({ id, active, onClose, hideClose, variant = 
     const [height, setHeight] = useState(0);
     const [nextPage, setNextPage] = useState(1);
     const prevPage = useRef([0]);
+    const config = useRecoilValue(id ? configuration(id) : appConfiguration);
 
     useEffect(() => {
-        if (active) setPage(1);
-    }, [active]);
+        if (active) {
+            if (config.showCandidateWizard) setPage(1);
+            else if (config.showScoringWizard) setPage(4);
+            else if (config.showDiversityWizard) setPage(5);
+        }
+    }, [active, config]);
 
     const doSetPage = (p: number) => {
         if (p > page) {
@@ -73,7 +80,12 @@ export default function RecomWizard({ id, active, onClose, hideClose, variant = 
                                 {t('recommendations.actions.back')}
                             </Button>
                             <Stepper
-                                steps={[[0, 1], [2, 3], [4], [5]]}
+                                steps={[
+                                    [0, 1],
+                                    config.showCandidateRefinementWizard ? [2, 3] : undefined,
+                                    config.showScoringWizard ? [4] : undefined,
+                                    config.showDiversityWizard ? [5] : undefined,
+                                ].filter((f) => f !== undefined)}
                                 page={page}
                             />
                             <Button

@@ -54,7 +54,13 @@ export default function NonPersonalCandidates({ id, changePage }: Props) {
     const setGlobalConfig = useSetRecoilState(appConfiguration);
 
     useEffect(() => {
-        changePage(4);
+        if (config.showScoringWizard) {
+            changePage(4);
+        } else if (config.showDiversityWizard) {
+            changePage(5);
+        } else {
+            changePage(0);
+        }
     }, [config, changePage]);
 
     return (

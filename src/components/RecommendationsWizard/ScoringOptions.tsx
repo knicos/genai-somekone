@@ -69,8 +69,12 @@ export default function ScoringOptions({ id, changePage }: Props) {
     const value = mapScoring(config.recommendations);
 
     useEffect(() => {
-        changePage(5);
-    }, [value, changePage]);
+        if (config.showDiversityWizard) {
+            changePage(5);
+        } else {
+            changePage(0);
+        }
+    }, [config, value, changePage]);
 
     return (
         <section className={style.wizardPage}>

@@ -24,6 +24,7 @@ export interface SMConfig {
     showScoringWizard?: boolean;
     showCandidateWizard?: boolean;
     showCandidateRefinementWizard?: boolean;
+    showDiversityWizard?: boolean;
     hideRecommendationMenu?: boolean;
     hideCandidateOrigin?: boolean;
     hideExplainedScores?: boolean;
