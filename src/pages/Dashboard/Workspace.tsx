@@ -90,9 +90,6 @@ export function Workspace({ contentUrls, cfg, guide, experimental, noSession }: 
                         <StartDialog
                             users={users}
                             code={MYCODE}
-                            onDemo={() => {
-                                setFileToOpen(['https://store.gen-ai.fi/somekone/sm_demo1c.zip']);
-                            }}
                         />
                         <SettingsDialog />
                         <AppSettingsDialog />

@@ -1,13 +1,13 @@
-import Simulation from '@genaism/services/simulation/Simulation';
 import { menuShowSimulator } from '@genaism/state/menuState';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import SimulatorDialog from './SimulatorDialog';
 import { appConfiguration } from '@genaism/state/settingsState';
 import SimulatorStatus from './SimulatorStatus';
+import { currentSimulation } from '@genaism/state/simulationState';
 
 export default function Simulator() {
-    const [simulation, setSimulation] = useState<Simulation | null>(null);
+    const [simulation, setSimulation] = useRecoilState(currentSimulation);
     const [open, setOpen] = useRecoilState(menuShowSimulator);
     const appConfig = useRecoilValue(appConfiguration);
     const [progress, setProgress] = useState(0);

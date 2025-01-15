@@ -3,21 +3,25 @@ import style from './style.module.css';
 import { QRCode } from '@knicos/genai-base';
 import { useTranslation, Trans } from 'react-i18next';
 import { LargeButton } from '@knicos/genai-base';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { menuShowShare } from '@genaism/state/menuState';
 import { useCallback } from 'react';
 import { Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
+import Simulation from '@genaism/services/simulation/Simulation';
+import { useServices } from '@genaism/hooks/services';
+import { currentSimulation } from '@genaism/state/simulationState';
 
 interface Props {
     users: UserInfo[];
     code: string;
-    onDemo?: () => void;
 }
 
-export default function StartDialog({ users, code, onDemo }: Props) {
+export default function StartDialog({ users, code }: Props) {
     const { t } = useTranslation();
     const [showDialog, setShowDialog] = useRecoilState(menuShowShare);
+    const { recommender, actionLog } = useServices();
+    const setSimulation = useSetRecoilState(currentSimulation);
 
     const doClose = useCallback(() => setShowDialog(false), [setShowDialog]);
 
@@ -73,19 +77,21 @@ export default function StartDialog({ users, code, onDemo }: Props) {
                         >
                             <FolderOpenIcon fontSize="medium" />
                         </IconButton>
-                        {onDemo && (
-                            <LargeButton
-                                variant="outlined"
-                                color="secondary"
-                                data-testid="dashboard-demo-button"
-                                onClick={() => {
-                                    onDemo();
-                                    doClose();
-                                }}
-                            >
-                                {t('dashboard.actions.demo')}
-                            </LargeButton>
-                        )}
+                        <LargeButton
+                            variant="outlined"
+                            color="secondary"
+                            data-testid="dashboard-demo-button"
+                            onClick={() => {
+                                const sim = new Simulation(recommender, actionLog);
+                                sim.createAgents(12, {
+                                    thresholds: { min: 0.1, max: 0.7 },
+                                });
+                                setSimulation(sim);
+                                doClose();
+                            }}
+                        >
+                            {t('dashboard.actions.demo')}
+                        </LargeButton>
                         <LargeButton
                             variant="contained"
                             color="secondary"
