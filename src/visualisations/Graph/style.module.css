@@ -18,6 +18,16 @@
     stroke: secondary;
 }
 
+.zoomControls {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    display: flex;
+    flex-direction: column;
+    background: #ffffffbf;
+    border-radius: 6px;
+}
+
 /*.link {
     stroke: primary;
 }*/

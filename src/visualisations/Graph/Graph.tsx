@@ -28,11 +28,14 @@ import ProgressDialog from '../../components/ProgressDialog/ProgressDialog';
 import { useTranslation } from 'react-i18next';
 import { Spinner } from '@knicos/genai-base';
 import { calcAutoCamera, calcExtents, calculateViewBox, DEFAULT_EXTENTS } from './camera';
+import ZoomControls from './ZoomControls';
 
 interface LabelProps<T extends NodeID> {
     node: GraphNode<T>;
     scale: number;
 }
+
+const BUTTON_ZOOM_SPEED = 0.2;
 
 export interface Props<T extends NodeID> extends PropsWithChildren {
     nodes: GraphNode<T>[];
@@ -397,6 +400,16 @@ export default function Graph<T extends NodeID>({
                 open={saving}
             />
             {nodeList.length === 0 && <Spinner />}
+            <ZoomControls
+                onZoomIn={() => {
+                    const newZoom = Math.max(0.5, actualZoom.zoom - BUTTON_ZOOM_SPEED * actualZoom.zoom);
+                    setActualZoom((oldZoom) => ({ ...oldZoom, zoom: newZoom }));
+                }}
+                onZoomOut={() => {
+                    const newZoom = Math.max(0.5, actualZoom.zoom + BUTTON_ZOOM_SPEED * actualZoom.zoom);
+                    setActualZoom((oldZoom) => ({ ...oldZoom, zoom: newZoom }));
+                }}
+            />
         </>
     );
 }
