@@ -1,21 +1,19 @@
 import { MouseEvent, useCallback, useEffect, useReducer, useState } from 'react';
 import style from './style.module.css';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
-import IconButton from '@mui/material/IconButton';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ReplyIcon from '@mui/icons-material/Reply';
 import Avatar from '@mui/material/Avatar';
 import SharePanel, { ShareKind } from './SharePanel';
 import CommentPanel from './CommentPanel';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import LabelsPanel from './LabelsPanel';
 import IconButtonDot from '../IconButtonDot/IconButtonDot';
 import { useTranslation } from 'react-i18next';
 import { ContentNodeId, UserNodeId } from '@knicos/genai-recom';
 import { useContentService } from '@genaism/hooks/services';
 import { useContent, useContentStats } from '@genaism/hooks/content';
+import { Button } from '@knicos/genai-base';
 
 const MAX_COMMENTS = 10;
 
@@ -167,25 +165,15 @@ export default function FeedImage({
                         <Avatar {...stringAvatar(contentMeta.author || 'Unknown')} />
                         <span className={style.author}>{contentMeta.author || 'Unknown'}</span>
                         {!noActions && !noFollow && (
-                            <IconButton
-                                color="inherit"
+                            <Button
                                 onClick={doFollow}
-                                data-testid="feed-image-follow-button"
-                                aria-label={t('feed.aria.followUser')}
                                 aria-pressed={followed}
+                                data-testid="feed-image-follow-button"
+                                color="inherit"
+                                variant="outlined"
                             >
-                                {followed ? (
-                                    <PersonRemoveIcon
-                                        color="inherit"
-                                        fontSize="large"
-                                    />
-                                ) : (
-                                    <PersonAddIcon
-                                        color="inherit"
-                                        fontSize="large"
-                                    />
-                                )}
-                            </IconButton>
+                                {followed ? t('feed.actions.unfollow') : t('feed.actions.follow')}
+                            </Button>
                         )}
                     </div>
                 )}
