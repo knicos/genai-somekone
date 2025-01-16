@@ -185,6 +185,10 @@ export default function ServerProtocol({ onReady, code, content }: Props) {
         onReady(ready);
     }, [onReady, ready]);
 
+    const doFailed = useCallback(() => {
+        onReady(true);
+    }, [onReady]);
+
     return (
         <ConnectionMonitor
             api={import.meta.env.VITE_APP_APIURL}
@@ -192,6 +196,7 @@ export default function ServerProtocol({ onReady, code, content }: Props) {
             ready={ready}
             status={status}
             error={error}
+            onFailed={doFailed}
         />
     );
 }

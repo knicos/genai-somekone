@@ -92,7 +92,7 @@
             "unknown": "A connection problem occurred",
             "id-in-use": "Someone is already using this code",
             "peer-not-found": "The code could not be found",
-            "missing-ice": "Configuration is missing",
+            "missing-ice": "Could not connect, you may be offline.",
             "no-signaling": "Our server isn't responding",
             "bad-browser": "Your device doesn't support this app",
             "unknownContent": "There is a problem with the media content",

@@ -19,7 +19,7 @@ import Nodes from './Nodes';
 import Lines from './Lines';
 import { createSimulation } from './simulation';
 import { makeLinks, makeNodes } from './utilities';
-import { ZoomState, pointerMove, wheelZoom } from './controls';
+import { Mover, ZoomState, wheelZoom } from './controls';
 import { NodeID } from '@knicos/genai-recom';
 import { useEventListen } from '@genaism/hooks/events';
 import { saveAs } from 'file-saver';
@@ -123,8 +123,7 @@ export default function Graph<T extends NodeID>({
         duration: CAMERA_DURATION,
     });
     const extents = useRef<[number, number, number, number]>([0, 0, 0, 0]);
-    const movement = useRef<[number, number]>([0, 0]);
-    const pointerCache = useRef(new Map<number, PointerEvent<SVGSVGElement>>());
+    const mover = useRef<Mover | undefined>();
     const drawCount = useRef(0);
     useEventListen(
         () => {
@@ -289,20 +288,29 @@ export default function Graph<T extends NodeID>({
                 onClickCapture={
                     !disableControls
                         ? (e: MouseEvent<SVGSVGElement>) => {
-                              if (Math.max(movement.current[0], movement.current[1]) > MOVE_THRESHOLD) {
-                                  movement.current = [0, 0];
+                              if (
+                                  mover.current &&
+                                  Math.max(mover.current.movementX, mover.current.movementY) > MOVE_THRESHOLD
+                              ) {
+                                  mover.current = undefined;
                                   e.stopPropagation();
                                   return;
                               }
                               if (onUnselect && focusNode && e.target === e.currentTarget) onUnselect();
-                              movement.current = [0, 0];
+                              mover.current = undefined;
                           }
                         : undefined
                 }
                 onPointerMove={
                     !disableControls && !autoCamera
                         ? (e: PointerEvent<SVGSVGElement>) => {
-                              setActualZoom((oldZoom) => {
+                              const pressed = e.pointerType === 'touch' || e.buttons === 1;
+                              if (pressed && svgRef.current) {
+                                  if (!mover.current)
+                                      mover.current = new Mover(actualZoom, extents.current, svgRef.current);
+                                  setActualZoom(mover.current.move(e));
+                              }
+                              /*setActualZoom((oldZoom) => {
                                   if (svgRef.current) {
                                       return pointerMove(
                                           e,
@@ -314,15 +322,16 @@ export default function Graph<T extends NodeID>({
                                       );
                                   }
                                   return oldZoom;
-                              });
+                              });*/
                           }
                         : undefined
                 }
                 onPointerUp={
                     !disableControls
                         ? (e: PointerEvent<SVGSVGElement>) => {
-                              pointerCache.current.clear();
-                              if (e.pointerType === 'touch') movement.current = [0, 0];
+                              //pointerCache.current.clear();
+                              //if (e.pointerType === 'touch') movement.current = [0, 0];
+                              if (e.pointerType === 'touch') mover.current = undefined;
                               if (onDragStop) onDragStop();
                           }
                         : undefined
@@ -353,11 +362,14 @@ export default function Graph<T extends NodeID>({
                         nodeList={nodeList}
                         onSelect={(node: GraphNode<T>, element: SVGElement) => {
                             if (onSelect && svgRef.current) {
-                                if (Math.max(movement.current[0], movement.current[1]) > MOVE_THRESHOLD) {
-                                    movement.current = [0, 0];
+                                if (
+                                    mover.current &&
+                                    Math.max(mover.current.movementX, mover.current.movementY) > MOVE_THRESHOLD
+                                ) {
+                                    mover.current = undefined;
                                     return;
                                 }
-                                movement.current = [0, 0];
+                                mover.current = undefined;
                                 onSelect(
                                     node,
                                     linkList.filter((l) => l.source.id === node.id || l.target.id === node.id),

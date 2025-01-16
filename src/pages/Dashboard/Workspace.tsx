@@ -79,6 +79,10 @@ export function Workspace({ contentUrls, cfg, guide, experimental, noSession }: 
         setLoaded(true);
     }, []);
 
+    const doReady = useCallback((r: boolean) => {
+        if (r) setReady(true);
+    }, []);
+
     return (
         <>
             <Loading loading={!loaded}>
@@ -100,9 +104,7 @@ export function Workspace({ contentUrls, cfg, guide, experimental, noSession }: 
                 </main>
             </Loading>
             <ServerProtocol
-                onReady={(r: boolean) => {
-                    if (r) setReady(true);
-                }}
+                onReady={doReady}
                 content={content}
                 code={MYCODE}
             />

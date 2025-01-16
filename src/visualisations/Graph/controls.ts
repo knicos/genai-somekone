@@ -19,58 +19,74 @@ function distance(x1: number, y1: number, x2: number, y2: number): number {
     return Math.sqrt(dx * dx + dy * dy);
 }
 
-export function pointerMove(
-    e: PointerEvent<SVGSVGElement>,
-    oldZoom: ZoomState,
-    extents: [number, number, number, number],
-    svg: SVGSVGElement,
-    pointerCache: Map<number, PointerEvent<SVGSVGElement>>,
-    movement: [number, number]
-): ZoomState {
-    if (e.pointerType === 'touch' || e.buttons === 1) pointerCache.set(e.pointerId, e);
+export class Mover {
+    private pointers = new Map<number, PointerEvent<SVGSVGElement>>();
+    private currentPointers = new Map<number, PointerEvent<SVGSVGElement>>();
+    private startZoom: ZoomState;
+    private element: SVGSVGElement;
+    private extents: [number, number, number, number];
+    public movementX = 0;
+    public movementY = 0;
 
-    if (pointerCache.size === 2) {
-        const ps = Array.from(pointerCache.values());
-        const mx1 = ps[0].movementX;
-        const mx2 = ps[1].movementX;
-        const my1 = ps[0].movementY;
-        const my2 = ps[1].movementY;
-
-        const offsetX = (ps[0].clientX + ps[1].clientX) / 2 / (svg.clientWidth || 1);
-        const offsetY = (ps[0].clientY + ps[1].clientY) / 2 / (svg.clientHeight || 1);
-
-        const l = distance(ps[0].clientX, ps[0].clientY, ps[1].clientX, ps[1].clientY);
-        const ll = distance(ps[0].clientX + mx1, ps[0].clientY + my1, ps[1].clientX + mx2, ps[1].clientY + my2);
-
-        const dl = l - ll;
-        const newX = extents[0] + extents[2] * offsetX;
-        const newY = extents[1] + extents[3] * offsetY;
-
-        return {
-            ...oldZoom,
-            cx: newX,
-            cy: newY,
-            offsetX,
-            offsetY,
-            duration: 0,
-            zoom: Math.max(0.5, oldZoom.zoom + TOUCH_ZOOM_SPEED * dl * oldZoom.zoom),
-        };
+    constructor(zoom: ZoomState, extents: [number, number, number, number], svg: SVGSVGElement) {
+        this.startZoom = zoom;
+        this.element = svg;
+        this.extents = extents;
     }
 
-    if (pointerCache.size === 1 && e.buttons === 1) {
-        movement[0] += Math.abs(e.movementX);
-        movement[1] += Math.abs(e.movementY);
-        const dx = e.movementX / (svg?.clientWidth || 1);
-        const dy = e.movementY / (svg?.clientHeight || 1);
-        return {
-            ...oldZoom,
-            duration: 0,
-            cx: oldZoom.cx - dx * extents[2],
-            cy: oldZoom.cy - dy * extents[3],
-        };
-    }
+    public move(e: PointerEvent<SVGSVGElement>): ZoomState {
+        const pressed = e.pointerType === 'touch' || e.buttons === 1;
+        if (pressed && !this.pointers.has(e.pointerId)) this.pointers.set(e.pointerId, e);
+        if (pressed) this.currentPointers.set(e.pointerId, e);
 
-    return oldZoom;
+        if (this.pointers.size === 2) {
+            const ps = Array.from(this.currentPointers.values());
+            const psOriginal = ps.map((p) => this.pointers.get(p.pointerId) || p);
+
+            const offsetX = (ps[0].clientX + ps[1].clientX) / 2 / this.element.clientWidth;
+            const offsetY = (ps[0].clientY + ps[1].clientY) / 2 / this.element.clientHeight;
+
+            const l = distance(
+                psOriginal[0].clientX,
+                psOriginal[0].clientY,
+                psOriginal[1].clientX,
+                psOriginal[1].clientY
+            );
+            const ll = distance(ps[0].clientX, ps[0].clientY, ps[1].clientX, ps[1].clientY);
+
+            const dl = l - ll;
+            const newX = this.extents[0] + this.extents[2] * offsetX;
+            const newY = this.extents[1] + this.extents[3] * offsetY;
+
+            return {
+                ...this.startZoom,
+                cx: newX,
+                cy: newY,
+                offsetX,
+                offsetY,
+                duration: 0,
+                zoom: Math.max(0.5, this.startZoom.zoom + TOUCH_ZOOM_SPEED * dl * this.startZoom.zoom),
+            };
+        }
+
+        if (this.pointers.size === 1 && pressed) {
+            const oldPointer = this.pointers.get(e.pointerId);
+            const mX = oldPointer ? e.screenX - oldPointer.screenX : 0;
+            const mY = oldPointer ? e.screenY - oldPointer.screenY : 0;
+            this.movementX += Math.abs(mX);
+            this.movementY += Math.abs(mY);
+            const dx = mX / this.element.clientWidth;
+            const dy = mY / this.element.clientHeight;
+            return {
+                ...this.startZoom,
+                duration: 0,
+                cx: this.startZoom.cx - dx * this.extents[2],
+                cy: this.startZoom.cy - dy * this.extents[3],
+            };
+        }
+
+        return this.startZoom;
+    }
 }
 
 export function wheelZoom(

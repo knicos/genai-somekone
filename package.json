@@ -5,7 +5,7 @@
     "type": "module",
     "scripts": {
         "git-info": "node scripts/gitInfo.js",
-        "dev": "vite",
+        "dev": "vite --host",
         "build": "npm run git-info && tsc && vite build",
         "lint": "eslint ./src/**/*.{ts,tsx} --report-unused-disable-directives --max-warnings 0",
         "preview": "vite preview",
@@ -18,7 +18,7 @@
     "dependencies": {
         "@emotion/react": "^11.11.1",
         "@emotion/styled": "^11.11.0",
-        "@knicos/genai-base": "^1.0.7",
+        "@knicos/genai-base": "^1.0.8",
         "@knicos/genai-recom": "^0.3.14",
         "@mui/icons-material": "^5.14.16",
         "@mui/material": "^5.15.18",
