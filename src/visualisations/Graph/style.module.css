@@ -23,7 +23,7 @@
     bottom: 1rem;
     right: 1rem;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     background: #ffffffbf;
     border-radius: 6px;
 }

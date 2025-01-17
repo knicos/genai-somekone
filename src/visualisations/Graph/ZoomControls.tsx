@@ -15,7 +15,7 @@ export default function ZoomControls({ onZoomIn, onZoomOut }: Props) {
     return (
         <section className={style.zoomControls}>
             <IconButton
-                color="primary"
+                color="inherit"
                 size="medium"
                 onClick={onZoomIn}
                 aria-label={t('dashboard.actions.zoomIn')}
@@ -23,7 +23,7 @@ export default function ZoomControls({ onZoomIn, onZoomOut }: Props) {
                 <ZoomInIcon fontSize="large" />
             </IconButton>
             <IconButton
-                color="primary"
+                color="inherit"
                 size="medium"
                 onClick={onZoomOut}
                 aria-label={t('dashboard.actions.zoomOut')}

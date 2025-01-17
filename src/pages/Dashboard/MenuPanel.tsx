@@ -19,6 +19,7 @@ import { MenuButton } from './MenuButton';
 import { saveFile } from '@genaism/services/saver/fileSaver';
 import { useSettingSerialise } from '@genaism/hooks/settings';
 import { useServices } from '@genaism/hooks/services';
+import ShortCuts from './ShortCuts';
 
 export default function MenuPanel() {
     const { t } = useTranslation();
@@ -124,6 +125,7 @@ export default function MenuPanel() {
                 </MenuButton>
             </IconMenuItem>
 
+            {!open && <ShortCuts />}
             {showTree && <MenuTree open={open} />}
 
             {showTools && <ToolsMenu />}
