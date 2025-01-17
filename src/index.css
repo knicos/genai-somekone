@@ -24,6 +24,10 @@
     overflow: hidden;
 }
 
+.errorView {
+    margin: 2rem;
+}
+
 @media print {
     #root {
         position: initial;

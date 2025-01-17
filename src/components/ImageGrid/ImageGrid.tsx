@@ -67,7 +67,7 @@ export default function ImageGrid({ multiselect, images, selected, onSelect, lin
                                 onSelect(img);
                             }
                         }}
-                        aria-label={t('recommendations.aria.imageSelect', { number: ix + 1 })}
+                        aria-label={t('recommendations.aria.imageSelect', { ns: 'common', number: ix + 1 })}
                     >
                         <ImageItem image={img} />
                         <SelectButton selected={selectedSet.has(img)} />

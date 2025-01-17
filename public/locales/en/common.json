@@ -1,0 +1,299 @@
+{
+    "app": {
+        "language": "Change language"
+    },
+    "about": {
+        "back": "Back",
+        "title": "Generation AI",
+        "privacyTitle": "Privacy Notice",
+        "privacy": [
+            "Welcome to our Privacy Notice, designed to inform you about how we handle your personal data following the General Data Protection Regulation (GDPR) when you use our website featuring the GenAI Somekone tool.",
+            "To make the subject matter of this notice clearer, let us define some terms from the GDPR. The \"controller\" refers to us, as we decide how and why your personal data is used, which also makes us responsible for protecting your personal data. \"Personal data\" includes any information that can identify you directly or indirectly, like your IP address. \"Processing\" covers all actions done with your data, such as collecting, storing, using, and deleting it.",
+            "It is important to read this notice to understand what data we collect from you, why we collect it, what we do with it, and what rights you have regarding your data.",
+            "If you have any questions about this notice, please reach out to the controller:",
+            "**Dr. Nicolas Pope**,",
+            "**Postal address:** University of Eastern Finland, Länsikatu 15, 80110 Joensuu, Finland.",
+            "**Email:** nicolas.pope@uef.fi",
+            "**Phone:** +358 505 288 449.",
+            "### 1. Data Processing Activity:",
+            "We log IP addresses.",
+            "However, we do not use cookies for tracking or analytics; instead, we provide content based solely on your inputs.",
+            "### 2. Purposes of Processing:",
+            "Logging IP addresses helps maintain website integrity and security by identifying and preventing malicious activities.",
+            "### 3. Legal Basis for Processing:",
+            "Primarily, we process IP addresses for security reasons, based on our legitimate interest in protecting our website and data as per Article 6(1)(f) GDPR. Again, we may also process data based on your consent under Article 6(1)(a) GDPR if you would like to exercise your right to access your logged IP address. In addition, we may process your personal data if we are instructed to do so by a competent court under Article 6(1)(c).",
+            "### 4. Legitimate Interests Pursued:",
+            "Our goal is to keep the website running by maintaining website integrity, and security, and preventing abuse.",
+            "### 5. Security:",
+            "We implement security measures to protect your IP addresses from unlawful access or damage. Your IP addresses are encrypted during any subsequent transfer.",
+            "### 6. Data Recipients:",
+            "Only authorized website personnel can access your IP address for security and maintenance purposes.",
+            "### 7. Data Transfers:",
+            "IP addresses may be transferred to Microsoft servers, but we ensure GDPR compliance for data protection.",
+            "### 8. Storage Limitation:",
+            "We keep IP addresses only as long as necessary, typically up to 7 days, unless required by law.",
+            "### 9. Your Rights:",
+            "Under GDPR, you have rights including",
+            "* Right to be informed: In addition to informing, you about processing purposes, retention periods, and to whom your data is shared, you have the right to be informed on how we collect. We collect your IP address when you visit our website.",
+            "* Right to access: you can request a copy of your logged IP address and associated log data.",
+            "* Right to rectification: if the logged data is inaccurate or incomplete, you can request rectification although IP address is not typically something that can be corrected in the same way as other data.",
+            "* Right to erasure: you can request deletion of your IP address within 7 days of your last visit to this website since your address is deleted automatically after 7 days.",
+            "* Right to object: you can object to the processing of your IP addresses.",
+            "* Right to lodge a complaint: you can lodge a complaint to the supervisory authority if you think that your data is not processed following GDPR provisions.",
+            "### 10. Updates to This Privacy Notice:",
+            "We may update this notice to reflect changes in our data processing practices or legal requirements. We will notify you of any changes.",
+            "We value your privacy and we are committed to protect your data and ensuring GDPR compliance. If you have questions or want to exercise your rights, contact us at nicolas.pope@uef.fi."
+        ]
+    },
+    "common": {
+        "errors": {
+            "unknown": "There was a problem, please try again.",
+            "content_not_found": "Unable to download the image content",
+            "peer_failed": "Could not connect",
+            "peer_retrying": "Connection lost, retrying...",
+            "peer_nortc": "Unable to start peer-2-peer, do you have an internet connection?",
+            "peer_no_peer": "The peer was not found",
+            "peer_nowebcam": "You must allow use of the webcam to create the conference call",
+            "missing_dependency": "This file depends on missing content",
+            "missing_embeddings": "Images are missing embeddings",
+            "missing_points": "Images are not mapped",
+            "missing_cluster": "Images have no cluster"
+        },
+        "titles": {
+            "error": "Problem",
+            "saving": "Saving",
+            "paused": "Paused"
+        },
+        "messages": {
+            "paused": "The App has been paused."
+        },
+        "actions": {
+            "close": "Close"
+        }
+    },
+    "loader": {
+        "messages": {
+            "getIceConfig": "Retrieving network configuration",
+            "cameraPermission": "To allow direct connections between devices you need to allow temporary access to the camera.",
+            "connecting": "Trying to connect...",
+            "signaling": "Finding other devices",
+            "disconnected": "Disconnected from the other device",
+            "retry": "Retrying connection...",
+            "content_load": "Loading the content",
+            "content_download": "Downloading the content",
+            "ready": "Connection ready",
+            "content_none": "Content ready",
+            "starting": "Starting",
+            "wifiNetwork": "Your data is being sent over the internet because you are not using the same Wi-Fi network.",
+            "permNetwork": "Your data is being sent over the internet because you didn't allow camera access."
+        },
+        "errors": {
+            "unknown": "A connection problem occurred",
+            "id-in-use": "Someone is already using this code",
+            "peer-not-found": "The code could not be found",
+            "missing-ice": "Could not connect, you may be offline.",
+            "no-signaling": "Our server isn't responding",
+            "bad-browser": "Your device doesn't support this app",
+            "unknownContent": "There is a problem with the media content",
+            "load": "Could not load the media content",
+            "download": "Could not download the media content",
+            "none": "Ok"
+        },
+        "titles": {
+            "iceConfig": "Configuring",
+            "permission": "Permissions",
+            "connecting": "Connection",
+            "error": "Problem",
+            "contentLoad": "Media Content",
+            "networkType": "Information"
+        },
+        "actions": {
+            "close": "Close"
+        }
+    },
+    "feed": {
+        "actions": {
+            "follow": "Follow",
+            "unfollow": "Unfollow",
+            "enterUser": "Enter",
+            "moreComments": "More Comments",
+            "post": "Post"
+        },
+        "titles": {
+            "shareWith": "Share with",
+            "main": "Somekone",
+            "home": "Image Feed",
+            "data": "Your Data",
+            "share": "Share with others",
+            "profile": "Your Profile",
+            "recommendations": "Your Recommendations",
+            "post": "Post Content"
+        },
+        "placeholders": {
+            "comment": "write a comment here..."
+        },
+        "messages": {
+            "noComments": "No comments yet.",
+            "usernameError": {
+                "missing": "A username is required",
+                "long": "The username is too long",
+                "short": "The username must be 3 or more characters"
+            },
+            "fullnameError": {
+                "missing": "Your full name is required"
+            },
+            "alreadyOpen": "You already have the app open in another tab.",
+            "sharedBy": "Shared by {{name}}."
+        },
+        "actionlog": {
+            "dwell": "Viewed for {{time}} second(s)",
+            "inactive": "Inactive for {{time}} second(s)",
+            "seen": "Image seen",
+            "follow": "Followed creator",
+            "like": "Liked the image",
+            "share_public": "Shared the image",
+            "comment": "Comment of length {{length}}",
+            "engagement": "Engagement",
+            "end": "Stopped using the app",
+            "unreact": "Unreacted"
+        },
+        "labels": {
+            "enterUsername": "Enter Username",
+            "enterFullname": "Enter Fullname"
+        },
+        "aria": {
+            "showLikeOptions": "Like the image",
+            "showComments": "Show comments",
+            "showShareOptions": "Show share options",
+            "shareLink": "Link to open the feed app",
+            "restoreUser": "Restore a previous session"
+        }
+    },
+    "profile": {
+        "titles": {
+            "sharingPreference": "Sharing Preferences",
+            "viewPreference": "Viewing Preferences",
+            "commentPreference": "Commenting Preferences",
+            "followPreference": "Following Preferences",
+            "reactPreference": "Reaction Preferences",
+            "yourData": "Your Data",
+            "yourProfile": "Your Profile",
+            "yourRecommendations": "Your Recommendations",
+            "shareProfile": "Share Profile",
+            "engagement": "Your engagement",
+            "newPost": "Create Post"
+        },
+        "labels": {
+            "followers": "followers",
+            "posts": "posts",
+            "follows": "follows",
+            "yourPosts": "Your Posts",
+            "missingPosts": "When you add your own posts they will show here."
+        },
+        "actions": {
+            "more": "More",
+            "post": "Post",
+            "print": "Print",
+            "download": "Download image"
+        },
+        "messages": {
+            "connection": "Go to the address below and enter the code <Code>{{codeText}}</Code>, or use the QR code."
+        }
+    },
+    "recommendations": {
+        "actions": {
+            "back": "Back",
+            "continue": "Continue",
+            "close": "Close",
+            "change": "Change",
+            "refresh": "Refresh view",
+            "invert": "Invert"
+        },
+        "labels": {
+            "topicCandidate": "Found from #{{topic}}.",
+            "popularCandidate": "Found from popular images.",
+            "random": "Found randomly from all images.",
+            "coengagedCandidate": "Found from another image you interacted with.",
+            "similarUserCandidate": "User \"{{userName}}\" is similar to you and engaged with this image.",
+            "candidateAll": "All of these (default)",
+            "candidateLabels": "Using your favorite hashtags",
+            "candidateUsers": "From similar people",
+            "candidateCoengaged": "From your recent interactions",
+            "candidateRandom": "Any images",
+            "candidatePersonal": "Personalised",
+            "candidatePopular": "Popular",
+            "candidateRecent": "Recently posted",
+            "candidateNonPersonal": "Non-personalised",
+            "candidatePersonalAndNon": "Both (default)",
+            "scoringPredict": "Predict engagement",
+            "scoringGeneral": "Content only score",
+            "scoringRandom": "Any image at random",
+            "scoringAll": "Combine all scores (default)",
+            "score": "Score",
+            "diversity": "Diversity",
+            "selectionProbability": "Add some diversity",
+            "selectionRank": "No diversity",
+            "imageGrid": "Show top recommendations",
+            "heatmap": "Show all images"
+        },
+        "titles": {
+            "candidateDiscovery": "How are candidates discovered?",
+            "scoringOptions": "How can we rank the images?",
+            "candidatesPersonal": "Which personal candidates?",
+            "candidatesNonPersonal": "How to select non-personal candidates?",
+            "diversityOptions": "Should there be diversity?",
+            "candidateOrigin": "Where it was found",
+            "predictedScore": "Predicted engagement",
+            "explainScore": "Why you might engage"
+        },
+        "descriptions": {
+            "selectHint": "Select an image to see why it is suggested.",
+            "heatHint": "Click to zoom and explore what you can see.",
+            "scoringPredict": "Predict if you might engage with the image",
+            "scoringGeneral": "Only consider popularity",
+            "scoringRandom": "Choose any order without scoring",
+            "scoringAll": "Use a combination of everything",
+            "candidateAll": "",
+            "candidateUsers": "Images liked by people in the same cluster as you",
+            "candidateLabels": "Look for images that match your interests",
+            "candidateCoengaged": "What others liked when they saw the same images",
+            "candidateRandom": "Choose anything from all images",
+            "candidatePopular": "From the most popular images",
+            "candidateRecent": "Anything recent that has not been seen much",
+            "candidatePersonal": "Use only your profile to find images",
+            "candidateNonPersonal": "Look for images without your profile",
+            "candidatePersonalAndNon": "Use a mix of personal and non-personal",
+            "selectionProbability": "Allow some images with lower scores to be selected",
+            "selectionRank": "Only select images that have the best scores"
+        },
+        "features": {
+            "taste": "Taste Similarity",
+            "coengagement": "Common engagements",
+            "sharing": "Likely to share",
+            "commenting": "Likely to comment",
+            "following": "Likely to follow",
+            "reacting": "Likely to react",
+            "viewing": "Likely to view",
+            "lastSeen": "Not seen recently",
+            "popularity": "Popularity",
+            "reaction": "Likely to react",
+            "lastEngaged": "Not engaged with"
+        },
+        "aria": {
+            "imageSelect": "Select recommendation number {{number}}",
+            "refresh": "Refresh recommendations",
+            "invert": "Invert the heatmap",
+            "heatmap": "Show a map of all image probabilities",
+            "imageGrid": "Show a grid of top recommendations"
+        }
+    },
+    "start": {
+        "actions": {
+            "createNew": "Create New",
+            "go": "Go"
+        },
+        "labels": {
+            "enterCode": "Enter Code"
+        }
+    }
+}

@@ -23,6 +23,8 @@ import AppSettingsDialog from '../dialogs/AppSettingsDialog/AppSettingsDialog';
 import RecomSettingsDialog from '../dialogs/RecomSettingsDialog/RecomSettingsDialog';
 import { SomekoneSettings, useSettingDeserialise } from '@genaism/hooks/settings';
 import Simulator from '@genaism/components/Simulator/Simulator';
+import { I18nextProvider } from 'react-i18next';
+import i18n from '@genaism/i18n';
 
 interface Props {
     contentUrls?: string;
@@ -86,22 +88,27 @@ export function Workspace({ contentUrls, cfg, guide, experimental, noSession }: 
     return (
         <>
             <Loading loading={!loaded}>
-                <main className={style.dashboard}>
-                    <MenuPanel />
-                    {guide && <Guidance guide={guide} />}
-                    <section className={style.workspace}>
-                        <Outlet />
-                        <StartDialog
-                            users={users}
-                            code={MYCODE}
-                        />
-                        <SettingsDialog />
-                        <AppSettingsDialog />
-                        <RecomSettingsDialog />
-                        {showReplay && <Replay />}
-                        <Simulator />
-                    </section>
-                </main>
+                <I18nextProvider
+                    i18n={i18n}
+                    defaultNS={'dashboard'}
+                >
+                    <main className={style.dashboard}>
+                        <MenuPanel />
+                        {guide && <Guidance guide={guide} />}
+                        <section className={style.workspace}>
+                            <Outlet />
+                            <StartDialog
+                                users={users}
+                                code={MYCODE}
+                            />
+                            <SettingsDialog />
+                            <AppSettingsDialog />
+                            <RecomSettingsDialog />
+                            {showReplay && <Replay />}
+                            <Simulator />
+                        </section>
+                    </main>
+                </I18nextProvider>
             </Loading>
             <ServerProtocol
                 onReady={doReady}

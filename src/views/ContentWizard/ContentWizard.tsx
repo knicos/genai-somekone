@@ -8,7 +8,7 @@ import { IconMenu, IconMenuItem } from '@genaism/components/IconMenu';
 import { IconButton } from '@mui/material';
 import { useServices } from '@genaism/hooks/services';
 import ContentClustering from './Cluster/ContentClustering';
-import { useTranslation } from 'react-i18next';
+import { I18nextProvider, useTranslation } from 'react-i18next';
 import SvgLayer, { ILine } from './SvgLayer';
 import { extractNodesFromElements, generateLines, IConnection } from './lines';
 import MappingTool from './MappingEncoder';
@@ -18,6 +18,7 @@ import { saveFile } from '@genaism/services/saver/fileSaver';
 import { useSettingSerialise } from '@genaism/hooks/settings';
 import { useSetRecoilState } from 'recoil';
 import { errorNotification } from '@genaism/state/errorState';
+import i18n from '@genaism/i18n';
 
 const connections: IConnection[] = [
     { start: 'query', end: 'summary', startPoint: 'right', endPoint: 'left' },
@@ -32,7 +33,7 @@ const connections: IConnection[] = [
 ];
 
 export default function ContentWizard() {
-    const { t } = useTranslation();
+    const { t } = useTranslation(['tools']);
     const { content: contentSvc, profiler: profilerSvc, actionLog } = useServices();
     const [lines, setLines] = useState<ILine[]>([]);
     const wkspaceRef = useRef<HTMLDivElement>(null);
@@ -114,7 +115,10 @@ export default function ContentWizard() {
     }, [actionLog, contentSvc, profilerSvc, serial, setError]);
 
     return (
-        <>
+        <I18nextProvider
+            i18n={i18n}
+            defaultNS="tools"
+        >
             <div className={style.workspace}>
                 <div
                     className={style.container}
@@ -154,6 +158,6 @@ export default function ContentWizard() {
                     </IconButton>
                 </IconMenuItem>
             </IconMenu>
-        </>
+        </I18nextProvider>
     );
 }

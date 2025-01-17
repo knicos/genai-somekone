@@ -27,7 +27,7 @@ export default function ViewContainer({ title, children }: Props) {
                             onClick={() => {
                                 navigate(-1);
                             }}
-                            aria-label={t('dashboard.actions.close')}
+                            aria-label={t('common.actions.close')}
                         >
                             <ArrowBackIcon
                                 fontSize="large"

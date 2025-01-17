@@ -7,7 +7,7 @@ import gitInfo from '../../generatedGitInfo.json';
 import { useTranslation } from 'react-i18next';
 
 export function Component() {
-    const { t } = useTranslation();
+    const { t } = useTranslation(['dashboard']);
 
     return (
         <main className={style.outerContainer}>

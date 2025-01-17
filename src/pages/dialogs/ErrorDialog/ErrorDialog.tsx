@@ -11,7 +11,7 @@ export default function ErrorDialog() {
 
     return (
         <Dialog open={errorType.size > 0}>
-            <DialogTitle className={style.errorTitle}>{t('dashboard.titles.error')}</DialogTitle>
+            <DialogTitle className={style.errorTitle}>{t('common.titles.error')}</DialogTitle>
             <IconButton
                 aria-label="close"
                 onClick={() => setErrors(new Set())}
@@ -26,7 +26,7 @@ export default function ErrorDialog() {
             </IconButton>
             <DialogContent className={style.errorContent}>
                 {Array.from(errorType).map((x, ix) => (
-                    <div key={ix}>{t(`dashboard.errors.${x}`, { defaultValue: t('dashboard.errors.unknown') })}</div>
+                    <div key={ix}>{t(`common.errors.${x}`, { defaultValue: t('common.errors.unknown') })}</div>
                 ))}
             </DialogContent>
         </Dialog>

@@ -396,20 +396,22 @@ export default function Graph<T extends NodeID>({
                 </g>
             </svg>
             <ProgressDialog
-                title={t('dashboard.titles.saving')}
+                title={t('common.titles.saving', { ns: 'common' })}
                 open={saving}
             />
             {nodeList.length === 0 && <Spinner />}
-            <ZoomControls
-                onZoomIn={() => {
-                    const newZoom = Math.max(0.5, actualZoom.zoom - BUTTON_ZOOM_SPEED * actualZoom.zoom);
-                    setActualZoom((oldZoom) => ({ ...oldZoom, zoom: newZoom }));
-                }}
-                onZoomOut={() => {
-                    const newZoom = Math.max(0.5, actualZoom.zoom + BUTTON_ZOOM_SPEED * actualZoom.zoom);
-                    setActualZoom((oldZoom) => ({ ...oldZoom, zoom: newZoom }));
-                }}
-            />
+            {!disableControls && (
+                <ZoomControls
+                    onZoomIn={() => {
+                        const newZoom = Math.max(0.5, actualZoom.zoom - BUTTON_ZOOM_SPEED * actualZoom.zoom);
+                        setActualZoom((oldZoom) => ({ ...oldZoom, zoom: newZoom }));
+                    }}
+                    onZoomOut={() => {
+                        const newZoom = Math.max(0.5, actualZoom.zoom + BUTTON_ZOOM_SPEED * actualZoom.zoom);
+                        setActualZoom((oldZoom) => ({ ...oldZoom, zoom: newZoom }));
+                    }}
+                />
+            )}
         </>
     );
 }

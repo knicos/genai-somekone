@@ -11,12 +11,12 @@ export default function BlockDialog() {
 
     return (
         <Dialog open={config?.disableFeedApp || false}>
-            <DialogTitle className={style.title}>{t('dashboard.titles.paused')}</DialogTitle>
+            <DialogTitle className={style.title}>{t('common.titles.paused')}</DialogTitle>
             <DialogContent className={style.content}>
                 <div className={style.icon}>
                     <PauseCircleIcon fontSize="inherit" />
                 </div>
-                {t('dashboard.messages.paused')}
+                {t('common.messages.paused')}
             </DialogContent>
         </Dialog>
     );

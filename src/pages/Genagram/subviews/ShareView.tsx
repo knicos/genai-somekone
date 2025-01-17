@@ -20,7 +20,7 @@ export function Component() {
             <div className={style.shareMessage}>
                 <Trans
                     values={{ codeText: code }}
-                    i18nKey="dashboard.messages.connection"
+                    i18nKey="profile.messages.connection"
                     components={{
                         Code: <em />,
                     }}

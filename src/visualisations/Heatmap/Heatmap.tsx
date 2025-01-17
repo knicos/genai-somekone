@@ -163,7 +163,7 @@ export default function Heatmap({ data, dimensions, busy, label, invert }: Props
                 </div>
             )}
             <ProgressDialog
-                title={t('dashboard.titles.saving')}
+                title={t('common.titles.saving', { ns: 'common' })}
                 open={saving}
             />
         </div>

@@ -212,10 +212,6 @@ const router = createBrowserRouter(
                     lazy={() => import('./pages/Dashboard/subviews/ContentBrowser')}
                 />
             </Route>
-            <Route
-                path="content"
-                lazy={() => import('./pages/ContentTool/ContentTool')}
-            />
         </Route>
     )
 );

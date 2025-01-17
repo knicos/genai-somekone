@@ -1,10 +1,11 @@
 import { menuSettingsDialog } from '@genaism/state/menuState';
 import { Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
 import { useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
+import { I18nextProvider, useTranslation } from 'react-i18next';
 import { useRecoilState } from 'recoil';
 import RecomWizard from '@genaism/components/RecommendationsWizard/RecomWizard';
 import CloseIcon from '@mui/icons-material/Close';
+import i18n from '@genaism/i18n';
 
 export default function RecomSettingsDialog() {
     const { t } = useTranslation();
@@ -34,12 +35,17 @@ export default function RecomSettingsDialog() {
                 <CloseIcon />
             </IconButton>
             <DialogContent sx={{ display: 'flex', padding: 0, maxHeight: '600px' }}>
-                <RecomWizard
-                    active
-                    onClose={doClose}
-                    hideClose
-                    variant="plain"
-                />
+                <I18nextProvider
+                    i18n={i18n}
+                    defaultNS="common"
+                >
+                    <RecomWizard
+                        active
+                        onClose={doClose}
+                        hideClose
+                        variant="plain"
+                    />
+                </I18nextProvider>
             </DialogContent>
         </Dialog>
     );

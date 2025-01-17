@@ -11,15 +11,17 @@ i18n.use(detector)
     .use(Backend)
     .use(initReactI18next) // passes i18n down to react-i18next
     .init({
-        ns: [],
+        ns: ['common'],
+        defaultNS: 'common',
         backend: {
             loadPath: '/locales/{{lng}}/{{ns}}.json',
         },
         interpolation: {
             escapeValue: false, // react already safes from xss
         },
-        fallbackLng: 'en-GB',
-        supportedLngs: ['en-GB', 'fi-FI'],
+        fallbackLng: 'en',
+        supportedLngs: ['en', 'fi'],
+        debug: true,
     });
 
 export default i18n;

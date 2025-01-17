@@ -28,7 +28,7 @@ describe('LangSelect', () => {
         render(<LangSelect />);
 
         const buttonElement = screen.getByLabelText('app.language');
-        await user.selectOptions(buttonElement, 'fi-FI');
-        expect(changeLangFn).toHaveBeenCalledWith('fi-FI');
+        await user.selectOptions(buttonElement, 'fi');
+        expect(changeLangFn).toHaveBeenCalledWith('fi');
     });
 });

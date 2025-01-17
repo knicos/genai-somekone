@@ -4,6 +4,8 @@ import { ContentNodeId } from '@knicos/genai-recom';
 import { useContentService } from '@genaism/hooks/services';
 import style from './style.module.css';
 import BrowserMenu from './BrowserMenu';
+import i18n from '@genaism/i18n';
+import { I18nextProvider } from 'react-i18next';
 
 export default function ContentBrowser() {
     const [images, setImages] = useState<ContentNodeId[]>([]);
@@ -33,7 +35,10 @@ export default function ContentBrowser() {
     }, [contentSvc, tags]);
 
     return (
-        <>
+        <I18nextProvider
+            i18n={i18n}
+            defaultNS="tools"
+        >
             <BrowserMenu
                 hasSelected={selected !== undefined}
                 onDelete={() => {
@@ -57,6 +62,6 @@ export default function ContentBrowser() {
                     onSelect={(id) => setSelected((old) => (old === id ? undefined : id))}
                 />
             </div>
-        </>
+        </I18nextProvider>
     );
 }

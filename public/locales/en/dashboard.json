@@ -1,0 +1,226 @@
+{
+    "library": {
+        "title": "Select Content",
+        "generic": {
+            "title": "Original Content",
+            "description": "The original Somekone dataset selected by children."
+        },
+        "guidedDefault": {
+            "title": "Core Concepts",
+            "description": "Introduce key social media mechanisms with a structured step-by-step interface for the classroom."
+        },
+        "kiosk": {
+            "title": "Kiosk Demo",
+            "description": "An automated demonstration running in a loop until the user interacts."
+        },
+        "public": {
+            "title": "Public Demonstration",
+            "description": "Use a safer restricted social network when presenting to larger public audiences."
+        },
+        "example": {
+            "title": "Example Data",
+            "description": "Demonstrate using anonymised example data from 19 children in a classroom environment."
+        },
+        "blank": {
+            "title": "Blank",
+            "description": "Add your own photos or select from the web to create custom social media content for the app."
+        },
+        "reetta": {
+            "title": "Generic Content",
+            "description": "Over 700 carefully selected free images in 7 main categories, food, hobbies, animals, lifestyle, fashion, sports and landscapes."
+        }
+    },
+
+    "menu": {
+        "vis": {
+            "title": "Visualizations",
+            "socialgraph": "Social Network",
+            "heatmap": "Heatmaps",
+            "usergrid": "User Grid",
+            "coengagement": "Content Relationships",
+            "topics": "Topic Relationships"
+        },
+        "tables": {
+            "title": "Data Tables",
+            "actionlog": "Action Log",
+            "userstats": "User Table",
+            "contentengage": "Content Engagements",
+            "topicengage": "Topic Engagements"
+        },
+        "guides": {
+            "title": "Guided Interfaces",
+            "default": "Core Concepts",
+            "kiosk": "Kiosk",
+            "none": "None"
+        },
+        "tools": {
+            "title": "Tools",
+            "addcontent": "Add Content",
+            "browseContent": "Browse Content",
+            "simulator": "User Simulator"
+        },
+        "settings": {
+            "title": "Settings",
+            "app": "App Interface",
+            "recommendation": "Recommendations"
+        }
+    },
+    "settings": {
+        "titles": {
+            "app": "App Interface Settings",
+            "feed": "Feed Actions",
+            "appmenu": "Menu Items",
+            "recom": "Recommendations",
+            "visualisation": "Visualisations"
+        },
+        "app": {
+            "hideFeedMenu": "Hide the bottom menu",
+            "hideDataView": "Disable the data view",
+            "hideProfileView": "Disable the profile view",
+            "hideRecommendationsView": "Disable the recommendations view",
+            "hidePostContent": "Disable posting content",
+            "hideOwnProfile": "Disable own profile page",
+            "showFeedImageLabels": "Show hashtags on images",
+            "hideSharing": "Disable sharing",
+            "disableComments": "Disable commenting",
+            "disableLiking": "Disable liking",
+            "disableFollowing": "Disable following",
+            "disableSharing": "Disable sharing",
+            "showRecommendationWizard": "Show wizard",
+            "showCandidateWizard": "Personal or Non-personal",
+            "showCandidateRefinementWizard": "Show more candidate options",
+            "showScoringWizard": "Show scoring options",
+            "showDiversityWizard": "Show diversity options",
+            "hideRecommendationMenu": "Hide menu",
+            "hideExplainedScores": "Hide score explanation",
+            "hideCandidateOrigin": "Hide image origin"
+        },
+        "vis": {
+            "socialMenu": "Show social network menu",
+            "gridMenu": "Show user grid menu"
+        }
+    },
+    "dashboard": {
+        "titles": {
+            "settings": "Settings",
+            "general": "General",
+            "feedApp": "Feed App",
+            "recommendations": "Recommendations",
+            "socialGraph": "Social Graph",
+            "people": "People",
+            "deleteUser": "Delete User",
+            "connectUsers": "Connect Users",
+            "userSelect": "Select User",
+            "usersSelect": "Select Users",
+            "simulator": "User Simulator",
+            "replay": "Replay"
+        },
+        "labels": {
+            "usePopularCandidates": "Use popular candidates",
+            "popularityScore": "Use popularity",
+            "heatmapGlobal": "Image popularity",
+            "heatmapEngagement": "Past image engagement",
+            "heatmapRecommendation": "Image recommendation probability",
+            "theme": "Theme",
+            "themeDefault": "Default",
+            "themeHighContrast": "High contrast",
+            "showSocialGraphSettings": "Graph settings",
+            "saveGraphImage": "Download graph as image",
+            "heatmapUsers": "Select users to show",
+            "refresh": "Refresh",
+            "invertHeatmap": "Invert the heatmap",
+            "shareTip": "Show join code",
+            "openTip": "Upload existing saved data",
+            "saveTip": "Download data",
+            "engagedImages": "Show engaged images",
+            "topicCloud": "Show topic cloud",
+            "showLines": "Show connecting lines",
+            "showLabels": "Show user name labels",
+            "edgeScaling": "Change the size of the graph",
+            "similarPercent": "Similarity threshold for link display",
+            "nodeCharge": "Strength of separation force",
+            "hideFeedMenu": "Hide menu in feed view",
+            "refreshGraph": "Refresh the graph display",
+            "clusterColouring": "Colour users by their cluster",
+            "egoSelect": "Hide unrelated on select",
+            "useTopicCandidates": "Use candidates from taste labels",
+            "useRandomCandidates": "Use randomly generated candidates",
+            "useCoengagedCandidates": "Use co-engaged content candidates",
+            "useSimilarUserCandidates": "Use similar user candidates",
+            "candidates": "Candidate Selection Mechanisms",
+            "scoring": "Scoring Features",
+            "selectionMechanism": "Final Selection Strategy",
+            "tasteScore": "Use a taste similarity score",
+            "sharingScore": "Use likelihood of sharing",
+            "coengagementScore": "Use the similarity of co-engagements",
+            "followingScore": "Use likelihood of following",
+            "commentingScore": "Use likelihood of commenting",
+            "lastSeenScore": "Use the time since last seen this image",
+            "reactionScore": "Use likelihood of reacting",
+            "viewingScore": "Use likelihood of viewing",
+            "rankSelection": "Use the top ranked candidates",
+            "distributionSelection": "Use score as a selection probability",
+            "disableFeedApp": "Pause all users",
+            "hideDataView": "Hide data view",
+            "hideProfileView": "Hide profile view",
+            "hideRecommendationsView": "Hide recommendations view",
+            "showData": "Show user log data",
+            "showProfile": "Show user profile",
+            "showRecommendations": "Show user recommendations",
+            "deleteUser": "Delete User",
+            "showFeed": "Show user feed",
+            "collectResearch": "Collect research data",
+            "showFeedImageLabels": "Show image labels in feed",
+            "allLinks": "Include all links",
+            "showReplay": "Show replay controls",
+            "stop": "Stop",
+            "play": "Play",
+            "appOptions": "Feed app options",
+            "none": "none",
+            "showSettings": "Advanced Settings",
+            "showTools": "Show advanced tools menu",
+            "toolsMenu": "Advanced Tools",
+            "toolAnonymise": "Anonymise all data",
+            "showMainMenu": "Show main app menu",
+            "alwaysActive": "Keep current image active",
+            "profileImage": "Profile Images",
+            "similarityThreshold": "Similarity difference threshold",
+            "limitLinks": "Maximum links per node",
+            "agentCount": "Number of Agents",
+            "playbackSpeed": "Speed",
+            "autoCamera": "Automatic camera",
+            "autoEdges": "Automatic link adjustment"
+        },
+        "messages": {
+            "connection": "Go to the address below and enter the code <Code>{{codeText}}</Code>, or use the QR code.",
+            "waitingPeople": "Waiting for people...",
+            "onePerson": "{{count}} person has joined.",
+            "manyPeople": "{{count}} people have joined.",
+            "loading": "Creating your social network...",
+            "confirmDeleteUser": "Are you sure you want to delete user \"{{name}}\""
+        },
+        "actions": {
+            "start": "Start",
+            "cancel": "Cancel",
+            "close": "Close",
+            "delete": "Delete",
+            "demo": "Demo",
+            "select": "Select",
+            "simulate": "Simulate",
+            "zoomIn": "Zoom in",
+            "zoomOut": "Zoom out"
+        },
+        "aria": {
+            "linkForFeed": "Link for a new user feed",
+            "socialMenu": "Social graph menu"
+        }
+    },
+    "tables": {
+        "titles": {
+            "actionlog": "Action Log",
+            "userstats": "User Table",
+            "contentengage": "Content Engagements",
+            "topictable": "Topic Engagements"
+        }
+    }
+}
