@@ -12,6 +12,26 @@
     flex-shrink: 0;
 }
 
+.topRightButtons {
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: white;
+    padding-right: 1rem;
+    padding-top: 0.5rem;
+}
+
+.topRightButtons :global .MuiButtonBase-root {
+    background: #00000022;
+}
+
+.topRightButtons :global .MuiButtonBase-root:hover {
+    background: #0000005e;
+    transform: scale(1.1);
+}
+
 .buttonRow {
     display: flex;
     flex-direction: row;
@@ -280,4 +300,29 @@
     background: primary;
     border-radius: 1.2rem;
     padding: 0 0.8rem;
+}
+
+.blocker {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #444;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.1rem;
+    font-weight: bold;
+    animation: fadebg 0.2s;
+}
+
+@keyframes fadebg {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }

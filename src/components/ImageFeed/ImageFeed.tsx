@@ -197,6 +197,13 @@ export default function ImageFeed({
         [onLog]
     );
 
+    const doHide = useCallback(
+        (id: ContentNodeId) => {
+            onLog({ activity: 'hide', id, timestamp: Date.now() });
+        },
+        [onLog]
+    );
+
     const doComment = useCallback(
         (id: ContentNodeId, l: string) => {
             onLog({ activity: 'comment', id, timestamp: Date.now(), value: l.length, content: l });
@@ -252,6 +259,7 @@ export default function ImageFeed({
                         onFollow={doFollow}
                         onUnfollow={doUnfollow}
                         onShare={doShare}
+                        onHide={doHide}
                         onComment={doComment}
                         noComments={noComments}
                         noLike={noLike}

@@ -14,6 +14,8 @@ import { ContentNodeId, UserNodeId } from '@knicos/genai-recom';
 import { useContentService } from '@genaism/hooks/services';
 import { useContent, useContentStats } from '@genaism/hooks/content';
 import { Button } from '@knicos/genai-base';
+import { IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 const MAX_COMMENTS = 10;
 
@@ -36,6 +38,7 @@ interface Props {
     onComment?: (id: ContentNodeId, comment: string) => void;
     onFollow?: (id: ContentNodeId) => void;
     onUnfollow?: (id: ContentNodeId) => void;
+    onHide?: (id: ContentNodeId) => void;
 }
 
 function stringToColor(string: string) {
@@ -76,6 +79,7 @@ export default function FeedImage({
     onUnfollow,
     onShare,
     onComment,
+    onHide,
     active,
     visible,
     noActions,
@@ -90,6 +94,7 @@ export default function FeedImage({
     const content = useContentService();
     const [contentMeta, contentData] = useContent(id);
     const [liked, setLiked] = useState<LikeKind>('none');
+    const [hidden, setHidden] = useState(false);
     const [activePanel, setActivePanel] = useState<ActionPanel>('none');
     const [followed, setFollowed] = useState(false);
     const [commentCount, incComment] = useReducer((v) => ++v, 0);
@@ -178,6 +183,23 @@ export default function FeedImage({
                     </div>
                 )}
                 {reason && <div className={style.reason}>{reason}</div>}
+                {active && !noActions && onHide && (
+                    <div className={style.topRightButtons}>
+                        <IconButton
+                            color="inherit"
+                            onClick={() => {
+                                onHide(id);
+                                setHidden(true);
+                            }}
+                            aria-label={t('feed.aria.hide')}
+                        >
+                            <CloseIcon
+                                color="inherit"
+                                fontSize="medium"
+                            />
+                        </IconButton>
+                    </div>
+                )}
                 <img
                     onClick={doClick}
                     className={style.instaImage}
@@ -261,6 +283,7 @@ export default function FeedImage({
                         disabled={commentCount >= MAX_COMMENTS}
                     />
                 )}
+                {hidden && <div className={style.blocker}>{t('feed.labels.hidden')}</div>}
             </div>
         </div>
     );

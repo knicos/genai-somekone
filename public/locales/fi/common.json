@@ -155,18 +155,21 @@
             "comment": "Lisäsi {{length}} merkin pituisen kommentin",
             "engagement": "Aktiivisuus: {{score}}/10",
             "end": "Lopetti appin käytön",
-            "unreact": "Unreacted"
+            "unreact": "Unreacted",
+            "hide": "Image was hidden"
         },
         "labels": {
             "enterUsername": "Anna käyttäjänimesi",
-            "enterFullname": "Anna oikea nimesi"
+            "enterFullname": "Anna oikea nimesi",
+            "hidden": "Hidden"
         },
         "aria": {
             "showLikeOptions": "Näytä tykkäysvalinnat",
             "showComments": "Näytä kommentit",
             "showShareOptions": "Näytä jakamisvalinnat",
             "shareLink": "Linkki kuva-appiin",
-            "restoreUser": "Palauta aiempi sessio"
+            "restoreUser": "Palauta aiempi sessio",
+            "hide": "Hide this image"
         }
     },
     "profile": {

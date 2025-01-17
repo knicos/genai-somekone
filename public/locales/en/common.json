@@ -155,18 +155,21 @@
             "comment": "Comment of length {{length}}",
             "engagement": "Engagement",
             "end": "Stopped using the app",
-            "unreact": "Unreacted"
+            "unreact": "Unreacted",
+            "hide": "Image was hidden"
         },
         "labels": {
             "enterUsername": "Enter Username",
-            "enterFullname": "Enter Fullname"
+            "enterFullname": "Enter Fullname",
+            "hidden": "Hidden"
         },
         "aria": {
             "showLikeOptions": "Like the image",
             "showComments": "Show comments",
             "showShareOptions": "Show share options",
             "shareLink": "Link to open the feed app",
-            "restoreUser": "Restore a previous session"
+            "restoreUser": "Restore a previous session",
+            "hide": "Hide this image"
         }
     },
     "profile": {
