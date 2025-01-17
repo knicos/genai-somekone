@@ -1,28 +1,39 @@
 import { describe, it, vi } from 'vitest';
-import { LogEntry, UserProfile } from '../profiler/profilerTypes';
 import { saveFile } from './fileSaver';
 import JSZip from 'jszip';
-import { createEmptyProfile } from '@genaism/services/profiler/profiler';
+import {
+    ActionLogService,
+    ContentService,
+    createEmptyProfile,
+    GraphService,
+    LogEntry,
+    ProfilerService,
+    ServiceBroker,
+    UserNodeData,
+} from '@knicos/genai-recom';
 
 const { mockUsers, mockProfiles, mockSave, mockLog } = vi.hoisted(() => ({
     mockUsers: vi.fn(),
-    mockProfiles: vi.fn<unknown[], UserProfile>(),
+    mockProfiles: vi.fn<unknown[], UserNodeData>(),
     mockSave: vi.fn(),
     mockLog: vi.fn<unknown[], LogEntry[]>(),
 }));
 
-vi.mock('@genaism/services/graph/nodes', () => ({
-    getNodesByType: mockUsers,
-}));
-
-vi.mock('@genaism/services/profiler/profiler', async () => {
-    const mod = await vi.importActual<typeof import('@genaism/services/profiler/profiler')>(
-        '@genaism/services/profiler/profiler'
-    );
+vi.mock('@knicos/genai-recom', async () => {
+    const mod = await vi.importActual<typeof import('@knicos/genai-recom')>('@knicos/genai-recom');
     return {
         ...mod,
-        getUserProfile: mockProfiles,
-        getActionLog: mockLog,
+        GraphService: vi.fn(() => ({
+            getNodesByType: mockUsers,
+        })),
+        ProfilerService: vi.fn((broker, graph) => ({
+            broker,
+            graph,
+            getUserProfile: mockProfiles,
+        })),
+        ActionLogService: vi.fn(() => ({
+            getActionLog: mockLog,
+        })),
     };
 });
 
@@ -32,10 +43,18 @@ vi.mock('file-saver', () => ({
 
 describe('saveFile()', () => {
     it('generates a zip containing user profiles', async ({ expect }) => {
+        const broker = new ServiceBroker();
+        const graph = new GraphService(broker);
+        const content = new ContentService(broker, graph);
+        const profiler = new ProfilerService(broker, graph, content);
+        const actionLog = new ActionLogService(broker);
+
         mockUsers.mockImplementation(() => ['xyz']);
         mockProfiles.mockImplementation(() => createEmptyProfile('user:xyz', 'TestUser'));
 
-        const blob = await saveFile({ includeProfiles: true });
+        const blob = await saveFile(profiler, content, actionLog, {
+            includeProfiles: true,
+        });
 
         expect(mockUsers).toHaveBeenCalledTimes(1);
         expect(mockProfiles).toHaveBeenCalledWith('xyz');
@@ -51,10 +70,18 @@ describe('saveFile()', () => {
     });
 
     it('generates a zip containing action logs', async ({ expect }) => {
+        const broker = new ServiceBroker();
+        const graph = new GraphService(broker);
+        const content = new ContentService(broker, graph);
+        const profiler = new ProfilerService(broker, graph, content);
+        const actionLog = new ActionLogService(broker);
+
         mockUsers.mockImplementation(() => ['xyz']);
         mockLog.mockImplementation(() => [{ activity: 'like', timestamp: 1 }] as LogEntry[]);
 
-        const blob = await saveFile({ includeLogs: true });
+        const blob = await saveFile(profiler, content, actionLog, {
+            includeLogs: true,
+        });
 
         expect(mockUsers).toHaveBeenCalledTimes(1);
         expect(mockLog).toHaveBeenCalledWith('xyz');

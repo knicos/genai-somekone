@@ -1,0 +1,301 @@
+{
+    "app": {
+        "language": "Change language"
+    },
+    "about": {
+        "back": "Back",
+        "title": "Generation AI",
+        "privacyTitle": "Privacy Notice",
+        "privacy": [
+            "Welcome to our Privacy Notice, designed to inform you about how we handle your personal data following the General Data Protection Regulation (GDPR) when you use our website featuring the GenAI Somekone tool.",
+            "To make the subject matter of this notice clearer, let us define some terms from the GDPR. The \"controller\" refers to us, as we decide how and why your personal data is used, which also makes us responsible for protecting your personal data. \"Personal data\" includes any information that can identify you directly or indirectly, like your IP address. \"Processing\" covers all actions done with your data, such as collecting, storing, using, and deleting it.",
+            "It is important to read this notice to understand what data we collect from you, why we collect it, what we do with it, and what rights you have regarding your data.",
+            "If you have any questions about this notice, please reach out to the controller:",
+            "**Dr. Nicolas Pope**,",
+            "**Postal address:** University of Eastern Finland, Länsikatu 15, 80110 Joensuu, Finland.",
+            "**Email:** nicolas.pope@uef.fi",
+            "**Phone:** +358 505 288 449.",
+            "### 1. Data Processing Activity:",
+            "We log IP addresses.",
+            "However, we do not use cookies for tracking or analytics; instead, we provide content based solely on your inputs.",
+            "### 2. Purposes of Processing:",
+            "Logging IP addresses helps maintain website integrity and security by identifying and preventing malicious activities.",
+            "### 3. Legal Basis for Processing:",
+            "Primarily, we process IP addresses for security reasons, based on our legitimate interest in protecting our website and data as per Article 6(1)(f) GDPR. Again, we may also process data based on your consent under Article 6(1)(a) GDPR if you would like to exercise your right to access your logged IP address. In addition, we may process your personal data if we are instructed to do so by a competent court under Article 6(1)(c).",
+            "### 4. Legitimate Interests Pursued:",
+            "Our goal is to keep the website running by maintaining website integrity, and security, and preventing abuse.",
+            "### 5. Security:",
+            "We implement security measures to protect your IP addresses from unlawful access or damage. Your IP addresses are encrypted during any subsequent transfer.",
+            "### 6. Data Recipients:",
+            "Only authorized website personnel can access your IP address for security and maintenance purposes.",
+            "### 7. Data Transfers:",
+            "IP addresses may be transferred to Microsoft servers, but we ensure GDPR compliance for data protection.",
+            "### 8. Storage Limitation:",
+            "We keep IP addresses only as long as necessary, typically up to 7 days, unless required by law.",
+            "### 9. Your Rights:",
+            "Under GDPR, you have rights including",
+            "* Right to be informed: In addition to informing, you about processing purposes, retention periods, and to whom your data is shared, you have the right to be informed on how we collect. We collect your IP address when you visit our website.",
+            "* Right to access: you can request a copy of your logged IP address and associated log data.",
+            "* Right to rectification: if the logged data is inaccurate or incomplete, you can request rectification although IP address is not typically something that can be corrected in the same way as other data.",
+            "* Right to erasure: you can request deletion of your IP address within 7 days of your last visit to this website since your address is deleted automatically after 7 days.",
+            "* Right to object: you can object to the processing of your IP addresses.",
+            "* Right to lodge a complaint: you can lodge a complaint to the supervisory authority if you think that your data is not processed following GDPR provisions.",
+            "### 10. Updates to This Privacy Notice:",
+            "We may update this notice to reflect changes in our data processing practices or legal requirements. We will notify you of any changes.",
+            "We value your privacy and we are committed to protect your data and ensuring GDPR compliance. If you have questions or want to exercise your rights, contact us at nicolas.pope@uef.fi."
+        ]
+    },
+    "common": {
+        "errors": {
+            "unknown": "Sovelluksessa tuli virhe.  Yritä uudelleen.",
+            "content_not_found": "Kuvasisältöä ei voi hakea",
+            "peer_failed": "Yhteyden luominen ei onnistu",
+            "peer_retrying": "Yhteys katkesi, yritetään uudelleen...",
+            "peer_nortc": "Laitteiden välille ei saada yhteyttä.  Ovathan molemmat laitteet yhteydessä Internetiin?",
+            "peer_no_peer": "Yhdistettävää laitetta ei löytynyt",
+            "peer_nowebcam": "Web-kameran käyttö pitää sallia jotta monen käyttäjän yhteys onnistuu",
+            "missing_dependency": "Tämän tiedoston tarvitsemaa sisältöä ei löydy",
+            "missing_embeddings": "Images are missing embeddings",
+            "missing_points": "Images are not mapped",
+            "missing_cluster": "Images have no cluster"
+        },
+        "titles": {
+            "error": "Virhe",
+            "saving": "Saving",
+            "paused": "Pysäytetty"
+        },
+        "messages": {
+            "paused": "Opettaja on pysäyttänyt appin."
+        },
+        "actions": {
+            "close": "Close"
+        }
+    },
+    "loader": {
+        "messages": {
+            "getIceConfig": "Selvitän verkkoyhteyden asetuksia",
+            "cameraPermission": "Lupa kameran käyttöön tarvitaan suoran yhteyden muodostamiseksi laitteiden välille.",
+            "connecting": "Yritän yhdistää...",
+            "signaling": "Etsin muita laitteita",
+            "disconnected": "Yhteys toiseen laitteeseen katkesi",
+            "retry": "Yritän yhdistää uudelleen...",
+            "content_load": "Avaan sisältöä",
+            "content_download": "Lataan sisältöä",
+            "ready": "Yhteys valmis",
+            "content_none": "Sisältö valmis",
+            "starting": "Starting",
+            "wifiNetwork": "Your data is being sent over the internet because you are not using the same Wi-Fi network.",
+            "permNetwork": "Your data is being sent over the internet because you didn't allow camera access."
+        },
+        "errors": {
+            "unknown": "Ongelma laitteiden välisessä viestinnässä",
+            "id-in-use": "Jollakulla toisella on jo tämä koodi käytössä",
+            "peer-not-found": "Koodia tai QR-koodia ei löytynyt",
+            "missing-ice": "Asetuksia ei löydy",
+            "no-signaling": "Palvelimeen ei saada yhteyttä",
+            "bad-browser": "Tätä appia ei voi käyttää laitteellasi",
+            "unknownContent": "Ongelma kuvasisällössä",
+            "load": "Ongelma kuvien lataamisessa",
+            "download": "Ongelma kuvien hakemisessa",
+            "none": "Ok"
+        },
+        "titles": {
+            "iceConfig": "Asetukset",
+            "permission": "Oikeudet",
+            "connecting": "Yhteys",
+            "error": "Ongelma",
+            "contentLoad": "Kuvasisältö",
+            "networkType": "Information"
+        },
+        "actions": {
+            "close": "Close"
+        }
+    },
+    "feed": {
+        "actions": {
+            "follow": "Seuraa",
+            "unfollow": "Älä seuraa",
+            "enterUser": "Aloita",
+            "moreComments": "Lisää",
+            "post": "Lähetä"
+        },
+        "titles": {
+            "shareWith": "Jaa",
+            "main": "Somekone",
+            "home": "Image Feed",
+            "data": "Your Data",
+            "share": "Share with others",
+            "profile": "Your Profile",
+            "recommendations": "Your Recommendations",
+            "post": "Post Content"
+        },
+        "placeholders": {
+            "comment": "Kirjoita kommentti..."
+        },
+        "messages": {
+            "noComments": "Kommentteja ei vielä ole.",
+            "usernameError": {
+                "missing": "Käyttäjänimi puuttuu",
+                "long": "Käyttäjänimi on liian pitkä",
+                "short": "Käyttäjänimen pitää olla ainakin 3 merkkiä"
+            },
+            "fullnameError": {
+                "missing": "Oikea nimi puuttuu"
+            },
+            "alreadyOpen": "Tämä appi on jo auki toisessa välilehdessä.",
+            "sharedBy": "Shared by {{name}}."
+        },
+        "actionlog": {
+            "dwell": "Katsoi kuvaa {{time}} sekuntia",
+            "inactive": "Oli poissa {{time}} sekuntia",
+            "seen": "Näki kuvan",
+            "follow": "Aloitti seuraamaan käyttäjää",
+            "like": "Tykkäsi kuvasta",
+            "share_public": "Jakoi kaikille",
+            "comment": "Lisäsi {{length}} merkin pituisen kommentin",
+            "engagement": "Aktiivisuus: {{score}}/10",
+            "end": "Lopetti appin käytön",
+            "unreact": "Unreacted",
+            "hide": "Image was hidden"
+        },
+        "labels": {
+            "enterUsername": "Anna käyttäjänimesi",
+            "enterFullname": "Anna oikea nimesi",
+            "hidden": "Hidden"
+        },
+        "aria": {
+            "showLikeOptions": "Näytä tykkäysvalinnat",
+            "showComments": "Näytä kommentit",
+            "showShareOptions": "Näytä jakamisvalinnat",
+            "shareLink": "Linkki kuva-appiin",
+            "restoreUser": "Palauta aiempi sessio",
+            "hide": "Hide this image"
+        }
+    },
+    "profile": {
+        "titles": {
+            "sharingPreference": "Mitä olet jakanut",
+            "viewPreference": "Mitä olet katsonut",
+            "commentPreference": "Mitä olet kommentoinut",
+            "followPreference": "Mitä olet seurannut",
+            "reactPreference": "Mihin olet reagoinut",
+            "yourData": "Sinusta kerätty data",
+            "yourProfile": "Profiilisi",
+            "yourRecommendations": "Suosituksesi",
+            "shareProfile": "Jaa datasi",
+            "engagement": "Aktiivisuutesi",
+            "newPost": "Create Post"
+        },
+        "labels": {
+            "followers": "followers",
+            "posts": "posts",
+            "follows": "follows",
+            "yourPosts": "Your Posts",
+            "missingPosts": "When you add your own posts they will show here."
+        },
+        "actions": {
+            "more": "Lisää",
+            "post": "Post",
+            "print": "Print",
+            "download": "Download image"
+        },
+        "messages": {
+            "connection": "Go to the address below and enter the code <Code>{{codeText}}</Code>, or use the QR code."
+        }
+    },
+    "recommendations": {
+        "actions": {
+            "back": "Back",
+            "continue": "Continue",
+            "close": "Close",
+            "change": "Change",
+            "refresh": "Refresh view",
+            "invert": "Invert"
+        },
+        "labels": {
+            "topicCandidate": "koska olet tykännyt aiheesta #{{topic}}.",
+            "random": "valittu sinulle sattumanvaraisesti.",
+            "coengagedCandidate": "koska muut allaolevasta kuvasta kiinnostuneet ovat tykänneet myös tästä.",
+            "similarUserCandidate": "koska kaltaisesi käyttäjä \"{{userName}}\" piti tästä.",
+            "candidateAll": "All of these (default)",
+            "candidateLabels": "Using your favorite hashtags",
+            "candidateUsers": "From similar people",
+            "candidateCoengaged": "From your recent interactions",
+            "candidateRandom": "Any images",
+            "candidatePersonal": "Personalised",
+            "candidatePopular": "Popular",
+            "candidateRecent": "Recently posted",
+            "candidateNonPersonal": "Non-personalised",
+            "candidatePersonalAndNon": "Both (default)",
+            "scoringPredict": "Predict engagement",
+            "scoringGeneral": "Content only score",
+            "scoringRandom": "Any image at random",
+            "scoringAll": "Combine all scores (default)",
+            "score": "Score",
+            "diversity": "Diversity",
+            "selectionProbability": "Add some diversity",
+            "selectionRank": "No diversity",
+            "imageGrid": "Show top recommendations",
+            "heatmap": "Show all images"
+        },
+        "titles": {
+            "candidateDiscovery": "How are candidates discovered?",
+            "scoringOptions": "How can we rank the images?",
+            "candidatesPersonal": "Which personal candidates?",
+            "candidatesNonPersonal": "How to select non-personal candidates?",
+            "diversityOptions": "Should there be diversity?",
+            "candidateOrigin": "Where it was found",
+            "predictedScore": "Predicted engagement",
+            "explainScore": "Why you might engage"
+        },
+        "descriptions": {
+            "selectHint": "Select an image to see why it is suggested.",
+            "heatHint": "Click to zoom and explore what you can see.",
+            "scoringPredict": "Predict if you might engage with the image",
+            "scoringGeneral": "Only consider popularity",
+            "scoringRandom": "Choose any order without scoring",
+            "scoringAll": "Use a combination of everything",
+            "candidateAll": "",
+            "candidateUsers": "Images liked by people in the same cluster as you",
+            "candidateLabels": "Look for images that match your interests",
+            "candidateCoengaged": "What others liked when they saw the same images",
+            "candidateRandom": "Choose anything from all images",
+            "candidatePopular": "From the most popular images",
+            "candidateRecent": "Anything recent that has not been seen much",
+            "candidatePersonal": "Use only your profile to find images",
+            "candidateNonPersonal": "Look for images without your profile",
+            "candidatePersonalAndNon": "Use a mix of personal and non-personal",
+            "selectionProbability": "Allow some images with lower scores to be selected",
+            "selectionRank": "Only select images that have the best scores"
+        },
+        "features": {
+            "taste": "Taste Similarity",
+            "coengagement": "Common engagements",
+            "sharing": "Likely to share",
+            "commenting": "Likely to comment",
+            "following": "Likely to follow",
+            "reacting": "Likely to react",
+            "viewing": "Likely to view",
+            "lastSeen": "Not seen recently",
+            "popularity": "Popularity",
+            "reaction": "Likely to react",
+            "lastEngaged": "Not engaged with"
+        },
+        "aria": {
+            "imageSelect": "Select recommendation number {{number}}",
+            "refresh": "Refresh recommendations",
+            "invert": "Invert the heatmap",
+            "heatmap": "Show a map of all image probabilities",
+            "imageGrid": "Show a grid of top recommendations"
+        }
+    },
+    "start": {
+        "actions": {
+            "createNew": "Luo uusi",
+            "go": "Aloita"
+        },
+        "labels": {
+            "enterCode": "Syötä koodi"
+        }
+    }
+}

@@ -1,4 +1,4 @@
-import { UserNodeId } from '@genaism/services/graph/graphTypes';
+import { UserNodeId } from '@knicos/genai-recom';
 import { atom } from 'recoil';
 
 export const menuShowShare = atom<boolean>({
@@ -6,9 +6,10 @@ export const menuShowShare = atom<boolean>({
     default: true,
 });
 
-export const menuShowSave = atom<boolean>({
-    key: 'menushowsave',
-    default: false,
+export type SettingsDialogs = 'none' | 'app' | 'recommendation';
+export const menuSettingsDialog = atom<SettingsDialogs>({
+    key: 'menusettingsdialog',
+    default: 'none',
 });
 
 export const menuShowSettings = atom<boolean>({
@@ -41,12 +42,6 @@ export const menuShowFeedActions = atom<boolean>({
     default: true,
 });
 
-export type GraphTypes = 'social' | 'topic' | 'content' | 'ego' | 'grid';
-export const menuGraphType = atom<GraphTypes>({
-    key: 'menugraphtype',
-    default: 'social',
-});
-
 export const menuSelectedUser = atom<UserNodeId | undefined>({
     key: 'menuselecteduser',
     default: undefined,
@@ -68,6 +63,16 @@ export const menuShowReplay = atom<boolean>({
     default: false,
 });
 
+export const menuShowReplayControls = atom<boolean>({
+    key: 'menushowreplaycontrols',
+    default: true,
+});
+
+export const menuReplaySpeed = atom<number>({
+    key: 'menureplayspeed',
+    default: 16,
+});
+
 export const menuAllowFeedActions = atom<boolean>({
     key: 'menuallowfeedactions',
     default: false,
@@ -78,9 +83,24 @@ export const menuShowTools = atom<boolean>({
     default: false,
 });
 
+export const menuShowSimulator = atom<boolean>({
+    key: 'menushowsimulator',
+    default: false,
+});
+
 export const menuMainMenu = atom<boolean>({
     key: 'menumainmenu',
     default: true,
+});
+
+export const menuTreeMenu = atom<boolean>({
+    key: 'menutreemenu',
+    default: true,
+});
+
+export const menuDisabledTreeItems = atom<string[]>({
+    key: 'menudisabledtree',
+    default: [],
 });
 
 export const menuShowSocialMenu = atom<boolean>({
@@ -91,4 +111,14 @@ export const menuShowSocialMenu = atom<boolean>({
 export const menuShowGridMenu = atom<boolean>({
     key: 'menugridmenu',
     default: true,
+});
+
+export const menuHideGridMenuActions = atom<boolean>({
+    key: 'menugridmenuactions',
+    default: false,
+});
+
+export const menuHideGridMenuContent = atom<boolean>({
+    key: 'menugridmenucontent',
+    default: false,
 });

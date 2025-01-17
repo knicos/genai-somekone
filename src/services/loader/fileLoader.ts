@@ -1,21 +1,37 @@
 import JSZip from 'jszip';
 
-import { ContentMetadata } from '@genaism/services/content/contentTypes';
-import { addContent } from '@genaism/services/content/content';
-import { LogEntry, UserProfile } from '@genaism/services/profiler/profilerTypes';
-import { addUserProfile, appendActionLog, getActionLog, getCurrentUser } from '@genaism/services/profiler/profiler';
-import { NodeID, TopicNodeId, isTopicID } from '../graph/graphTypes';
-import { GraphExport, dump } from '../graph/state';
-import { addNodes } from '../graph/nodes';
-import { addEdges } from '../graph/edges';
-import { getTopicId } from '../concept/concept';
 import { ProjectMeta, VERSION } from '../saver/types';
 import { dependencies } from './tracker';
 import { LogItem } from './loaderTypes';
-import { findLargestEdgeTimestamp, findLargestLogTimestamp, rebaseEdges, rebaseLog } from './rebase';
+import { findLargestEdgeTimestamp, findLargestLogTimestamp, rebaseLog } from './rebase';
 import { SomekoneSettings } from '@genaism/hooks/settings';
+import './session';
+import {
+    ActionLogService,
+    ContentMetadata,
+    ContentService,
+    Edge,
+    getTopicId,
+    GNode,
+    NodeID,
+    NodeType,
+    TopicNodeId,
+    UserNodeData,
+    UserNodeId,
+} from '@knicos/genai-recom';
+import topics from './disallowedTopics.json';
+
+const set = new Set(topics);
+
+export function isDisallowedTopic(label: string) {
+    return set.has(label);
+}
 
 const STATIC_PATH = 'https://store.gen-ai.fi/somekone/images';
+
+interface SavedUserProfile extends UserNodeData {
+    id: UserNodeId;
+}
 
 interface TopicData {
     label: string;
@@ -77,19 +93,33 @@ function patchLogs(logs: OldLogItem[]) {
                 case 'anger':
                 case 'sad':
                     item.activity = 'like';
+                    break;
+                case 'share_friends':
+                case 'share_private':
+                    item.activity = 'share_public';
+                    break;
             }
         });
     });
     return logs as LogItem[];
 }
 
-export async function loadFile(file: File | Blob): Promise<SomekoneSettings | undefined> {
+interface GraphExport {
+    nodes: GNode<NodeType>[];
+    edges: Edge<NodeID<NodeType>, NodeID<NodeType>>[];
+}
+
+export async function loadFile(
+    contentSvc: ContentService,
+    actionLogger: ActionLogService,
+    file: File | Blob
+): Promise<SomekoneSettings | undefined> {
     const zip = await JSZip.loadAsync(file);
 
     const images = new Map<string, string>();
     const store: {
         meta: ContentMetadata[];
-        users: UserProfile[];
+        users: SavedUserProfile[];
         logs: LogItem[];
         graph?: GraphExport;
         project?: ProjectMeta;
@@ -161,11 +191,19 @@ export async function loadFile(file: File | Blob): Promise<SomekoneSettings | un
         if (store.project.id && store.meta.length > 0) dependencies.add(store.project.id);
         store.project.dependencies.forEach((dep) => {
             if (!dependencies.has(dep)) {
-                throw new Error('missing_dependency');
+                //throw new Error('missing_dependency');
+                console.warn('Missing dependency');
             }
         });
         if (store.project.version > VERSION) {
             throw new Error('bad_version');
+        }
+
+        if (store.project.encoderURL) {
+            console.log('Loading encoder', store.project.encoderURL);
+            contentSvc.setEncoderModel(store.project.encoderURL).then(() => {
+                console.log('Encoder loaded');
+            });
         }
     }
 
@@ -182,10 +220,13 @@ export async function loadFile(file: File | Blob): Promise<SomekoneSettings | un
             if (node.type === 'topic') {
                 const label = (node.data as TopicData).label;
                 topicSet.set(node.id as TopicNodeId, label);
-                node.id = getTopicId(label);
+                node.id = getTopicId(contentSvc.graph, label);
+            }
+            if (node.type === 'user' && Array.isArray((node.data as UserNodeData)?.featureWeights)) {
+                (node.data as UserNodeData).featureWeights = {};
             }
         });
-        store.graph.edges.forEach((edge) => {
+        /*store.graph.edges.forEach((edge) => {
             if (isTopicID(edge.source)) {
                 const label = topicSet.get(edge.source) || '';
                 edge.source = getTopicId(label);
@@ -194,56 +235,40 @@ export async function loadFile(file: File | Blob): Promise<SomekoneSettings | un
                 const label = topicSet.get(edge.destination) || '';
                 edge.destination = getTopicId(label);
             }
-        });
+        });*/
 
-        rebaseEdges(store.graph.edges, timeOffset);
+        //rebaseEdges(store.graph.edges, timeOffset);
 
         // Remove users who do not have valid names
-        const badUsers = new Set<NodeID>(store.graph.nodes.filter((n) => !n.data).map((n) => n.id));
+        // const badUsers = new Set<NodeID>(store.graph.nodes.filter((n) => !n.data).map((n) => n.id));
 
-        addNodes(store.graph.nodes.filter((n) => !!n.data));
-        addEdges(store.graph.edges.filter((e) => !badUsers.has(e.destination) && !badUsers.has(e.source)));
+        contentSvc.graph.addNodes(store.graph.nodes.filter((n) => !!n.data));
+        // addEdges(store.graph.edges.filter((e) => !badUsers.has(e.destination) && !badUsers.has(e.source)));
     }
 
     store.meta.forEach((v) => {
-        addContent(images.get(v.id) || `${STATIC_PATH}/${v.id}.jpg`, v);
+        // Patch hack to reduce label strength
+        for (let i = 0; i < v.labels.length; ++i) {
+            if (isDisallowedTopic(v.labels[i].label)) {
+                v.labels[i].weight *= 0.1;
+            }
+        }
+        contentSvc.addContent(images.get(`${v.id}`) || `${STATIC_PATH}/${v.id}.jpg`, v);
     });
 
-    store.users.forEach((u) => {
+    /*store.users.forEach((u) => {
         try {
-            if (u.name !== 'NoName') addUserProfile(u);
+            if (u.name !== 'NoName') addUserProfile(u.id, u);
         } catch (e) {
             console.warn('User already exists');
         }
-    });
+    });*/
 
     rebaseLog(store.logs, timeOffset);
     store.logs.forEach((l) => {
-        appendActionLog(l.log, l.id, !!store.graph);
+        actionLogger.appendActionLog(l.log, l.id);
     });
+    actionLogger.sortLogs();
 
     return store.settings;
-}
-
-const GRAPH_KEY = 'genai_somekone_graph';
-const LOG_KEY = 'genai_somekone_logs';
-
-window.addEventListener('beforeunload', () => {
-    window.sessionStorage.setItem(GRAPH_KEY, JSON.stringify(dump()));
-    const logs = getActionLog(getCurrentUser());
-    window.sessionStorage.setItem(LOG_KEY, JSON.stringify(logs));
-});
-
-const sessionGraph = window.sessionStorage.getItem(GRAPH_KEY);
-if (sessionGraph) {
-    const graph = JSON.parse(sessionGraph) as GraphExport;
-    addNodes(graph.nodes);
-    addEdges(graph.edges);
-    console.log('Loaded session graph');
-}
-
-const sessionLogs = window.sessionStorage.getItem(LOG_KEY);
-if (sessionLogs) {
-    const logs = JSON.parse(sessionLogs) as LogEntry[];
-    appendActionLog(logs);
 }

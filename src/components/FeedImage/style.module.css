@@ -1,4 +1,4 @@
-@value primary, bgSubdued1 from "../../style/colours.module.css";
+@value primary, bgSubdued1, textDark from "@knicos/genai-base/css/colours.module.css";
 
 .instaImage {
     width: 100%;
@@ -10,6 +10,26 @@
     width: 500px;
     height: 500px;
     flex-shrink: 0;
+}
+
+.topRightButtons {
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: white;
+    padding-right: 1rem;
+    padding-top: 0.5rem;
+}
+
+.topRightButtons :global .MuiButtonBase-root {
+    background: #00000022;
+}
+
+.topRightButtons :global .MuiButtonBase-root:hover {
+    background: #0000005e;
+    transform: scale(1.1);
 }
 
 .buttonRow {
@@ -54,7 +74,7 @@
 
 .imageContainer {
     position: relative;
-    filter: brightness(0.4);
+    filter: brightness(0.3);
     transition: filter 0.4s;
     /*border-radius: 10px;*/
     overflow: hidden;
@@ -134,6 +154,7 @@
 .panel {
     position: absolute;
     animation: fadein 0.2s;
+    line-height: initial;
 }
 
 .left {
@@ -155,6 +176,11 @@
 .hfull {
     left: 1rem;
     right: 1rem;
+}
+
+.vfull {
+    top: 1rem;
+    bottom: calc(1rem + 51px);
 }
 
 .panel :global .MuiButtonBase-root:hover {
@@ -225,9 +251,13 @@
 .sharecontainer {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
     padding-bottom: 1rem;
-    align-items: flex-end;
+    align-items: flex-start;
+    height: 90%;
+    width: 100%;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
 }
 
 .sharecontainer :global .MuiButtonBase-root {
@@ -239,8 +269,8 @@
 
 .shareLabel {
     font-weight: bold;
-    color: white;
-    text-shadow: 0 0 5px black;
+    color: textDark;
+    margin: 1rem;
 }
 
 .topicLabel {
@@ -259,4 +289,40 @@
     align-items: flex-end;
     line-height: normal;
     font-size: 1.2rem;
+}
+
+.reason {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    line-height: normal;
+    color: white;
+    background: primary;
+    border-radius: 1.2rem;
+    padding: 0 0.8rem;
+}
+
+.blocker {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #444;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.1rem;
+    font-weight: bold;
+    animation: fadebg 0.2s;
+}
+
+@keyframes fadebg {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }

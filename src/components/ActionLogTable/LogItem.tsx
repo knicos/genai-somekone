@@ -1,8 +1,8 @@
-import { LogEntry } from '@genaism/services/profiler/profilerTypes';
 import { useTranslation } from 'react-i18next';
 import { generateMessage } from './message';
 import style from './style.module.css';
-import { timeAgo } from '../DataCard/time';
+import { timeAgo } from '../DataCard';
+import { LogEntry } from '@knicos/genai-recom';
 
 interface Props {
     item: LogEntry;

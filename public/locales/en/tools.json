@@ -1,0 +1,80 @@
+{
+    "creator": {
+        "titles": {
+            "creator": "Creator",
+            "captureImages": "Capture Images",
+            "query": "Find Images",
+            "summary": "Tag Summary",
+            "embedding": "Create Embeddings",
+            "similarity": "Check Similarity",
+            "mapping": "Map to Points",
+            "points": "Image Map",
+            "cluster": "Clustering",
+            "embeddingTrain": "Embedding Training",
+            "mapTraining": "Map Training",
+            "clusterViewer": "Cluster Checker",
+            "browser": "Browser",
+            "imageDetail": "Selected Image",
+            "addTag": "Add Tag",
+            "local": "Upload"
+        },
+        "tooltips": {
+            "deleteAll": "Delete all images",
+            "download": "Download content Zip"
+        },
+        "labels": {
+            "search": "Search",
+            "epochs": "Epochs",
+            "loss": "Loss",
+            "validationLoss": "Validation Loss",
+            "maxMemberDist": "Maximum member distance",
+            "minClusters": "Target number of clusters",
+            "minClusterSize": "Target cluster size",
+            "count": "Count: {{count}}",
+            "latest": "Latest",
+            "popular": "Popular",
+            "numberOfImages": "How many images to add?",
+            "dimensions": "Dimensions",
+            "useLabels": "Use the tags",
+            "usePixels": "Use pixel data",
+            "useEngagement": "Use engagement data",
+            "learningRate": "Learning Rate",
+            "imageSimilarity": "Image",
+            "similarityDistrib": "Global",
+            "clusterImages": "Images",
+            "clusterStats": "Tags",
+            "clusterSummary": "Summary",
+            "addTag": "Tag Name",
+            "selectTag": "Select Tag",
+            "selectCluster": "Select Cluster",
+            "filter": "Filter",
+            "noFilter": "None",
+            "byTag": "By Tag",
+            "byCluster": "By Cluster",
+            "noTags": "Has no tags"
+        },
+        "actions": {
+            "addImages": "Add Images",
+            "generateEmbed": "Generate",
+            "saveEncoder": "Save",
+            "cluster": "Create Clusters",
+            "go": "Find",
+            "add": "Add",
+            "close": "Close",
+            "deleteTags": "Delete Tags",
+            "deleteImagesWithTags": "Delete Images with Tags",
+            "mergeTags": "Merge Tags",
+            "findMoreTag": "Find More with Tags",
+            "train": "Train",
+            "deleteCluster": "Delete images in cluster",
+            "deleteImage": "Delete Image",
+            "cancel": "Cancel",
+            "addTagToCluster": "Add Tag to Cluster",
+            "unselectAll": "Unselect All"
+        },
+        "messages": {
+            "imageSearch": "Choose a query before automatically adding the images",
+            "needsRegen": "The embeddings need to be recreated"
+        }
+    }
+}

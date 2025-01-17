@@ -1,0 +1,72 @@
+@value textDark, bgSubdued1, primary, secondary from "@knicos/genai-base/css/colours.module.css";
+
+.container {
+    background: white;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 1rem;
+    width: 90%;
+    max-width: 1000px;
+}
+
+.outerContainer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 1rem;
+    box-sizing: border-box;
+    align-items: center;
+    height: 100%;
+    max-height: 100%;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.container ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: space-around;
+    padding-bottom: 2rem;
+}
+
+.container li {
+    flex: 0 1 300px;
+    min-height: 200px;
+    background: white;
+    border-radius: 6px;
+    box-shadow: 0 0 4px #888;
+    overflow: hidden;
+}
+
+.container li:hover {
+    box-shadow: 0 0 4px secondary;
+}
+
+.imageContainer {
+    line-height: 0;
+}
+
+.container a {
+    text-decoration: none;
+    color: textDark;
+}
+
+.container h2 {
+    margin: 0.5rem 1rem;
+    font-size: 1.1rem;
+}
+
+.description {
+    margin-left: 1rem;
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+    font-style: italic;
+    font-size: 0.9rem;
+    flex-grow: 1;
+}

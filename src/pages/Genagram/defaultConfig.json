@@ -1,0 +1,27 @@
+{
+    "configuration": {
+        "recommendations": {
+            "taste": 2,
+            "similarUsers": 2,
+            "coengaged": 2,
+            "random": 2,
+            "popular": 2,
+            "selection": "distribution"
+        },
+        "hideDataView": false,
+        "hideProfileView": false,
+        "hideActionsButton": false,
+        "hideRecommendationsView": false,
+        "hidePostContent": true,
+        "hideOwnProfile": true,
+        "collectResearchData": false,
+        "alwaysActive": false,
+        "experimental": false,
+        "showRecommendationWizard": true,
+        "showScoringWizard": true,
+        "showCandidateWizard": true,
+        "showCandidateRefinementWizard": true,
+        "showDiversityWizard": true
+    },
+    "content": ["https://store.gen-ai.fi/somekone/imageSet1c.zip"]
+}

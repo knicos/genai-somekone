@@ -1,22 +1,21 @@
-import { afterEach, beforeEach, describe, it, vi } from 'vitest';
+import { beforeEach, describe, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import FeedImage from './FeedImage';
-import { addComment, addContent, addContentReaction } from '@genaism/services/content/content';
-import { resetGraph } from '@genaism/services/graph/graph';
 import userEvent from '@testing-library/user-event';
-import { getCurrentUser } from '@genaism/services/profiler/state';
+import { getContentService, getGraphService, getProfilerService } from '@knicos/genai-recom';
 
 const TEST_IMAGE =
     'https://images.pexels.com/photos/3030647/pexels-photo-3030647.jpeg?cs=srgb&dl=pexels-nextvoyage-3030647.jpg&fm=jpg';
 
 describe('FeedImage component', () => {
     beforeEach(() => {
-        addContent(TEST_IMAGE, { id: 'xyz', author: 'TestAuthor', labels: [] });
-        addContent(TEST_IMAGE, { id: 'xyz2', author: 'TestAuthor', labels: [] });
-    });
-
-    afterEach(() => {
-        resetGraph();
+        getGraphService().reset();
+        const contentSvc = getContentService();
+        contentSvc.reset();
+        contentSvc.addContent(TEST_IMAGE, { id: 'xyz', author: 'TestAuthor', labels: [] });
+        contentSvc.addContent(TEST_IMAGE, { id: 'xyz2', author: 'TestAuthor', labels: [] });
+        const profilerSvc = getProfilerService();
+        profilerSvc.reset();
     });
 
     it('renders with a test image', async ({ expect }) => {
@@ -36,7 +35,7 @@ describe('FeedImage component', () => {
     });
 
     it('shows number of likes', async ({ expect }) => {
-        addContentReaction('content:xyz');
+        getContentService().addContentReaction('content:xyz');
         render(
             <FeedImage
                 id="content:xyz"
@@ -80,7 +79,7 @@ describe('FeedImage component', () => {
     });
 
     it('shows number of comments', async ({ expect }) => {
-        addComment('content:xyz2', getCurrentUser(), 'testcomment', 100);
+        getContentService().addComment('content:xyz2', 'user:xyz', 'testcomment', 100);
         render(
             <FeedImage
                 id="content:xyz2"
@@ -113,7 +112,7 @@ describe('FeedImage component', () => {
 
     it('displays one comment', async ({ expect }) => {
         const user = userEvent.setup();
-        addComment('content:xyz', getCurrentUser(), 'testcomment', 199);
+        getContentService().addComment('content:xyz', 'user:xyz', 'testcomment', 199);
         render(
             <FeedImage
                 id="content:xyz"
@@ -124,13 +123,14 @@ describe('FeedImage component', () => {
 
         await user.click(screen.getByTestId('feed-image-comment-button'));
 
-        expect(screen.getByText('testcomment')).toBeVisible();
+        expect(await screen.findByText('testcomment')).toBeVisible();
     });
 
     it('can display multiple comments', async ({ expect }) => {
         const user = userEvent.setup();
-        addComment('content:xyz', getCurrentUser(), 'testcomment1', 100);
-        addComment('content:xyz', getCurrentUser(), 'testcomment2', 200);
+        const contentSvc = getContentService();
+        contentSvc.addComment('content:xyz', 'user:xyz', 'testcomment1', 100);
+        contentSvc.addComment('content:xyz', 'user:xyz', 'testcomment2', 200);
         render(
             <FeedImage
                 id="content:xyz"
@@ -161,7 +161,10 @@ describe('FeedImage component', () => {
         expect(screen.getByTestId('feed-image-share-panel')).toBeVisible();
     });
 
-    it('calls share action on share friends', async ({ expect }) => {
+    it('calls share action on share with user', async ({ expect }) => {
+        const profilerSvc = getProfilerService();
+        const profile = profilerSvc.createUserProfile('user:1', 'NoName1');
+        profile.embeddings.taste = [1];
         const user = userEvent.setup();
         const sharefn = vi.fn();
         render(
@@ -174,8 +177,8 @@ describe('FeedImage component', () => {
         );
 
         await user.click(screen.getByTestId('feed-image-share-button'));
-        await user.click(screen.getByTestId('share-friends-button'));
-        expect(sharefn).toHaveBeenCalledWith('content:xyz', 'friends');
+        await user.click(await screen.findByLabelText('NoName1'));
+        expect(sharefn).toHaveBeenCalledWith('content:xyz', 'public', 'user:1');
     });
 
     it('can hide actions', async ({ expect }) => {

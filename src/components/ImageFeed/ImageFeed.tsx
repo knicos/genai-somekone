@@ -1,42 +1,63 @@
 import React, { useRef, useCallback, useState, useEffect, FocusEvent } from 'react';
-import IImage from '../FeedImage/FeedImage';
 import style from './style.module.css';
-import { LogActivity, LogEntry } from '@genaism/services/profiler/profilerTypes';
-import { LikeKind } from '@genaism/components/FeedImage/FeedImage';
-import { ShareKind } from '@genaism/components/FeedImage/SharePanel';
+import { FeedImage as IImage, LikeKind, ShareKind } from '@genaism/components/FeedImage';
 import FeedSpacer from './FeedSpacer';
 import { useTabActive } from '@genaism/hooks/interaction';
 import { useTranslation } from 'react-i18next';
-import { ContentNodeId } from '@genaism/services/graph/graphTypes';
-import { ScoredRecommendation } from '@genaism/services/recommender/recommenderTypes';
-import { updateEngagement } from '@genaism/services/profiler/profiler';
-import Spinner from '../Spinner/Spinner';
+import { Spinner } from '@knicos/genai-base';
 import LangSelect from '../LangSelect/LangSelect';
+import { ContentNodeId, LogEntry, ScoredRecommendation, UserNodeId } from '@knicos/genai-recom';
+import { useActionLogService, useProfilerService } from '@genaism/hooks/services';
+import { InjectContentType } from '@genaism/state/sessionState';
 
 const INTERACTION_TIMEOUT = 5000;
 
+export interface FeedEntry {
+    contentId: ContentNodeId;
+    recommendation?: ScoredRecommendation;
+    injection?: InjectContentType;
+}
+
 interface Props {
-    images: ScoredRecommendation[];
+    images: FeedEntry[];
     noActions?: boolean;
     showLabels?: boolean;
+    noComments?: boolean;
+    noLike?: boolean;
+    noShare?: boolean;
+    noFollow?: boolean;
     onView?: (index: number, time: number) => void;
     onMore?: () => void;
     onLog: (e: LogEntry) => void;
     alwaysActive?: boolean;
 }
 
-export default function ImageFeed({ images, onView, onMore, onLog, noActions, showLabels, alwaysActive }: Props) {
+export default function ImageFeed({
+    images,
+    onView,
+    onMore,
+    onLog,
+    noActions,
+    showLabels,
+    alwaysActive,
+    noComments,
+    noLike,
+    noFollow,
+    noShare,
+}: Props) {
     const { t } = useTranslation();
     const containerRef = useRef<HTMLDivElement>(null);
     const [viewed, setViewed] = useState(0);
     const prevRef = useRef<number>(-1);
     const startRef = useRef<number>(0);
     const lastRef = useRef<number>(0);
-    const viewedRef = useRef<ScoredRecommendation>();
+    const viewedRef = useRef<FeedEntry>();
     const canMoreRef = useRef(true);
     const durationRef = useRef<number>(0);
     const active = useTabActive();
     const [focus, setFocus] = useState(false);
+    const actionLog = useActionLogService();
+    const profiler = useProfilerService();
     //const ref = useRef<HTMLDivElement>(null);
 
     viewedRef.current = images[viewed];
@@ -89,12 +110,12 @@ export default function ImageFeed({ images, onView, onMore, onLog, noActions, sh
         if (prevRef.current >= 0) {
             const delta = now - startRef.current;
             doDwell(delta, prevRef.current);
-            updateEngagement(images[prevRef.current]);
+            actionLog.createEngagementEntry(profiler.getCurrentUser(), images[prevRef.current].contentId);
         }
         doSeen(viewed);
         startRef.current = now;
         prevRef.current = viewed;
-    }, [viewed, onView, onLog, images, doDwell, doSeen]);
+    }, [viewed, onView, onLog, images, doDwell, doSeen, actionLog, profiler]);
 
     const doInteraction = useCallback(() => {
         const now = Date.now();
@@ -116,7 +137,7 @@ export default function ImageFeed({ images, onView, onMore, onLog, noActions, sh
             const imgIndex = Math.floor(scrollTop / imageHeight + 0.2);
 
             const now = Date.now();
-            if (now - lastRef.current > INTERACTION_TIMEOUT) {
+            if (images.length > 0 && now - lastRef.current > INTERACTION_TIMEOUT) {
                 onLog({
                     activity: 'inactive',
                     value: now - lastRef.current,
@@ -154,21 +175,9 @@ export default function ImageFeed({ images, onView, onMore, onLog, noActions, sh
     );
 
     const doShare = useCallback(
-        (id: ContentNodeId, kind: ShareKind) => {
-            let type: LogActivity = 'share_private';
-            switch (kind) {
-                case 'friends':
-                    type = 'share_friends';
-                    break;
-                case 'individual':
-                    type = 'share_private';
-                    break;
-                case 'public':
-                    type = 'share_public';
-                    break;
-            }
-            if (kind !== 'none') {
-                onLog({ activity: type, id, timestamp: Date.now() });
+        (id: ContentNodeId, kind: ShareKind, user?: UserNodeId) => {
+            if (kind === 'public') {
+                onLog({ activity: 'share_public', id, timestamp: Date.now(), user });
             }
         },
         [onLog]
@@ -184,6 +193,13 @@ export default function ImageFeed({ images, onView, onMore, onLog, noActions, sh
     const doUnfollow = useCallback(
         (id: ContentNodeId) => {
             onLog({ activity: 'unfollow', id, timestamp: Date.now() });
+        },
+        [onLog]
+    );
+
+    const doHide = useCallback(
+        (id: ContentNodeId) => {
+            onLog({ activity: 'hide', id, timestamp: Date.now() });
         },
         [onLog]
     );
@@ -243,11 +259,21 @@ export default function ImageFeed({ images, onView, onMore, onLog, noActions, sh
                         onFollow={doFollow}
                         onUnfollow={doUnfollow}
                         onShare={doShare}
+                        onHide={doHide}
                         onComment={doComment}
+                        noComments={noComments}
+                        noLike={noLike}
+                        noFollow={noFollow}
+                        noShare={noShare}
                         active={activeState && (ix === viewed || (ix === 0 && viewed === -1))}
                         visible={Math.abs(ix - viewed) < 5}
                         noActions={noActions}
                         showLabels={showLabels}
+                        reason={
+                            img.injection?.from && img.injection?.reason === 'share'
+                                ? t('feed.messages.sharedBy', { name: profiler.getUserName(img.injection.from) })
+                                : undefined
+                        }
                     />
                 ))}
                 <FeedSpacer size={images.length - viewed - 5} />

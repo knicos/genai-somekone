@@ -1,0 +1,54 @@
+@value workspaceBg from "@knicos/genai-base/css/colours.module.css";
+
+.menuLogo {
+    color: white;
+    min-height: 48px;
+    font-weight: bold;
+    padding-right: 0.5rem;
+    display: flex;
+    align-items: center;
+    font-size: 1.1rem;
+}
+
+.grid {
+    display: grid;
+    width: 100%;
+    gap: 1rem;
+    padding: 1rem;
+    background: white;
+    box-sizing: border-box;
+}
+
+.grid1 {
+    composes: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    width: min(100%, 100vh);
+}
+
+.grid2 {
+    composes: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+}
+
+.grid3 {
+    composes: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+}
+
+.grid4 {
+    composes: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    width: min(100%, 100vh);
+}
+
+.heatCard {
+    background: workspaceBg;
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 2px 2px 5px #bbb;
+    /*aspect-ratio: 1/1;*/
+}

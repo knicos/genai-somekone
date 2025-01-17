@@ -1,0 +1,33 @@
+@value primary, secondary from "@knicos/genai-base/css/colours.module.css";
+
+.svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    user-select: none;
+    touch-action: none;
+    outline: none;
+}
+
+.node {
+    cursor: pointer;
+    outline: none;
+}
+
+.node:focus circle[data-nodeitem] {
+    stroke: secondary;
+}
+
+.zoomControls {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    display: flex;
+    flex-direction: column;
+    background: #ffffffbf;
+    border-radius: 6px;
+}
+
+/*.link {
+    stroke: primary;
+}*/

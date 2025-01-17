@@ -1,20 +1,24 @@
-import { describe, it, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, beforeEach, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import ImageFeed from './ImageFeed';
-import { addContent } from '../../services/content/content';
-import { resetGraph } from '../../services/graph/graph';
 import userEvent from '@testing-library/user-event';
-import { ContentNodeId } from '@genaism/services/graph/graphTypes';
-import { ScoredRecommendation } from '@genaism/services/recommender/recommenderTypes';
+import {
+    ContentNodeId,
+    getContentService,
+    getGraphService,
+    getProfilerService,
+    ScoredRecommendation,
+} from '@knicos/genai-recom';
 
 function makeRecommendation(id: ContentNodeId): ScoredRecommendation {
     return {
         contentId: id,
         score: 0,
-        scores: [],
-        features: [],
+        scores: {},
+        significance: {},
+        features: {},
         rank: 0,
-        rankScore: 0,
+        diversity: 0,
         timestamp: 0,
         candidateOrigin: 'random',
     };
@@ -25,11 +29,8 @@ const TEST_IMAGE =
 
 describe('ImageFeed component', () => {
     beforeEach(() => {
-        addContent(TEST_IMAGE, { id: 'xyz', author: 'TestAuthor', labels: [] });
-    });
-
-    afterEach(() => {
-        resetGraph();
+        getGraphService().reset();
+        getContentService().addContent(TEST_IMAGE, { id: 'xyz', author: 'TestAuthor', labels: [] });
     });
 
     it('renders a feed of test images', async ({ expect }) => {
@@ -61,6 +62,10 @@ describe('ImageFeed component', () => {
     });
 
     it('generates a share log event', async ({ expect }) => {
+        const profiler = getProfilerService();
+        profiler.reset();
+        const profile = profiler.createUserProfile('user:x', 'NoName2');
+        profile.embeddings.taste = [1];
         const user = userEvent.setup();
         const logfn = vi.fn();
         render(
@@ -71,12 +76,13 @@ describe('ImageFeed component', () => {
         );
 
         await user.click(screen.getByTestId('feed-image-share-button'));
-        await user.click(screen.getByTestId('share-friends-button'));
+        await user.click(await screen.findByLabelText('NoName2'));
 
         expect(logfn).toHaveBeenCalledWith({
-            activity: 'share_friends',
+            activity: 'share_public',
             id: 'content:xyz',
             timestamp: expect.any(Number),
+            user: 'user:x',
         });
     });
 

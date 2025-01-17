@@ -1,36 +1,47 @@
+@value borderGrey, textDark from "@knicos/genai-base/css/colours.module.css";
+
 .panel {
     position: absolute;
-    aspect-ratio: 9/16;
-    max-width: calc(0.6 * 80vh);
-    max-height: 80vh;
+    max-height: calc(100vh - 2rem);
     box-sizing: border-box;
-    width: 500px;
+    width: 100%;
+    max-width: 500px;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
     margin: auto;
     background: white;
-    padding: 0;
     padding-bottom: 1rem;
-    border-radius: 10px;
-    box-shadow: 0 0 10px #707070;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
+    align-items: center;
+    box-shadow: 0 0 20px #bbb;
+    border-radius: 6px;
 }
 
-.panel header {
+.panel > header {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     padding: 0 1rem;
     align-items: center;
+    background: white;
+    border-bottom: 1px solid borderGrey;
+    color: textDark;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .content {
-    overflow-y: auto;
+    overflow: hidden;
     flex-grow: 1;
     height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .background {

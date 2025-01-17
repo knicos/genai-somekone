@@ -16,7 +16,7 @@ describe('Settings hooks', () => {
                 deserial({
                     socialGraph: {
                         clusterColouring: 5,
-                        linkDistanceScale: 1,
+                        scale: 1,
                         nodeDisplay: 'word',
                     },
                     ui: {

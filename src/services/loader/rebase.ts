@@ -1,4 +1,4 @@
-import { Edge } from '../graph/graphTypes';
+import { Edge } from '@knicos/genai-recom';
 import { LogItem } from './loaderTypes';
 
 export function findLargestEdgeTimestamp(edges: Edge[]) {

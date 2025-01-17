@@ -1,4 +1,4 @@
-@value backgroundDark, textDark from "../../style/colours.module.css";
+@value backgroundDark, textDark from "@knicos/genai-base/css/colours.module.css";
 
 .container {
     position: relative;

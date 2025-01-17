@@ -11,7 +11,7 @@ describe('ActionLogTable component', () => {
     });
 
     it('shows a single normal item', async ({ expect }) => {
-        render(<ActionLogTable log={[{ activity: 'like', timestamp: Date.now() }]} />);
+        render(<ActionLogTable log={[{ entry: { activity: 'like', timestamp: Date.now() }, content: '' }]} />);
 
         expect(screen.getByTestId('data-cards')).toBeInTheDocument();
         expect(screen.getByTestId('data-card')).toBeInTheDocument();
@@ -22,21 +22,26 @@ describe('ActionLogTable component', () => {
         render(
             <ActionLogTable
                 log={[
-                    { activity: 'like', timestamp: Date.now() },
-                    { activity: 'dwell', timestamp: Date.now(), value: 3 },
+                    { entry: { activity: 'like', timestamp: Date.now() }, content: '' },
+                    { entry: { activity: 'dwell', timestamp: Date.now(), value: 3 }, content: '' },
+                    { entry: { activity: 'seen', timestamp: Date.now() }, content: '' },
                 ]}
             />
         );
 
         expect(screen.getByTestId('data-cards')).toBeInTheDocument();
         expect(screen.getByTestId('data-card')).toBeInTheDocument();
-        expect(screen.getAllByTestId('log-item')).toHaveLength(2);
+        expect(screen.getAllByTestId('log-item')).toHaveLength(3);
         expect(screen.getByText('feed.actionlog.like')).toBeVisible();
         expect(screen.getByText('feed.actionlog.dwell')).toBeVisible();
     });
 
     it('shows a single special item', async ({ expect }) => {
-        render(<ActionLogTable log={[{ activity: 'engagement', timestamp: Date.now(), value: 0.3 }]} />);
+        render(
+            <ActionLogTable
+                log={[{ entry: { activity: 'engagement', timestamp: Date.now(), value: 0.3 }, content: '' }]}
+            />
+        );
 
         expect(screen.getByText('feed.actionlog.engagement')).toBeVisible();
     });

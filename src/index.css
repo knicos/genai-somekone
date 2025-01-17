@@ -23,3 +23,19 @@
     flex-direction: column;
     overflow: hidden;
 }
+
+.errorView {
+    margin: 2rem;
+}
+
+@media print {
+    #root {
+        position: initial;
+        overflow: auto;
+    }
+
+    body {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+}

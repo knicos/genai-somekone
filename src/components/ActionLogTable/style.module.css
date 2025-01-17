@@ -1,28 +1,43 @@
-@value backgroundDark, primary from "../../style/colours.module.css";
+@value bgSubdued1, textDark, primary from "@knicos/genai-base/css/colours.module.css";
 
 .logItem {
     display: flex;
     flex-direction: column;
     width: 100%;
-    background: backgroundDark;
-    margin-top: 0.2rem;
+    background: bgSubdued1;
     padding: 0.5rem 1rem;
     box-sizing: border-box;
-    color: white;
+    color: black;
     transition: filter 0.2s;
+    border-bottom: 1px solid #444;
 }
 
 .logItem:hover {
-    filter: brightness(1.2);
+    filter: brightness(0.9);
 }
 
 .time {
     font-size: 0.9rem;
     font-style: italic;
-    color: #f5f5f5;
+    color: textDark;
 }
 
 .buttonListItem {
     display: flex;
     justify-content: center;
+}
+
+@media print {
+    .logItem {
+        flex-direction: row;
+        justify-content: space-between;
+        background: white;
+        border-top: 1px solid primary;
+        color: black;
+        margin-top: 0;
+    }
+
+    .time {
+        color: black;
+    }
 }

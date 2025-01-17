@@ -1,0 +1,94 @@
+import { memo, useEffect, useState } from 'react';
+import style from './style.module.css';
+import cloudLayout, { LocationItem, SizedItem } from './cloudLayout';
+
+export interface WeightedImage {
+    weight: number;
+    image: string;
+}
+
+interface Props {
+    content: WeightedImage[];
+    padding?: number;
+    size?: number;
+    colour?: string;
+    borderSize?: number;
+    className?: string;
+    count?: number;
+    onSize?: (size: number) => void;
+}
+
+const BORDER_SIZE = 1.5;
+const MIN_SIZE = 30;
+
+const ImageCloud = memo(function Cloud({
+    content,
+    size,
+    padding,
+    colour,
+    borderSize,
+    onSize,
+    className,
+    count,
+}: Props) {
+    const [locations, setLocations] = useState<LocationItem<string>[]>([]);
+
+    useEffect(() => {
+        const maxWeight = Math.max(0.01, content.length > 0 ? content[0].weight : 1);
+        const sizedContent: SizedItem<string>[] = content
+            .filter((c, ix) => c.weight > 0 && (count === undefined || ix < count))
+            .map((c) => {
+                const asize = Math.floor((c.weight / maxWeight) * ((size || 500) - MIN_SIZE) * 0.3) + MIN_SIZE;
+                return {
+                    id: c.image,
+                    width: asize,
+                    height: asize,
+                };
+            });
+
+        const [results, maxDist] = cloudLayout(sizedContent, size || 500, padding);
+        const floorDist = Math.floor(maxDist);
+
+        if (onSize && floorDist !== size) onSize(floorDist);
+
+        setLocations(results);
+    }, [content, padding, size, onSize, count]);
+
+    const bsize = borderSize === undefined ? BORDER_SIZE : borderSize;
+
+    return (
+        <g data-testid="cloud-group">
+            {locations.map((l, ix) => (
+                <g
+                    key={ix}
+                    className={className || style.cloudItem}
+                    transform={`translate(${l.x}, ${l.y})`}
+                >
+                    {colour && (
+                        <rect
+                            x={-bsize}
+                            y={-bsize}
+                            width={l.item.width + 2 * bsize}
+                            height={l.item.height + 2 * bsize}
+                            stroke="none"
+                            fill={colour}
+                            clipPath="inset(0% round 5px)"
+                        />
+                    )}
+                    <image
+                        data-testid="cloud-image"
+                        x={0}
+                        y={0}
+                        width={l.item.width}
+                        height={l.item.height}
+                        href={l.item.id}
+                        preserveAspectRatio="none"
+                        clipPath="inset(0% round 5px)"
+                    />
+                </g>
+            ))}
+        </g>
+    );
+});
+
+export default ImageCloud;

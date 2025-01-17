@@ -1,20 +1,36 @@
-import Item from './Item';
-import { ScoredRecommendation } from '@genaism/services/recommender/recommenderTypes';
-import Cards from '../DataCard/Cards';
+import CandidateItem from './CandidateItem';
+import style from './style.module.css';
+import ScoresItem from './ScoresItem';
+import ExplainItem from './ExplainItem';
+import { ScoredRecommendation, UserNodeId } from '@knicos/genai-recom';
 
 interface Props {
-    recommendations: ScoredRecommendation[];
+    recommendation: ScoredRecommendation;
+    userId: UserNodeId;
+    hideExplain?: boolean;
+    hideCandidate?: boolean;
+    hideScores?: boolean;
 }
 
-export default function RecommendationsTable({ recommendations }: Props) {
+export default function RecommendationsTable({
+    userId,
+    recommendation,
+    hideExplain,
+    hideCandidate,
+    hideScores,
+}: Props) {
     return (
-        <Cards>
-            {recommendations.map((l, ix) => (
-                <Item
-                    key={recommendations.length - ix}
-                    item={l}
-                />
-            ))}
-        </Cards>
+        <div>
+            <ul className={style.tableList}>
+                {!hideCandidate && (
+                    <CandidateItem
+                        item={recommendation}
+                        userId={userId}
+                    />
+                )}
+                {!hideScores && <ScoresItem item={recommendation} />}
+                {!hideExplain && <ExplainItem item={recommendation} />}
+            </ul>
+        </div>
     );
 }

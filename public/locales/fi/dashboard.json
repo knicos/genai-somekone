@@ -1,0 +1,227 @@
+{
+    "library": {
+        "title": "Select Content",
+        "generic": {
+            "title": "Original Content",
+            "description": "The original Somekone dataset selected by children."
+        },
+        "guidedDefault": {
+            "title": "Core Concepts",
+            "description": "Introduce key social media mechanisms with a structured step-by-step interface for the classroom."
+        },
+        "kiosk": {
+            "title": "Kiosk Demo",
+            "description": "An automated demonstration running in a loop until the user interacts."
+        },
+        "public": {
+            "title": "Public Demonstration",
+            "description": "Use a safer restricted social network when presenting to larger public audiences."
+        },
+        "example": {
+            "title": "Example Data",
+            "description": "Demonstrate using anonymised example data from 19 children in a classroom environment."
+        },
+        "blank": {
+            "title": "Blank",
+            "description": "Add your own photos or select from the web to create custom social media content for the app."
+        },
+        "reetta": {
+            "title": "Generic Content",
+            "description": "Over 700 carefully selected free images in 7 main categories, food, hobbies, animals, lifestyle, fashion, sports and landscapes."
+        }
+    },
+
+    "menu": {
+        "vis": {
+            "title": "Visualizations",
+            "socialgraph": "Social Network",
+            "heatmap": "Heatmaps",
+            "usergrid": "User Grid",
+            "coengagement": "Content Relationships",
+            "topics": "Topic Relationships"
+        },
+        "tables": {
+            "title": "Data Tables",
+            "actionlog": "Action Log",
+            "userstats": "User Table",
+            "contentengage": "Content Engagements",
+            "topicengage": "Topic Engagements"
+        },
+        "guides": {
+            "title": "Guided Interfaces",
+            "default": "Core Concepts",
+            "kiosk": "Kiosk",
+            "none": "None"
+        },
+        "tools": {
+            "title": "Tools",
+            "addcontent": "Add Content",
+            "browseContent": "Browse Content",
+            "simulator": "User Simulator"
+        },
+        "settings": {
+            "title": "Settings",
+            "app": "App Interface",
+            "recommendation": "Recommendations"
+        }
+    },
+    "settings": {
+        "titles": {
+            "app": "App Interface Settings",
+            "feed": "Feed Actions",
+            "appmenu": "Menu Items",
+            "recom": "Recommendations",
+            "visualisation": "Visualisations"
+        },
+        "app": {
+            "hideFeedMenu": "Hide the bottom menu",
+            "hideDataView": "Disable the data view",
+            "hideProfileView": "Disable the profile view",
+            "hideRecommendationsView": "Disable the recommendations view",
+            "hidePostContent": "Disable posting content",
+            "hideOwnProfile": "Disable own profile page",
+            "showFeedImageLabels": "Show hashtags on images",
+            "hideSharing": "Disable sharing",
+            "disableComments": "Disable commenting",
+            "disableLiking": "Disable liking",
+            "disableFollowing": "Disable following",
+            "disableSharing": "Disable sharing",
+            "showRecommendationWizard": "Show wizard",
+            "showCandidateWizard": "Personal or Non-personal",
+            "showCandidateRefinementWizard": "Show more candidate options",
+            "showScoringWizard": "Show scoring options",
+            "showDiversityWizard": "Show diversity options",
+            "hideRecommendationMenu": "Hide menu",
+            "hideExplainedScores": "Hide score explanation",
+            "hideCandidateOrigin": "Hide image origin"
+        },
+        "vis": {
+            "socialMenu": "Show social network menu",
+            "gridMenu": "Show user grid menu"
+        }
+    },
+    "dashboard": {
+        "titles": {
+            "settings": "Asetukset",
+            "general": "Yleiset",
+            "feedApp": "Käyttäjien appi",
+            "recommendations": "Suositukset",
+            "socialGraph": "Sosiaalinen verkosto",
+            "people": "Käyttäjät",
+            "deleteUser": "Poista käyttäjä",
+            "connectUsers": "Connect Users",
+            "userSelect": "Select User",
+            "usersSelect": "Select Users",
+            "simulator": "User Simulator",
+            "replay": "Replay"
+        },
+        "labels": {
+            "usePopularCandidates": "Use popular candidates",
+            "popularityScore": "Use popularity",
+            "heatmapGlobal": "Image popularity",
+            "heatmapEngagement": "Past image engagement",
+            "heatmapRecommendation": "Image recommendation probability",
+            "theme": "Theme",
+            "themeDefault": "Default",
+            "themeHighContrast": "High contrast",
+            "showSocialGraphSettings": "Graph settings",
+            "saveGraphImage": "Download graph as image",
+            "heatmapUsers": "Select users to show",
+            "refresh": "Refresh",
+            "invertHeatmap": "Invert the heatmap",
+            "shareTip": "Näytä QR-koodi liittymistä varten",
+            "openTip": "Tuo aiemmin tallennettua käyttäjädataa",
+            "saveTip": "Tallenna profiilit ja kuvat",
+            "engagedImages": "Näytä kiinnostaneet kuvat",
+            "topicCloud": "Näytä #hashtagit",
+            "showLines": "Yhdistä samanlaiset asiat viivalla",
+            "showLabels": "Näytä käyttäjien nimet",
+            "edgeScaling": "Skaalaa etäisyyttä ryhmien välillä",
+            "similarPercent": "Yhdistävien viivojen määrä",
+            "nodeCharge": "Solmujen pyrkiminen kauemmas toisistaan",
+            "hideFeedMenu": "Piilota menu kuvavirtanäkymässä",
+            "refreshGraph": "Piirrä verkosto uudelleen",
+            "clusterColouring": "Ryhmittele ja väritä käyttäjäryhmät",
+            "egoSelect": "Valittaessa piilota erillään olevat ",
+            "useTopicCandidates": "Valitse kuvia #hashtagien perusteella",
+            "useRandomCandidates": "Valitse satunnaisesti valittuja kuvia",
+            "useCoengagedCandidates": "Valitse usein yhdessä aktivoineita kuvia",
+            "useSimilarUserCandidates": "Valitse samankaltaisten käyttäjien kuvia",
+            "candidates": "Kuvakandidaattien valintamekaniikat",
+            "scoring": "Kuvien pisteytyksen perusteet",
+            "selectionMechanism": "Lopullisen valinnan perusteet",
+            "tasteScore": "Mieltymysten samankaltaisuus",
+            "sharingScore": "Kuvan jakamisen todennäköisyys",
+            "coengagementScore": "Usein yhdessä kiinnostaneet kuvat",
+            "followingScore": "Tekijän seuraamisen todennäköisyys",
+            "commentingScore": "Kommentoinnin todennäköisyys",
+            "lastSeenScore": "Aika siitä kun kuva on viimeksi näytetty",
+            "reactionScore": "Emojilla reagoinnin todennäköisyys",
+            "viewingScore": "Kuvan katsomisen todennäköisyys",
+            "rankSelection": "Parhaiten sijoittuneet kuvakandidaatit",
+            "distributionSelection": "Laske todennäköisyys pisteytyksen perusteella",
+            "disableFeedApp": "Pysäytä kaikkien käyttäjien appit",
+            "hideDataView": "Piilota käyttäjiltä datanäkymä",
+            "hideProfileView": "Piilota käyttäjiltä profiilinäkymä",
+            "hideRecommendationsView": "Piilota käyttäjiltä suositusnäkymä",
+            "showData": "Näytä käyttäjän lokitiedot",
+            "showProfile": "Näytä käyttäjän profiili",
+            "showRecommendations": "Näytä käyttäjän suositukset",
+            "deleteUser": "Poista käyttäjä",
+            "showFeed": "Näytä käyttäjän kuvavirta",
+            "collectResearch": "Kerää tutkimusdataa",
+            "showFeedImageLabels": "Näytä #hashtagit kuvavirrassa",
+            "topicThreshold": "#hashtagien määrä per käyttäjä",
+            "allLinks": "Näytä valittaessa kaikki linkit",
+            "showReplay": "Näytä replay-työkalut",
+            "stop": "Pysäytä",
+            "play": "Toista",
+            "appOptions": "Kuva-appin asetukset",
+            "none": "ei mitään",
+            "showSettings": "Opettajan appin asetukset",
+            "showTools": "Näytä lisätyökalut -menu",
+            "toolsMenu": "Lisätyökalut",
+            "toolAnonymise": "Anonymisoi kaikki data",
+            "showMainMenu": "Show main app menu",
+            "alwaysActive": "Keep current image active",
+            "profileImage": "Profile Images",
+            "similarityThreshold": "Similarity difference threshold",
+            "limitLinks": "Maximum links per node",
+            "agentCount": "Number of Agents",
+            "playbackSpeed": "Speed",
+            "autoCamera": "Automatic camera",
+            "autoEdges": "Automatic link adjustment"
+        },
+        "messages": {
+            "connection": "Mene allaolevaan www-osoitteeseen ja syötä koodi <Code>{{codeText}}</Code>, tai käytä QR -koodia.",
+            "waitingPeople": "Odotetaan käyttäjiä...",
+            "onePerson": "{{count}} käyttäjä on liittynyt mukaan.",
+            "manyPeople": "{{count}} käyttäjää on liittynyt mukaan.",
+            "loading": "Luodaan sosiaalista verkostoa...",
+            "confirmDeleteUser": "Haluatko varmasti poistaa käyttäjän \"{{name}}\""
+        },
+        "actions": {
+            "start": "Aloita",
+            "cancel": "Peruuta",
+            "close": "Sulje",
+            "delete": "Poista",
+            "demo": "Demo",
+            "select": "Select",
+            "simulate": "Simulate",
+            "zoomIn": "Zoom in",
+            "zoomOut": "Zoom out"
+        },
+        "aria": {
+            "linkForFeed": "Link for a new user feed",
+            "socialMenu": "Social graph menu"
+        }
+    },
+    "tables": {
+        "titles": {
+            "actionlog": "Action Log",
+            "userstats": "User Table",
+            "contentengage": "Content Engagements",
+            "topictable": "Topic Engagements"
+        }
+    }
+}

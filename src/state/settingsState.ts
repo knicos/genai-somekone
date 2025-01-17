@@ -1,5 +1,7 @@
+import { SocialGraphThemes } from '@genaism/visualisations/SocialGraph/graphTheme';
 import { SMConfig } from '@genaism/state/smConfig';
-import { atom } from 'recoil';
+import { UserNodeId } from '@knicos/genai-recom';
+import { atom, atomFamily, selectorFamily } from 'recoil';
 
 /* === General === */
 
@@ -8,7 +10,24 @@ export const appConfiguration = atom<SMConfig>({
     default: undefined,
 });
 
+export const userConfiguration = atomFamily<Partial<SMConfig>, UserNodeId>({
+    key: 'userconfig',
+    default: undefined,
+});
+
+export const configuration = selectorFamily<SMConfig, UserNodeId>({
+    key: 'configuration',
+    get:
+        (id: UserNodeId) =>
+        ({ get }) => ({ ...get(appConfiguration), ...get(userConfiguration(id)) }),
+});
+
 /* === Social Graph === */
+
+export const settingSocialGraphScale = atom<number>({
+    key: 'settingSocialGraphScale',
+    default: 1,
+});
 
 export const settingDisplayLines = atom<boolean>({
     key: 'settingdisplaylines',
@@ -22,28 +41,43 @@ export const settingDisplayLabel = atom<boolean>({
 
 export const settingIncludeAllLinks = atom<boolean>({
     key: 'settingalllinks',
-    default: true,
+    default: false,
 });
 
-export const settingLinkDistanceScale = atom<number>({
-    key: 'settinglinkdistscale',
-    default: 5,
+export const settingSocialGraphTheme = atom<SocialGraphThemes>({
+    key: 'settingsocialgraphtheme',
+    default: 'default',
 });
+
+/*export const settingLinkDistanceScale = atom<number>({
+    key: 'settinglinkdistscale',
+    default: 200,
+});*/
 
 export const settingSimilarPercent = atom<number>({
     key: 'settingsimilarpercent',
-    default: 0.2,
+    default: 0.1,
 });
 
-export const settingNodeCharge = atom<number>({
-    key: 'settingnodecharge',
-    default: 3,
+export const settingLinkLimit = atom<number>({
+    key: 'settinglinklimit',
+    default: 5,
 });
 
-export const settingTopicThreshold = atom<number>({
+export const settingAutoCamera = atom<boolean>({
+    key: 'settingautocamera',
+    default: false,
+});
+
+export const settingAutoEdges = atom<boolean>({
+    key: 'settingautoedges',
+    default: true,
+});
+
+/*export const settingTopicThreshold = atom<number>({
     key: 'settingtopicthreshold',
     default: 0.4,
-});
+});*/
 
 export const settingShrinkOfflineUsers = atom<boolean>({
     key: 'settingshrinkofflineusers',
@@ -55,7 +89,7 @@ export const settingShowOfflineUsers = atom<boolean>({
     default: true,
 });
 
-export type NodeDisplayMode = 'image' | 'word' | 'score';
+export type NodeDisplayMode = 'image' | 'word' | 'score' | 'profileImage';
 
 export const settingNodeMode = atom<NodeDisplayMode>({
     key: 'settingnodemode',
@@ -74,6 +108,11 @@ export const settingEgoOnSelect = atom<boolean>({
 
 export const settingSocialSelectAction = atom<boolean>({
     key: 'settingselectaction',
+    default: true,
+});
+
+export const settingSocialNodeMenu = atom<boolean>({
+    key: 'settingnodemenu',
     default: true,
 });
 

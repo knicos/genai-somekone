@@ -1,10 +1,15 @@
-import { PeerEvent, BuiltinEvent } from '@genaism/hooks/peer';
+import { PeerEvent, BuiltinEvent } from '@knicos/genai-base';
 import { SMConfig } from '@genaism/state/smConfig';
-import { LogEntry, UserProfile } from '@genaism/services/profiler/profilerTypes';
-import { ContentNodeId, UserNodeId } from '@genaism/services/graph/graphTypes';
-import { ScoredRecommendation } from '@genaism/services/recommender/recommenderTypes';
-import { Snapshot } from '@genaism/services/users/users';
-import { ContentStatsId } from '@genaism/services/content/contentTypes';
+import {
+    ContentMetadata,
+    ContentNodeId,
+    ContentStatsId,
+    LogEntry,
+    ScoredRecommendation,
+    Snapshot,
+    UserNodeData,
+    UserNodeId,
+} from '@knicos/genai-recom';
 
 export interface ConfigurationEvent extends PeerEvent {
     event: 'eter:config';
@@ -31,7 +36,7 @@ export interface UserListEvent extends PeerEvent {
 export interface ProfileEvent extends PeerEvent {
     event: 'eter:profile_data';
     id: UserNodeId;
-    profile: UserProfile;
+    profile: UserNodeData;
 }
 
 export interface RecommendationEvent extends PeerEvent {
@@ -60,6 +65,16 @@ export interface CommentEvent extends PeerEvent {
     timestamp: number;
 }
 
+export type ContentInjectReason = 'unknown' | 'share';
+
+export interface InjectEvent extends PeerEvent {
+    event: 'eter:inject';
+    from?: UserNodeId;
+    to: UserNodeId;
+    content: ContentNodeId;
+    reason: ContentInjectReason;
+}
+
 export interface ResearchLogEvent extends PeerEvent {
     event: 'researchlog';
     action: string;
@@ -71,7 +86,19 @@ export interface ResearchLogEvent extends PeerEvent {
 export interface SnapshotEvent extends PeerEvent {
     event: 'eter:snapshot';
     id: UserNodeId;
-    snapshot?: Snapshot;
+    snapshot?: Snapshot | string;
+    compressed?: boolean;
+}
+
+export interface NewPostEvent extends PeerEvent {
+    event: 'eter:newpost';
+    meta: ContentMetadata;
+    data?: Uint8Array;
+}
+
+export interface ContentRequestEvent extends PeerEvent {
+    event: 'eter:request_content';
+    id: ContentNodeId;
 }
 
 export type EventProtocol =
@@ -85,4 +112,7 @@ export type EventProtocol =
     | ResearchLogEvent
     | UserListEvent
     | CommentEvent
+    | NewPostEvent
+    | InjectEvent
+    | ContentRequestEvent
     | ActionLogEvent;

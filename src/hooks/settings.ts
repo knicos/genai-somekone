@@ -1,14 +1,19 @@
 import {
-    GraphTypes,
     UserPanel,
-    menuGraphType,
+    menuDisabledTreeItems,
+    menuHideGridMenuActions,
+    menuHideGridMenuContent,
     menuMainMenu,
     menuNodeSelectAction,
+    menuReplaySpeed,
+    menuSelectedUser,
     menuShowGridMenu,
-    menuShowSave,
+    menuShowReplay,
+    menuShowReplayControls,
     menuShowShare,
     menuShowSocialMenu,
     menuShowUserPanel,
+    menuTreeMenu,
 } from '@genaism/state/menuState';
 import {
     NodeDisplayMode,
@@ -16,26 +21,31 @@ import {
     settingClusterColouring,
     settingDisplayLabel,
     settingIncludeAllLinks,
-    settingLinkDistanceScale,
-    settingNodeCharge,
+    settingSocialGraphScale,
     settingNodeMode,
+    settingLinkLimit,
     settingSimilarPercent,
-    settingTopicThreshold,
+    settingAutoCamera,
+    settingAutoEdges,
+    settingSocialNodeMenu,
 } from '@genaism/state/settingsState';
 import { SMConfig, mergeConfiguration } from '@genaism/state/smConfig';
+import { UserNodeId } from '@knicos/genai-recom';
 import { useRecoilCallback } from 'recoil';
 
 export interface SomekoneSocialSettings {
     // displayLines?: boolean;
     includeAllLinks?: boolean;
     displayLabels?: boolean;
-    linkDistanceScale?: number;
-    similarPercent?: number;
-    nodeCharge?: number;
-    topicThreshold?: number;
+    scale?: number;
     // showOfflineUsers?: boolean;
     nodeDisplay?: NodeDisplayMode;
     clusterColouring?: number;
+    similarityThreshold?: number;
+    linkLimit?: number;
+    autoCamera?: boolean;
+    autoEdges?: boolean;
+    showNodeMenu?: boolean;
 }
 
 export interface SomekoneGeneralSettings {}
@@ -43,12 +53,18 @@ export interface SomekoneGeneralSettings {}
 export interface SomekoneUISettings {
     showUserPanel?: UserPanel;
     showShareCode?: boolean;
-    showSaveDialog?: boolean;
-    showGraph?: GraphTypes;
     showMainMenu?: boolean;
     showGridMenu?: boolean;
+    hideGridMenuActions?: boolean;
+    hideGridMenuContent?: boolean;
     showSocialMenu?: boolean;
     nodeSelectAction?: UserPanel;
+    showTreeMenu?: boolean;
+    disabledTreeItems?: string[];
+    showReplay?: boolean;
+    enableReplayControls?: boolean;
+    replaySpeed?: number;
+    selectedUser?: UserNodeId;
 }
 
 export interface SomekoneSettings {
@@ -71,20 +87,26 @@ export function useSettingDeserialise() {
                     if (data.socialGraph.nodeDisplay !== undefined) {
                         set(settingNodeMode, data.socialGraph.nodeDisplay);
                     }
-                    if (data.socialGraph.nodeCharge !== undefined) {
-                        set(settingNodeCharge, data.socialGraph.nodeCharge);
+                    if (data.socialGraph.scale !== undefined) {
+                        set(settingSocialGraphScale, data.socialGraph.scale);
                     }
-                    if (data.socialGraph.linkDistanceScale !== undefined) {
-                        set(settingLinkDistanceScale, data.socialGraph.linkDistanceScale);
+                    if (data.socialGraph.linkLimit !== undefined) {
+                        set(settingLinkLimit, data.socialGraph.linkLimit);
                     }
-                    if (data.socialGraph.topicThreshold !== undefined) {
-                        set(settingTopicThreshold, data.socialGraph.topicThreshold);
+                    if (data.socialGraph.similarityThreshold !== undefined) {
+                        set(settingSimilarPercent, data.socialGraph.similarityThreshold);
                     }
                     if (data.socialGraph.includeAllLinks !== undefined) {
                         set(settingIncludeAllLinks, data.socialGraph.includeAllLinks);
                     }
-                    if (data.socialGraph.similarPercent !== undefined) {
-                        set(settingSimilarPercent, data.socialGraph.similarPercent);
+                    if (data.socialGraph.autoCamera !== undefined) {
+                        set(settingAutoCamera, data.socialGraph.autoCamera);
+                    }
+                    if (data.socialGraph.autoEdges !== undefined) {
+                        set(settingAutoEdges, data.socialGraph.autoEdges);
+                    }
+                    if (data.socialGraph.showNodeMenu !== undefined) {
+                        set(settingSocialNodeMenu, data.socialGraph.showNodeMenu);
                     }
                 }
                 if (data.applicationConfig) {
@@ -95,17 +117,17 @@ export function useSettingDeserialise() {
                     });
                 }
                 if (data.ui) {
+                    if (data.ui.showTreeMenu !== undefined) {
+                        set(menuTreeMenu, data.ui.showTreeMenu);
+                    }
+                    if (data.ui.disabledTreeItems !== undefined) {
+                        set(menuDisabledTreeItems, data.ui.disabledTreeItems);
+                    }
                     if (data.ui.showUserPanel !== undefined) {
                         set(menuShowUserPanel, data.ui.showUserPanel);
                     }
                     if (data.ui.showShareCode !== undefined) {
                         set(menuShowShare, data.ui.showShareCode);
-                    }
-                    if (data.ui.showGraph !== undefined) {
-                        set(menuGraphType, data.ui.showGraph);
-                    }
-                    if (data.ui.showSaveDialog !== undefined) {
-                        set(menuShowSave, data.ui.showSaveDialog);
                     }
                     if (data.ui.showMainMenu !== undefined) {
                         set(menuMainMenu, data.ui.showMainMenu);
@@ -116,8 +138,26 @@ export function useSettingDeserialise() {
                     if (data.ui.showGridMenu !== undefined) {
                         set(menuShowGridMenu, data.ui.showGridMenu);
                     }
+                    if (data.ui.hideGridMenuActions !== undefined) {
+                        set(menuHideGridMenuActions, data.ui.hideGridMenuActions);
+                    }
+                    if (data.ui.hideGridMenuContent !== undefined) {
+                        set(menuHideGridMenuContent, data.ui.hideGridMenuContent);
+                    }
+                    if (data.ui.showReplay !== undefined) {
+                        set(menuShowReplay, data.ui.showReplay);
+                    }
+                    if (data.ui.enableReplayControls !== undefined) {
+                        set(menuShowReplayControls, data.ui.enableReplayControls);
+                    }
+                    if (data.ui.replaySpeed !== undefined) {
+                        set(menuReplaySpeed, data.ui.replaySpeed);
+                    }
                     if (data.ui.nodeSelectAction !== undefined) {
                         set(menuNodeSelectAction, data.ui.nodeSelectAction);
+                    }
+                    if (data.ui.selectedUser !== undefined) {
+                        set(menuSelectedUser, data.ui.selectedUser);
                     }
                 }
             },
@@ -136,21 +176,28 @@ export function useSettingSerialise() {
                         displayLabels: await snapshot.getPromise(settingDisplayLabel),
                         clusterColouring: await snapshot.getPromise(settingClusterColouring),
                         nodeDisplay: await snapshot.getPromise(settingNodeMode),
-                        nodeCharge: await snapshot.getPromise(settingNodeCharge),
-                        linkDistanceScale: await snapshot.getPromise(settingLinkDistanceScale),
-                        topicThreshold: await snapshot.getPromise(settingTopicThreshold),
+                        scale: await snapshot.getPromise(settingSocialGraphScale),
                         includeAllLinks: await snapshot.getPromise(settingIncludeAllLinks),
-                        similarPercent: await snapshot.getPromise(settingSimilarPercent),
+                        linkLimit: await snapshot.getPromise(settingLinkLimit),
+                        similarityThreshold: await snapshot.getPromise(settingSimilarPercent),
+                        autoCamera: await snapshot.getPromise(settingAutoCamera),
+                        autoEdges: await snapshot.getPromise(settingAutoEdges),
+                        showNodeMenu: await snapshot.getPromise(settingSocialNodeMenu),
                     },
                     applicationConfig: await snapshot.getPromise(appConfiguration),
                     ui: {
                         showUserPanel: await snapshot.getPromise(menuShowUserPanel),
-                        showGraph: await snapshot.getPromise(menuGraphType),
-                        showSaveDialog: await snapshot.getPromise(menuShowSave),
                         showShareCode: await snapshot.getPromise(menuShowShare),
                         showSocialMenu: await snapshot.getPromise(menuShowSocialMenu),
                         showGridMenu: await snapshot.getPromise(menuShowGridMenu),
+                        hideGridMenuActions: await snapshot.getPromise(menuHideGridMenuActions),
+                        hideGridMenuContent: await snapshot.getPromise(menuHideGridMenuContent),
                         nodeSelectAction: await snapshot.getPromise(menuNodeSelectAction),
+                        showTreeMenu: await snapshot.getPromise(menuTreeMenu),
+                        disabledTreeItems: await snapshot.getPromise(menuDisabledTreeItems),
+                        showReplay: await snapshot.getPromise(menuShowReplay),
+                        enableReplayControls: await snapshot.getPromise(menuShowReplayControls),
+                        replaySpeed: await snapshot.getPromise(menuReplaySpeed),
                     },
                 };
             },

@@ -5,7 +5,9 @@ const TAB_ID = uuidv4();
 
 export function TabBlocker() {
     useEffect(() => {
-        const bc = new BroadcastChannel('genai-tab-check');
+        if (!window.BroadcastChannel) return;
+
+        const bc = new window.BroadcastChannel('genai-tab-check');
         bc.onmessage = (e: MessageEvent<string>) => {
             if (e.data === 'check_tab') {
                 bc.postMessage(TAB_ID);
@@ -23,7 +25,9 @@ export function useDuplicateTabCheck() {
     const [found, setFound] = useState(false);
 
     useEffect(() => {
-        const bc = new BroadcastChannel('genai-tab-check');
+        if (!window.BroadcastChannel) return;
+
+        const bc = new window.BroadcastChannel('genai-tab-check');
         bc.onmessage = (e: MessageEvent<string>) => {
             if (e.data !== TAB_ID) {
                 setFound(true);

@@ -7,6 +7,7 @@ trigger:
     branches:
         include:
             - main
+            - mainv2
     tags:
         include:
             - 'v*'
@@ -22,13 +23,15 @@ stages:
             steps:
                 - task: Cache@2
                   inputs:
-                      key: '"npm" | "$(Agent.OS)" | package-lock.json'
+                      key: '"npmcache" | "$(Agent.OS)" | package-lock.json'
                       restoreKeys: |
-                          npm | "$(Agent.OS)"
-                          npm
-                      path: $(System.DefaultWorkingDirectory)/node_modules
+                          npmcache | "$(Agent.OS)"
+                          npmcache
+                      path: $(System.DefaultWorkingDirectory)/.npm
                   displayName: Cache NPM packages
                 - script: |
+                      echo -e "\n//npm.pkg.github.com/:_authToken=$(GITHUB_TOKEN)" >> ./.npmrc
+                      npm set cache .npm
                       npm ci
                       npm run lint
     - stage: Build
@@ -44,14 +47,16 @@ stages:
 
                 - task: Cache@2
                   inputs:
-                      key: '"npm" | "$(Agent.OS)" | package-lock.json'
+                      key: '"npmcache" | "$(Agent.OS)" | package-lock.json'
                       restoreKeys: |
-                          npm | "$(Agent.OS)"
-                          npm
-                      path: $(System.DefaultWorkingDirectory)/node_modules
+                          npmcache | "$(Agent.OS)"
+                          npmcache
+                      path: $(System.DefaultWorkingDirectory)/.npm
                   displayName: Cache NPM packages
 
                 - script: |
+                      echo -e "\n//npm.pkg.github.com/:_authToken=$(GITHUB_TOKEN)" >> ./.npmrc
+                      npm set cache .npm
                       npm ci
                       npm run build
                   displayName: 'Build'
@@ -67,15 +72,15 @@ stages:
             steps:
                 - task: Cache@2
                   inputs:
-                      key: '"npm" | "$(Agent.OS)" | package-lock.json'
+                      key: '"npmcache" | "$(Agent.OS)" | package-lock.json'
                       restoreKeys: |
-                          npm | "$(Agent.OS)"
-                          npm
-                      path: $(System.DefaultWorkingDirectory)/node_modules
+                          npmcache | "$(Agent.OS)"
+                          npmcache
+                      path: $(System.DefaultWorkingDirectory)/.npm
                   displayName: Cache NPM packages
-                - download: current
-                  artifact: DistFolder
                 - script: |
+                      echo -e "\n//npm.pkg.github.com/:_authToken=$(GITHUB_TOKEN)" >> ./.npmrc
+                      npm set cache .npm
                       npm ci
                       CI=true npm run ci:test
                   displayName: 'Test'
@@ -138,3 +143,22 @@ stages:
                       skip_app_build: true
                       azure_static_web_apps_api_token: $(deployment_token)
                       deployment_environment: staging
+    - stage: DeployV2
+      displayName: Deploy Version 2
+      dependsOn: Test
+      condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/mainv2'))
+      jobs:
+          - job: AzureSWA
+            displayName: Deploy to static app
+            steps:
+                - download: current
+                  artifact: DistFolder
+                - task: AzureStaticWebApp@0
+                  inputs:
+                      app_location: 'DistFolder'
+                      output_location: 'DistFolder'
+                      cwd: $(Pipeline.Workspace)
+                      skip_api_build: true
+                      skip_app_build: true
+                      azure_static_web_apps_api_token: $(deployment_token2)
+                      #deployment_environment: nextVersion

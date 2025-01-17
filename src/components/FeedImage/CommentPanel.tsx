@@ -1,14 +1,12 @@
 import style from './style.module.css';
-import TextField from '@mui/material/TextField';
 import ActionPanel from './ActionPanel';
 import { useTranslation } from 'react-i18next';
-import { ChangeEvent, useCallback, useState } from 'react';
-import { ContentNodeId } from '@genaism/services/graph/graphTypes';
-import { getComments } from '@genaism/services/content/content';
+import { useState } from 'react';
 import Comment from './Comment';
-import { Button } from '../Button/Button';
-
-const MAX_COMMENT_LENGTH = 400;
+import { Button } from '@knicos/genai-base';
+import { ContentNodeId } from '@knicos/genai-recom';
+import CommentBox from './CommentBox';
+import { useContentComments } from '@genaism/hooks/content';
 
 interface Props {
     id: ContentNodeId;
@@ -17,25 +15,10 @@ interface Props {
     disabled?: boolean;
 }
 
-const unsavedComments = new Map<ContentNodeId, string>();
-
 export default function CommentPanel({ onClose, onComment, id, disabled }: Props) {
     const { t } = useTranslation();
-    const [value, setValue] = useState<string>(unsavedComments.get(id) || '');
     const [showMore, setShowMore] = useState(false);
-
-    const comments = getComments(id);
-
-    const doChange = useCallback(
-        (e: ChangeEvent<HTMLTextAreaElement>) => {
-            const v = e.target.value;
-            if (v.length <= MAX_COMMENT_LENGTH) {
-                setValue(v);
-                unsavedComments.set(id, v);
-            }
-        },
-        [id]
-    );
+    const comments = useContentComments(id) || [];
 
     return (
         <ActionPanel
@@ -49,33 +32,11 @@ export default function CommentPanel({ onClose, onComment, id, disabled }: Props
                 data-testid="feed-image-comment-panel"
             >
                 {!disabled && (
-                    <div className={style.commentInputRow}>
-                        <TextField
-                            error={value.length === MAX_COMMENT_LENGTH}
-                            value={value}
-                            onChange={doChange}
-                            fullWidth
-                            variant="outlined"
-                            placeholder={t('feed.placeholders.comment')}
-                            inputProps={{ 'data-testid': 'comment-input' }}
-                            multiline
-                            maxRows={2}
-                        />
-                        <Button
-                            data-testid="comment-post-button"
-                            variant="contained"
-                            disabled={value.length === 0}
-                            onClick={() => {
-                                if (onComment) {
-                                    onComment(value);
-                                    unsavedComments.delete(id);
-                                }
-                                if (onClose) onClose();
-                            }}
-                        >
-                            {t('feed.actions.post')}
-                        </Button>
-                    </div>
+                    <CommentBox
+                        id={id}
+                        onClose={onClose}
+                        onComment={onComment}
+                    />
                 )}
                 <ul className={style.commentList}>
                     {comments.length === 0 && <li>{t('feed.messages.noComments')}</li>}

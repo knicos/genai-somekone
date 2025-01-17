@@ -7,8 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { InputAdornment } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { canvasFromURL } from '@genaism/util/canvas';
-import { LargeButton } from '../Button/Button';
-import AlertPara from '../AlertPara/AlertPara';
+import { LargeButton } from '@knicos/genai-base';
+import { AlertPara } from '@knicos/genai-base';
 
 interface Props {
     onAdd: (url: string, meta: ImageResult) => void;
@@ -63,7 +63,7 @@ export default function ImageSearch({ onAdd, columns, selected, onSelect, disabl
         (data: ImageResult) => {
             if (onSelect) onSelect(data.id);
             canvasFromURL(data.url, 500).then((canvas) => {
-                onAdd(canvas.toDataURL(), data);
+                onAdd(canvas.toDataURL('image/jpeg', 0.95), data);
             });
         },
         [onAdd, onSelect]

@@ -1,0 +1,46 @@
+@value primary, bgSubdued1 from "@knicos/genai-base/css/colours.module.css";
+
+.column {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    padding: 1rem;
+    overflow-y: auto;
+    /*max-height: 500px;*/
+    min-height: 0;
+    box-sizing: border-box;
+    width: min-content;
+    background: white;
+    justify-content: center;
+}
+
+.feedView {
+    pointer-events: none;
+    transform: scale(0.5);
+    height: 600px;
+    margin: -80px -50px;
+    display: flex;
+    flex-direction: column;
+    border-top: 40px solid #222;
+    border-bottom: 40px solid #222;
+    border-left: 5px solid #222;
+    border-right: 5px solid #222;
+    border-radius: 20px;
+    flex: 0 0 400px;
+    user-select: none;
+    background: white;
+}
+
+.settingsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    background: bgSubdued1;
+}
+
+.spacer {
+    flex: 0 0 1px;
+    background: #ddd;
+    width: 100%;
+    margin: 1rem 0;
+}

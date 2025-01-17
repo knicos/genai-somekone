@@ -1,6 +1,7 @@
 import { afterEach, vi } from 'vitest';
 import { cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
+import { PropsWithChildren } from 'react';
 
 declare global {
     // eslint-disable-next-line no-var
@@ -24,6 +25,9 @@ vi.mock('react-i18next', () => ({
     },
     Trans: function Trans({ i18nKey }: { i18nKey: string }) {
         return i18nKey;
+    },
+    I18nextProvider: function ({ children }: PropsWithChildren) {
+        return children;
     },
 }));
 

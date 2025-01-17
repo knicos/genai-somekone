@@ -1,0 +1,14 @@
+.container {
+    overflow-y: scroll;
+    margin-top: 6rem;
+}
+
+.menuLogo {
+    color: white;
+    min-height: 48px;
+    font-weight: bold;
+    padding-right: 0.5rem;
+    display: flex;
+    align-items: center;
+    font-size: 1.1rem;
+}

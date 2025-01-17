@@ -16,7 +16,7 @@ export default function ContentError({ error }: Props) {
         >
             <DialogTitle className={style.errorTitle}>{t('loader.titles.error')}</DialogTitle>
             <DialogContent className={style.errorContent}>
-                <div>{t(`loader.errors.${error}`, { defaultValue: t('loader.errors.unknownContent') })}</div>
+                <div>{t(`loader.errors.${error}`)}</div>
             </DialogContent>
         </Dialog>
     );

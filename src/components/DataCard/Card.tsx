@@ -1,12 +1,10 @@
-import { ContentNodeId } from '@genaism/services/graph/graphTypes';
 import style from './style.module.css';
-import PieScore from '../PieScore/PieScore';
-import { getContentData } from '@genaism/services/content/content';
 import { PropsWithChildren } from 'react';
 import { timeAgo } from './time';
+import ScorePie from '../RecommendationsTable/ScorePie';
 
 interface Props extends PropsWithChildren {
-    image?: ContentNodeId;
+    image?: string;
     message?: JSX.Element | string;
     title?: JSX.Element | string;
     score?: number;
@@ -23,7 +21,7 @@ export default function Card({ image, message, score, children, avatar, time, ti
             <div className={style.header}>
                 {image && (
                     <img
-                        src={getContentData(image)}
+                        src={image}
                         alt="Content item"
                         width={75}
                         height={75}
@@ -35,7 +33,16 @@ export default function Card({ image, message, score, children, avatar, time, ti
                     {title && <h2>{title}</h2>}
                     {time && <div className={style.time}>{timeAgo(time)}</div>}
                 </div>
-                {score && <PieScore value={score} />}
+                {score !== undefined && (
+                    <ScorePie
+                        value={Math.min(1, score)}
+                        maxValue={1}
+                        size={65}
+                        color="white"
+                        bgColor="#005566"
+                        showValue
+                    />
+                )}
             </div>
             {children}
         </li>

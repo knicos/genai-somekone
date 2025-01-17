@@ -1,0 +1,17 @@
+@value bgSubdued1 from "@knicos/genai-base/css/colours.module.css";
+
+.statsTable {
+    width: 100%;
+    font-size: 0.9rem;
+    background: bgSubdued1;
+    table-layout: fixed;
+}
+
+.statsTable td {
+    padding: 0 0.2rem;
+    width: max-content;
+}
+
+.heading {
+    font-weight: bold;
+}

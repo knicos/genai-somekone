@@ -1,9 +1,9 @@
-import { getCurrentUser } from '@genaism/services/profiler/state';
 import { appConfiguration } from '@genaism/state/settingsState';
 import { PropsWithChildren, createContext, memo, useCallback, useContext } from 'react';
 import { useRecoilValue } from 'recoil';
-import { SenderType } from './peer';
+import { SenderType } from '@knicos/genai-base';
 import { ResearchLogEvent } from '@genaism/protocol/protocol';
+import { useProfilerService } from './services';
 
 type LogFn = null | ((action: string, details?: unknown) => void);
 
@@ -15,13 +15,20 @@ interface Props extends PropsWithChildren {
 
 function LogProviderComp({ sender, children }: Props) {
     const config = useRecoilValue(appConfiguration);
+    const profiler = useProfilerService();
 
     const logFn = useCallback(
         (action: string, details: unknown) => {
             if (sender)
-                sender({ event: 'researchlog', action, timestamp: Date.now(), userId: getCurrentUser(), details });
+                sender({
+                    event: 'researchlog',
+                    action,
+                    timestamp: Date.now(),
+                    userId: profiler.getCurrentUser(),
+                    details,
+                });
         },
-        [sender]
+        [sender, profiler]
     );
 
     return (

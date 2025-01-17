@@ -1,4 +1,4 @@
-import { UserNodeId } from '../graph/graphTypes';
+import { UserNodeId } from '@knicos/genai-recom';
 
 interface ResearchLogData {
     action: string;

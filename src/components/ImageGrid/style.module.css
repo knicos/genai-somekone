@@ -1,0 +1,55 @@
+.grid {
+    display: grid;
+    /*aspect-ratio: 1/1;*/
+    width: 100%;
+    grid-template-columns: repeat(3, 1fr);
+    /*margin-top: 10px;
+    margin-bottom: 0.5rem;*/
+    gap: 0.2rem;
+}
+
+.grid img {
+    width: 100%;
+    object-fit: cover;
+    max-height: 100%;
+}
+
+.gridItem {
+    position: relative;
+    line-height: 0;
+    cursor: pointer;
+    outline: none;
+    padding: 0;
+    border: none;
+}
+
+.selectButton {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    border: 2px solid white;
+    color: white;
+    box-sizing: content-box;
+}
+
+.gridItem:hover .selectButton {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.gridItem:focus .selectButton {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.selectedButton {
+    composes: selectButton;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.blankImage {
+    aspect-ratio: 1/1;
+    background: #ddd;
+}

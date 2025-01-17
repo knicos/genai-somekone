@@ -1,0 +1,14 @@
+@value bgColourful1, textDark from "@knicos/genai-base/css/colours.module.css";
+
+.cloudItem {
+    transition: transform 1s;
+}
+
+.cloudItem rect {
+    fill: bgColourful1;
+    opacity: 0.2;
+}
+
+.cloudItem text {
+    fill: textDark;
+}

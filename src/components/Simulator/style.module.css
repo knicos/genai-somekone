@@ -1,0 +1,7 @@
+.progress {
+    background: white;
+    padding: 0.5rem;
+    border-radius: 10px;
+    position: absolute;
+    bottom: 1rem;
+}

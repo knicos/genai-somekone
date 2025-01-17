@@ -1,20 +1,21 @@
-import { useCallback, useEffect, useReducer, useState } from 'react';
+import { MouseEvent, useCallback, useEffect, useReducer, useState } from 'react';
 import style from './style.module.css';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
-import IconButton from '@mui/material/IconButton';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ReplyIcon from '@mui/icons-material/Reply';
 import Avatar from '@mui/material/Avatar';
 import SharePanel, { ShareKind } from './SharePanel';
 import CommentPanel from './CommentPanel';
-import { getComments, getContentData, getContentMetadata, getContentStats } from '@genaism/services/content/content';
-import { ContentNodeId } from '@genaism/services/graph/graphTypes';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import LabelsPanel from './LabelsPanel';
 import IconButtonDot from '../IconButtonDot/IconButtonDot';
 import { useTranslation } from 'react-i18next';
+import { ContentNodeId, UserNodeId } from '@knicos/genai-recom';
+import { useContentService } from '@genaism/hooks/services';
+import { useContent, useContentStats } from '@genaism/hooks/content';
+import { Button } from '@knicos/genai-base';
+import { IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 const MAX_COMMENTS = 10;
 
@@ -26,12 +27,18 @@ interface Props {
     visible?: boolean;
     noActions?: boolean;
     showLabels?: boolean;
+    reason?: string;
+    noComments?: boolean;
+    noLike?: boolean;
+    noShare?: boolean;
+    noFollow?: boolean;
     onClick?: (id: ContentNodeId) => void;
     onLike?: (id: ContentNodeId, kind: LikeKind) => void;
-    onShare?: (id: ContentNodeId, kind: ShareKind) => void;
+    onShare?: (id: ContentNodeId, kind: ShareKind, user?: UserNodeId) => void;
     onComment?: (id: ContentNodeId, comment: string) => void;
     onFollow?: (id: ContentNodeId) => void;
     onUnfollow?: (id: ContentNodeId) => void;
+    onHide?: (id: ContentNodeId) => void;
 }
 
 function stringToColor(string: string) {
@@ -72,19 +79,27 @@ export default function FeedImage({
     onUnfollow,
     onShare,
     onComment,
+    onHide,
     active,
     visible,
     noActions,
     showLabels,
+    reason,
+    noComments,
+    noLike,
+    noFollow,
+    noShare,
 }: Props) {
     const { t } = useTranslation();
-    const contentData = getContentData(id); //useRecoilValue(contentCache(id));
-    const contentMeta = getContentMetadata(id);
+    const content = useContentService();
+    const [contentMeta, contentData] = useContent(id);
     const [liked, setLiked] = useState<LikeKind>('none');
+    const [hidden, setHidden] = useState(false);
     const [activePanel, setActivePanel] = useState<ActionPanel>('none');
     const [followed, setFollowed] = useState(false);
-    const [shareState, setShareState] = useState(new Set<ShareKind>());
     const [commentCount, incComment] = useReducer((v) => ++v, 0);
+    const { reactions, shares } = useContentStats(id);
+
     const doClick = useCallback(() => {
         if (onClick) onClick(id);
         setActivePanel('none');
@@ -99,13 +114,8 @@ export default function FeedImage({
     }, [onLike, id]);
 
     const doShare = useCallback(
-        (kind: ShareKind) => {
-            setShareState((old) => {
-                const n = new Set(old);
-                n.add(kind);
-                return n;
-            });
-            if (onShare) onShare(id, kind);
+        (kind: ShareKind, user: UserNodeId) => {
+            if (onShare) onShare(id, kind, user);
         },
         [onShare, id]
     );
@@ -120,13 +130,21 @@ export default function FeedImage({
         [onComment, id]
     );
 
-    const doShowSharePanel = useCallback(() => {
-        setActivePanel('share');
-    }, [setActivePanel]);
+    const doShowSharePanel = useCallback(
+        (e: MouseEvent) => {
+            setActivePanel('share');
+            e.stopPropagation();
+        },
+        [setActivePanel]
+    );
 
-    const doShowComments = useCallback(() => {
-        setActivePanel((current) => (current === 'comment' ? 'none' : 'comment'));
-    }, [setActivePanel]);
+    const doShowComments = useCallback(
+        (e: MouseEvent) => {
+            setActivePanel((current) => (current === 'comment' ? 'none' : 'comment'));
+            e.stopPropagation();
+        },
+        [setActivePanel]
+    );
 
     const doFollow = useCallback(() => {
         setFollowed((v) => {
@@ -144,42 +162,42 @@ export default function FeedImage({
         if (!active) setActivePanel('none');
     }, [active]);
 
-    /*useEffect(() => {
-        if (!content && reqContent) {
-            reqContent.fn({ event: 'eter:request_content', id });
-        }
-    }, [content, reqContent, id]);*/
-
-    const stats = getContentStats(id);
-
     return !visible || !contentData || !contentMeta ? null : (
         <div className={style.container}>
             <div className={active || noActions ? style.activeImageContainer : style.imageContainer}>
-                {(active || noActions) && (
+                {(active || noActions) && !reason && (
                     <div className={style.name}>
                         <Avatar {...stringAvatar(contentMeta.author || 'Unknown')} />
                         <span className={style.author}>{contentMeta.author || 'Unknown'}</span>
-                        {!noActions && (
-                            <IconButton
-                                color="inherit"
+                        {!noActions && !noFollow && (
+                            <Button
                                 onClick={doFollow}
-                                data-testid="feed-image-follow-button"
-                                aria-label={t('feed.aria.followUser')}
                                 aria-pressed={followed}
+                                data-testid="feed-image-follow-button"
+                                color="inherit"
+                                variant="outlined"
                             >
-                                {followed ? (
-                                    <PersonRemoveIcon
-                                        color="inherit"
-                                        fontSize="large"
-                                    />
-                                ) : (
-                                    <PersonAddIcon
-                                        color="inherit"
-                                        fontSize="large"
-                                    />
-                                )}
-                            </IconButton>
+                                {followed ? t('feed.actions.unfollow') : t('feed.actions.follow')}
+                            </Button>
                         )}
+                    </div>
+                )}
+                {reason && <div className={style.reason}>{reason}</div>}
+                {active && !noActions && onHide && (
+                    <div className={style.topRightButtons}>
+                        <IconButton
+                            color="inherit"
+                            onClick={() => {
+                                onHide(id);
+                                setHidden(true);
+                            }}
+                            aria-label={t('feed.aria.hide')}
+                        >
+                            <CloseIcon
+                                color="inherit"
+                                fontSize="medium"
+                            />
+                        </IconButton>
                     </div>
                 )}
                 <img
@@ -190,53 +208,62 @@ export default function FeedImage({
                     data-testid="feed-image-element"
                 />
                 {active && !noActions && (
-                    <div className={style.buttonRow}>
-                        <IconButtonDot
-                            count={stats.reactions}
-                            className={liked !== 'none' ? style.liked : ''}
-                            onClick={() => doLike()}
-                            color="inherit"
-                            data-testid="feed-image-like-button"
-                            aria-label={t('feed.aria.showLikeOptions')}
-                        >
-                            {liked !== 'none' ? (
-                                <FavoriteIcon
+                    <div
+                        className={style.buttonRow}
+                        onClick={doClick}
+                    >
+                        {!noLike && (
+                            <IconButtonDot
+                                count={reactions}
+                                className={liked !== 'none' ? style.liked : ''}
+                                onClick={() => doLike()}
+                                color="inherit"
+                                data-testid="feed-image-like-button"
+                                aria-label={t('feed.aria.showLikeOptions')}
+                            >
+                                {liked !== 'none' ? (
+                                    <FavoriteIcon
+                                        color="inherit"
+                                        fontSize="large"
+                                    />
+                                ) : (
+                                    <FavoriteBorderIcon
+                                        color="inherit"
+                                        fontSize="large"
+                                    />
+                                )}
+                            </IconButtonDot>
+                        )}
+                        {!noComments && (
+                            <IconButtonDot
+                                count={content.getComments(id).length}
+                                color="inherit"
+                                onClick={doShowComments}
+                                data-testid="feed-image-comment-button"
+                                aria-label={t('feed.aria.showComments')}
+                            >
+                                <ChatBubbleOutlineIcon
                                     color="inherit"
                                     fontSize="large"
                                 />
-                            ) : (
-                                <FavoriteBorderIcon
+                            </IconButtonDot>
+                        )}
+                        {!noShare && (
+                            <IconButtonDot
+                                count={shares}
+                                position="left"
+                                color="inherit"
+                                onClick={doShowSharePanel}
+                                data-testid="feed-image-share-button"
+                                aria-label={t('feed.aria.showShareOptions')}
+                            >
+                                <ReplyIcon
                                     color="inherit"
                                     fontSize="large"
+                                    style={{ transform: 'scaleX(-1)' }}
                                 />
-                            )}
-                        </IconButtonDot>
-                        <IconButtonDot
-                            count={getComments(id).length}
-                            color="inherit"
-                            onClick={doShowComments}
-                            data-testid="feed-image-comment-button"
-                            aria-label={t('feed.aria.showComments')}
-                        >
-                            <ChatBubbleOutlineIcon
-                                color="inherit"
-                                fontSize="large"
-                            />
-                        </IconButtonDot>
-                        <IconButtonDot
-                            count={stats.shares}
-                            position="left"
-                            color="inherit"
-                            onClick={doShowSharePanel}
-                            data-testid="feed-image-share-button"
-                            aria-label={t('feed.aria.showShareOptions')}
-                        >
-                            <ReplyIcon
-                                color="inherit"
-                                fontSize="large"
-                                style={{ transform: 'scaleX(-1)' }}
-                            />
-                        </IconButtonDot>
+                            </IconButtonDot>
+                        )}
                     </div>
                 )}
                 {active && showLabels && activePanel === 'none' && (
@@ -246,7 +273,6 @@ export default function FeedImage({
                     <SharePanel
                         onClose={doCloseLike}
                         onChange={doShare}
-                        state={shareState}
                     />
                 )}
                 {active && activePanel === 'comment' && (
@@ -257,6 +283,7 @@ export default function FeedImage({
                         disabled={commentCount >= MAX_COMMENTS}
                     />
                 )}
+                {hidden && <div className={style.blocker}>{t('feed.labels.hidden')}</div>}
             </div>
         </div>
     );

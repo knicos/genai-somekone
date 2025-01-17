@@ -131,5 +131,5 @@ export async function canvasFromDataTransfer(item: DataTransfer | DragEvent, siz
 
 export async function urlFromDataTransfer(item: DataTransfer | DragEvent, size = 224): Promise<string[]> {
     const canvases = await canvasFromDataTransfer(item, size);
-    return canvases.map((c) => c.toDataURL());
+    return canvases.map((c) => c.toDataURL('image/jpeg'));
 }
