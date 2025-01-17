@@ -14,4 +14,6 @@ export interface ProjectMeta {
     encoderURL?: string;
 
     dependencies: string[];
+
+    labelLocale?: Record<string, Record<string, string>>;
 }
