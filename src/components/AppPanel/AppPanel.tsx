@@ -28,6 +28,9 @@ export default function AppPanel({ title, onClose, children, ...props }: Props) 
                     onClose();
                 }
             }}
+            role="dialog"
+            aria-modal={visible ? true : false}
+            aria-label={title}
         >
             <section
                 className={style.panel}

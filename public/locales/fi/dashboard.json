@@ -1,103 +1,103 @@
 {
     "library": {
-        "title": "Select Content",
+        "title": "Valitse sisältö",
         "generic": {
-            "title": "Original Content",
-            "description": "The original Somekone dataset selected by children."
+            "title": "AAlkuperäinen sisältö",
+            "description": "Alkuperäinen Somekone-sisältö, jonka lapset ovat valinneet."
         },
         "guidedDefault": {
-            "title": "Core Concepts",
-            "description": "Introduce key social media mechanisms with a structured step-by-step interface for the classroom."
+            "title": "Ydinkäsitteet",
+            "description": "Esittele keskeiset sosiaalisen median mekanismit rakenteellisella vaiheittaisella käyttöliittymällä luokkahuoneessa."
         },
         "kiosk": {
-            "title": "Kiosk Demo",
-            "description": "An automated demonstration running in a loop until the user interacts."
+            "title": "Kiosk-tila",
+            "description": "Automaattinen esittely, joka pyörii, kunnes käyttäjä vuorovaikuttaa."
         },
         "public": {
-            "title": "Public Demonstration",
-            "description": "Use a safer restricted social network when presenting to larger public audiences."
+            "title": "Julkinen demonstraatio",
+            "description": "Käytä turvallisempaa rajoitettua sosiaalista verkostoa suuremmalle yleisölle esitellessä."
         },
         "example": {
-            "title": "Example Data",
-            "description": "Demonstrate using anonymised example data from 19 children in a classroom environment."
+            "title": "Esimerkkidata",
+            "description": "Demonstroi käyttämällä anonymisoitua esimerkkidataa 19 lapsesta luokkahuoneympäristössä."
         },
         "blank": {
-            "title": "Blank",
-            "description": "Add your own photos or select from the web to create custom social media content for the app."
+            "title": "Tyhjä",
+            "description": "Lisää omia valokuviasi tai valitse verkosta luodaksesi räätälöityä sosiaalisen median sisältöä sovellukseen."
         },
         "reetta": {
-            "title": "Generic Content",
-            "description": "Over 700 carefully selected free images in 7 main categories, food, hobbies, animals, lifestyle, fashion, sports and landscapes."
+            "title": "Geneerinen sisältö",
+            "description": "Yli 700 huolellisesti valittua ilmaista kuvaa 7 pääkategoriassa: ruoka, harrastukset, eläimet, elämäntapa, muoti, urheilu ja maisemat."
         }
     },
 
     "menu": {
         "vis": {
-            "title": "Visualizations",
-            "socialgraph": "Social Network",
-            "heatmap": "Heatmaps",
-            "usergrid": "User Grid",
-            "coengagement": "Content Relationships",
-            "topics": "Topic Relationships"
+            "title": "Visualisaatiot",
+            "socialgraph": "Sosiaalinen verkosto",
+            "heatmap": "Lämpökartat",
+            "usergrid": "Käyttäjäruudukko",
+            "coengagement": "Sisällön yhteydet",
+            "topics": "Aiheiden yhteydet"
         },
         "tables": {
-            "title": "Data Tables",
-            "actionlog": "Action Log",
-            "userstats": "User Table",
-            "contentengage": "Content Engagements",
-            "topicengage": "Topic Engagements"
+            "title": "Tietotaulukot",
+            "actionlog": "Toimintaloki",
+            "userstats": "Käyttäjätaulukko",
+            "contentengage": "Sisällön vuorovaikutukset",
+            "topicengage": "Aiheen vuorovaikutukset"
         },
         "guides": {
-            "title": "Guided Interfaces",
-            "default": "Core Concepts",
+            "title": "Ohjatut käyttöliittymät",
+            "default": "Ydinkäsitteet",
             "kiosk": "Kiosk",
-            "none": "None"
+            "none": "Ei ohjattua käyttöliittymää"
         },
         "tools": {
-            "title": "Tools",
-            "addcontent": "Add Content",
-            "browseContent": "Browse Content",
-            "simulator": "User Simulator"
+            "title": "Työkalut",
+            "addcontent": "Lisää sisältöä",
+            "browseContent": "Selaa sisältöä",
+            "simulator": "Käyttäjän simulointi"
         },
         "settings": {
-            "title": "Settings",
-            "app": "App Interface",
-            "recommendation": "Recommendations"
+            "title": "Asetukset",
+            "app": "Sovelluksen käyttöliittymä",
+            "recommendation": "Suositukset"
         }
     },
     "settings": {
         "titles": {
-            "app": "App Interface Settings",
-            "feed": "Feed Actions",
-            "appmenu": "Menu Items",
-            "recom": "Recommendations",
-            "visualisation": "Visualisations"
+            "app": "Sovelluksen käyttöliittymäasetukset",
+            "feed": "Syötteen toiminnot",
+            "appmenu": "Valikkokohteet",
+            "recom": "Suositukset",
+            "visualisation": "Visualisaatiot"
         },
         "app": {
-            "hideFeedMenu": "Hide the bottom menu",
-            "hideDataView": "Disable the data view",
-            "hideProfileView": "Disable the profile view",
-            "hideRecommendationsView": "Disable the recommendations view",
-            "hidePostContent": "Disable posting content",
-            "hideOwnProfile": "Disable own profile page",
-            "showFeedImageLabels": "Show hashtags on images",
-            "hideSharing": "Disable sharing",
-            "disableComments": "Disable commenting",
-            "disableLiking": "Disable liking",
-            "disableFollowing": "Disable following",
-            "disableSharing": "Disable sharing",
-            "showRecommendationWizard": "Show wizard",
-            "showCandidateWizard": "Personal or Non-personal",
-            "showCandidateRefinementWizard": "Show more candidate options",
-            "showScoringWizard": "Show scoring options",
-            "showDiversityWizard": "Show diversity options",
-            "hideRecommendationMenu": "Hide menu",
-            "hideExplainedScores": "Hide score explanation",
-            "hideCandidateOrigin": "Hide image origin"
+            "hideFeedMenu": "Piilota ala-valikko",
+            "hideDataView": "Poista datanäkymä käytöstä",
+            "hideProfileView": "Poista profiilinäkymä käytöstä",
+            "hideRecommendationsView": "Poista suositusnäkymä käytöstä",
+            "hidePostContent": "Poista sisällön julkaisu käytöstä",
+            "hideOwnProfile": "Poista oma profiilisivu käytöstä",
+            "showFeedImageLabels": "Näytä hashtagit kuvissa",
+            "hideSharing": "Poista jakaminen käytöstä",
+            "disableComments": "Poista kommentointi käytöstä",
+            "disableLiking": "Poista tykkääminen käytöstä",
+            "disableFollowing": "Poista seuraaminen käytöstä",
+            "disableSharing": "Poista jakaminen käytöstä",
+            "showRecommendationWizard": "Näytä ohjattu toiminto",
+            "showCandidateWizard": "Henkilökohtainen vai ei-henkilökohtainen",
+            "showCandidateRefinementWizard": "Näytä lisää ehdokasvaihtoehtoja",
+            "showScoringWizard": "Näytä pisteytysasetukset",
+            "showDiversityWizard": "Näytä monimuotoisuusvaihtoehdot",
+            "hideRecommendationMenu": "Piilota valikko",
+            "hideExplainedScores": "Piilota pisteytyksen selitys",
+            "hideCandidateOrigin": "Piilota kuvan alkuperä"
         },
         "vis": {
-            "socialMenu": "Show social network menu",
-            "gridMenu": "Show user grid menu"
+            "socialMenu": "Näytä sosiaalisen verkoston valikko",
+            "gridMenu": "Näytä käyttäjän ruudukkomenu"
         }
     },
     "dashboard": {
@@ -109,26 +109,26 @@
             "socialGraph": "Sosiaalinen verkosto",
             "people": "Käyttäjät",
             "deleteUser": "Poista käyttäjä",
-            "connectUsers": "Connect Users",
-            "userSelect": "Select User",
-            "usersSelect": "Select Users",
-            "simulator": "User Simulator",
-            "replay": "Replay"
+            "connectUsers": "Yhdistä käyttäjiä",
+            "userSelect": "Valitse käyttäjä",
+            "usersSelect": "Valitse käyttäjät",
+            "simulator": "Käyttäjäsimulaattori",
+            "replay": "Toista"
         },
         "labels": {
-            "usePopularCandidates": "Use popular candidates",
-            "popularityScore": "Use popularity",
-            "heatmapGlobal": "Image popularity",
-            "heatmapEngagement": "Past image engagement",
-            "heatmapRecommendation": "Image recommendation probability",
-            "theme": "Theme",
-            "themeDefault": "Default",
-            "themeHighContrast": "High contrast",
-            "showSocialGraphSettings": "Graph settings",
-            "saveGraphImage": "Download graph as image",
-            "heatmapUsers": "Select users to show",
-            "refresh": "Refresh",
-            "invertHeatmap": "Invert the heatmap",
+            "usePopularCandidates": "Käytä suosittuja kuvia",
+            "popularityScore": "Käytä suosiota",
+            "heatmapGlobal": "Kuvan suosio",
+            "heatmapEngagement": "Aikaisempi kuvien vuorovaikutus",
+            "heatmapRecommendation": "Kuvan suosituksen todennäköisyys",
+            "theme": "Teema",
+            "themeDefault": "Oletus",
+            "themeHighContrast": "Korkea kontrasti",
+            "showSocialGraphSettings": "Graafin asetukset",
+            "saveGraphImage": "Lataa graafi kuvana",
+            "heatmapUsers": "Valitse näytettävät käyttäjät",
+            "refresh": "Päivitä",
+            "invertHeatmap": "Käänteinen lämpökartta",
             "shareTip": "Näytä QR-koodi liittymistä varten",
             "openTip": "Tuo aiemmin tallennettua käyttäjädataa",
             "saveTip": "Tallenna profiilit ja kuvat",
@@ -182,15 +182,15 @@
             "showTools": "Näytä lisätyökalut -menu",
             "toolsMenu": "Lisätyökalut",
             "toolAnonymise": "Anonymisoi kaikki data",
-            "showMainMenu": "Show main app menu",
-            "alwaysActive": "Keep current image active",
-            "profileImage": "Profile Images",
-            "similarityThreshold": "Similarity difference threshold",
-            "limitLinks": "Maximum links per node",
-            "agentCount": "Number of Agents",
-            "playbackSpeed": "Speed",
-            "autoCamera": "Automatic camera",
-            "autoEdges": "Automatic link adjustment"
+            "showMainMenu": "Näytä sovelluksen päävalikko",
+            "alwaysActive": "Pidä nykyinen kuva aktiivisena",
+            "profileImage": "Profiilikuvat",
+            "similarityThreshold": "Samankaltaisuuseron kynnys",
+            "limitLinks": "Enimmäismäärä kaaria solmua kohden",
+            "agentCount": "Agenttien lukumäärä",
+            "playbackSpeed": "Nopeus",
+            "autoCamera": "Automaattinen kamera",
+            "autoEdges": "Automaattinen kaarien säätö"
         },
         "messages": {
             "connection": "Mene allaolevaan www-osoitteeseen ja syötä koodi <Code>{{codeText}}</Code>, tai käytä QR -koodia.",
@@ -206,22 +206,24 @@
             "close": "Sulje",
             "delete": "Poista",
             "demo": "Demo",
-            "select": "Select",
-            "simulate": "Simulate",
-            "zoomIn": "Zoom in",
-            "zoomOut": "Zoom out"
+            "select": "Valitse",
+            "simulate": "Simuloi",
+            "zoomIn": "Lähennä",
+            "zoomOut": "Loitonna"
         },
         "aria": {
-            "linkForFeed": "Link for a new user feed",
-            "socialMenu": "Social graph menu"
+            "linkForFeed": "Linkki uudelle käyttäjän syötteelle",
+            "socialMenu": "Sosiaalisen verkoston valikko",
+            "socialUserMenu": "Menu for a user",
+            "mainMenu": "Open or close the main side menu"
         }
     },
     "tables": {
         "titles": {
-            "actionlog": "Action Log",
-            "userstats": "User Table",
-            "contentengage": "Content Engagements",
-            "topictable": "Topic Engagements"
+            "actionlog": "Toimintaloki",
+            "userstats": "Käyttäjätaulukko",
+            "contentengage": "Sisällön vuorovaikutukset",
+            "topictable": "Aiheen vuorovaikutukset"
         }
     }
 }

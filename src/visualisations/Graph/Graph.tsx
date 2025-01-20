@@ -65,6 +65,7 @@ export interface Props<T extends NodeID> extends PropsWithChildren {
     onDragStop?: () => void;
     autoCamera?: boolean;
     onNodeDensity?: (density: number) => void;
+    inert?: boolean;
 }
 
 interface InternalState {
@@ -107,6 +108,7 @@ export default function Graph<T extends NodeID>({
     style: cssStyle,
     autoCamera,
     onNodeDensity,
+    inert,
 }: Props<T>) {
     const { t } = useTranslation();
     const [saving, setSaving] = useState(false);
@@ -160,6 +162,12 @@ export default function Graph<T extends NodeID>({
     useEffect(() => {
         setActualZoom((old) => ({ ...old, zoom, offsetX: 0.5, offsetY: 0.5, duration: CAMERA_DURATION }));
     }, [zoom]);
+
+    useEffect(() => {
+        if (svgRef.current && inert !== undefined) {
+            svgRef.current.setAttribute('inert', inert ? 'true' : 'false');
+        }
+    }, [inert]);
 
     // Make sure settings changes cause a redraw
     useEffect(() => {
@@ -363,24 +371,31 @@ export default function Graph<T extends NodeID>({
                     )}
                     <Nodes
                         nodeList={nodeList}
-                        onSelect={(node: GraphNode<T>, element: SVGElement) => {
-                            if (onSelect && svgRef.current) {
-                                if (
-                                    mover.current &&
-                                    Math.max(mover.current.movementX, mover.current.movementY) > MOVE_THRESHOLD
-                                ) {
-                                    mover.current = undefined;
-                                    return;
-                                }
-                                mover.current = undefined;
-                                onSelect(
-                                    node,
-                                    linkList.filter((l) => l.source.id === node.id || l.target.id === node.id),
-                                    element,
-                                    svgRef.current
-                                );
-                            }
-                        }}
+                        onSelect={
+                            onSelect
+                                ? (node: GraphNode<T>, element: SVGElement) => {
+                                      if (onSelect && svgRef.current) {
+                                          if (
+                                              mover.current &&
+                                              Math.max(mover.current.movementX, mover.current.movementY) >
+                                                  MOVE_THRESHOLD
+                                          ) {
+                                              mover.current = undefined;
+                                              return;
+                                          }
+                                          mover.current = undefined;
+                                          onSelect(
+                                              node,
+                                              linkList.filter(
+                                                  (l) => l.source.id === node.id || l.target.id === node.id
+                                              ),
+                                              element,
+                                              svgRef.current
+                                          );
+                                      }
+                                  }
+                                : undefined
+                        }
                     >
                         {children}
                     </Nodes>

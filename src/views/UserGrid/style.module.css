@@ -82,8 +82,13 @@
     aspect-ratio: 1/1;
 }
 
+.colourBox {
+    height: 100%;
+    aspect-ratio: 1/1;
+}
+
 .userNameContainer {
-    padding: 0.2rem 0.5rem;
+    padding: 0.3rem;
     background: primary;
     color: white;
     font-weight: bold;
@@ -92,6 +97,9 @@
     overflow: hidden;
     line-height: 2rem;
     min-height: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
 
 .selectedUserNameContainer {

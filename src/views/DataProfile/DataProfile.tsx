@@ -64,6 +64,7 @@ export default function Profile({ id, disableMenu }: Props) {
                     <IconMenuInline>
                         <IconMenuItem tooltip={t('profile.actions.print')}>
                             <PrintButton
+                                ariaLabel={t('profile.actions.print')}
                                 data={() => {
                                     return {
                                         title: profile.name,
@@ -78,6 +79,7 @@ export default function Profile({ id, disableMenu }: Props) {
                             <IconButton
                                 onClick={doSave}
                                 color="inherit"
+                                aria-label={t('profile.actions.download')}
                             >
                                 <DownloadIcon />
                             </IconButton>

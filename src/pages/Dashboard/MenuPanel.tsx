@@ -66,6 +66,8 @@ export default function MenuPanel() {
                 <IconButton
                     color="inherit"
                     onClick={() => setOpen((o) => !o)}
+                    aria-label={t('dashboard.aria.mainMenu')}
+                    aria-pressed={open}
                 >
                     {open ? <ArrowBackIosIcon fontSize="large" /> : <MenuIcon fontSize="large" />}
                 </IconButton>

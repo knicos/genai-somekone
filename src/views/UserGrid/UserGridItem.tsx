@@ -88,10 +88,11 @@ export default function UserGridItem({ id, colour }: Props) {
                     </svg>
                 )}
             </div>
-            <div
-                className={selectedUser === id ? style.selectedUserNameContainer : style.userNameContainer}
-                style={selectedUser === id ? undefined : { background: colour }}
-            >
+            <div className={selectedUser === id ? style.selectedUserNameContainer : style.userNameContainer}>
+                <div
+                    className={style.colourBox}
+                    style={{ background: colour }}
+                />
                 {profile.name}
             </div>
         </button>

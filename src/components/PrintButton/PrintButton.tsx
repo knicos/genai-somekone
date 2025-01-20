@@ -6,9 +6,10 @@ import { PrintData } from '@genaism/protocol/printProtocol';
 interface Props {
     data: () => PrintData;
     path: string;
+    ariaLabel: string;
 }
 
-export default function PrintButton({ data, path }: Props) {
+export default function PrintButton({ data, path, ariaLabel }: Props) {
     const code = useRandom(5);
 
     if (!window.BroadcastChannel) return null;
@@ -16,6 +17,7 @@ export default function PrintButton({ data, path }: Props) {
     return (
         <IconButton
             color="inherit"
+            aria-label={ariaLabel}
             onClick={() => {
                 const bc = new window.BroadcastChannel('printing');
                 bc.onmessage = (ev: MessageEvent) => {

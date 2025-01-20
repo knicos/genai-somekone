@@ -24,8 +24,8 @@ export default function Nodes<T extends NodeID>({ nodeList, onSelect, children }
                         e.stopPropagation();
                     }}
                     className={style.node}
-                    tabIndex={0}
-                    role="button"
+                    tabIndex={onSelect ? 0 : undefined}
+                    role={onSelect ? 'button' : undefined}
                     onKeyDown={(e: KeyboardEvent<SVGGElement>) => {
                         if (e.key === 'Enter' || e.key === ' ') {
                             if (onSelect) {

@@ -55,20 +55,20 @@
             "peer_no_peer": "Yhdistettävää laitetta ei löytynyt",
             "peer_nowebcam": "Web-kameran käyttö pitää sallia jotta monen käyttäjän yhteys onnistuu",
             "missing_dependency": "Tämän tiedoston tarvitsemaa sisältöä ei löydy",
-            "missing_embeddings": "Images are missing embeddings",
-            "missing_points": "Images are not mapped",
-            "missing_cluster": "Images have no cluster"
+            "missing_embeddings": "Kuvista puuttuvat upotukset",
+            "missing_points": "Kuvia ei ole määritetty",
+            "missing_cluster": "Kuvilla ei ole klusteria"
         },
         "titles": {
             "error": "Virhe",
-            "saving": "Saving",
+            "saving": "Tallentaa",
             "paused": "Pysäytetty"
         },
         "messages": {
             "paused": "Opettaja on pysäyttänyt appin."
         },
         "actions": {
-            "close": "Close"
+            "close": "Sulje"
         }
     },
     "loader": {
@@ -83,9 +83,9 @@
             "content_download": "Lataan sisältöä",
             "ready": "Yhteys valmis",
             "content_none": "Sisältö valmis",
-            "starting": "Starting",
-            "wifiNetwork": "Your data is being sent over the internet because you are not using the same Wi-Fi network.",
-            "permNetwork": "Your data is being sent over the internet because you didn't allow camera access."
+            "starting": "Käynnistää",
+            "wifiNetwork": "Tietosi lähetetään internetin kautta, koska et käytä samaa Wi-Fi-verkkoa.",
+            "permNetwork": "Tietosi lähetetään internetin kautta, koska et sallinut kameran käyttöoikeutta."
         },
         "errors": {
             "unknown": "Ongelma laitteiden välisessä viestinnässä",
@@ -105,10 +105,10 @@
             "connecting": "Yhteys",
             "error": "Ongelma",
             "contentLoad": "Kuvasisältö",
-            "networkType": "Information"
+            "networkType": "Informaatio"
         },
         "actions": {
-            "close": "Close"
+            "close": "Sulje"
         }
     },
     "feed": {
@@ -122,12 +122,12 @@
         "titles": {
             "shareWith": "Jaa",
             "main": "Somekone",
-            "home": "Image Feed",
-            "data": "Your Data",
-            "share": "Share with others",
-            "profile": "Your Profile",
-            "recommendations": "Your Recommendations",
-            "post": "Post Content"
+            "home": "Kuvavirta",
+            "data": "Sinun data",
+            "share": "Jaa muille",
+            "profile": "Profiilisi",
+            "recommendations": "Suosituksesi",
+            "post": "Julkaise sisältö"
         },
         "placeholders": {
             "comment": "Kirjoita kommentti..."
@@ -143,7 +143,7 @@
                 "missing": "Oikea nimi puuttuu"
             },
             "alreadyOpen": "Tämä appi on jo auki toisessa välilehdessä.",
-            "sharedBy": "Shared by {{name}}."
+            "sharedBy": "Jakanut {{name}}."
         },
         "actionlog": {
             "dwell": "Katsoi kuvaa {{time}} sekuntia",
@@ -155,13 +155,13 @@
             "comment": "Lisäsi {{length}} merkin pituisen kommentin",
             "engagement": "Aktiivisuus: {{score}}/10",
             "end": "Lopetti appin käytön",
-            "unreact": "Unreacted",
-            "hide": "Image was hidden"
+            "unreact": "Poista reaktio",
+            "hide": "Kuva on piilotetu"
         },
         "labels": {
             "enterUsername": "Anna käyttäjänimesi",
             "enterFullname": "Anna oikea nimesi",
-            "hidden": "Hidden"
+            "hidden": "Piilotettu"
         },
         "aria": {
             "showLikeOptions": "Näytä tykkäysvalinnat",
@@ -169,7 +169,7 @@
             "showShareOptions": "Näytä jakamisvalinnat",
             "shareLink": "Linkki kuva-appiin",
             "restoreUser": "Palauta aiempi sessio",
-            "hide": "Hide this image"
+            "hide": "Piilota tämä kuva"
         }
     },
     "profile": {
@@ -184,109 +184,109 @@
             "yourRecommendations": "Suosituksesi",
             "shareProfile": "Jaa datasi",
             "engagement": "Aktiivisuutesi",
-            "newPost": "Create Post"
+            "newPost": "Luo julkaisu"
         },
         "labels": {
-            "followers": "followers",
-            "posts": "posts",
-            "follows": "follows",
-            "yourPosts": "Your Posts",
-            "missingPosts": "When you add your own posts they will show here."
+            "followers": "seuraajat",
+            "posts": "julkaisut",
+            "follows": "seuraa",
+            "yourPosts": "Omat julkaisut",
+            "missingPosts": "Kun lisäät omia julkaisuja, ne näkyvät täällä."
         },
         "actions": {
             "more": "Lisää",
-            "post": "Post",
-            "print": "Print",
-            "download": "Download image"
+            "post": "Julkaisu",
+            "print": "Tulosta",
+            "download": "Lataa kuva"
         },
         "messages": {
-            "connection": "Go to the address below and enter the code <Code>{{codeText}}</Code>, or use the QR code."
+            "connection": "Mene alla olevaan osoitteeseen ja syötä koodi <Code>{{codeText}}</Code>, tai käytä QR-koodia."
         }
     },
     "recommendations": {
         "actions": {
-            "back": "Back",
-            "continue": "Continue",
-            "close": "Close",
-            "change": "Change",
-            "refresh": "Refresh view",
-            "invert": "Invert"
+            "back": "Takaisin",
+            "continue": "Jatka",
+            "close": "Sulje",
+            "change": "Vaihda",
+            "refresh": "Päivitä näkymä",
+            "invert": "vaihda päivänvastaiseksi"
         },
         "labels": {
             "topicCandidate": "koska olet tykännyt aiheesta #{{topic}}.",
             "random": "valittu sinulle sattumanvaraisesti.",
             "coengagedCandidate": "koska muut allaolevasta kuvasta kiinnostuneet ovat tykänneet myös tästä.",
             "similarUserCandidate": "koska kaltaisesi käyttäjä \"{{userName}}\" piti tästä.",
-            "candidateAll": "All of these (default)",
-            "candidateLabels": "Using your favorite hashtags",
-            "candidateUsers": "From similar people",
-            "candidateCoengaged": "From your recent interactions",
-            "candidateRandom": "Any images",
-            "candidatePersonal": "Personalised",
-            "candidatePopular": "Popular",
-            "candidateRecent": "Recently posted",
-            "candidateNonPersonal": "Non-personalised",
-            "candidatePersonalAndNon": "Both (default)",
-            "scoringPredict": "Predict engagement",
-            "scoringGeneral": "Content only score",
-            "scoringRandom": "Any image at random",
-            "scoringAll": "Combine all scores (default)",
-            "score": "Score",
-            "diversity": "Diversity",
-            "selectionProbability": "Add some diversity",
-            "selectionRank": "No diversity",
-            "imageGrid": "Show top recommendations",
-            "heatmap": "Show all images"
+            "candidateAll": "Kaikki nämä (oletus)",
+            "candidateLabels": "Käyttäen suosikkihashtagejasi",
+            "candidateUsers": "Samankaltaisilta käyttäjiltä",
+            "candidateCoengaged": "Viimeisistä vuorovaikutuksistasi",
+            "candidateRandom": "Mitä tahansa kuvia",
+            "candidatePersonal": "Personoitu",
+            "candidatePopular": "Suositut",
+            "candidateRecent": "Äskettäin julkaistu",
+            "candidateNonPersonal": "Ei-personoitu",
+            "candidatePersonalAndNon": "Molemmat (oletus)",
+            "scoringPredict": "Ennusta vuorovaikutus",
+            "scoringGeneral": "Vain sisällön pistemäärä",
+            "scoringRandom": "Mikä tahansa kuva satunnaisesti",
+            "scoringAll": "Yhdistä kaikki pisteet (oletus)",
+            "score": "Pisteet",
+            "diversity": "Vaihtelu",
+            "selectionProbability": "Lisää vaihtelua",
+            "selectionRank": "Ei vaihtelua",
+            "imageGrid": "Näytä parhaat suositukset",
+            "heatmap": "Näytä kaikki kuvat"
         },
         "titles": {
-            "candidateDiscovery": "How are candidates discovered?",
-            "scoringOptions": "How can we rank the images?",
-            "candidatesPersonal": "Which personal candidates?",
-            "candidatesNonPersonal": "How to select non-personal candidates?",
-            "diversityOptions": "Should there be diversity?",
-            "candidateOrigin": "Where it was found",
-            "predictedScore": "Predicted engagement",
-            "explainScore": "Why you might engage"
+            "candidateDiscovery": "Miten ehdokkaat löydetään?",
+            "scoringOptions": "Kuinka voimme järjestää kuvat?",
+            "candidatesPersonal": "Mitkä henkilökohtaiset ehdokkaat?",
+            "candidatesNonPersonal": "Miten ei-henkilökohtaiset ehdokkaat valitaan?",
+            "diversityOptions": "Tuleeko vaihtelua olla?",
+            "candidateOrigin": "Mistä se löydettiin",
+            "predictedScore": "Ennusta vuorovaikutusta",
+            "explainScore": "Miksi voisit vuorovaikuttaa"
         },
         "descriptions": {
-            "selectHint": "Select an image to see why it is suggested.",
-            "heatHint": "Click to zoom and explore what you can see.",
-            "scoringPredict": "Predict if you might engage with the image",
-            "scoringGeneral": "Only consider popularity",
-            "scoringRandom": "Choose any order without scoring",
-            "scoringAll": "Use a combination of everything",
+            "selectHint": "Valitse kuva nähdäksesi, miksi se on ehdotettu.",
+            "heatHint": "Klikkaa zoomataksesi ja tutkiaksesi, mitä voit nähdä.",
+            "scoringPredict": "Ennusta, vuorovaikuttaisitko kuvan kanssa",
+            "scoringGeneral": "Ota vain suosio huomioon",
+            "scoringRandom": "Valitse mikä tahansa järjestys ilman pisteytystä",
+            "scoringAll": "UKäytä kaiken yhdistelmää",
             "candidateAll": "",
-            "candidateUsers": "Images liked by people in the same cluster as you",
-            "candidateLabels": "Look for images that match your interests",
-            "candidateCoengaged": "What others liked when they saw the same images",
-            "candidateRandom": "Choose anything from all images",
-            "candidatePopular": "From the most popular images",
-            "candidateRecent": "Anything recent that has not been seen much",
-            "candidatePersonal": "Use only your profile to find images",
-            "candidateNonPersonal": "Look for images without your profile",
-            "candidatePersonalAndNon": "Use a mix of personal and non-personal",
-            "selectionProbability": "Allow some images with lower scores to be selected",
-            "selectionRank": "Only select images that have the best scores"
+            "candidateUsers": "Kuvat, joista ihmiset samassa klusterissa kuin sinä ovat tykänneet",
+            "candidateLabels": "Etsi kuvia, jotka vastaavat kiinnostuksen kohteitasi",
+            "candidateCoengaged": "Mistä muut tykkäsivät, kun he näkivät samat kuvat",
+            "candidateRandom": "Valitse mitä tahansa kaikista kuvista",
+            "candidatePopular": "Suosituimmista kuvista",
+            "candidateRecent": "Mikä tahansa äskettäin julkaistu, jota ei ole nähty paljoa",
+            "candidatePersonal": "Käytä vain profiiliasi kuvien löytämiseen",
+            "candidateNonPersonal": "Etsi kuvia ilman omaa profiiliasi",
+            "candidatePersonalAndNon": "Käytä sekoitusta henkilökohtaisista ja ei-henkilökohtaisista",
+            "selectionProbability": "Salli joidenkin kuvien, joilla on alempi pistemäärä, tulla valituksi",
+            "selectionRank": "Valitse vain kuvia, jotka ovat saaneet parhaat pisteet"
         },
         "features": {
-            "taste": "Taste Similarity",
-            "coengagement": "Common engagements",
-            "sharing": "Likely to share",
-            "commenting": "Likely to comment",
-            "following": "Likely to follow",
-            "reacting": "Likely to react",
-            "viewing": "Likely to view",
-            "lastSeen": "Not seen recently",
-            "popularity": "Popularity",
-            "reaction": "Likely to react",
+            "taste": "mieltymysten samankaltaisuus",
+            "coengagement": "Yhteiset vuorovaikutukset",
+            "sharing": "On todennäköistä, että jaat",
+            "commenting": "On todennäköistä, että kommentoit",
+            "following": "On todennäköistä, että seuraat",
+            "reacting": "On todennäköistä, että reagoit",
+            "viewing": "On todennäköistä, että katsot",
+            "lastSeen": "Ei nähty äskettäin",
+            "popularity": "Suosio",
+            "reaction": "On todennäköistä, että reagoit",
             "lastEngaged": "Not engaged with"
         },
         "aria": {
-            "imageSelect": "Select recommendation number {{number}}",
-            "refresh": "Refresh recommendations",
-            "invert": "Invert the heatmap",
-            "heatmap": "Show a map of all image probabilities",
-            "imageGrid": "Show a grid of top recommendations"
+            "imageSelect": "Valitse suosituksen numero {{number}}",
+            "refresh": "Päivitä suositukset",
+            "invert": "muuta lämpökartta päinvastaiseksi",
+            "heatmap": "Näytä kaikkien kuvien todennäköisyyksien lämpökartta",
+            "imageGrid": "Näytä parhaat suositukset ruudukossa"
         }
     },
     "start": {

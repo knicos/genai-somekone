@@ -29,7 +29,7 @@ export default function UserMenu({ x, y }: Props) {
 
     return (
         <IconMenu
-            title={t('dashboard.aria.socialMenu')}
+            title={t('dashboard.aria.socialUserMenu')}
             placement="free"
             x={x}
             y={y}

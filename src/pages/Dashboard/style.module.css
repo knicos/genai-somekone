@@ -117,11 +117,13 @@
 .treeContainer {
     width: 100%;
     margin: 2rem 0;
-    background: backgroundDark3;
+    background: backgroundDark2;
     padding: 1rem 0;
     min-height: 0;
     max-height: 50%;
     overflow-y: auto;
     overflow-x: hidden;
     box-sizing: border-box;
+    border-top: 3px solid backgroundDark3;
+    border-bottom: 3px solid backgroundDark3;
 }

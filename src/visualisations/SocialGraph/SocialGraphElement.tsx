@@ -20,7 +20,7 @@ import {
 // import FakeNode from '../FakeNode/FakeNode';
 import style from './style.module.css';
 import UserLabel from './UserLabel';
-import { menuSelectedUser } from '@genaism/state/menuState';
+import { menuSelectedUser, menuShowUserPanel } from '@genaism/state/menuState';
 import { UserNodeId } from '@knicos/genai-recom';
 import { useServices } from '@genaism/hooks/services';
 import { calculateParameters } from './parameters';
@@ -56,6 +56,7 @@ export default function SocialGraphElement({ liveUsers }: Props) {
 
     // Global state
     const [focusNode, setFocusNode] = useRecoilState(menuSelectedUser);
+    const panel = useRecoilValue(menuShowUserPanel);
 
     // Settings
     const scale = useRecoilValue(settingSocialGraphScale);
@@ -180,6 +181,7 @@ export default function SocialGraphElement({ liveUsers }: Props) {
                 onZoom={(z: number) => {
                     currentZoom.current = z;
                 }}
+                inert={panel !== 'none' && focusNode !== undefined}
                 links={links}
                 nodes={nodes}
                 linkScale={linkDistance}

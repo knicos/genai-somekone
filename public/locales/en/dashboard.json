@@ -212,7 +212,9 @@
         },
         "aria": {
             "linkForFeed": "Link for a new user feed",
-            "socialMenu": "Social graph menu"
+            "socialMenu": "Social graph menu",
+            "socialUserMenu": "Menu for a user",
+            "mainMenu": "Open or close the main side menu"
         }
     },
     "tables": {
