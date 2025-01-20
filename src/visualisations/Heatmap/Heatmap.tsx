@@ -130,7 +130,7 @@ export default function Heatmap({ data, dimensions, busy, label, invert }: Props
                                     <Fragment key={ix2}>
                                         <image
                                             data-testid="heatmap-image"
-                                            href={content.getContentData(img)}
+                                            href={content.getContentData(img, true)}
                                             width={size}
                                             height={size}
                                             x={ix2 * size}

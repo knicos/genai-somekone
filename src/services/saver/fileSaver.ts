@@ -9,7 +9,7 @@ import { dependencies } from '../loader/tracker';
 import { SomekoneSettings } from '@genaism/hooks/settings';
 import { ActionLogService, ContentService, ProfilerService } from '@knicos/genai-recom';
 
-function makeMeta(configuration?: SMConfig, name?: string): ProjectMeta {
+function makeMeta(configuration?: SMConfig, name?: string, hasLow?: boolean): ProjectMeta {
     return {
         date: new Date().toISOString(),
         name: name || 'NoName',
@@ -19,6 +19,7 @@ function makeMeta(configuration?: SMConfig, name?: string): ProjectMeta {
         id: uuidv4(),
         feedConfiguration: configuration,
         origin: window.location.origin,
+        hasLowResolution: hasLow,
     };
 }
 
@@ -40,6 +41,8 @@ async function generateBlob(
 ) {
     const zip = new JSZip();
 
+    let hasLow = false;
+
     if (includeContent) {
         const imageFolder = zip.folder('images');
         let count = 0;
@@ -51,6 +54,14 @@ async function generateBlob(
                 if (data && !data.startsWith('http')) {
                     imageFolder.file(`${d.split(':')[1]}.jpg`, data.split(';base64,')[1], { base64: true });
                     ++count;
+                }
+                const ldata = contentSvc.getContentData(d, true);
+                if (ldata && ldata !== data && !ldata.startsWith('http')) {
+                    imageFolder.file(`${d.split(':')[1]}_low.jpg`, ldata.split(';base64,')[1], { base64: true });
+                    ++count;
+                }
+                if (ldata && ldata !== data) {
+                    hasLow = true;
                 }
             });
 
@@ -83,7 +94,7 @@ async function generateBlob(
         zip.file('settings.json', JSON.stringify(settings, undefined, 4));
     }
 
-    zip.file('metadata.json', JSON.stringify(makeMeta(configuration), undefined, 4));
+    zip.file('metadata.json', JSON.stringify(makeMeta(configuration, undefined, hasLow), undefined, 4));
 
     const researchLog = getResearchLog();
     if (researchLog.length > 0) {

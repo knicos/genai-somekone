@@ -269,7 +269,15 @@ export async function loadFile(
                 v.labels[i].weight *= 0.1;
             }
         }
-        contentSvc.addContent(images.get(`${v.id}`) || `${STATIC_PATH}/${v.id}.jpg`, v);
+        contentSvc.addContent(
+            {
+                normal: images.get(`${v.id}`) || `${STATIC_PATH}/${v.id}.jpg`,
+                lowRes:
+                    images.get(`${v.id}_low`) ||
+                    (store.project?.hasLowResolution ? `${STATIC_PATH}/${v.id}_low.jpg` : undefined),
+            },
+            v
+        );
     });
 
     /*store.users.forEach((u) => {

@@ -89,7 +89,7 @@ const ProfileNode = memo(function ProfileNode({
     const contents = useMemo(() => {
         return profile.affinities.contents.contents.map((c) => ({
             weight: c.weight,
-            image: content.getContentData(c.id) || '',
+            image: content.getContentData(c.id, true) || '',
         }));
     }, [profile, content]);
 

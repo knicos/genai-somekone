@@ -16,4 +16,6 @@ export interface ProjectMeta {
     dependencies: string[];
 
     labelLocale?: Record<string, Record<string, string>>;
+
+    hasLowResolution?: boolean;
 }

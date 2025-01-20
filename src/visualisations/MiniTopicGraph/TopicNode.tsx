@@ -40,7 +40,7 @@ const TopicNode = memo(function TopicNode({ disabled, node, id, onResize }: Prop
                     y={-asize}
                     width={asize * 2}
                     height={asize * 2}
-                    href={content.getContentData(image as ContentNodeId)}
+                    href={content.getContentData(image as ContentNodeId, true)}
                     preserveAspectRatio="none"
                     clipPath={`circle(${asize - BORDER_SIZE}px)`}
                 />

@@ -61,7 +61,7 @@ export default function UserGridItem({ id, colour }: Props) {
                         <ImageCloud
                             content={profile.affinities.contents.contents.map((c) => ({
                                 weight: c.weight,
-                                image: content.getContentData(c.id) || '',
+                                image: content.getContentData(c.id, true) || '',
                             }))}
                             size={300}
                             onSize={doResize}

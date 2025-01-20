@@ -64,11 +64,13 @@ export default function Profile({ id, disableMenu }: Props) {
                           topic: t.label,
                           score: t.weight / tasteSum,
                           image:
-                              contentItems.length > 0 ? profiler.content.getContentData(contentItems[0].id) : undefined,
+                              contentItems.length > 0
+                                  ? profiler.content.getContentData(contentItems[0].id, true)
+                                  : undefined,
                           images:
                               topicContent.map.get(t.label)?.map((t) => ({
                                   weight: t.weight,
-                                  image: profiler.content.getContentData(t.id) || '',
+                                  image: profiler.content.getContentData(t.id, true) || '',
                               })) || [],
                       };
                   })

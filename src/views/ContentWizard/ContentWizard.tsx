@@ -19,6 +19,7 @@ import { useSettingSerialise } from '@genaism/hooks/settings';
 import { useSetRecoilState } from 'recoil';
 import { errorNotification } from '@genaism/state/errorState';
 import i18n from '@genaism/i18n';
+import { canvasFromURL } from '@knicos/genai-base';
 
 const connections: IConnection[] = [
     { start: 'query', end: 'summary', startPoint: 'right', endPoint: 'left' },
@@ -66,7 +67,8 @@ export default function ContentWizard() {
     const doSave = useCallback(async () => {
         // Validate all metadata
         let valid = true;
-        contentSvc.getAllContent().forEach((content) => {
+        const content = contentSvc.getAllContent();
+        content.forEach((content) => {
             const meta = contentSvc.getContentMetadata(content);
             if (!meta) {
                 setError((err) => {
@@ -104,6 +106,20 @@ export default function ContentWizard() {
         });
 
         if (!valid) return;
+
+        const lowResProm = content.map(async (c) => {
+            const meta = contentSvc.getContentMetadata(c);
+            const data = contentSvc.getContentData(c);
+            const ldata = contentSvc.getContentData(c, true);
+            if (data && meta) {
+                if (!ldata || ldata.length === data.length) {
+                    const lowcanv = await canvasFromURL(data, 100);
+                    const lowdata = lowcanv.toDataURL('image/jpeg', 0.95);
+                    contentSvc.addContentData({ normal: data, lowRes: lowdata }, meta);
+                }
+            }
+        });
+        await Promise.all(lowResProm);
 
         saveFile(profilerSvc, contentSvc, actionLog, {
             includeContent: true,

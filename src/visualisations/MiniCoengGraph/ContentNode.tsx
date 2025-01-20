@@ -38,7 +38,7 @@ const ContentNode = memo(function ContentNode({ disabled, node }: Props) {
                     y={-asize}
                     width={asize * 2}
                     height={asize * 2}
-                    href={content.getContentData(image as ContentNodeId)}
+                    href={content.getContentData(image as ContentNodeId, true)}
                     preserveAspectRatio="none"
                     clipPath={`circle(${asize - BORDER_SIZE}px)`}
                 />
