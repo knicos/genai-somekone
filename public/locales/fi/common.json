@@ -123,11 +123,11 @@
             "shareWith": "Jaa",
             "main": "Somekone",
             "home": "Kuvavirta",
-            "data": "Sinun data",
+            "data": "Sinun datasi",
             "share": "Jaa muille",
             "profile": "Profiilisi",
             "recommendations": "Suosituksesi",
-            "post": "Julkaise sisältö"
+            "post": "Julkaise sisältöä"
         },
         "placeholders": {
             "comment": "Kirjoita kommentti..."
@@ -187,9 +187,9 @@
             "newPost": "Luo julkaisu"
         },
         "labels": {
-            "followers": "seuraajat",
-            "posts": "julkaisut",
-            "follows": "seuraa",
+            "followers": "Seuraajat",
+            "posts": "Julkaisut",
+            "follows": "Seuraa",
             "yourPosts": "Omat julkaisut",
             "missingPosts": "Kun lisäät omia julkaisuja, ne näkyvät täällä."
         },
@@ -220,14 +220,14 @@
             "candidateAll": "Kaikki nämä (oletus)",
             "candidateLabels": "Käyttäen suosikkihashtagejasi",
             "candidateUsers": "Samankaltaisilta käyttäjiltä",
-            "candidateCoengaged": "Viimeisistä vuorovaikutuksistasi",
+            "candidateCoengaged": "Viimeaikaisen aktiivisuuden perusteella",
             "candidateRandom": "Mitä tahansa kuvia",
             "candidatePersonal": "Personoitu",
             "candidatePopular": "Suositut",
             "candidateRecent": "Äskettäin julkaistu",
             "candidateNonPersonal": "Ei-personoitu",
             "candidatePersonalAndNon": "Molemmat (oletus)",
-            "scoringPredict": "Ennusta vuorovaikutus",
+            "scoringPredict": "Ennusta aktiivisuus",
             "scoringGeneral": "Vain sisällön pistemäärä",
             "scoringRandom": "Mikä tahansa kuva satunnaisesti",
             "scoringAll": "Yhdistä kaikki pisteet (oletus)",
@@ -240,23 +240,23 @@
         },
         "titles": {
             "candidateDiscovery": "Miten ehdokkaat löydetään?",
-            "scoringOptions": "Kuinka voimme järjestää kuvat?",
+            "scoringOptions": "Miten voimme asettaa kuvat järjestykseen?",
             "candidatesPersonal": "Mitkä henkilökohtaiset ehdokkaat?",
             "candidatesNonPersonal": "Miten ei-henkilökohtaiset ehdokkaat valitaan?",
-            "diversityOptions": "Tuleeko vaihtelua olla?",
-            "candidateOrigin": "Mistä se löydettiin",
-            "predictedScore": "Ennusta vuorovaikutusta",
-            "explainScore": "Miksi voisit vuorovaikuttaa"
+            "diversityOptions": "Pitäisikö monimuotoisuutta olla?",
+            "candidateOrigin": "Mistä se löydettiin?",
+            "predictedScore": "Ennusta aktiivisuutta",
+            "explainScore": "Miksi voisit reagoida?"
         },
         "descriptions": {
             "selectHint": "Valitse kuva nähdäksesi, miksi se on ehdotettu.",
             "heatHint": "Klikkaa zoomataksesi ja tutkiaksesi, mitä voit nähdä.",
-            "scoringPredict": "Ennusta, vuorovaikuttaisitko kuvan kanssa",
+            "scoringPredict": "Ennusta, reagoisitko kuvan kanssa",
             "scoringGeneral": "Ota vain suosio huomioon",
             "scoringRandom": "Valitse mikä tahansa järjestys ilman pisteytystä",
-            "scoringAll": "UKäytä kaiken yhdistelmää",
+            "scoringAll": "Käytä kaiken yhdistelmää",
             "candidateAll": "",
-            "candidateUsers": "Kuvat, joista ihmiset samassa klusterissa kuin sinä ovat tykänneet",
+            "candidateUsers": "Kuvat, joista ihmiset samassa klusterissa ovat tykänneet",
             "candidateLabels": "Etsi kuvia, jotka vastaavat kiinnostuksen kohteitasi",
             "candidateCoengaged": "Mistä muut tykkäsivät, kun he näkivät samat kuvat",
             "candidateRandom": "Valitse mitä tahansa kaikista kuvista",
@@ -265,12 +265,12 @@
             "candidatePersonal": "Käytä vain profiiliasi kuvien löytämiseen",
             "candidateNonPersonal": "Etsi kuvia ilman omaa profiiliasi",
             "candidatePersonalAndNon": "Käytä sekoitusta henkilökohtaisista ja ei-henkilökohtaisista",
-            "selectionProbability": "Salli joidenkin kuvien, joilla on alempi pistemäärä, tulla valituksi",
+            "selectionProbability": "Salli joidenkin kuvien, joilla on alhaisemmat pisteet, valitseminen.",
             "selectionRank": "Valitse vain kuvia, jotka ovat saaneet parhaat pisteet"
         },
         "features": {
             "taste": "mieltymysten samankaltaisuus",
-            "coengagement": "Yhteiset vuorovaikutukset",
+            "coengagement": "Yhteinen aktiivisuus",
             "sharing": "On todennäköistä, että jaat",
             "commenting": "On todennäköistä, että kommentoit",
             "following": "On todennäköistä, että seuraat",
@@ -279,7 +279,7 @@
             "lastSeen": "Ei nähty äskettäin",
             "popularity": "Suosio",
             "reaction": "On todennäköistä, että reagoit",
-            "lastEngaged": "Not engaged with"
+            "lastEngaged": "Ei reagoitu"
         },
         "aria": {
             "imageSelect": "Valitse suosituksen numero {{number}}",
@@ -295,7 +295,8 @@
             "go": "Aloita"
         },
         "labels": {
-            "enterCode": "Syötä koodi"
+            "enterCode": "Syötä koodi",
+            "or": "tai"
         }
     }
 }

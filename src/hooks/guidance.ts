@@ -30,7 +30,7 @@ export interface GuidanceData {
     reloadOnReplayEnd?: boolean;
 }
 
-const DEFAULT_LOCALE = 'en-GB';
+const DEFAULT_LOCALE = 'en';
 
 const KNOWN_GUIDES: Record<string, string> = {
     default: 'https://store.gen-ai.fi/somekone/guides/guide1_update2.zip',
@@ -77,13 +77,13 @@ export function useGuide(url: string) {
     const [guide, setGuide] = useState<GuidanceData | null>(null);
 
     useEffect(() => {
-        loadGuide(url)
+        loadGuide(url, i18n.language)
             .then(setGuide)
             .catch((e) => {
                 console.error('Guide error', url, e);
                 setGuide(null);
             });
-    }, [url, locale]);
+    }, [url, locale, i18n]);
 
     return guide;
 }

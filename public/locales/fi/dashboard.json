@@ -119,7 +119,7 @@
             "usePopularCandidates": "Käytä suosittuja kuvia",
             "popularityScore": "Käytä suosiota",
             "heatmapGlobal": "Kuvan suosio",
-            "heatmapEngagement": "Aikaisempi kuvien vuorovaikutus",
+            "heatmapEngagement": "Aikaisempi kuvien aktiivisuus",
             "heatmapRecommendation": "Kuvan suosituksen todennäköisyys",
             "theme": "Teema",
             "themeDefault": "Oletus",
@@ -129,7 +129,7 @@
             "heatmapUsers": "Valitse näytettävät käyttäjät",
             "refresh": "Päivitä",
             "invertHeatmap": "Käänteinen lämpökartta",
-            "shareTip": "Näytä QR-koodi liittymistä varten",
+            "shareTip": "Näytä QR-koodi liittyäksesi",
             "openTip": "Tuo aiemmin tallennettua käyttäjädataa",
             "saveTip": "Tallenna profiilit ja kuvat",
             "engagedImages": "Näytä kiinnostaneet kuvat",
@@ -160,7 +160,7 @@
             "viewingScore": "Kuvan katsomisen todennäköisyys",
             "rankSelection": "Parhaiten sijoittuneet kuvakandidaatit",
             "distributionSelection": "Laske todennäköisyys pisteytyksen perusteella",
-            "disableFeedApp": "Pysäytä kaikkien käyttäjien appit",
+            "disableFeedApp": "Pysäytä käyttäjien apit",
             "hideDataView": "Piilota käyttäjiltä datanäkymä",
             "hideProfileView": "Piilota käyttäjiltä profiilinäkymä",
             "hideRecommendationsView": "Piilota käyttäjiltä suositusnäkymä",
@@ -214,8 +214,8 @@
         "aria": {
             "linkForFeed": "Linkki uudelle käyttäjän syötteelle",
             "socialMenu": "Sosiaalisen verkoston valikko",
-            "socialUserMenu": "Menu for a user",
-            "mainMenu": "Open or close the main side menu"
+            "socialUserMenu": "Käyttäjän valikko",
+            "mainMenu": "Avaa tai sulje sivupäävalikko"
         }
     },
     "tables": {

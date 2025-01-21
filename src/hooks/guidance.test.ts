@@ -15,12 +15,12 @@ describe('loadGuide()', () => {
         const zip = new JSZip();
         const fakeGuide: GuidanceData = {
             name: 'fake',
-            locales: ['en-GB'],
+            locales: ['en'],
             actions: {},
             steps: [],
         };
         zip.file('guide.json', JSON.stringify(fakeGuide));
-        zip.file('locale/en-GB.json', '{}');
+        zip.file('locale/en.json', '{}');
 
         const blob = await zip.generateAsync({ type: 'blob' });
 
@@ -35,7 +35,7 @@ describe('loadGuide()', () => {
         const zip = new JSZip();
         const fakeGuide: GuidanceData = {
             name: 'fake',
-            locales: ['en-GB'],
+            locales: ['en'],
             actions: {},
             steps: [
                 {
@@ -45,7 +45,7 @@ describe('loadGuide()', () => {
             ],
         };
         zip.file('guide.json', JSON.stringify(fakeGuide));
-        zip.file('locale/en-GB.json', '{"title1": "test title"}');
+        zip.file('locale/en.json', '{"title1": "test title"}');
 
         const blob = await zip.generateAsync({ type: 'blob' });
 
