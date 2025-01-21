@@ -185,7 +185,6 @@ export default function Guidance({ guide }: Props) {
                         onAction={() => {
                             if (currentStep.actionButton) {
                                 const act = data.actions[currentStep.actionButton];
-                                console.log('ACTION', act, currentStep.actionButton);
                                 if (act) {
                                     doAction(act);
                                 }

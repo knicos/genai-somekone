@@ -55,7 +55,6 @@ export function findNearestSlot(grid: unknown[][], pt: [number, number], maxDist
 }
 
 export function heatmapGrid(content: ContentService, images: ContentNodeId[], dim: number) {
-    const start = performance.now();
     const grid: (ContentNodeId | null)[][] = new Array(dim);
     for (let i = 0; i < dim; ++i) {
         const row = new Array<ContentNodeId | null>(dim);
@@ -71,9 +70,6 @@ export function heatmapGrid(content: ContentService, images: ContentNodeId[], di
             grid[nearest[1]][nearest[0]] = image;
         }
     });
-
-    const end = performance.now();
-    console.log('Grid time', end - start);
 
     return grid;
 }

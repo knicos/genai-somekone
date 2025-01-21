@@ -18,9 +18,12 @@
     max-width: 300px;
 }
 
-.spacer {
-    width: 100%;
-    height: 4rem;
+.or {
+    margin: 1.5rem 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+    font-style: italic;
+    color: #444;
 }
 
 .innerContainer :global .MuiInputBase-input {
@@ -48,8 +51,11 @@
     text-transform: none;
 }
 
-@media screen and (max-width: 600px) {
+@media screen and ((max-width: 600px) or (max-height: 500px)) {
     .createButton {
+        display: none;
+    }
+    .or {
         display: none;
     }
 }

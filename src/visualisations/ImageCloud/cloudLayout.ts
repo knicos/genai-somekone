@@ -94,6 +94,6 @@ export default function cloudLayout<T extends string>(
         const d = calculateDistance(r.x, r.x + r.item.width, r.y, r.y + r.item.height);
         dist.max = Math.max(dist.max, d);
     });
-    // console.log('Cloud Layout', performance.now() - start);
+
     return [results, dist.max];
 }

@@ -57,7 +57,6 @@ export default function CaptureDialog({ tags, onClose, open, query, options }: P
                 size,
                 (meta: ContentMetadata) => (tags ? tagsCheck(meta, tagSet) : true)
             ).then((tally) => {
-                console.log('Done', tally);
                 setTimeout(() => {
                     setCount(tally);
                     if (tally < size && page < MAX_PAGES) {

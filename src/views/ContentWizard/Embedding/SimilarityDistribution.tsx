@@ -45,8 +45,6 @@ export default function SimilarityDistribution() {
         });
 
         setDistribution(dist.map((d, ix) => ({ x: Math.floor(((ix / BUCKETS) * 2 - 1) * 10), y: d })));
-
-        console.log(dist);
     }, [count, contentSvc]);
 
     return (

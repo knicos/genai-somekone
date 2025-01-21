@@ -21,7 +21,7 @@ i18n.use(detector)
         },
         fallbackLng: 'en',
         supportedLngs: ['en', 'fi'],
-        debug: true,
+        debug: false,
     });
 
 export default i18n;

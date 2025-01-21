@@ -2,6 +2,7 @@ import { NativeSelect } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useCallback } from 'react';
 import style from './style.module.css';
+import LanguageIcon from '@mui/icons-material/Language';
 
 export const LANGS = [
     { name: 'en', label: 'English' },
@@ -35,6 +36,7 @@ export default function LangSelect() {
                     </option>
                 ))}
             </NativeSelect>
+            <LanguageIcon />
         </div>
     );
 }

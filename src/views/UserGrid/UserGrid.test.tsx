@@ -24,7 +24,7 @@ describe('UserGrid component', () => {
             </TestWrapper>
         );
 
-        expect(screen.getByTestId('usergrid')).toBeEmptyDOMElement();
+        expect(screen.getByText('dashboard.messages.waitingPeople')).toBeVisible();
     });
 
     it('shows one user', async ({ expect }) => {

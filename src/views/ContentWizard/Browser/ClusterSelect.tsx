@@ -25,7 +25,7 @@ export default function ClusterSelect({ value, onChange }: Props) {
             for (let i = 0; i <= maxCluster; ++i) {
                 result.push(`Cluster-${i}`);
             }
-            console.log('Clusters', result);
+
             return result;
         },
         [contentSvc],

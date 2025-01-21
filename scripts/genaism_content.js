@@ -24,7 +24,6 @@ async function processDir() {
                     if (file2 === 'images') {
                         const imagepath = path.join(p, file2);
                         const imageFiles = await fs.promises.readdir(imagepath);
-                        //console.log('IMAGES', imageFiles);
 
                         for (const image of imageFiles) {
                             await sharp(path.join(imagepath, image))

@@ -26,7 +26,6 @@ export async function heatmapScores(
     profile: UserNodeData,
     config: SMConfig
 ): Promise<WeightedNode<ContentNodeId>[]> {
-    const start = performance.now();
     if (profile) {
         const candidates: Recommendation[] = await batchMap(images, 100, (p) => ({
             candidateOrigin: 'popular',
@@ -40,13 +39,9 @@ export async function heatmapScores(
             ),
         }));
 
-        console.log('Candidate time', performance.now() - start);
-
         const scores = recommender.getScoringProbabilities(user, candidates, profile, 9, config.recommendations);
         scores.sort((a, b) => (b.probability || 0) - (a.probability || 0));
 
-        const end = performance.now();
-        console.log('Score time', end - start);
         return scores.map((s) => ({
             id: s.contentId,
             weight: s.probability || 0,

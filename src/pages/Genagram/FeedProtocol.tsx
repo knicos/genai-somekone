@@ -100,7 +100,7 @@ export default function FeedProtocol({ content, server, mycode, setContent, chil
                 const snap = data.compressed
                     ? (JSON.parse(decompressFromUTF16(data.snapshot as string)) as Snapshot)
                     : (data.snapshot as Snapshot);
-                console.log('SNAP', snap);
+
                 profilerSvc.graph.addNodes(snap.nodes);
                 profilerSvc.graph.addEdges(snap.edges.map((e) => ({ ...e, timestamp: Date.now(), metadata: {} })));
                 snap.logs?.forEach((log) => {

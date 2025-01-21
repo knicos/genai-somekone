@@ -14,12 +14,15 @@ import colours from '@knicos/genai-base/css/colours.module.css';
 import { useServices } from '@genaism/hooks/services';
 import { useEffect, useMemo } from 'react';
 import { useSimilarityData } from '@genaism/hooks/similarity';
+import Loading from '@genaism/components/Loading/Loading';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
     users?: UserNodeId[];
 }
 
 export default function UserGrid({ users }: Props) {
+    const { t } = useTranslation();
     const { profiler, similarity } = useServices();
     const similar = useSimilarityData();
     const fusers = useMemo(() => similar.users.filter((u) => u !== profiler.getCurrentUser()), [similar, profiler]);
@@ -57,6 +60,12 @@ export default function UserGrid({ users }: Props) {
                 onClick={() => setSelectedUser(undefined)}
                 data-testid="usergrid"
             >
+                {sortedUsers.length === 0 && (
+                    <Loading
+                        loading={true}
+                        message={t('dashboard.messages.waitingPeople')}
+                    />
+                )}
                 {sortedUsers.map((user) => {
                     const cluster = similar.clusters.get(user)?.label;
                     return (

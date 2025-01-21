@@ -65,7 +65,7 @@ export function Component() {
                 >
                     {t('start.actions.go')}
                 </Button>
-                <div className={style.spacer} />
+                <div className={style.or}>{t('start.labels.or')}</div>
                 <Button
                     variant="outlined"
                     href="/library"

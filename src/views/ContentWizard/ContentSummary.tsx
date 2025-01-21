@@ -70,7 +70,7 @@ export default function ContentSummary({ onFindMore }: Props) {
             selected.forEach((v) => {
                 tags.push(v.label);
             });
-            console.log('Deletes', tags);
+
             deleteTags(contentSvc, tags);
             //trigger();
         }

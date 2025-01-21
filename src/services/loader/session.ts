@@ -24,7 +24,6 @@ export function loadSession(graphSvc: GraphService, logger: ActionLogService) {
     if (sessionGraph) {
         const graph = JSON.parse(decompress(sessionGraph)) as GNode<NodeType>[];
         graphSvc.addNodes(graph);
-        console.log('Loaded session graph');
     }
 
     if (sessionLogs) {

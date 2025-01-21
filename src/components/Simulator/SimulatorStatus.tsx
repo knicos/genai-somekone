@@ -8,7 +8,6 @@ interface Props {
 }
 
 export default function SimulatorStatus({ progress }: Props) {
-    console.log(progress);
     return (
         <div className={style.progress}>
             {progress !== undefined && (

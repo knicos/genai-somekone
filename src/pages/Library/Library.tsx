@@ -17,17 +17,6 @@ export function Component() {
                 </header>
                 <ul className={style.grid}>
                     <ContentItem
-                        title={t('library.reetta.title')}
-                        image="/images/reetta1.jpg"
-                        url={`/dashboard/socialgraph?${createSearchParams({
-                            content: compressToEncodedURIComponent(
-                                JSON.stringify(['https://store.gen-ai.fi/somekone/reettaSet1.zip'])
-                            ),
-                        })}`}
-                        description={t('library.reetta.description')}
-                    />
-
-                    <ContentItem
                         title={t('library.guidedDefault.title')}
                         image="/images/guidedDefault.jpg"
                         url={`/dashboard/socialgraph?${createSearchParams({
@@ -39,10 +28,14 @@ export function Component() {
                         description={t('library.guidedDefault.description')}
                     />
                     <ContentItem
-                        title={t('library.generic.title')}
-                        image="/images/defaultContent.jpg"
-                        url="/dashboard"
-                        description={t('library.generic.description')}
+                        title={t('library.reetta.title')}
+                        image="/images/reetta1.jpg"
+                        url={`/dashboard/socialgraph?${createSearchParams({
+                            content: compressToEncodedURIComponent(
+                                JSON.stringify(['https://store.gen-ai.fi/somekone/reettaSet1.zip'])
+                            ),
+                        })}`}
+                        description={t('library.reetta.description')}
                     />
                     <ContentItem
                         title={t('library.public.title')}
@@ -75,18 +68,10 @@ export function Component() {
                         description={t('library.example.description')}
                     />
                     <ContentItem
-                        title={t('library.kiosk.title')}
-                        image="/images/kiosk.jpg"
-                        url={`/dashboard/usergrid?${createSearchParams({
-                            content: compressToEncodedURIComponent(
-                                JSON.stringify([
-                                    'https://store.gen-ai.fi/somekone/imageSet1c.zip',
-                                    'https://store.gen-ai.fi/somekone/sm_demo1c.zip',
-                                ])
-                            ),
-                            guide: 'kiosk',
-                        })}`}
-                        description={t('library.kiosk.description')}
+                        title={t('library.generic.title')}
+                        image="/images/defaultContent.jpg"
+                        url="/dashboard"
+                        description={t('library.generic.description')}
                     />
                     <ContentItem
                         title={t('library.blank.title')}
@@ -107,3 +92,20 @@ export function Component() {
         </main>
     );
 }
+
+/*
+<ContentItem
+                        title={t('library.kiosk.title')}
+                        image="/images/kiosk.jpg"
+                        url={`/dashboard/usergrid?${createSearchParams({
+                            content: compressToEncodedURIComponent(
+                                JSON.stringify([
+                                    'https://store.gen-ai.fi/somekone/imageSet1c.zip',
+                                    'https://store.gen-ai.fi/somekone/sm_demo1c.zip',
+                                ])
+                            ),
+                            guide: 'kiosk',
+                        })}`}
+                        description={t('library.kiosk.description')}
+                    />
+*/

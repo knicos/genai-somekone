@@ -292,11 +292,12 @@
     },
     "start": {
         "actions": {
-            "createNew": "Create New",
+            "createNew": "Create New Session",
             "go": "Go"
         },
         "labels": {
-            "enterCode": "Enter Code"
+            "enterCode": "Enter PIN",
+            "or": "or"
         }
     }
 }

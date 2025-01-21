@@ -15,7 +15,6 @@ export function PrintingProtocol({ children, code }: Props) {
 
         const bc = new window.BroadcastChannel('printing');
         bc.onmessage = (ev: MessageEvent) => {
-            console.log(ev);
             setPrintData(ev.data);
             setHasData(true);
             bc.close();

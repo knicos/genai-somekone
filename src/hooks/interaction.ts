@@ -30,7 +30,6 @@ export function useInteractionDetector(timeout: number) {
     useEffect(() => {
         intervalRef.current = window.setInterval(() => {
             if (navigator.userActivation) {
-                console.log('Navigator', navigator.userActivation.isActive);
                 setStatus(navigator.userActivation.isActive && tabActive);
             } else {
                 setStatus(Date.now() - timeRef.current > timeout && tabActive);
@@ -43,7 +42,6 @@ export function useInteractionDetector(timeout: number) {
 
     useEffect(() => {
         const detect = () => {
-            console.log('some interaction');
             timeRef.current = Date.now();
         };
         document.body.addEventListener('mousemove', detect);

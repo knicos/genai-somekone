@@ -57,7 +57,6 @@ interface Point {
 }
 
 export function rectify(images: Point[], dim: number) {
-    const start = performance.now();
     const grid: (Point | null)[][] = new Array(dim);
     for (let i = 0; i < dim; ++i) {
         const row = new Array<Point | null>(dim);
@@ -77,9 +76,6 @@ export function rectify(images: Point[], dim: number) {
             image.y = -1;
         }
     });
-
-    const end = performance.now();
-    console.log('Grid time', end - start);
 
     return images;
 }

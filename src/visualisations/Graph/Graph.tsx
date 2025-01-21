@@ -26,9 +26,9 @@ import { saveAs } from 'file-saver';
 import { svgToPNG } from '@genaism/util/svgToPNG';
 import ProgressDialog from '../../components/ProgressDialog/ProgressDialog';
 import { useTranslation } from 'react-i18next';
-import { Spinner } from '@knicos/genai-base';
 import { calcAutoCamera, calcExtents, calculateViewBox, DEFAULT_EXTENTS } from './camera';
 import ZoomControls from './ZoomControls';
+import Loading from '@genaism/components/Loading/Loading';
 
 interface LabelProps<T extends NodeID> {
     node: GraphNode<T>;
@@ -414,7 +414,12 @@ export default function Graph<T extends NodeID>({
                 title={t('common.titles.saving', { ns: 'common' })}
                 open={saving}
             />
-            {nodeList.length === 0 && <Spinner />}
+            {nodeList.length === 0 && (
+                <Loading
+                    loading={true}
+                    message={t('dashboard.messages.waitingPeople')}
+                />
+            )}
             {!disableControls && (
                 <ZoomControls
                     onZoomIn={() => {

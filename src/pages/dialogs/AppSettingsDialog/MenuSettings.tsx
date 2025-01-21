@@ -64,6 +64,21 @@ export default function MenuSettings() {
                 <FormControlLabel
                     control={
                         <Checkbox
+                            checked={config?.hideShareProfile || false}
+                            onChange={(_, checked) => setConfig((old) => ({ ...old, hideShareProfile: checked }))}
+                        />
+                    }
+                    label={t('settings.app.hideSharing')}
+                />
+            </div>
+        </div>
+    );
+}
+
+/*
+<FormControlLabel
+                    control={
+                        <Checkbox
                             checked={config?.hidePostContent || false}
                             onChange={(_, checked) => setConfig((old) => ({ ...old, hidePostContent: checked }))}
                         />
@@ -79,16 +94,4 @@ export default function MenuSettings() {
                     }
                     label={t('settings.app.hideOwnProfile')}
                 />
-                <FormControlLabel
-                    control={
-                        <Checkbox
-                            checked={config?.hideShareProfile || false}
-                            onChange={(_, checked) => setConfig((old) => ({ ...old, hideShareProfile: checked }))}
-                        />
-                    }
-                    label={t('settings.app.hideSharing')}
-                />
-            </div>
-        </div>
-    );
-}
+*/
