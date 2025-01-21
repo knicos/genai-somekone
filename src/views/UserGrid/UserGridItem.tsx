@@ -78,7 +78,6 @@ export default function UserGridItem({ id, colour }: Props) {
                         data-testid={`wordcloud-${id}`}
                         viewBox={`${-(wcSize * CLOUD_SCALE)} ${-wcSize} ${wcSize * CLOUD_SCALE * 2} ${wcSize * 2}`}
                     >
-                        <style>{'rect {opacity: 0.9; fill: #5f7377;} text { fill: white;}'}</style>
                         <WordCloud
                             content={profile.affinities.topics.topics}
                             size={300}

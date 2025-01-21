@@ -39,8 +39,11 @@ export default function RecomWizard({ id, active, onClose, hideClose, variant = 
             if (config.showCandidateWizard) setPage(1);
             else if (config.showScoringWizard) setPage(4);
             else if (config.showDiversityWizard) setPage(5);
+            else setPage(1);
         }
-    }, [active, config]);
+        // Do not depend on config, only change the first time.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [active]);
 
     const doSetPage = (p: number) => {
         if (p > page) {

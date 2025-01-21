@@ -1,4 +1,4 @@
-@value workspaceBg, primary, secondary from "@knicos/genai-base/css/colours.module.css";
+@value workspaceBg, primary, secondary, backgroundDark from "@knicos/genai-base/css/colours.module.css";
 
 .menuLogo {
     color: white;
@@ -112,9 +112,10 @@
 }
 
 .word rect {
-    fill: white;
+    opacity: 0.9;
+    fill: backgroundDark;
 }
 
 .word text {
-    fill: #444;
+    fill: white;
 }

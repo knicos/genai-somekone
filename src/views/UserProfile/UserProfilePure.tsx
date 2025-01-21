@@ -39,7 +39,6 @@ export const UserProfilePure = forwardRef(function UserProfilePure(
                     ref={ref}
                     viewBox={`${-(wcSize * 1.67)} ${-wcSize} ${wcSize * 1.67 * 2} ${wcSize * 2}`}
                 >
-                    <style>{'rect {opacity: 0.9; fill: #5f7377;} text { fill: white;}'}</style>
                     <WordCloud
                         content={wordCloud}
                         size={wordCloudSize}

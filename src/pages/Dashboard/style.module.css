@@ -68,6 +68,7 @@
     overflow: hidden;
     max-height: 48px;
     margin-left: 0.5rem;
+    margin-right: 0.5rem;
 }
 
 .backgroundLogo h1 {
@@ -85,7 +86,7 @@
     align-items: flex-start;
     box-shadow: 0 0 10px #888;
     /*width: 280px;*/
-    transition: flex 0.2s;
+    /*transition: flex 0.2s;*/
     overflow: hidden;
     padding-bottom: 0.5rem;
     z-index: 10;
