@@ -16,7 +16,8 @@
             "browser": "Browser",
             "imageDetail": "Selected Image",
             "addTag": "Add Tag",
-            "local": "Upload"
+            "local": "Upload",
+            "settings": "Content Tool Settings"
         },
         "tooltips": {
             "deleteAll": "Delete all images",
@@ -51,7 +52,9 @@
             "noFilter": "None",
             "byTag": "By Tag",
             "byCluster": "By Cluster",
-            "noTags": "Has no tags"
+            "noTags": "Has no tags",
+            "advanced": "Show advanced options",
+            "showSettings": "Show content tool settings"
         },
         "actions": {
             "addImages": "Add Images",

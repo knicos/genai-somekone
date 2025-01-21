@@ -138,7 +138,7 @@ export const settingTopicNodeCharge = atom<number>({
     default: 5,
 });
 
-/* === Content Grap === */
+/* === Content Graph === */
 
 export const settingContentDisplayLines = atom<boolean>({
     key: 'settingcontentdisplaylines',
@@ -158,4 +158,11 @@ export const settingContentSimilarPercent = atom<number>({
 export const settingContentNodeCharge = atom<number>({
     key: 'settingcontentnodecharge',
     default: 2,
+});
+
+/* === Content Wizard === */
+
+export const settingContentWizardAdvanced = atom<boolean>({
+    key: 'settingcontentwizardadvanced',
+    default: false,
 });

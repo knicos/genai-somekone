@@ -9,6 +9,8 @@ import { Widget } from './Widget';
 import { useTranslation } from 'react-i18next';
 import TrainingGraph, { TrainingDataPoint } from '../../visualisations/TrainingGraph/TrainingGraph';
 import { hslToHex } from '@genaism/util/colours';
+import { useRecoilValue } from 'recoil';
+import { settingContentWizardAdvanced } from '@genaism/state/settingsState';
 
 // const CLUSTERS = 6;
 // const COLORS = ['blue', 'pink', 'green', 'red', 'purple', 'silver', 'orange', 'black', 'yellow'];
@@ -93,6 +95,7 @@ export default function MappingTool() {
     const [points, setPoints] = useState<Point[]>([]);
     const contentSvc = useContentService();
     const [history, setHistory] = useState<TrainingDataPoint[]>([]);
+    const advanced = useRecoilValue(settingContentWizardAdvanced);
 
     useEffect(() => {
         const nodes = contentSvc.graph.getNodesByType('content');
@@ -217,34 +220,36 @@ export default function MappingTool() {
                 dataWidget="mapping"
                 style={{ width: '300px' }}
             >
-                <div className={style.group}>
-                    <label id="autoencoder-epoch-slider">{t('creator.labels.epochs')}</label>
-                    <Slider
-                        disabled={startTraining}
-                        aria-labelledby="autoencoder-epoch-slider"
-                        value={epochs}
-                        onChange={(_, value) => {
-                            setEpochs(value as number);
-                        }}
-                        min={10}
-                        max={200}
-                        step={10}
-                        valueLabelDisplay="auto"
-                    />
-                    <label id="autoencoder-rate-slider">{t('creator.labels.learningRate')}</label>
-                    <Slider
-                        disabled={startTraining}
-                        aria-labelledby="autoencoder-rate-slider"
-                        value={learningRate}
-                        onChange={(_, value) => {
-                            setLearningRate(value as number);
-                        }}
-                        min={0.0001}
-                        max={0.002}
-                        step={0.0001}
-                        valueLabelDisplay="auto"
-                    />
-                </div>
+                {advanced && (
+                    <div className={style.group}>
+                        <label id="autoencoder-epoch-slider">{t('creator.labels.epochs')}</label>
+                        <Slider
+                            disabled={startTraining}
+                            aria-labelledby="autoencoder-epoch-slider"
+                            value={epochs}
+                            onChange={(_, value) => {
+                                setEpochs(value as number);
+                            }}
+                            min={10}
+                            max={200}
+                            step={10}
+                            valueLabelDisplay="auto"
+                        />
+                        <label id="autoencoder-rate-slider">{t('creator.labels.learningRate')}</label>
+                        <Slider
+                            disabled={startTraining}
+                            aria-labelledby="autoencoder-rate-slider"
+                            value={learningRate}
+                            onChange={(_, value) => {
+                                setLearningRate(value as number);
+                            }}
+                            min={0.0001}
+                            max={0.002}
+                            step={0.0001}
+                            valueLabelDisplay="auto"
+                        />
+                    </div>
+                )}
                 <div className={style.group}>
                     <BusyButton
                         variant="contained"
@@ -255,18 +260,20 @@ export default function MappingTool() {
                     </BusyButton>
                 </div>
             </Widget>
-            <Widget
-                title={t('creator.titles.mapTraining')}
-                dataWidget="points"
-                style={{ width: '300px' }}
-            >
-                <div className={style.group}>
-                    <TrainingGraph
-                        data={history}
-                        maxEpochs={epochs}
-                    />
-                </div>
-            </Widget>
+            {advanced && (
+                <Widget
+                    title={t('creator.titles.mapTraining')}
+                    dataWidget="points"
+                    style={{ width: '300px' }}
+                >
+                    <div className={style.group}>
+                        <TrainingGraph
+                            data={history}
+                            maxEpochs={epochs}
+                        />
+                    </div>
+                </Widget>
+            )}
         </div>
     );
 }

@@ -7,15 +7,18 @@ import { useContentService } from '@genaism/hooks/services';
 import ContentCluster from './ContentCluster';
 import { useTranslation } from 'react-i18next';
 import { Widget } from '../Widget';
+import { useRecoilValue } from 'recoil';
+import { settingContentWizardAdvanced } from '@genaism/state/settingsState';
 
 export default function ContentClustering() {
     const { t } = useTranslation();
     const [startCluster, setStartCluster] = useState(false);
     const [clusters, setClusters] = useState<ContentNodeId[][]>([]);
     const [maxDistance, setMaxDistance] = useState(2);
-    const [minClusters, setMinClusters] = useState(2);
+    const [minClusters, setMinClusters] = useState(6);
     const [minSize, setMinSize] = useState(200);
     const contentSvc = useContentService();
+    const advanced = useRecoilValue(settingContentWizardAdvanced);
 
     useEffect(() => {
         if (startCluster) {
@@ -52,44 +55,46 @@ export default function ContentClustering() {
                     dataWidget="cluster"
                     style={{ maxWidth: '300px' }}
                 >
-                    <div className={style.group}>
-                        <label id="autoencoder-memberdist-slider">{t('creator.labels.maxMemberDist')}</label>
-                        <Slider
-                            aria-labelledby="autoencoder-memberdist-slider"
-                            value={maxDistance}
-                            onChange={(_, value) => {
-                                setMaxDistance(value as number);
-                            }}
-                            min={0}
-                            max={2}
-                            step={0.01}
-                            valueLabelDisplay="auto"
-                        />
-                        <label id="autoencoder-mincluster-slider">{t('creator.labels.minClusters')}</label>
-                        <Slider
-                            aria-labelledby="autoencoder-mincluster-slider"
-                            value={minClusters}
-                            onChange={(_, value) => {
-                                setMinClusters(value as number);
-                            }}
-                            min={2}
-                            max={100}
-                            step={1}
-                            valueLabelDisplay="auto"
-                        />
-                        <label id="autoencoder-minsize-slider">{t('creator.labels.minClusterSize')}</label>
-                        <Slider
-                            aria-labelledby="autoencoder-minsize-slider"
-                            value={minSize}
-                            onChange={(_, value) => {
-                                setMinSize(value as number);
-                            }}
-                            min={1}
-                            max={200}
-                            step={1}
-                            valueLabelDisplay="auto"
-                        />
-                    </div>
+                    {advanced && (
+                        <div className={style.group}>
+                            <label id="autoencoder-memberdist-slider">{t('creator.labels.maxMemberDist')}</label>
+                            <Slider
+                                aria-labelledby="autoencoder-memberdist-slider"
+                                value={maxDistance}
+                                onChange={(_, value) => {
+                                    setMaxDistance(value as number);
+                                }}
+                                min={0}
+                                max={2}
+                                step={0.01}
+                                valueLabelDisplay="auto"
+                            />
+                            <label id="autoencoder-mincluster-slider">{t('creator.labels.minClusters')}</label>
+                            <Slider
+                                aria-labelledby="autoencoder-mincluster-slider"
+                                value={minClusters}
+                                onChange={(_, value) => {
+                                    setMinClusters(value as number);
+                                }}
+                                min={2}
+                                max={100}
+                                step={1}
+                                valueLabelDisplay="auto"
+                            />
+                            <label id="autoencoder-minsize-slider">{t('creator.labels.minClusterSize')}</label>
+                            <Slider
+                                aria-labelledby="autoencoder-minsize-slider"
+                                value={minSize}
+                                onChange={(_, value) => {
+                                    setMinSize(value as number);
+                                }}
+                                min={1}
+                                max={200}
+                                step={1}
+                                valueLabelDisplay="auto"
+                            />
+                        </div>
+                    )}
                     <div className={style.group}>
                         <Button
                             variant="contained"

@@ -20,6 +20,8 @@ import { useSetRecoilState } from 'recoil';
 import { errorNotification } from '@genaism/state/errorState';
 import i18n from '@genaism/i18n';
 import { canvasFromURL } from '@knicos/genai-base';
+import SettingsIcon from '@mui/icons-material/Settings';
+import ContentSettingsDialog from './SettingsDialog';
 
 const connections: IConnection[] = [
     { start: 'query', end: 'summary', startPoint: 'right', endPoint: 'left' },
@@ -41,6 +43,7 @@ export default function ContentWizard() {
     const observer = useRef<ResizeObserver>();
     const serial = useSettingSerialise();
     const setError = useSetRecoilState(errorNotification);
+    const [showSettings, setShowSettings] = useState(false);
 
     useEffect(() => {
         if (wkspaceRef.current) {
@@ -173,7 +176,20 @@ export default function ContentWizard() {
                         <BlockIcon />
                     </IconButton>
                 </IconMenuItem>
+                <IconMenuItem tooltip={t('creator.labels.showSettings')}>
+                    <IconButton
+                        color="inherit"
+                        onClick={() => setShowSettings(true)}
+                        aria-label={t('creator.labels.showSettings')}
+                    >
+                        <SettingsIcon />
+                    </IconButton>
+                </IconMenuItem>
             </IconMenu>
+            <ContentSettingsDialog
+                open={showSettings}
+                onClose={() => setShowSettings(false)}
+            />
         </I18nextProvider>
     );
 }

@@ -12,6 +12,8 @@ import TrainingGraph, { TrainingDataPoint } from '../../../visualisations/Traini
 import SimilarityDistribution from './SimilarityDistribution';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { useEventEmit } from '@genaism/hooks/events';
+import { useRecoilValue } from 'recoil';
+import { settingContentWizardAdvanced } from '@genaism/state/settingsState';
 
 export default function EmbeddingTool() {
     const { t } = useTranslation();
@@ -27,6 +29,7 @@ export default function EmbeddingTool() {
     const [history, setHistory] = useState<TrainingDataPoint[]>([]);
     const [learningRate, setLearningRate] = useState(0.001);
     const [tabNumber, setTabNumber] = useState(0);
+    const advanced = useRecoilValue(settingContentWizardAdvanced);
 
     const emitRefresh = useEventEmit('refresh_embeddings');
 
@@ -100,79 +103,83 @@ export default function EmbeddingTool() {
                 style={{ width: '300px' }}
             >
                 {!valid && <AlertPara severity="info">{t('creator.messages.needsRegen')}</AlertPara>}
-                <div className={style.group}>
-                    <FormControlLabel
-                        disabled={startGenerate}
-                        control={
-                            <Checkbox
-                                checked={useLabels}
-                                onChange={(_, checked) => setUseLabels(checked)}
-                            />
-                        }
-                        label={t('creator.labels.useLabels')}
-                    />
-                    <FormControlLabel
-                        disabled={startGenerate}
-                        control={
-                            <Checkbox
-                                checked={usePixels}
-                                onChange={(_, checked) => setUsePixels(checked)}
-                            />
-                        }
-                        label={t('creator.labels.usePixels')}
-                    />
-                    <FormControlLabel
-                        disabled={startGenerate}
-                        control={
-                            <Checkbox
-                                checked={useEngagement}
-                                onChange={(_, checked) => setUseEngagement(checked)}
-                            />
-                        }
-                        label={t('creator.labels.useEngagement')}
-                    />
-                </div>
-                <div className={style.group}>
-                    <label id="autoencoder-epoch-slider">{t('creator.labels.epochs')}</label>
-                    <Slider
-                        disabled={startGenerate}
-                        aria-labelledby="autoencoder-epoch-slider"
-                        value={epochs}
-                        onChange={(_, value) => {
-                            setEpochs(value as number);
-                        }}
-                        min={20}
-                        max={600}
-                        step={10}
-                        valueLabelDisplay="auto"
-                    />
-                    <label id="autoencoder-dim-slider">{t('creator.labels.dimensions')}</label>
-                    <Slider
-                        disabled={startGenerate}
-                        aria-labelledby="autoencoder-dim-slider"
-                        value={dims}
-                        onChange={(_, value) => {
-                            setDims(value as number);
-                        }}
-                        min={4}
-                        max={32}
-                        step={2}
-                        valueLabelDisplay="auto"
-                    />
-                    <label id="autoencoder-rate-slider">{t('creator.labels.learningRate')}</label>
-                    <Slider
-                        disabled={startGenerate}
-                        aria-labelledby="autoencoder-rate-slider"
-                        value={learningRate}
-                        onChange={(_, value) => {
-                            setLearningRate(value as number);
-                        }}
-                        min={0.0001}
-                        max={0.002}
-                        step={0.0001}
-                        valueLabelDisplay="auto"
-                    />
-                </div>
+                {advanced && (
+                    <div className={style.group}>
+                        <FormControlLabel
+                            disabled={startGenerate}
+                            control={
+                                <Checkbox
+                                    checked={useLabels}
+                                    onChange={(_, checked) => setUseLabels(checked)}
+                                />
+                            }
+                            label={t('creator.labels.useLabels')}
+                        />
+                        <FormControlLabel
+                            disabled={startGenerate}
+                            control={
+                                <Checkbox
+                                    checked={usePixels}
+                                    onChange={(_, checked) => setUsePixels(checked)}
+                                />
+                            }
+                            label={t('creator.labels.usePixels')}
+                        />
+                        <FormControlLabel
+                            disabled={startGenerate}
+                            control={
+                                <Checkbox
+                                    checked={useEngagement}
+                                    onChange={(_, checked) => setUseEngagement(checked)}
+                                />
+                            }
+                            label={t('creator.labels.useEngagement')}
+                        />
+                    </div>
+                )}
+                {advanced && (
+                    <div className={style.group}>
+                        <label id="autoencoder-epoch-slider">{t('creator.labels.epochs')}</label>
+                        <Slider
+                            disabled={startGenerate}
+                            aria-labelledby="autoencoder-epoch-slider"
+                            value={epochs}
+                            onChange={(_, value) => {
+                                setEpochs(value as number);
+                            }}
+                            min={20}
+                            max={600}
+                            step={10}
+                            valueLabelDisplay="auto"
+                        />
+                        <label id="autoencoder-dim-slider">{t('creator.labels.dimensions')}</label>
+                        <Slider
+                            disabled={startGenerate}
+                            aria-labelledby="autoencoder-dim-slider"
+                            value={dims}
+                            onChange={(_, value) => {
+                                setDims(value as number);
+                            }}
+                            min={4}
+                            max={32}
+                            step={2}
+                            valueLabelDisplay="auto"
+                        />
+                        <label id="autoencoder-rate-slider">{t('creator.labels.learningRate')}</label>
+                        <Slider
+                            disabled={startGenerate}
+                            aria-labelledby="autoencoder-rate-slider"
+                            value={learningRate}
+                            onChange={(_, value) => {
+                                setLearningRate(value as number);
+                            }}
+                            min={0.0001}
+                            max={0.002}
+                            step={0.0001}
+                            valueLabelDisplay="auto"
+                        />
+                    </div>
+                )}
                 <div
                     className={style.group}
                     style={{ gap: '0.5rem' }}
@@ -198,18 +205,20 @@ export default function EmbeddingTool() {
                 </div>
             </Widget>
 
-            <Widget
-                title={t('creator.titles.embeddingTrain')}
-                dataWidget="similarity"
-                style={{ width: '300px', padding: '0' }}
-            >
-                <div className={style.group}>
-                    <TrainingGraph
-                        data={history}
-                        maxEpochs={epochs}
-                    />
-                </div>
-            </Widget>
+            {advanced && (
+                <Widget
+                    title={t('creator.titles.embeddingTrain')}
+                    dataWidget="similarity"
+                    style={{ width: '300px', padding: '0' }}
+                >
+                    <div className={style.group}>
+                        <TrainingGraph
+                            data={history}
+                            maxEpochs={epochs}
+                        />
+                    </div>
+                </Widget>
+            )}
         </div>
     );
 }
