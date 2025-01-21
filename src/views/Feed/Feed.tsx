@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import style from './style.module.css';
 import ImageFeed, { FeedEntry } from '@genaism/components/ImageFeed/ImageFeed';
 import { useRecoilValue } from 'recoil';
@@ -24,7 +24,8 @@ export default function Feed({ onProfile, onLog, onRecommend, id, noLog, noActio
     const profiler = useProfilerService();
     const aid = id || profiler.getCurrentUser();
     const appConfig = useRecoilValue(configuration(aid));
-    const { recommendations, more } = useRecommendations(5, aid, appConfig?.recommendations);
+    const config = useMemo(() => ({ ...appConfig?.recommendations, coldStart: !noLog }), [appConfig, noLog]);
+    const { recommendations, more } = useRecommendations(5, aid, config);
     const actionLog = useActionLogService();
     const contentReady = useRecoilValue(contentLoaded);
     const injections = useRecoilValue(injectedContent);

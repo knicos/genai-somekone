@@ -84,7 +84,7 @@ export default function StartDialog({ users, code }: Props) {
                             onClick={() => {
                                 const sim = new Simulation(recommender, actionLog);
                                 sim.createAgents(12, {
-                                    thresholds: { min: 0.1, max: 0.7 },
+                                    thresholds: { min: 0.1, max: 0.5 },
                                 });
                                 setSimulation(sim);
                                 doClose();

@@ -68,6 +68,7 @@ export default class Simulation {
     }
 
     public simulate(options: SimulationOptions) {
+        //this.recommender.profiler.coldStartThreshold = 4;
         this.stop();
         this.interval = window.setInterval(() => {
             this.step(options);
@@ -83,9 +84,10 @@ export default class Simulation {
 
     private step(options: RecommendationOptions) {
         this.counter += 5;
+        const o: RecommendationOptions = { ...options, coldStart: true };
         this.agents.forEach((agent) => {
-            this.recommender.generateNewRecommendations(agent.id, 5, options);
-            const recommendations = this.recommender.getRecommendations(agent.id, 5, options);
+            this.recommender.generateNewRecommendations(agent.id, 5, o);
+            const recommendations = this.recommender.getRecommendations(agent.id, 5, o);
 
             recommendations.forEach((recommendation) => {
                 const dist = embeddingSimilarity(
