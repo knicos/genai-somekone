@@ -85,6 +85,7 @@ const WordCloud = memo(function Cloud({ content, size, padding, onSize, classNam
                                 rx="6px"
                                 width={l.item.width}
                                 height={l.item.height}
+                                fill="#444"
                             />
                         )}
                         <text
@@ -101,6 +102,7 @@ const WordCloud = memo(function Cloud({ content, size, padding, onSize, classNam
                             x={(l?.item.width || 0) / 2}
                             y={(l?.item.height || 0) / 2}
                             visibility={l ? 'visible' : 'hidden'}
+                            fill="white"
                         >
                             {localiser.getLocalisedLabel(c.label, i18n.language)}
                         </text>
