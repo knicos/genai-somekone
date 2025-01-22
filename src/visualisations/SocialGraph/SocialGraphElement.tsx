@@ -34,8 +34,8 @@ import { patchNodes } from './nodes';
 const LINE_THICKNESS_UNSELECTED = 40;
 const MIN_LINE_THICKNESS = 10;
 const LINE_THICKNESS_SELECTED = 60;
-const DENSITY_LOW = 0.01;
-const DENSITY_HIGH = 0.03;
+const DENSITY_LOW = 0.001;
+const DENSITY_HIGH = 0.01;
 
 interface Props {
     liveUsers?: UserNodeId[];
