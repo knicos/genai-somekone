@@ -240,6 +240,7 @@
     padding-bottom: 0.2rem;
     border-radius: 6px;
     background: bgSubdued1;
+    overflow-wrap: break-word;
 }
 
 .commentUser {
