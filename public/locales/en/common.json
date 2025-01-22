@@ -81,7 +81,7 @@
             "retry": "Retrying connection...",
             "content_load": "Loading the content",
             "content_download": "Downloading the content",
-            "ready": "Connection ready",
+            "ready": "Connected",
             "content_none": "Content ready",
             "starting": "Starting",
             "wifiNetwork": "Your data is being sent over the internet because you are not using the same Wi-Fi network.",

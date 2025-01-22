@@ -1,4 +1,4 @@
-import { usePeer, SenderType, ConnectionMonitor } from '@knicos/genai-base';
+import { usePeer, SenderType, ConnectionStatus } from '@knicos/genai-base';
 import { EventProtocol, UserEntry } from '@genaism/protocol/protocol';
 import { appConfiguration } from '@genaism/state/settingsState';
 import { DataConnection } from 'peerjs';
@@ -185,18 +185,13 @@ export default function ServerProtocol({ onReady, code, content }: Props) {
         onReady(ready);
     }, [onReady, ready]);
 
-    const doFailed = useCallback(() => {
-        onReady(true);
-    }, [onReady]);
-
     return (
-        <ConnectionMonitor
+        <ConnectionStatus
             api={import.meta.env.VITE_APP_APIURL}
             appName="somekone"
             ready={ready}
             status={status}
             error={error}
-            onFailed={doFailed}
         />
     );
 }
