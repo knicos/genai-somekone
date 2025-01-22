@@ -86,12 +86,16 @@ export default function Guidance({ guide }: Props) {
 
         if (data && data.firstStep !== undefined) {
             paramsRef.current((prev) => {
-                prev.set('page', `${data.firstStep}`);
+                if (!prev.has('page')) {
+                    prev.set('page', `${data.firstStep}`);
+                }
                 return prev;
             });
         } else if (data) {
             paramsRef.current((prev) => {
-                prev.set('page', '0');
+                if (!prev.has('page')) {
+                    prev.set('page', '0');
+                }
                 return prev;
             });
         }
