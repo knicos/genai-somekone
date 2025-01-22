@@ -2,7 +2,7 @@
     "library": {
         "title": "Valitse sisältö",
         "generic": {
-            "title": "AAlkuperäinen sisältö",
+            "title": "Alkuperäinen sisältö",
             "description": "Alkuperäinen Somekone-sisältö, jonka lapset ovat valinneet."
         },
         "guidedDefault": {
@@ -33,7 +33,7 @@
 
     "menu": {
         "vis": {
-            "title": "Visualisaatiot",
+            "title": "Näkymä",
             "socialgraph": "Sosiaalinen verkosto",
             "heatmap": "Lämpökartat",
             "usergrid": "Käyttäjäruudukko",

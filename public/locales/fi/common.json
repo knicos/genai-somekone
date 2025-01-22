@@ -213,10 +213,10 @@
             "invert": "vaihda päivänvastaiseksi"
         },
         "labels": {
-            "topicCandidate": "koska olet tykännyt aiheesta #{{topic}}.",
-            "random": "valittu sinulle sattumanvaraisesti.",
-            "coengagedCandidate": "koska muut allaolevasta kuvasta kiinnostuneet ovat tykänneet myös tästä.",
-            "similarUserCandidate": "koska kaltaisesi käyttäjä \"{{userName}}\" piti tästä.",
+            "topicCandidate": "Koska olet tykännyt aiheesta #{{topic}}.",
+            "random": "Valittu sinulle sattumanvaraisesti.",
+            "coengagedCandidate": "Koska muut allaolevasta kuvasta kiinnostuneet ovat tykänneet myös tästä.",
+            "similarUserCandidate": "Koska kaltaisesi käyttäjä \"{{userName}}\" piti tästä.",
             "candidateAll": "Kaikki nämä (oletus)",
             "candidateLabels": "Käyttäen suosikkihashtagejasi",
             "candidateUsers": "Samankaltaisilta käyttäjiltä",
@@ -245,7 +245,7 @@
             "candidatesNonPersonal": "Miten ei-henkilökohtaiset ehdokkaat valitaan?",
             "diversityOptions": "Pitäisikö monimuotoisuutta olla?",
             "candidateOrigin": "Mistä se löydettiin?",
-            "predictedScore": "Ennusta aktiivisuutta",
+            "predictedScore": "Ennuste aktiivisuudesta",
             "explainScore": "Miksi voisit reagoida?"
         },
         "descriptions": {
@@ -269,12 +269,12 @@
             "selectionRank": "Valitse vain kuvia, jotka ovat saaneet parhaat pisteet"
         },
         "features": {
-            "taste": "mieltymysten samankaltaisuus",
+            "taste": "Mieltymysten samankaltaisuus",
             "coengagement": "Yhteinen aktiivisuus",
-            "sharing": "On todennäköistä, että jaat",
-            "commenting": "On todennäköistä, että kommentoit",
+            "sharing": "Todennäköisyys että jaat",
+            "commenting": "Todennäköisyys että kommentoit",
             "following": "On todennäköistä, että seuraat",
-            "reacting": "On todennäköistä, että reagoit",
+            "reacting": "Todennäköisyys että reagoit",
             "viewing": "On todennäköistä, että katsot",
             "lastSeen": "Ei nähty äskettäin",
             "popularity": "Suosio",
