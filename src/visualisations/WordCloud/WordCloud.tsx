@@ -2,6 +2,8 @@ import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import style from './style.module.css';
 import cloudLayout, { LocationItem, SizedItem } from '@genaism/visualisations/ImageCloud/cloudLayout';
 import { WeightedLabel } from '@knicos/genai-recom';
+import { localiser } from '@genaism/services/localiser/localiser';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
     content: WeightedLabel[];
@@ -15,6 +17,7 @@ interface Props {
 const MIN_SIZE = 15;
 
 const WordCloud = memo(function Cloud({ content, size, padding, onSize, className }: Props) {
+    const { i18n } = useTranslation();
     const gRef = useRef<SVGGElement>(null);
     const [locations, setLocations] = useState(new Map<string, LocationItem<string>>());
 
@@ -99,7 +102,7 @@ const WordCloud = memo(function Cloud({ content, size, padding, onSize, classNam
                             y={(l?.item.height || 0) / 2}
                             visibility={l ? 'visible' : 'hidden'}
                         >
-                            {c.label}
+                            {localiser.getLocalisedLabel(c.label, i18n.language)}
                         </text>
                     </g>
                 );

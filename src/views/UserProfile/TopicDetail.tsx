@@ -2,6 +2,8 @@ import { Card } from '@genaism/components/DataCard';
 import style from './style.module.css';
 import ImageCloud, { WeightedImage } from '../../visualisations/ImageCloud/ImageCloud';
 import { useCallback, useState } from 'react';
+import { localiser } from '@genaism/services/localiser/localiser';
+import { useTranslation } from 'react-i18next';
 
 export interface TopicData {
     images: WeightedImage[];
@@ -16,6 +18,7 @@ interface Props {
 }
 
 export default function TopicDetail({ data, size = 200 }: Props) {
+    const { i18n } = useTranslation();
     const [wcSize, setWCSize] = useState(size);
     const doResize = useCallback((size: number) => {
         setWCSize(size);
@@ -23,7 +26,7 @@ export default function TopicDetail({ data, size = 200 }: Props) {
 
     return (
         <Card
-            message={`#${data.topic}`}
+            message={`#${localiser.getLocalisedLabel(data.topic, i18n.language)}`}
             score={data.score}
             image={data.image}
         >

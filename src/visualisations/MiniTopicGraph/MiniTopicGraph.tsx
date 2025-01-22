@@ -6,6 +6,8 @@ import colours from '@knicos/genai-base/css/colours.module.css';
 import { useUserProfile } from '@genaism/hooks/profiler';
 import { useServices } from '@genaism/hooks/services';
 import { ContentNodeId, getTopicId, TopicNodeId, UserNodeId } from '@knicos/genai-recom';
+import { localiser } from '@genaism/services/localiser/localiser';
+import { useTranslation } from 'react-i18next';
 
 const LINE_THICKNESS_UNSELECTED = 20;
 const MIN_LINE_THICKNESS = 5;
@@ -20,6 +22,7 @@ interface Props {
 type AnyNode = UserNodeId | TopicNodeId | ContentNodeId;
 
 export default function MiniTopicGraph({ userId, topic, contentId }: Props) {
+    const { i18n } = useTranslation();
     const profile = useUserProfile(userId);
     const [count, trigger] = useReducer((a) => a + 1, 0);
     const [nodes, setNodes] = useState<GraphNode<AnyNode>[]>([]);
@@ -59,7 +62,7 @@ export default function MiniTopicGraph({ userId, topic, contentId }: Props) {
                         size: sizesRef.current.get(`topic:${u.label}`) || 30,
                         data: {
                             colour: colours.backgroundDark,
-                            label: `#${u.label}`,
+                            label: `#${localiser.getLocalisedLabel(u.label, i18n.language)}`,
                         },
                     };
                 }),
@@ -87,7 +90,7 @@ export default function MiniTopicGraph({ userId, topic, contentId }: Props) {
                 size: sizesRef.current.get(`topic:${topic}`) || 30,
                 fx: 20,
                 fy: 0,
-                data: { label: `#${topic}`, colour: colours.secondary },
+                data: { label: `#${localiser.getLocalisedLabel(topic, i18n.language)}`, colour: colours.secondary },
             },
             {
                 id: contentId,
@@ -135,7 +138,7 @@ export default function MiniTopicGraph({ userId, topic, contentId }: Props) {
                 }),
         ];
         setLinks(newLinks);
-    }, [profile, userId, contentId, topic, count, content, graph]);
+    }, [profile, userId, contentId, topic, count, content, graph, i18n]);
 
     return (
         <Graph

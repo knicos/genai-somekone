@@ -1,5 +1,7 @@
 import style from './style.module.css';
 import ActionPanel from './ActionPanel';
+import { localiser } from '@genaism/services/localiser/localiser';
+import { useTranslation } from 'react-i18next';
 
 export type ShareKind = 'none' | 'individual' | 'friends' | 'public';
 
@@ -9,6 +11,7 @@ interface Props {
 }
 
 export default function LabelsPanel({ onClose, labels }: Props) {
+    const { i18n } = useTranslation();
     return (
         <ActionPanel
             horizontal="right"
@@ -24,7 +27,7 @@ export default function LabelsPanel({ onClose, labels }: Props) {
                         key={ix}
                         className={style.topicLabel}
                     >
-                        #{l}
+                        #{localiser.getLocalisedLabel(l, i18n.language)}
                     </div>
                 ))}
             </div>

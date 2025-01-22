@@ -20,7 +20,7 @@ import {
     UserNodeId,
 } from '@knicos/genai-recom';
 import topics from './disallowedTopics.json';
-import i18n from '@genaism/i18n';
+import { localiser } from '../localiser/localiser';
 
 const set = new Set(topics);
 
@@ -207,19 +207,8 @@ export async function loadFile(
             });
         }
 
-        // Remap labels if there is a locale for it.
         if (store.project.labelLocale) {
-            const lng = store.project.labelLocale[i18n.language];
-            if (lng) {
-                store.meta.forEach((meta) => {
-                    meta.labels.forEach((label) => {
-                        const l = lng[label.label];
-                        if (l) {
-                            label.label = l;
-                        }
-                    });
-                });
-            }
+            localiser.addLabelLocales(store.project.labelLocale);
         }
     }
 
