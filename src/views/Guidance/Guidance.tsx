@@ -2,7 +2,7 @@ import { GuideAction, useGuide } from '@genaism/hooks/guidance';
 import { MenuItem, MenuList } from '@mui/material';
 import style from './style.module.css';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useSettingDeserialise } from '@genaism/hooks/settings';
+import { SomekoneSettings, useSettingDeserialise, useSettingSerialise } from '@genaism/hooks/settings';
 import ActionButton from './ActionButton';
 import { useLocation, useNavigate } from 'react-router';
 import { useSearchParams } from 'react-router-dom';
@@ -18,6 +18,7 @@ interface Props {
 export default function Guidance({ guide }: Props) {
     const data = useGuide(guide);
     const deserial = useSettingDeserialise();
+    const serial = useSettingSerialise();
     const navigate = useNavigate();
     const { search } = useLocation();
     const [params, setParams] = useSearchParams();
@@ -29,6 +30,8 @@ export default function Guidance({ guide }: Props) {
     // Hack to fix react router conceptual bug
     const paramsRef = useRef(setParams);
     paramsRef.current = setParams;
+
+    const settingsRef = useRef<SomekoneSettings | undefined>();
 
     const doAction = useCallback(
         (action: GuideAction) => {
@@ -54,26 +57,30 @@ export default function Guidance({ guide }: Props) {
     );
 
     useEffect(() => {
-        if (data && data.initActions) {
-            data.initActions.forEach((act) => {
-                const action = data.actions[act];
-                if (action) {
-                    deserial(action);
+        // Save current settings for later restore
+        serial().then((oldSettings) => {
+            settingsRef.current = oldSettings;
+            if (data && data.initActions) {
+                data.initActions.forEach((act) => {
+                    const action = data.actions[act];
+                    if (action) {
+                        deserial(action);
 
-                    if (action.replay !== undefined) {
-                        if (action.replay && !replay.isPlaying()) {
-                            replay.start();
+                        if (action.replay !== undefined) {
+                            if (action.replay && !replay.isPlaying()) {
+                                replay.start();
+                            }
+                            if (!action.replay) {
+                                replay.stop();
+                            }
                         }
-                        if (!action.replay) {
-                            replay.stop();
+                        if (action.autoPlay !== undefined) {
+                            setAutoplay(action.autoPlay);
                         }
                     }
-                    if (action.autoPlay !== undefined) {
-                        setAutoplay(action.autoPlay);
-                    }
-                }
-            });
-        }
+                });
+            }
+        });
         let reloadHandler: () => void;
 
         if (data && data.reloadOnReplayEnd) {
@@ -104,8 +111,12 @@ export default function Guidance({ guide }: Props) {
             if (reloadHandler) {
                 replay.broker.off('replayfinished', reloadHandler);
             }
+            // Restore original settings when closing guide
+            if (settingsRef.current) {
+                deserial(settingsRef.current);
+            }
         };
-    }, [data, deserial, replay, navigate]);
+    }, [data, deserial, replay, navigate, serial]);
 
     useEffect(() => {
         if (autoplay > 0 && data) {
