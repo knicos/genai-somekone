@@ -1,7 +1,6 @@
-import { usePeer, ConnectionMonitor } from '@knicos/genai-base';
+import { usePeer, ConnectionStatus } from '@knicos/genai-base';
 import { EventProtocol } from '@genaism/protocol/protocol';
 import { availableUsers, currentUserName, injectedContent } from '@genaism/state/sessionState';
-import { DataConnection } from 'peerjs';
 import { PropsWithChildren, createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { SMConfig } from '../../state/smConfig';
@@ -11,6 +10,7 @@ import { decompressFromUTF16 } from 'lz-string';
 import { ContentNodeId, ScoredRecommendation, Snapshot, UserNodeData } from '@knicos/genai-recom';
 import { useServices } from '@genaism/hooks/services';
 import { bytesToBase64DataUrl, dataUrlToBytes } from '@genaism/util/base64';
+import { Connection } from '@knicos/genai-base/main/services/peer2peer/types';
 
 const DATA_LOG_TIME = 15 * 60 * 1000;
 const USERNAME_KEY = 'genai_somekone_username';
@@ -46,7 +46,7 @@ export default function FeedProtocol({ content, server, mycode, setContent, chil
     const { content: contentSvc, profiler: profilerSvc, actionLog, recommender } = useServices();
 
     const onData = useCallback(
-        (data: EventProtocol, conn: DataConnection) => {
+        (data: EventProtocol, conn: Connection<EventProtocol>) => {
             if (data.event === 'eter:config' && data.configuration) {
                 setConfig((old) => ({ ...old, ...data.configuration }));
                 if (data.content) setContent && setContent(data.content);
@@ -75,7 +75,7 @@ export default function FeedProtocol({ content, server, mycode, setContent, chil
                     config.recommendations
                 );
                 conn.send({ event: 'eter:config', configuration: config, content });
-                conn.send({ event: 'eter:reguser', username, id: profilerSvc.getCurrentUser() });
+                conn.send({ event: 'eter:reguser', username: username || 'NoName', id: profilerSvc.getCurrentUser() });
                 conn.send({ event: 'eter:action_log', id: profilerSvc.getCurrentUser(), log: logs });
                 conn.send({ event: 'eter:profile_data', profile, id: profilerSvc.getCurrentUser() });
                 conn.send({ event: 'eter:recommendations', recommendations, id: profilerSvc.getCurrentUser() });
@@ -128,7 +128,7 @@ export default function FeedProtocol({ content, server, mycode, setContent, chil
         ]
     );
 
-    const { ready, send, status, error } = usePeer<EventProtocol>({
+    const { ready, send, peer } = usePeer<EventProtocol>({
         host: import.meta.env.VITE_APP_PEER_SERVER,
         secure: import.meta.env.VITE_APP_PEER_SECURE === '1',
         key: import.meta.env.VITE_APP_PEER_KEY || 'peerjs',
@@ -233,12 +233,12 @@ export default function FeedProtocol({ content, server, mycode, setContent, chil
             }}
         >
             {hasBeenReady && <LogProvider sender={send}>{children}</LogProvider>}
-            <ConnectionMonitor
+            <ConnectionStatus
                 api={import.meta.env.VITE_APP_APIURL}
-                appName="somekone"
+                appName={import.meta.env.DEV ? 'dev' : 'somekone'}
                 ready={ready}
-                status={status}
-                error={error}
+                peer={peer}
+                visibility={1}
             />
         </ProtocolContext.Provider>
     );

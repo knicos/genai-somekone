@@ -85,7 +85,12 @@
             "content_none": "Sisältö valmis",
             "starting": "Käynnistää",
             "wifiNetwork": "Tietosi lähetetään internetin kautta, koska et käytä samaa Wi-Fi-verkkoa.",
-            "permNetwork": "Tietosi lähetetään internetin kautta, koska et sallinut kameran käyttöoikeutta."
+            "permNetwork": "Tietosi lähetetään internetin kautta, koska et sallinut kameran käyttöoikeutta.",
+            "quality0": "Checking...",
+            "quality1": "Poor Connection",
+            "quality2": "Connected",
+            "quality3": "Connected",
+            "failed": "No Connection"
         },
         "errors": {
             "unknown": "Ongelma laitteiden välisessä viestinnässä",

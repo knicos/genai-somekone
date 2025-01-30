@@ -2,9 +2,8 @@ import { describe, it, vi } from 'vitest';
 import { render, screen, act } from '@testing-library/react';
 import { Component as Dashboard } from './Dashboard';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
-import { usePeer } from '@knicos/genai-base';
+import { Connection, usePeer } from '@knicos/genai-base';
 import { EventProtocol } from '@genaism/protocol/protocol';
-import { DataConnection } from 'peerjs';
 import TestWrapper from '@genaism/util/TestWrapper';
 
 type PeerProps = Parameters<typeof usePeer<EventProtocol>>[0];
@@ -84,7 +83,7 @@ describe('Dashboard view', () => {
             if (propsObj.props.onData) {
                 propsObj.props.onData({ event: 'eter:reguser', username: 'dummy', id: 'user:xyz1' }, {
                     send: vi.fn(),
-                } as unknown as DataConnection);
+                } as unknown as Connection<EventProtocol>);
             }
         });
 
@@ -118,10 +117,10 @@ describe('Dashboard view', () => {
             if (propsObj.props.onData) {
                 propsObj.props.onData({ event: 'eter:reguser', username: 'dummy', id: 'user:xyz1' }, {
                     send: vi.fn(),
-                } as unknown as DataConnection);
+                } as unknown as Connection<EventProtocol>);
                 propsObj.props.onData({ event: 'eter:reguser', username: 'dumm2', id: 'user:xyz2' }, {
                     send: vi.fn(),
-                } as unknown as DataConnection);
+                } as unknown as Connection<EventProtocol>);
             }
         });
 

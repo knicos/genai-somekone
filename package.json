@@ -18,7 +18,7 @@
     "dependencies": {
         "@emotion/react": "^11.14.0",
         "@emotion/styled": "^11.14.0",
-        "@knicos/genai-base": "^1.1.1",
+        "@knicos/genai-base": "^2.0.2",
         "@knicos/genai-recom": "^0.3.17",
         "@mui/icons-material": "^6.4.0",
         "@mui/material": "^6.4.0",
@@ -80,7 +80,7 @@
         "jsdom": "^22.1.0",
         "sharp": "^0.33.2",
         "storybook": "^7.5.3",
-        "typescript": "^5.0.2",
+        "typescript": "^5.7.3",
         "vite": "^4.4.5",
         "vitest": "^0.34.6"
     }

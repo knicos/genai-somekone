@@ -73,19 +73,22 @@
     },
     "loader": {
         "messages": {
-            "getIceConfig": "Retrieving network configuration",
             "cameraPermission": "To allow direct connections between devices you need to allow temporary access to the camera.",
             "connecting": "Trying to connect...",
-            "signaling": "Finding other devices",
             "disconnected": "Disconnected from the other device",
-            "retry": "Retrying connection...",
+            "retry": "Retrying...",
             "content_load": "Loading the content",
             "content_download": "Downloading the content",
             "ready": "Connected",
             "content_none": "Content ready",
-            "starting": "Starting",
+            "starting": "Connecting...",
             "wifiNetwork": "Your data is being sent over the internet because you are not using the same Wi-Fi network.",
-            "permNetwork": "Your data is being sent over the internet because you didn't allow camera access."
+            "permNetwork": "Your data is being sent over the internet because you didn't allow camera access.",
+            "quality0": "Checking...",
+            "quality1": "Poor Connection",
+            "quality2": "Connected",
+            "quality3": "Connected",
+            "failed": "No Connection"
         },
         "errors": {
             "unknown": "A connection problem occurred",

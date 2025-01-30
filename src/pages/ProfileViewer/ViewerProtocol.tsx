@@ -1,4 +1,4 @@
-import { usePeer, ConnectionMonitor } from '@knicos/genai-base';
+import { usePeer, ConnectionStatus } from '@knicos/genai-base';
 import { EventProtocol } from '@genaism/protocol/protocol';
 import { currentUserName } from '@genaism/state/sessionState';
 import { PropsWithChildren, useCallback, useEffect, useState } from 'react';
@@ -54,7 +54,7 @@ export default function ViewerProtocol({ server, mycode, children, onID }: Props
         [setConfig, onID, profiler, actionLog, recommender]
     );
 
-    const { ready, send, status, error } = usePeer<EventProtocol>({
+    const { ready, send, peer } = usePeer<EventProtocol>({
         host: import.meta.env.VITE_APP_PEER_SERVER,
         secure: import.meta.env.VITE_APP_PEER_SECURE === '1',
         key: import.meta.env.VITE_APP_PEER_KEY || 'peerjs',
@@ -83,12 +83,11 @@ export default function ViewerProtocol({ server, mycode, children, onID }: Props
                 content={content}
                 onLoaded={() => setLoaded(true)}
             />
-            <ConnectionMonitor
+            <ConnectionStatus
                 api={import.meta.env.VITE_APP_APIURL}
-                appName="somekone"
+                appName={import.meta.env.DEV ? 'dev' : 'somekone'}
                 ready={ready}
-                status={status}
-                error={error}
+                peer={peer}
             />
         </>
     );

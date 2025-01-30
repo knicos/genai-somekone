@@ -1,7 +1,6 @@
 import { usePeer, SenderType, ConnectionStatus } from '@knicos/genai-base';
 import { EventProtocol, UserEntry } from '@genaism/protocol/protocol';
 import { appConfiguration } from '@genaism/state/settingsState';
-import { DataConnection } from 'peerjs';
 import { useCallback, useEffect, useRef } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { SMConfig } from '../../state/smConfig';
@@ -11,6 +10,7 @@ import { onlineUsers } from '@genaism/state/sessionState';
 import { ContentNodeId, makeUserSnapshot, ProfilerService, UserNodeId } from '@knicos/genai-recom';
 import { useServices } from '@genaism/hooks/services';
 import { bytesToBase64DataUrl, dataUrlToBytes } from '@genaism/util/base64';
+import { Connection } from '@knicos/genai-base/main/services/peer2peer/types';
 
 const MAX_AGE = 30 * 60 * 1000; // 30 mins
 
@@ -37,7 +37,7 @@ export default function ServerProtocol({ onReady, code, content }: Props) {
     const postCache = useRef(new Set<ContentNodeId>());
 
     const dataHandler = useCallback(
-        (data: EventProtocol, conn: DataConnection) => {
+        (data: EventProtocol, conn: Connection<EventProtocol>) => {
             if (data.event === 'eter:join') {
                 conn.send({ event: 'eter:config', configuration: config, content });
                 conn.send({
@@ -150,7 +150,9 @@ export default function ServerProtocol({ onReady, code, content }: Props) {
                 // Send some updated statistics for these new recommendations
                 conn.send({
                     event: 'eter:stats',
-                    content: contentSvc.getContentStats(data.recommendations.map((r) => r.contentId)),
+                    content: contentSvc
+                        .getContentStats(data.recommendations.map((r) => r.contentId))
+                        .map((s, ix) => ({ ...s, id: data.recommendations[ix].contentId })),
                     bestEngagement: profilerSvc.getBestEngagement(),
                 });
             }
@@ -158,7 +160,7 @@ export default function ServerProtocol({ onReady, code, content }: Props) {
         [config, content, users, setUsers, profilerSvc, contentSvc, actionLog]
     );
     const closeHandler = useCallback(
-        (conn?: DataConnection) => {
+        (conn?: Connection<EventProtocol>) => {
             if (conn) {
                 setUsers((old) => old.filter((o) => o.connection !== conn));
             }
@@ -166,7 +168,7 @@ export default function ServerProtocol({ onReady, code, content }: Props) {
         [setUsers]
     );
 
-    const { ready, send, status, error } = usePeer({
+    const { ready, send, peer } = usePeer({
         host: import.meta.env.VITE_APP_PEER_SERVER,
         secure: import.meta.env.VITE_APP_PEER_SECURE === '1',
         key: import.meta.env.VITE_APP_PEER_KEY || 'peerjs',
@@ -188,10 +190,9 @@ export default function ServerProtocol({ onReady, code, content }: Props) {
     return (
         <ConnectionStatus
             api={import.meta.env.VITE_APP_APIURL}
-            appName="somekone"
+            appName={import.meta.env.DEV ? 'dev' : 'somekone'}
             ready={ready}
-            status={status}
-            error={error}
+            peer={peer}
         />
     );
 }
