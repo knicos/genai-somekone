@@ -162,7 +162,7 @@ export default function ServerProtocol({ onReady, code, content }: Props) {
     const closeHandler = useCallback(
         (conn?: Connection<EventProtocol>) => {
             if (conn) {
-                setUsers((old) => old.filter((o) => o.connection !== conn));
+                setUsers((old) => old.filter((o) => o.connection.connectionId !== conn.connectionId));
             }
         },
         [setUsers]

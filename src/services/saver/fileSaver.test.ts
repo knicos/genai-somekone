@@ -14,9 +14,9 @@ import {
 
 const { mockUsers, mockProfiles, mockSave, mockLog } = vi.hoisted(() => ({
     mockUsers: vi.fn(),
-    mockProfiles: vi.fn<unknown[], UserNodeData>(),
+    mockProfiles: vi.fn<(a: unknown[]) => UserNodeData>(),
     mockSave: vi.fn(),
-    mockLog: vi.fn<unknown[], LogEntry[]>(),
+    mockLog: vi.fn<(a: unknown[]) => LogEntry[]>(),
 }));
 
 vi.mock('@knicos/genai-recom', async () => {

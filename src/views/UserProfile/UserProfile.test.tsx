@@ -5,7 +5,7 @@ import { ContentNodeId, createEmptyProfile, getGraphService, UserNodeData } from
 import { TestWrapper } from '@knicos/genai-base';
 
 const { mockProfile } = vi.hoisted(() => ({
-    mockProfile: vi.fn<unknown[], UserNodeData>(() => {
+    mockProfile: vi.fn<(a: unknown[]) => UserNodeData>(() => {
         const profile = createEmptyProfile('user:xyz', 'TestUser1');
         profile.affinities.contents.contents = [{ id: 'content:content1', weight: 1 }];
         profile.affinities.topics.topics = [{ label: 'taste1', weight: 0.5 }];

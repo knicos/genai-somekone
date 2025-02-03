@@ -12,7 +12,7 @@ interface RecReturn {
 }
 
 const { mockRecommendations } = vi.hoisted(() => ({
-    mockRecommendations: vi.fn<unknown[], RecReturn>(() => ({ more: () => {}, recommendations: [] })),
+    mockRecommendations: vi.fn<(a: unknown[]) => RecReturn>(() => ({ more: () => {}, recommendations: [] })),
 }));
 
 vi.mock('@genaism/hooks/recommender', () => ({

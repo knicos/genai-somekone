@@ -5,10 +5,10 @@ import { createEmptyProfile, LogEntry, UserNodeData } from '@knicos/genai-recom'
 import { TestWrapper } from '@knicos/genai-base';
 
 const { mockProfile, mockLog } = vi.hoisted(() => ({
-    mockProfile: vi.fn<unknown[], UserNodeData>(() => ({
+    mockProfile: vi.fn<(a: unknown[]) => UserNodeData>(() => ({
         ...createEmptyProfile('user:xyz', 'TestUser1'),
     })),
-    mockLog: vi.fn<unknown[], LogEntry[]>(() => []),
+    mockLog: vi.fn<(a: unknown[]) => LogEntry[]>(() => []),
 }));
 
 vi.mock('@genaism/hooks/profiler', () => ({
