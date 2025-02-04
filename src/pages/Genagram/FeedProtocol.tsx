@@ -11,6 +11,7 @@ import { ContentNodeId, ScoredRecommendation, Snapshot, UserNodeData } from '@kn
 import { useServices } from '@genaism/hooks/services';
 import { bytesToBase64DataUrl, dataUrlToBytes } from '@genaism/util/base64';
 import { Connection } from '@knicos/genai-base/main/services/peer2peer/types';
+import style from './style.module.css';
 
 const DATA_LOG_TIME = 15 * 60 * 1000;
 const USERNAME_KEY = 'genai_somekone_username';
@@ -233,13 +234,15 @@ export default function FeedProtocol({ content, server, mycode, setContent, chil
             }}
         >
             {hasBeenReady && <LogProvider sender={send}>{children}</LogProvider>}
-            <ConnectionStatus
-                api={import.meta.env.VITE_APP_APIURL}
-                appName={import.meta.env.DEV ? 'dev' : 'somekone'}
-                ready={ready}
-                peer={peer}
-                visibility={1}
-            />
+            <div className={style.connectionStatus}>
+                <ConnectionStatus
+                    api={import.meta.env.VITE_APP_APIURL}
+                    appName={import.meta.env.DEV ? 'dev' : 'somekone'}
+                    ready={ready}
+                    peer={peer}
+                    visibility={0}
+                />
+            </div>
         </ProtocolContext.Provider>
     );
 }

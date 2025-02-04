@@ -11,6 +11,7 @@ import { ContentNodeId, makeUserSnapshot, ProfilerService, UserNodeId } from '@k
 import { useServices } from '@genaism/hooks/services';
 import { bytesToBase64DataUrl, dataUrlToBytes } from '@genaism/util/base64';
 import { Connection } from '@knicos/genai-base/main/services/peer2peer/types';
+import style from './style.module.css';
 
 const MAX_AGE = 30 * 60 * 1000; // 30 mins
 
@@ -188,11 +189,13 @@ export default function ServerProtocol({ onReady, code, content }: Props) {
     }, [onReady, ready]);
 
     return (
-        <ConnectionStatus
-            api={import.meta.env.VITE_APP_APIURL}
-            appName={import.meta.env.DEV ? 'dev' : 'somekone'}
-            ready={ready}
-            peer={peer}
-        />
+        <div className={style.connectionStatus}>
+            <ConnectionStatus
+                api={import.meta.env.VITE_APP_APIURL}
+                appName={import.meta.env.DEV ? 'dev' : 'somekone'}
+                ready={ready}
+                peer={peer}
+            />
+        </div>
     );
 }

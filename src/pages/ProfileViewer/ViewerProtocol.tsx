@@ -9,6 +9,7 @@ import { LogProvider } from '@genaism/hooks/logger';
 import { ContentLoader } from '@genaism/components/ContentLoader';
 import { UserNodeId } from '@knicos/genai-recom';
 import { useServices } from '@genaism/hooks/services';
+import style from './style.module.css';
 
 const USERNAME_KEY = 'genai_somekone_username';
 
@@ -83,12 +84,15 @@ export default function ViewerProtocol({ server, mycode, children, onID }: Props
                 content={content}
                 onLoaded={() => setLoaded(true)}
             />
-            <ConnectionStatus
-                api={import.meta.env.VITE_APP_APIURL}
-                appName={import.meta.env.DEV ? 'dev' : 'somekone'}
-                ready={ready}
-                peer={peer}
-            />
+            <div className={style.connectionStatus}>
+                <ConnectionStatus
+                    api={import.meta.env.VITE_APP_APIURL}
+                    appName={import.meta.env.DEV ? 'dev' : 'somekone'}
+                    ready={ready}
+                    peer={peer}
+                    visibility={0}
+                />
+            </div>
         </>
     );
 }

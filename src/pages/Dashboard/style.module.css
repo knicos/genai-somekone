@@ -128,3 +128,9 @@
     border-top: 3px solid backgroundDark3;
     border-bottom: 3px solid backgroundDark3;
 }
+
+.connectionStatus {
+    position: absolute;
+    right: 0.5rem;
+    top: 0.5rem;
+}
