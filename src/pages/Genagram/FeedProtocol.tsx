@@ -105,8 +105,9 @@ export default function FeedProtocol({ content, server, mycode, setContent, chil
                 profilerSvc.graph.addNodes(snap.nodes);
                 profilerSvc.graph.addEdges(snap.edges.map((e) => ({ ...e, timestamp: Date.now(), metadata: {} })));
                 snap.logs?.forEach((log) => {
-                    // if (log.user !== getCurrentUser())
-                    actionLog.addLogEntry(log.entry, log.user);
+                    if (log.user !== profilerSvc.getCurrentUser()) {
+                        actionLog.addLogEntry(log.entry, log.user);
+                    }
                 });
             } else if (data.event === 'eter:stats') {
                 contentSvc.updateContentStats(data.content);

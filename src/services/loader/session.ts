@@ -1,6 +1,5 @@
 import { compress, decompress } from 'lz-string';
 import { LogItem } from './loaderTypes';
-import { findLargestLogTimestamp, rebaseLog } from './rebase';
 import { ActionLogService, GNode, GraphService, NodeType } from '@knicos/genai-recom';
 
 const GRAPH_KEY = 'genai_somekone_graph';
@@ -28,13 +27,14 @@ export function loadSession(graphSvc: GraphService, logger: ActionLogService) {
 
     if (sessionLogs) {
         const logs = JSON.parse(decompress(sessionLogs)) as LogItem[];
-        const ts = findLargestLogTimestamp(logs);
-        const timeOffset = Date.now() - ts;
-        rebaseLog(logs, timeOffset);
+
+        //const ts = findLargestLogTimestamp(logs);
+        //const timeOffset = Date.now() - ts;
+        //rebaseLog(logs, timeOffset);
         logs.forEach((log) => {
             logger.appendActionLog(log.log, log.id);
         });
-        logger.sortLogs();
+        //logger.sortLogs();
     }
 
     if (!addedHandler) {

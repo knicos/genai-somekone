@@ -83,6 +83,7 @@ export default function ViewerProtocol({ server, mycode, children, onID }: Props
             <ContentLoader
                 content={content}
                 onLoaded={() => setLoaded(true)}
+                noSession
             />
             <div className={style.connectionStatus}>
                 <ConnectionStatus

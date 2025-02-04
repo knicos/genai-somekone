@@ -70,6 +70,7 @@ export function Component() {
                 content={content}
                 onLoaded={doLoaded}
                 noConfig
+                noSession
             />
             <ErrorDialog />
             <TabBlocker />
