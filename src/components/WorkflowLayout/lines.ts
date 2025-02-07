@@ -1,4 +1,4 @@
-import { ILine } from './SvgLayer';
+import { ILine } from '../../components/WorkflowLayout/SvgLayer';
 
 export interface INode {
     x: number;

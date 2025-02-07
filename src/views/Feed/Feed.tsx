@@ -16,9 +16,10 @@ interface Props {
     noLog?: boolean;
     noActions?: boolean;
     alwaysActive?: boolean;
+    noHeader?: boolean;
 }
 
-export default function Feed({ onProfile, onLog, onRecommend, id, noLog, noActions, alwaysActive }: Props) {
+export default function Feed({ onProfile, onLog, onRecommend, id, noLog, noActions, alwaysActive, noHeader }: Props) {
     const [feedList, setFeedList] = useState<FeedEntry[]>([]);
     const moreState = useRef(true);
     const profiler = useProfilerService();
@@ -68,12 +69,14 @@ export default function Feed({ onProfile, onLog, onRecommend, id, noLog, noActio
         <section className={style.feedView}>
             {feedList.length > 0 && (
                 <ImageFeed
+                    id={aid}
                     images={feedList}
                     onMore={() => {
                         moreState.current = true;
                         more();
                     }}
                     onLog={doLog}
+                    noHeader={noHeader}
                     noActions={noActions}
                     showLabels={appConfig?.showTopicLabels}
                     alwaysActive={appConfig?.alwaysActive || alwaysActive}

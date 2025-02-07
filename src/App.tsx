@@ -196,6 +196,10 @@ const router = createBrowserRouter(
                     lazy={() => import('./pages/Dashboard/subviews/UserGrid')}
                 />
                 <Route
+                    path="workflow"
+                    lazy={() => import('./pages/Dashboard/subviews/Workflow')}
+                />
+                <Route
                     path="contentengage"
                     lazy={() => import('./pages/Dashboard/subviews/ContentEngagements')}
                 />

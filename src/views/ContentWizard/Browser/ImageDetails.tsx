@@ -1,5 +1,5 @@
 import { ContentNodeId } from '@knicos/genai-recom';
-import { Widget } from '../Widget';
+import { Widget } from '../../../components/WorkflowLayout/Widget';
 import { useTranslation } from 'react-i18next';
 import { Chip, IconButton, Menu, MenuItem } from '@mui/material';
 import style from '../style.module.css';

@@ -18,9 +18,10 @@ import DownloadIcon from '@mui/icons-material/Download';
 interface Props {
     id?: UserNodeId;
     disableMenu?: boolean;
+    noImageCloud?: boolean;
 }
 
-export default function Profile({ id, disableMenu }: Props) {
+export default function Profile({ id, disableMenu, noImageCloud }: Props) {
     const { t } = useTranslation();
     const profile = useUserProfile(id);
     const profiler = useProfilerService();
@@ -88,7 +89,7 @@ export default function Profile({ id, disableMenu }: Props) {
                 )}
                 <DataProfilePure
                     ref={svgRef}
-                    content={weightedImages}
+                    content={noImageCloud ? undefined : weightedImages}
                     log={actionLog}
                 />
             </div>

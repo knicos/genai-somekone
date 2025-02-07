@@ -74,6 +74,8 @@
 
 .widget_content {
     padding: 1rem;
+    display: flex;
+    flex-direction: column;
 }
 
 .widget_content > p {

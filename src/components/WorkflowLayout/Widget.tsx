@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useCallback } from 'react';
+import React, { useRef, useEffect, useCallback, CSSProperties } from 'react';
 import style from './widget.module.css';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
@@ -19,6 +19,7 @@ interface Props extends React.HTMLProps<HTMLDivElement> {
     active?: boolean;
     id?: string;
     noPadding?: boolean;
+    contentStyle?: CSSProperties;
 }
 
 const TextField = styled(MTextField)({
@@ -41,6 +42,7 @@ export function Widget({
     id,
     noPadding,
     active,
+    contentStyle,
     ...props
 }: Props) {
     const { t } = useTranslation();
@@ -144,7 +146,7 @@ export function Widget({
             )}
             <div
                 className={style.widget_content}
-                style={{ padding: noPadding ? 0 : undefined }}
+                style={{ ...contentStyle, padding: noPadding ? 0 : undefined }}
             >
                 {children}
             </div>

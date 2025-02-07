@@ -7,7 +7,7 @@ import { saveAs } from 'file-saver';
 import { useChangeNodeType } from '@genaism/hooks/graph';
 import SimilarityChecker from './SimilarityCheck';
 import { useTranslation } from 'react-i18next';
-import { Widget } from '../Widget';
+import { Widget } from '../../../components/WorkflowLayout/Widget';
 import TrainingGraph, { TrainingDataPoint } from '../../../visualisations/TrainingGraph/TrainingGraph';
 import SimilarityDistribution from './SimilarityDistribution';
 import RefreshIcon from '@mui/icons-material/Refresh';

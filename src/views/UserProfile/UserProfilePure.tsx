@@ -12,7 +12,7 @@ interface Props {
     engagement: number;
     topics: TopicData[];
     wordCloud: WeightedLabel[];
-    summary: TopicSummary;
+    summary?: TopicSummary;
     wordCloudSize?: number;
     imageCloudSize?: number;
     ref?: RefObject<SVGSVGElement>;
@@ -47,44 +47,46 @@ export const UserProfilePure = forwardRef(function UserProfilePure(
                     />
                 </svg>
             </div>
-            <Cards>
-                <Card
-                    title={t('profile.titles.engagement')}
-                    score={engagement}
-                />
-                {topics.map((t) => (
-                    <TopicDetail
-                        key={t.topic}
-                        data={t}
-                        size={imageCloudSize}
+            {summary && (
+                <Cards>
+                    <Card
+                        title={t('profile.titles.engagement')}
+                        score={engagement}
                     />
-                ))}
-                <TopicPie
-                    title={t('profile.titles.sharingPreference')}
-                    summary={summary.shared}
-                    percent={summary.sharedPercent}
-                />
-                <TopicPie
-                    title={t('profile.titles.followPreference')}
-                    summary={summary.followed}
-                    percent={summary.followedPercent}
-                />
-                <TopicPie
-                    title={t('profile.titles.commentPreference')}
-                    summary={summary.commented}
-                    percent={summary.commentedPercent}
-                />
-                <TopicPie
-                    title={t('profile.titles.reactPreference')}
-                    summary={summary.reacted}
-                    percent={summary.reactedPercent}
-                />
-                <TopicPie
-                    title={t('profile.titles.viewPreference')}
-                    summary={summary.viewed}
-                    percent={summary.viewedPercent}
-                />
-            </Cards>
+                    {topics.map((t) => (
+                        <TopicDetail
+                            key={t.topic}
+                            data={t}
+                            size={imageCloudSize}
+                        />
+                    ))}
+                    <TopicPie
+                        title={t('profile.titles.sharingPreference')}
+                        summary={summary.shared}
+                        percent={summary.sharedPercent}
+                    />
+                    <TopicPie
+                        title={t('profile.titles.followPreference')}
+                        summary={summary.followed}
+                        percent={summary.followedPercent}
+                    />
+                    <TopicPie
+                        title={t('profile.titles.commentPreference')}
+                        summary={summary.commented}
+                        percent={summary.commentedPercent}
+                    />
+                    <TopicPie
+                        title={t('profile.titles.reactPreference')}
+                        summary={summary.reacted}
+                        percent={summary.reactedPercent}
+                    />
+                    <TopicPie
+                        title={t('profile.titles.viewPreference')}
+                        summary={summary.viewed}
+                        percent={summary.viewedPercent}
+                    />
+                </Cards>
+            )}
         </>
     );
 });

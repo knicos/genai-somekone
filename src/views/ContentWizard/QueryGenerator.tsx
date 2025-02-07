@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { Widget } from './Widget';
+import { Widget } from '../../components/WorkflowLayout/Widget';
 import QuerySource from './Sources/QuerySource';
 import { Tab, Tabs } from '@mui/material';
 import { useState } from 'react';

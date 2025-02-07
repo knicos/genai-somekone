@@ -8,7 +8,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import { deleteTags, deleteWithTags, mergeTags, renameTag } from './contentUtilities';
 import { useTranslation } from 'react-i18next';
-import { Widget } from './Widget';
+import { Widget } from '../../components/WorkflowLayout/Widget';
 
 interface Row {
     id: string;

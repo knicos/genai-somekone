@@ -5,7 +5,7 @@ import { IconButton, Menu, MenuItem, Pagination, Tab, Tabs } from '@mui/material
 import { useContentService } from '@genaism/hooks/services';
 import { useCallback, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Widget } from '../Widget';
+import { Widget } from '../../../components/WorkflowLayout/Widget';
 import MenuIcon from '@mui/icons-material/Menu';
 import ClusterSummary from './ClusterSummary';
 import ClusterTags from './ClusterTags';

@@ -6,7 +6,7 @@ import { clusterEmbeddings, ContentNodeId } from '@knicos/genai-recom';
 import { useContentService } from '@genaism/hooks/services';
 import ContentCluster from './ContentCluster';
 import { useTranslation } from 'react-i18next';
-import { Widget } from '../Widget';
+import { Widget } from '../../../components/WorkflowLayout/Widget';
 import { useRecoilValue } from 'recoil';
 import { settingContentWizardAdvanced } from '@genaism/state/settingsState';
 

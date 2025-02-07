@@ -5,7 +5,7 @@ import { Slider } from '@mui/material';
 import { findNearestSlot } from '@genaism/visualisations/Heatmap/grid';
 import { AutoEncoder, ContentNodeId, ContentService, Embedding } from '@knicos/genai-recom';
 import { useContentService } from '@genaism/hooks/services';
-import { Widget } from './Widget';
+import { Widget } from '../../components/WorkflowLayout/Widget';
 import { useTranslation } from 'react-i18next';
 import TrainingGraph, { TrainingDataPoint } from '../../visualisations/TrainingGraph/TrainingGraph';
 import { hslToHex } from '@genaism/util/colours';

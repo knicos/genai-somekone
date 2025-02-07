@@ -11,6 +11,8 @@ import { useActionLogService, useProfilerService } from '@genaism/hooks/services
 import { InjectContentType } from '@genaism/state/sessionState';
 
 const INTERACTION_TIMEOUT = 5000;
+const HEADER_HEIGHT = 130;
+const BASIC_PAD = 50;
 
 export interface FeedEntry {
     contentId: ContentNodeId;
@@ -19,6 +21,7 @@ export interface FeedEntry {
 }
 
 interface Props {
+    id: UserNodeId;
     images: FeedEntry[];
     noActions?: boolean;
     showLabels?: boolean;
@@ -26,6 +29,7 @@ interface Props {
     noLike?: boolean;
     noShare?: boolean;
     noFollow?: boolean;
+    noHeader?: boolean;
     onView?: (index: number, time: number) => void;
     onMore?: () => void;
     onLog: (e: LogEntry) => void;
@@ -33,6 +37,7 @@ interface Props {
 }
 
 export default function ImageFeed({
+    id,
     images,
     onView,
     onMore,
@@ -44,6 +49,7 @@ export default function ImageFeed({
     noLike,
     noFollow,
     noShare,
+    noHeader,
 }: Props) {
     const { t } = useTranslation();
     const containerRef = useRef<HTMLDivElement>(null);
@@ -110,12 +116,12 @@ export default function ImageFeed({
         if (prevRef.current >= 0) {
             const delta = now - startRef.current;
             doDwell(delta, prevRef.current);
-            actionLog.createEngagementEntry(profiler.getCurrentUser(), images[prevRef.current].contentId);
+            actionLog.createEngagementEntry(id, images[prevRef.current].contentId);
         }
         doSeen(viewed);
         startRef.current = now;
         prevRef.current = viewed;
-    }, [viewed, onView, onLog, images, doDwell, doSeen, actionLog, profiler]);
+    }, [viewed, onView, onLog, images, doDwell, doSeen, actionLog, id]);
 
     const doInteraction = useCallback(() => {
         const now = Date.now();
@@ -129,11 +135,13 @@ export default function ImageFeed({
         }
     }, [focus]);
 
+    const hasHeader = !noHeader;
+
     const doScroll = useCallback(
         (e: React.MouseEvent<HTMLDivElement>) => {
             const scrollHeight = e.currentTarget.scrollHeight;
-            const imageHeight = Math.floor((scrollHeight - 50 - 80) / images.length);
-            const scrollTop = e.currentTarget.scrollTop + imageHeight / 2 - 50 - 80;
+            const imageHeight = Math.floor((scrollHeight - (hasHeader ? HEADER_HEIGHT : BASIC_PAD)) / images.length);
+            const scrollTop = e.currentTarget.scrollTop + imageHeight / 2 - (hasHeader ? HEADER_HEIGHT : BASIC_PAD);
             const imgIndex = Math.floor(scrollTop / imageHeight + 0.2);
 
             const now = Date.now();
@@ -160,7 +168,7 @@ export default function ImageFeed({
                 containerRef.current.focus();
             }
         },
-        [images, setViewed, onMore, focus, onLog]
+        [images, setViewed, onMore, focus, onLog, hasHeader]
     );
 
     const doLike = useCallback(
@@ -232,7 +240,7 @@ export default function ImageFeed({
                     className={style.titleOuter}
                     style={{ minHeight: noActions ? '40px' : undefined }}
                 >
-                    {!noActions && (
+                    {!noActions && !noHeader && (
                         <header className={style.title}>
                             <img
                                 src="/logo48_bw.png"
@@ -246,6 +254,7 @@ export default function ImageFeed({
                             </div>
                         </header>
                     )}
+                    {noHeader && <div style={{ height: `${BASIC_PAD}px` }} />}
                 </div>
 
                 <div className={style.topSpacer} />

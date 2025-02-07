@@ -26,6 +26,7 @@ import AppSettingsAltIcon from '@mui/icons-material/AppSettingsAlt';
 import TuneIcon from '@mui/icons-material/Tune';
 import ImageSearchIcon from '@mui/icons-material/ImageSearch';
 import PsychologyIcon from '@mui/icons-material/Psychology';
+import AccountTreeIcon from '@mui/icons-material/AccountTree';
 
 interface Props {
     open?: boolean;
@@ -55,6 +56,9 @@ export default function MenuTree({ open }: Props) {
                     break;
                 case 'graphs-grid':
                     navigate('usergrid' + search);
+                    break;
+                case 'graphs-workflow':
+                    navigate('workflow' + search);
                     break;
                 case 'graphs-content':
                     navigate('contentgraph' + search);
@@ -183,6 +187,18 @@ export default function MenuTree({ open }: Props) {
                                     <div className={page === 'topicgraph' ? style.treeItemSelected : style.treeItem}>
                                         <TagIcon />
                                         {t('menu.vis.topics')}
+                                    </div>
+                                }
+                            />
+                        )}
+                        {!disabled.has('graphs-workflow') && (
+                            <TreeItem
+                                disabled
+                                itemId="graphs-workflow"
+                                label={
+                                    <div className={page === 'workflow' ? style.treeItemSelected : style.treeItem}>
+                                        <AccountTreeIcon />
+                                        {t('menu.vis.workflow')}
                                     </div>
                                 }
                             />

@@ -38,7 +38,8 @@
             "heatmap": "Heatmaps",
             "usergrid": "User Grid",
             "coengagement": "Content Relationships",
-            "topics": "Topic Relationships"
+            "topics": "Topic Relationships",
+            "workflow": "Data Flow"
         },
         "tables": {
             "title": "Data Tables",

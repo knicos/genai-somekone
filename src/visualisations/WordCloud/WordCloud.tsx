@@ -69,12 +69,12 @@ const WordCloud = memo(function Cloud({ content, size, padding, onSize, classNam
             data-testid="wordcloud-group"
             ref={gRef}
         >
-            {content.map((c, ix) => {
+            {content.map((c) => {
                 const l = locations.get(c.label);
                 if (c.weight === 0) return null;
                 return (
                     <g
-                        key={ix}
+                        key={c.label}
                         className={className || style.cloudItem}
                         transform={l ? `translate(${l.x}, ${l.y})` : 'translate(0,0)'}
                     >

@@ -37,6 +37,7 @@ describe('ImageFeed component', () => {
         const logfn = vi.fn();
         render(
             <ImageFeed
+                id={'user:1'}
                 images={[makeRecommendation('content:xyz'), makeRecommendation('content:xyz')]}
                 onLog={logfn}
             />
@@ -50,6 +51,7 @@ describe('ImageFeed component', () => {
         const logfn = vi.fn();
         render(
             <ImageFeed
+                id={'user:1'}
                 images={[makeRecommendation('content:xyz')]}
                 onLog={logfn}
             />
@@ -70,6 +72,7 @@ describe('ImageFeed component', () => {
         const logfn = vi.fn();
         render(
             <ImageFeed
+                id={'user:1'}
                 images={[makeRecommendation('content:xyz')]}
                 onLog={logfn}
             />
@@ -91,6 +94,7 @@ describe('ImageFeed component', () => {
         const logfn = vi.fn();
         render(
             <ImageFeed
+                id={'user:1'}
                 images={[makeRecommendation('content:xyz')]}
                 onLog={logfn}
             />
@@ -115,6 +119,7 @@ describe('ImageFeed component', () => {
         const logfn = vi.fn();
         render(
             <ImageFeed
+                id={'user:1'}
                 images={[makeRecommendation('content:xyz')]}
                 onLog={logfn}
             />
@@ -129,6 +134,7 @@ describe('ImageFeed component', () => {
         const logfn = vi.fn();
         render(
             <ImageFeed
+                id={'user:1'}
                 images={[makeRecommendation('content:xyz')]}
                 onLog={logfn}
             />

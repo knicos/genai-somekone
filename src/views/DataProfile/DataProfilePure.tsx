@@ -5,7 +5,7 @@ import { ForwardedRef, forwardRef, useCallback, useState } from 'react';
 
 interface Props {
     log: ContentLogEntry[];
-    content: WeightedImage[];
+    content?: WeightedImage[];
     fixedSize?: number;
     cloudSize?: number;
 }
@@ -21,21 +21,23 @@ export const DataProfilePure = forwardRef(function DataProfilePure(
 
     return (
         <>
-            <div className={style.svgContainer}>
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="100%"
-                    height={`${cloudSize}px`}
-                    viewBox={`${-(wcSize * 1.67)} ${-wcSize} ${wcSize * 1.67 * 2} ${wcSize * 2}`}
-                    ref={ref}
-                >
-                    <ImageCloud
-                        content={content}
-                        size={cloudSize}
-                        onSize={doResize}
-                    />
-                </svg>
-            </div>
+            {content && (
+                <div className={style.svgContainer}>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="100%"
+                        height={`${cloudSize}px`}
+                        viewBox={`${-(wcSize * 1.67)} ${-wcSize} ${wcSize * 1.67 * 2} ${wcSize * 2}`}
+                        ref={ref}
+                    >
+                        <ImageCloud
+                            content={content}
+                            size={cloudSize}
+                            onSize={doResize}
+                        />
+                    </svg>
+                </div>
+            )}
             <ActionLogTable
                 log={log}
                 fixedSize={fixedSize}

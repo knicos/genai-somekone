@@ -19,9 +19,10 @@ import { IconButton } from '@mui/material';
 interface Props {
     id?: UserNodeId;
     disableMenu?: boolean;
+    noTagSummary?: boolean;
 }
 
-export default function Profile({ id, disableMenu }: Props) {
+export default function Profile({ id, disableMenu, noTagSummary }: Props) {
     const { t } = useTranslation();
     const profiler = useProfilerService();
     const aid = id || profiler.getCurrentUser();
@@ -125,7 +126,7 @@ export default function Profile({ id, disableMenu }: Props) {
                 <UserProfilePure
                     ref={svgRef}
                     topics={topics}
-                    summary={summary}
+                    summary={noTagSummary ? undefined : summary}
                     wordCloud={profile.affinities.topics.topics}
                     engagement={Math.min(1, profile.engagement / (profiler.getBestEngagement() || 1))}
                 />
