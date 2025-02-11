@@ -14,10 +14,9 @@ import {
     menuShowSocialMenu,
     menuShowUserPanel,
     menuTreeMenu,
-} from '@genaism/state/menuState';
+} from '@genaism/apps/Dashboard/state/menuState';
 import {
     NodeDisplayMode,
-    appConfiguration,
     settingClusterColouring,
     settingDisplayLabel,
     settingIncludeAllLinks,
@@ -28,8 +27,9 @@ import {
     settingAutoCamera,
     settingAutoEdges,
     settingSocialNodeMenu,
-} from '@genaism/state/settingsState';
-import { SMConfig, mergeConfiguration } from '@genaism/state/smConfig';
+} from '@genaism/apps/Dashboard/state/settingsState';
+import { appConfiguration } from '@genaism/common/state/configState';
+import { SMConfig, mergeConfiguration } from '@genaism/common/state/smConfig';
 import { UserNodeId } from '@knicos/genai-recom';
 import { useRecoilCallback } from 'recoil';
 

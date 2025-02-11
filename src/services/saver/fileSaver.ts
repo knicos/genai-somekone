@@ -4,7 +4,7 @@ import { getResearchLog } from '../research/research';
 import { ProjectMeta, VERSION } from './types';
 import { v4 as uuidv4 } from 'uuid';
 import appVersion from '@genaism/generatedGitInfo.json';
-import { SMConfig } from '@genaism/state/smConfig';
+import { SMConfig } from '@genaism/common/state/smConfig';
 import { dependencies } from '../loader/tracker';
 import { SomekoneSettings } from '@genaism/hooks/settings';
 import { ActionLogService, ContentService, ProfilerService } from '@knicos/genai-recom';

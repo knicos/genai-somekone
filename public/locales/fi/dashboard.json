@@ -190,7 +190,10 @@
             "agentCount": "Agenttien lukumäärä",
             "playbackSpeed": "Nopeus",
             "autoCamera": "Automaattinen kamera",
-            "autoEdges": "Automaattinen kaarien säätö"
+            "autoEdges": "Automaattinen kaarien säätö",
+            "appType": "User Application Type",
+            "feedApp": "Instagram style",
+            "flowApp": "Data-flow style"
         },
         "messages": {
             "connection": "Mene allaolevaan www-osoitteeseen ja syötä koodi <Code>{{codeText}}</Code>, tai käytä QR -koodia.",

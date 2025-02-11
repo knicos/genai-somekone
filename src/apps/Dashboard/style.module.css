@@ -1,0 +1,29 @@
+@value textDark from "@knicos/genai-base/css/colours.module.css";
+
+.dashboard {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: white;
+    color: textDark;
+    display: flex;
+}
+
+.workspace {
+    /*position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;*/
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    /*padding-left: 57px;*/
+    min-width: 0;
+    min-height: 0;
+}

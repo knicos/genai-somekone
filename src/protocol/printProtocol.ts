@@ -1,7 +1,7 @@
-import { ContentLogEntry } from '@genaism/components/ActionLogTable';
-import { WeightedImage } from '@genaism/visualisations/ImageCloud/ImageCloud';
-import { TopicData } from '@genaism/views/UserProfile/TopicDetail';
-import { TopicSummary } from '@genaism/views/UserProfile/topicSummary';
+import { ContentLogEntry } from '@genaism/common/components/ActionLogTable';
+import { WeightedImage } from '@genaism/common/visualisations/ImageCloud/ImageCloud';
+import { TopicData } from '@genaism/common/views/UserProfile/TopicDetail';
+import { TopicSummary } from '@genaism/common/views/UserProfile/topicSummary';
 import { UserNodeData, UserNodeId, WeightedLabel } from '@knicos/genai-recom';
 
 interface PrintProfiles {

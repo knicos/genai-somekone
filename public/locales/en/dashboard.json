@@ -190,7 +190,10 @@
             "agentCount": "Number of Agents",
             "playbackSpeed": "Speed",
             "autoCamera": "Automatic camera",
-            "autoEdges": "Automatic link adjustment"
+            "autoEdges": "Automatic link adjustment",
+            "appType": "User Application Type",
+            "feedApp": "Instagram style",
+            "flowApp": "Data-flow style"
         },
         "messages": {
             "connection": "Go to the address below and enter the code <Code>{{codeText}}</Code>, or use the QR code.",

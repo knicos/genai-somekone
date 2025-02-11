@@ -1,4 +1,4 @@
-import { appConfiguration } from '@genaism/state/settingsState';
+import { appConfiguration } from '@genaism/common/state/configState';
 import { PropsWithChildren, createContext, memo, useCallback, useContext } from 'react';
 import { useRecoilValue } from 'recoil';
 import { SenderType } from '@knicos/genai-base';

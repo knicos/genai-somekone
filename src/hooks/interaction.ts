@@ -1,6 +1,4 @@
-import { interactionStatus } from '@genaism/state/interaction';
-import { useEffect, useRef, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useEffect, useState } from 'react';
 
 export function useTabActive() {
     const [active, setActive] = useState(true);
@@ -21,7 +19,7 @@ export function useTabActive() {
     return active;
 }
 
-export function useInteractionDetector(timeout: number) {
+/*export function useInteractionDetector(timeout: number) {
     const timeRef = useRef(0);
     const intervalRef = useRef(-1);
     const [status, setStatus] = useRecoilState(interactionStatus);
@@ -56,4 +54,4 @@ export function useInteractionDetector(timeout: number) {
     }, []);
 
     return status;
-}
+}*/

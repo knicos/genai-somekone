@@ -1,4 +1,4 @@
-import { SMConfig } from '@genaism/state/smConfig';
+import { SMConfig } from '@genaism/common/state/smConfig';
 
 export const VERSION = 1;
 

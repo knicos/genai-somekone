@@ -5,6 +5,10 @@
             "rewrite": "index.html"
         },
         {
+            "route": "/flow*",
+            "rewrite": "index.html"
+        },
+        {
             "route": "/dashboard*",
             "rewrite": "index.html"
         },

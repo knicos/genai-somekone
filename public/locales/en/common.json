@@ -114,6 +114,14 @@
             "close": "Close"
         }
     },
+    "workflow": {
+        "titles": {
+            "data": "Data",
+            "cluster": "Similar Users",
+            "profile": "Profile",
+            "map": "Recommendation Map"
+        }
+    },
     "feed": {
         "actions": {
             "follow": "Follow",
