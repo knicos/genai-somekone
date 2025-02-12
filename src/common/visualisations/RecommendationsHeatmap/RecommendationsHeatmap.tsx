@@ -23,8 +23,8 @@ export default function RecommendationsHeatmap({ user, dimensions, showName, inv
     const recommender = useRecommenderService();
 
     useEffect(() => {
-        setLoading(true);
-        if (!images.current) {
+        if (!images.current || images.current.length === 0) {
+            setLoading(true);
             images.current = heatmapImageSet(recommender.graph, dimensions);
         }
 

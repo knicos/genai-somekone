@@ -1,6 +1,15 @@
 import { RecommendationOptions } from '@knicos/genai-recom';
 
-export interface SMConfig {
+interface FeedConfig {
+    disableComments?: boolean;
+    disableSharing?: boolean;
+    disableLiking?: boolean;
+    disableFollowing?: boolean;
+    showTopicLabels?: boolean;
+    alwaysActive?: boolean;
+}
+
+interface ViewConfig {
     hideShareProfile?: boolean;
     hideDataView?: boolean;
     hideProfileView?: boolean;
@@ -8,18 +17,9 @@ export interface SMConfig {
     hideRecommendationsView?: boolean;
     hidePostContent?: boolean;
     hideOwnProfile?: boolean;
-    disableComments?: boolean;
-    disableSharing?: boolean;
-    disableLiking?: boolean;
-    disableFollowing?: boolean;
-    disableFeedApp?: boolean;
-    recommendations: RecommendationOptions;
-    collectResearchData?: boolean;
-    automaticUsername?: boolean;
-    limitSessions?: boolean;
-    showTopicLabels?: boolean;
-    alwaysActive?: boolean;
-    experimental?: boolean;
+}
+
+interface RecommendationConfig {
     showRecommendationWizard?: boolean;
     showScoringWizard?: boolean;
     showCandidateWizard?: boolean;
@@ -28,6 +28,19 @@ export interface SMConfig {
     hideRecommendationMenu?: boolean;
     hideCandidateOrigin?: boolean;
     hideExplainedScores?: boolean;
+    recommendations: RecommendationOptions;
+}
+
+interface WorkflowConfig {
+    blackboxWorkflow?: boolean;
+}
+
+export interface SMConfig extends RecommendationConfig, ViewConfig, FeedConfig, WorkflowConfig {
+    disableFeedApp?: boolean;
+    collectResearchData?: boolean;
+    automaticUsername?: boolean;
+    limitSessions?: boolean;
+    experimental?: boolean;
     disablePrinting?: boolean;
 }
 

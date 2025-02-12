@@ -106,6 +106,7 @@
             "settings": "Settings",
             "general": "General",
             "feedApp": "Feed App",
+            "flowApp": "Flow App",
             "recommendations": "Recommendations",
             "socialGraph": "Social Graph",
             "people": "People",
@@ -193,7 +194,8 @@
             "autoEdges": "Automatic link adjustment",
             "appType": "User Application Type",
             "feedApp": "Instagram style",
-            "flowApp": "Data-flow style"
+            "flowApp": "Data-flow style",
+            "blackboxFlow": "Blackbox the data flow"
         },
         "messages": {
             "connection": "Go to the address below and enter the code <Code>{{codeText}}</Code>, or use the QR code.",

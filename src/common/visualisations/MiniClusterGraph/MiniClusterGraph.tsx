@@ -27,10 +27,10 @@ export default function MiniClusterGraph({ userId }: Props) {
     useEffect(() => {
         const mySimilar = similar.similar.get(userId);
         if (!mySimilar) return;
-        const similarUsers = mySimilar.filter((u) => {
+        const similarUsers = mySimilar; /*.filter((u) => {
             const c = similar.clusters.get(u.id);
             return c?.label === cluster;
-        });
+        });*/
         if (!similarUsers) return;
         const newNodes = [
             ...similarUsers.map((u) => {

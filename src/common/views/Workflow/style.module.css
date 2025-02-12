@@ -1,0 +1,20 @@
+.widgetColumn {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.bbcontainer {
+    display: flex;
+    position: relative;
+    width: 80px;
+    height: 80px;
+}
+
+.bbtick {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    line-height: 1;
+}

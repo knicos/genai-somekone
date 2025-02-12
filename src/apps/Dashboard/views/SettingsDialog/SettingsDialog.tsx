@@ -8,6 +8,7 @@ import FeedSettings from './Feed';
 import GeneralSettings from './General';
 import RecommendationSettings from './Recommendations';
 import VisualisationSettings from './Visualisation';
+import FlowSettings from './Flow';
 
 export default function SettingsDialog() {
     const { t } = useTranslation();
@@ -36,13 +37,15 @@ export default function SettingsDialog() {
                 >
                     <Tab label={t('dashboard.titles.general')} />
                     <Tab label={t('dashboard.titles.feedApp')} />
+                    <Tab label={t('dashboard.titles.flowApp')} />
                     <Tab label={t('dashboard.titles.recommendations')} />
                     <Tab label={t('settings.titles.visualisation')} />
                 </Tabs>
                 {tabNumber === 0 && <GeneralSettings />}
                 {tabNumber === 1 && <FeedSettings />}
-                {tabNumber === 2 && <RecommendationSettings />}
-                {tabNumber === 3 && <VisualisationSettings />}
+                {tabNumber === 2 && <FlowSettings />}
+                {tabNumber === 3 && <RecommendationSettings />}
+                {tabNumber === 4 && <VisualisationSettings />}
             </DialogContent>
             <DialogActions>
                 <Button
