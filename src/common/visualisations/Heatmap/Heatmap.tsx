@@ -1,7 +1,7 @@
 import { Fragment, MouseEvent, PointerEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { Spinner } from '@knicos/genai-base';
 import style from './style.module.css';
-import { normWeights } from '@genaism/util/weights';
+import { zNormWeights } from '@genaism/util/weights';
 import { heatmapGrid } from './grid';
 import { ContentNodeId, WeightedNode } from '@knicos/genai-recom';
 import { useContentService } from '@genaism/hooks/services';
@@ -12,12 +12,15 @@ import { saveAs } from 'file-saver';
 import ProgressDialog from '@genaism/common/components/ProgressDialog/ProgressDialog';
 import { useTranslation } from 'react-i18next';
 
+const GRID_UPDATE_FREQ = 10;
+
 interface Props {
     data: WeightedNode<ContentNodeId>[];
     dimensions?: number;
     busy?: boolean;
     label?: string;
     invert?: boolean;
+    deviationFactor?: number;
 }
 
 /*function heatMapColorforValue(value: number) {
@@ -29,20 +32,21 @@ interface Props {
 const ZOOM_SCALE = 60;
 const MIN_OPACITY = 0.1;
 
-export default function Heatmap({ data, dimensions, busy, label, invert }: Props) {
+export default function Heatmap({ data, dimensions, busy, label, invert, deviationFactor = 1 }: Props) {
     const { t } = useTranslation();
     const [grid, setGrid] = useState<(ContentNodeId | null)[][]>();
     const svgRef = useRef<SVGSVGElement>(null);
     const [zoom, setZoom] = useState(false);
     const content = useContentService();
     const [saving, setSaving] = useState(false);
+    const updateCounter = useRef(0);
 
     const loading = data.length === 0 || !grid || busy;
     const adim = dimensions || Math.floor(Math.sqrt(content.getAllContent().length));
 
     const size = 200 / adim;
 
-    const normData = useMemo(() => (data ? normWeights(data) : undefined), [data]);
+    const normData = useMemo(() => (data ? zNormWeights(data, deviationFactor) : undefined), [data, deviationFactor]);
     const heats = useMemo(() => {
         const newHeats = new Map<ContentNodeId, number>();
         normData?.forEach((n) => {
@@ -53,15 +57,18 @@ export default function Heatmap({ data, dimensions, busy, label, invert }: Props
 
     useEffect(() => {
         if (normData && normData.length > 0) {
-            setGrid((oldGrid) =>
-                oldGrid && oldGrid.length === adim
-                    ? oldGrid
-                    : heatmapGrid(
-                          content,
-                          normData.map((n) => n.id),
-                          adim
-                      )
-            );
+            setGrid((oldGrid) => {
+                if (oldGrid && oldGrid.length === adim && updateCounter.current < GRID_UPDATE_FREQ) {
+                    updateCounter.current += 1;
+                    return oldGrid;
+                }
+                updateCounter.current = 0;
+                return heatmapGrid(
+                    content,
+                    normData.map((n) => n.id),
+                    adim
+                );
+            });
         }
     }, [normData, adim, content]);
 

@@ -11,8 +11,8 @@ export default function HeatmapCompare() {
     const [openUserList, setOpenUserList] = useState(false);
     const [users, setUser] = useState<UserNodeId[]>([]);
     const [count, refresh] = useReducer((old) => old + 1, 0);
-    const [invert, setInvert] = useState(false);
     const [mode, setMode] = useState<HeatmapMode>('global');
+    const [factor, setFactor] = useState(1);
 
     useEffect(() => {
         if ((mode === 'engagement' || mode === 'recommendation') && users.length === 0) {
@@ -36,7 +36,7 @@ export default function HeatmapCompare() {
                                 dimensions={0}
                                 user={user}
                                 showName
-                                invert={invert}
+                                deviationFactor={factor}
                             />
                         </div>
                     ))}
@@ -56,7 +56,7 @@ export default function HeatmapCompare() {
                                 dimensions={0}
                                 user={user}
                                 showName
-                                invert={invert}
+                                deviationFactor={factor}
                             />
                         </div>
                     ))}
@@ -70,7 +70,7 @@ export default function HeatmapCompare() {
                     <div className={style.heatCard}>
                         <ContentHeatmap
                             dimensions={0}
-                            invert={invert}
+                            deviationFactor={factor}
                         />
                     </div>
                 </div>
@@ -87,8 +87,8 @@ export default function HeatmapCompare() {
                 onMode={setMode}
                 onOpenUserList={() => setOpenUserList(true)}
                 onRefresh={refresh}
-                onInvert={() => setInvert((o) => !o)}
-                inverted={invert}
+                factor={factor}
+                onFactor={setFactor}
             />
         </>
     );

@@ -138,6 +138,7 @@ export default function Workflow({ id, onProfile, onRecommend, onLog }: Props) {
                         <RecommendationsHeatmap
                             user={aid}
                             dimensions={20}
+                            deviationFactor={2}
                         />
                     )}
                 </Widget>

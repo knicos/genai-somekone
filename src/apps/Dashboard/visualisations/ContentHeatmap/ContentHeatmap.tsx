@@ -7,9 +7,10 @@ import { useContentService } from '@genaism/hooks/services';
 interface Props {
     dimensions: number;
     invert?: boolean;
+    deviationFactor?: number;
 }
 
-export default function ContentHeatmap({ dimensions, invert }: Props) {
+export default function ContentHeatmap({ dimensions, invert, deviationFactor }: Props) {
     const images = useRef<ContentNodeId[]>();
     const [heats, setHeats] = useState<WeightedNode<ContentNodeId>[]>();
     const [loading, setLoading] = useState(false);
@@ -37,6 +38,7 @@ export default function ContentHeatmap({ dimensions, invert }: Props) {
             busy={loading}
             dimensions={dimensions}
             invert={invert}
+            deviationFactor={deviationFactor}
         />
     );
 }

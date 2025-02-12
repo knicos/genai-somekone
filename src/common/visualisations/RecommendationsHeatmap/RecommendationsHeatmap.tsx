@@ -12,9 +12,10 @@ interface Props {
     dimensions: number;
     showName?: boolean;
     invert?: boolean;
+    deviationFactor?: number;
 }
 
-export default function RecommendationsHeatmap({ user, dimensions, showName, invert }: Props) {
+export default function RecommendationsHeatmap({ user, dimensions, showName, invert, deviationFactor }: Props) {
     const config = useRecoilValue(configuration(user));
     const images = useRef<ContentNodeId[]>();
     const [heats, setHeats] = useState<WeightedNode<ContentNodeId>[]>();
@@ -41,6 +42,7 @@ export default function RecommendationsHeatmap({ user, dimensions, showName, inv
             dimensions={dimensions}
             label={showName ? profile.name : undefined}
             invert={invert}
+            deviationFactor={deviationFactor}
         />
     );
 }

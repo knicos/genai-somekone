@@ -5,12 +5,12 @@ import { IconButton } from '@mui/material';
 import GroupIcon from '@mui/icons-material/Group';
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import InvertColorsIcon from '@mui/icons-material/InvertColors';
 import DownloadIcon from '@mui/icons-material/Download';
 import { useEventEmit } from '@genaism/hooks/events';
 import PublicIcon from '@mui/icons-material/Public';
 import ImageSearchIcon from '@mui/icons-material/ImageSearch';
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
+import FactorMenu from './FactorMenu';
 
 export type HeatmapMode = 'global' | 'engagement' | 'recommendation';
 
@@ -18,12 +18,12 @@ interface Props {
     onOpenUserList: () => void;
     onMode: (mode: HeatmapMode) => void;
     onRefresh: () => void;
-    onInvert: () => void;
-    inverted?: boolean;
     mode: HeatmapMode;
+    factor: number;
+    onFactor: (f: number) => void;
 }
 
-export default function HeatmapMenu({ mode, onMode, onOpenUserList, onRefresh, onInvert, inverted }: Props) {
+export default function HeatmapMenu({ mode, onMode, onOpenUserList, onRefresh, factor, onFactor }: Props) {
     const { t } = useTranslation();
     const saveGraph = useEventEmit('save_heat');
 
@@ -89,19 +89,10 @@ export default function HeatmapMenu({ mode, onMode, onOpenUserList, onRefresh, o
                 </IconButton>
             </IconMenuItem>
             <Spacer />
-            <IconMenuItem
-                tooltip={t('dashboard.labels.invertHeatmap')}
-                selected={inverted}
-            >
-                <IconButton
-                    color={'inherit'}
-                    onClick={onInvert}
-                    data-testid="heatmap-menu-invert"
-                    aria-label={t('dashboard.labels.invertHeatmap')}
-                >
-                    <InvertColorsIcon />
-                </IconButton>
-            </IconMenuItem>
+            <FactorMenu
+                factor={factor}
+                onFactor={onFactor}
+            />
             <IconMenuItem tooltip={t('dashboard.labels.refresh')}>
                 <IconButton
                     color={'inherit'}

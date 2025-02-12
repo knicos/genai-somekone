@@ -11,6 +11,7 @@ interface Props {
     dimensions?: number;
     showName?: boolean;
     invert?: boolean;
+    deviationFactor?: number;
 }
 
 export function uniformUniqueSubset<T, V extends string | number>(
@@ -42,7 +43,7 @@ function heatmapImageSet(graph: GraphService, count: number, existing: ContentNo
     return uniformUniqueSubset(contents, count, (v) => v, new Set(existing));
 }
 
-export default function EngagementHeatmap({ user, dimensions, showName, invert }: Props) {
+export default function EngagementHeatmap({ user, dimensions, showName, invert, deviationFactor }: Props) {
     const config = useRecoilValue(configuration(user));
     const images = useRef<ContentNodeId[]>();
     const [heats, setHeats] = useState<WeightedNode<ContentNodeId>[]>();
@@ -86,6 +87,7 @@ export default function EngagementHeatmap({ user, dimensions, showName, invert }
             dimensions={dimensions}
             label={showName ? profile.name : undefined}
             invert={invert}
+            deviationFactor={deviationFactor}
         />
     );
 }
