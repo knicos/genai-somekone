@@ -1,7 +1,6 @@
 import { IConnection, Widget, WorkflowLayout } from '@genaism/common/components/WorkflowLayout';
 import { menuSelectedUser } from '@genaism/apps/Dashboard/state/menuState';
 import { useRecoilValue } from 'recoil';
-import Feed from '../Feed/Feed';
 import DataProfile from '../DataProfile/DataProfile';
 import UserProfile from '../UserProfile/UserProfile';
 import { I18nextProvider, useTranslation } from 'react-i18next';
@@ -14,6 +13,7 @@ import style from './style.module.css';
 import { configuration } from '@genaism/common/state/configState';
 import Blackbox from './Blackbox';
 import { useCallback, useEffect, useState } from 'react';
+import FeedWidget from './FeedWidget';
 
 const connections: IConnection[] = [
     { start: 'feed', end: 'data', startPoint: 'right', endPoint: 'left' },
@@ -29,14 +29,14 @@ interface Props {
     onProfile?: (profile: UserNodeData) => void;
     onRecommend?: (recommendations: ScoredRecommendation[]) => void;
     onLog?: () => void;
+    hideFeedMenu?: boolean;
 }
 
-export default function Workflow({ id, onProfile, onRecommend, onLog }: Props) {
+export default function Workflow({ id, onProfile, onRecommend, onLog, hideFeedMenu }: Props) {
     const { t } = useTranslation('common');
-    const profiler = useProfilerService();
     const selectedUser = useRecoilValue(menuSelectedUser);
-    const aid = id || selectedUser;
-    const name = aid ? profiler.getUserName(aid) : 'No User';
+    const profiler = useProfilerService();
+    const aid = id || selectedUser || profiler.getCurrentUser();
     const config = useRecoilValue(configuration(aid || 'user:'));
     const [spin, setSpin] = useState(false);
 
@@ -62,22 +62,13 @@ export default function Workflow({ id, onProfile, onRecommend, onLog }: Props) {
             defaultNS="common"
         >
             <WorkflowLayout connections={connections}>
-                <Widget
-                    title={name}
-                    dataWidget="feed"
-                    style={{ width: '400px' }}
-                    contentStyle={{ height: '600px' }}
-                    noPadding
-                >
-                    <Feed
-                        id={aid}
-                        noHeader
-                        alwaysActive
-                        onProfile={onProfile}
-                        onRecommend={onRecommend}
-                        onLog={doLog}
-                    />
-                </Widget>
+                <FeedWidget
+                    id={aid}
+                    onProfile={onProfile}
+                    onRecommend={onRecommend}
+                    onLog={doLog}
+                    hideMenu={hideFeedMenu}
+                />
                 {config.blackboxWorkflow && <Blackbox spin={spin} />}
                 {!config.blackboxWorkflow && (
                     <Widget

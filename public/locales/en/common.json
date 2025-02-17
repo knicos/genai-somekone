@@ -120,6 +120,9 @@
             "cluster": "Similar Users",
             "profile": "Profile",
             "map": "Recommendation Map"
+        },
+        "actions": {
+            "selectUser": "Select User"
         }
     },
     "feed": {

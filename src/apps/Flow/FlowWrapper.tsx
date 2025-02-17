@@ -11,6 +11,7 @@ export default function FlowWrapper() {
             onProfile={doProfile}
             onRecommend={doRecommend}
             id={profiler.getCurrentUser()}
+            hideFeedMenu
         />
     );
 }
