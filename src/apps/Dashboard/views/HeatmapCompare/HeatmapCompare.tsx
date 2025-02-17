@@ -1,24 +1,38 @@
 import RecommendationsHeatmap from '@genaism/common/visualisations/RecommendationsHeatmap/RecommendationsHeatmap';
-import HeatmapMenu, { HeatmapMode } from './Menu';
+import HeatmapMenu from './Menu';
 import { useEffect, useReducer, useState } from 'react';
 import UserDialog from '@genaism/common/views/UserListing/UserDialog';
 import { UserNodeId } from '@knicos/genai-recom';
 import style from './style.module.css';
 import ContentHeatmap from '../../visualisations/ContentHeatmap/ContentHeatmap';
 import EngagementHeatmap from '@genaism/common/visualisations/EngagementHeatmap/EngagementHeaptmap';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { heatmapAutoUsers, heatmapMode } from '../../state/settingsState';
+import { useProfilerService } from '@genaism/hooks/services';
+import disimilarUsers from '../../../../util/autoUsers';
 
 export default function HeatmapCompare() {
     const [openUserList, setOpenUserList] = useState(false);
     const [users, setUser] = useState<UserNodeId[]>([]);
     const [count, refresh] = useReducer((old) => old + 1, 0);
-    const [mode, setMode] = useState<HeatmapMode>('global');
+    const [mode, setMode] = useRecoilState(heatmapMode);
     const [factor, setFactor] = useState(1);
+    const autoUsers = useRecoilValue(heatmapAutoUsers);
+    const profiler = useProfilerService();
 
     useEffect(() => {
-        if ((mode === 'engagement' || mode === 'recommendation') && users.length === 0) {
+        if ((mode === 'engagement' || mode === 'recommendation') && users.length === 0 && autoUsers === 0) {
             setOpenUserList(true);
         }
-    }, [users, mode]);
+    }, [users, mode, autoUsers]);
+
+    useEffect(() => {
+        if (autoUsers > 0) {
+            setUser(disimilarUsers(profiler, autoUsers));
+        } else {
+            setUser([]);
+        }
+    }, [autoUsers, profiler]);
 
     return (
         <>

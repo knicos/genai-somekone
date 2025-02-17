@@ -17,11 +17,11 @@ export function useUserProfile(id?: UserNodeId): UserNodeData {
                 setProfile(createEmptyProfile(aid, 'NoName'));
             }
         };
-        handler();
+        //handler();
         profiler.broker.on(`profile-${aid}`, handler);
         return () => profiler.broker.off(`profile-${aid}`, handler);
     }, [aid, profiler, setProfile]);
-    return profile || createEmptyProfile(aid, 'NoName');
+    return profile || profiler.getUserProfile(aid) || createEmptyProfile(aid, 'NoName');
 }
 
 export function useSimilarUsers(profile: UserNodeData) {

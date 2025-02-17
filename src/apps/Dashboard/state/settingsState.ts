@@ -8,6 +8,26 @@ export const userApp = atom<'feed' | 'flow'>({
     default: 'feed',
 });
 
+/* === Guidance === */
+
+export const guideFile = atom<File | null>({
+    key: 'guidefile',
+    default: null,
+});
+
+/* === Heatmaps === */
+
+export const heatmapAutoUsers = atom<number>({
+    key: 'heatmapautouser',
+    default: 0,
+});
+
+export type HeatmapMode = 'global' | 'engagement' | 'recommendation';
+export const heatmapMode = atom<HeatmapMode>({
+    key: 'heatmapmode',
+    default: 'global',
+});
+
 /* === Social Graph === */
 
 export const settingSocialGraphScale = atom<number>({

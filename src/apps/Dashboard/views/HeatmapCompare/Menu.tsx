@@ -11,8 +11,7 @@ import PublicIcon from '@mui/icons-material/Public';
 import ImageSearchIcon from '@mui/icons-material/ImageSearch';
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import FactorMenu from './FactorMenu';
-
-export type HeatmapMode = 'global' | 'engagement' | 'recommendation';
+import { HeatmapMode } from '../../state/settingsState';
 
 interface Props {
     onOpenUserList: () => void;

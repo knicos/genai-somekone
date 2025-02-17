@@ -25,6 +25,7 @@ import { SomekoneSettings, useSettingDeserialise } from '@genaism/hooks/settings
 import Simulator from './components/Simulator/Simulator';
 import { I18nextProvider } from 'react-i18next';
 import i18n from '@genaism/i18n';
+import { guideFile } from './state/settingsState';
 
 interface Props {
     contentUrls?: string;
@@ -42,6 +43,7 @@ export function Workspace({ contentUrls, cfg, guide, experimental, noSession }: 
     const setError = useSetRecoilState(errorNotification);
     const MYCODE = useID(5);
     const deserial = useSettingDeserialise();
+    const gfile = useRecoilValue(guideFile);
 
     const [ready, setReady] = useState(false);
     const showReplay = useRecoilValue(menuShowReplay);
@@ -94,7 +96,7 @@ export function Workspace({ contentUrls, cfg, guide, experimental, noSession }: 
                 >
                     <main className={style.dashboard}>
                         <MenuPanel />
-                        {guide && <Guidance guide={guide} />}
+                        {(gfile || guide) && <Guidance guide={gfile ? gfile : guide || ''} />}
                         <section className={style.workspace}>
                             <Outlet />
                             <StartDialog

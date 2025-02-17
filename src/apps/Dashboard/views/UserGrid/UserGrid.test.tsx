@@ -5,12 +5,14 @@ import { beforeEach, describe, it } from 'vitest';
 import UserGrid from './UserGrid';
 import { getContentService, getGraphService, getProfilerService } from '@knicos/genai-recom';
 import userEvent from '@testing-library/user-event';
+import { getSimilarityService } from '@genaism/services/similarity';
 
 describe('UserGrid component', () => {
     beforeEach(() => {
         getContentService().reset();
         getProfilerService().reset();
         getGraphService().reset();
+        getSimilarityService().reset();
     });
 
     it('renders with no users', async ({ expect }) => {

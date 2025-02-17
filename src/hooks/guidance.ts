@@ -11,6 +11,7 @@ export interface GuideAction extends SomekoneSettings {
     url?: string;
     replay?: boolean;
     autoPlay?: number;
+    autoSelect?: boolean;
 }
 
 export interface GuidanceStep {
@@ -35,10 +36,11 @@ const DEFAULT_LOCALE = 'en';
 const KNOWN_GUIDES: Record<string, string> = {
     default: 'https://store.gen-ai.fi/somekone/guides/guide1_update2.zip',
     kiosk: 'https://store.gen-ai.fi/somekone/guides/kiosk1.zip',
+    guide2: 'https://store.gen-ai.fi/somekone/guides/guide2.zip',
 };
 
-export async function loadGuide(url: string, locale = DEFAULT_LOCALE) {
-    const realURL = url.startsWith('http') ? url : KNOWN_GUIDES[url];
+export async function loadGuide(url: string | File, locale = DEFAULT_LOCALE) {
+    const realURL = url instanceof File ? url : url.startsWith('http') ? url : KNOWN_GUIDES[url];
     if (!realURL) throw new Error('invalid_guide');
 
     const blob = await getZipBlob(realURL);
@@ -71,7 +73,7 @@ export async function loadGuide(url: string, locale = DEFAULT_LOCALE) {
     return guideData;
 }
 
-export function useGuide(url: string) {
+export function useGuide(url: string | File) {
     const { i18n } = useTranslation();
     const locale = i18n.language;
     const [guide, setGuide] = useState<GuidanceData | null>(null);

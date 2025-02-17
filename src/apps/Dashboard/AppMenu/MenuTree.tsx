@@ -20,13 +20,15 @@ import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 import ImportContactsIcon from '@mui/icons-material/ImportContacts';
 import NotInterestedIcon from '@mui/icons-material/NotInterested';
 import SettingsIcon from '@mui/icons-material/Settings';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { menuDisabledTreeItems, menuSettingsDialog, menuShowSimulator } from '@genaism/apps/Dashboard/state/menuState';
 import AppSettingsAltIcon from '@mui/icons-material/AppSettingsAlt';
 import TuneIcon from '@mui/icons-material/Tune';
 import ImageSearchIcon from '@mui/icons-material/ImageSearch';
 import PsychologyIcon from '@mui/icons-material/Psychology';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
+import FolderOpenIcon from '@mui/icons-material/FolderOpen';
+import { guideFile } from '../state/settingsState';
 
 interface Props {
     open?: boolean;
@@ -40,10 +42,15 @@ export default function MenuTree({ open }: Props) {
     const [settingsDialog, setSettingsDialog] = useRecoilState(menuSettingsDialog);
     const [simulator, setSimulator] = useRecoilState(menuShowSimulator);
     const disabledArray = useRecoilValue(menuDisabledTreeItems);
+    const setGuide = useSetRecoilState(guideFile);
 
     const disabled = useMemo(() => new Set(disabledArray), [disabledArray]);
 
     const page = pathname.split('/').pop();
+
+    const doOpenGuide = (file: File) => {
+        setGuide(file);
+    };
 
     const doClick = useCallback(
         (_: unknown, item: string) => {
@@ -96,6 +103,9 @@ export default function MenuTree({ open }: Props) {
                         return prev;
                     });
                     break;
+                case 'guides-custom':
+                    document.getElementById('guideopen')?.click();
+                    break;
                 case 'guides-none':
                     setParams((prev) => {
                         prev.delete('guide');
@@ -122,6 +132,18 @@ export default function MenuTree({ open }: Props) {
             className={style.treeContainer}
             style={open ? undefined : { display: 'none' }}
         >
+            <input
+                type="file"
+                id="guideopen"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    if (e.currentTarget.files) {
+                        doOpenGuide(e.currentTarget.files[0]);
+                        e.currentTarget.value = '';
+                    }
+                }}
+                hidden={true}
+                accept=".zip,application/zip"
+            />
             <SimpleTreeView
                 style={{ alignSelf: 'flex-start' }}
                 onItemClick={doClick}
@@ -295,6 +317,15 @@ export default function MenuTree({ open }: Props) {
                                 >
                                     <ImportContactsIcon />
                                     {t('menu.guides.kiosk')}
+                                </div>
+                            }
+                        />
+                        <TreeItem
+                            itemId="guides-custom"
+                            label={
+                                <div className={style.treeItem}>
+                                    <FolderOpenIcon />
+                                    {t('menu.guides.custom')}
                                 </div>
                             }
                         />

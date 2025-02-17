@@ -8,11 +8,14 @@ import { useLocation, useNavigate } from 'react-router';
 import { useSearchParams } from 'react-router-dom';
 import { useServices } from '@genaism/hooks/services';
 import { cancelSessionSave } from '@genaism/services/loader/session';
+import disimilarUsers from '@genaism/util/autoUsers';
+import { useSetRecoilState } from 'recoil';
+import { menuSelectedUser } from '../../state/menuState';
 
 const AUTOPLAY_ACTIVITY_DELAY = 30 * 1000;
 
 interface Props {
-    guide: string;
+    guide: string | File;
 }
 
 export default function Guidance({ guide }: Props) {
@@ -24,8 +27,9 @@ export default function Guidance({ guide }: Props) {
     const [params, setParams] = useSearchParams();
     const page = params.get('page');
     const index = page !== null ? parseInt(page) : -1;
-    const { replay } = useServices();
+    const { replay, profiler } = useServices();
     const [autoplay, setAutoplay] = useState(-1);
+    const setSelected = useSetRecoilState(menuSelectedUser);
 
     // Hack to fix react router conceptual bug
     const paramsRef = useRef(setParams);
@@ -52,8 +56,12 @@ export default function Guidance({ guide }: Props) {
             if (action.autoPlay !== undefined) {
                 setAutoplay(action.autoPlay);
             }
+            if (action.autoSelect) {
+                const bestUser = disimilarUsers(profiler, 1)[0];
+                setSelected(bestUser);
+            }
         },
-        [navigate, replay, deserial, search]
+        [navigate, replay, deserial, search, setSelected, profiler]
     );
 
     useEffect(() => {
@@ -76,6 +84,10 @@ export default function Guidance({ guide }: Props) {
                         }
                         if (action.autoPlay !== undefined) {
                             setAutoplay(action.autoPlay);
+                        }
+                        if (action.autoSelect) {
+                            const bestUser = disimilarUsers(profiler, 1)[0];
+                            setSelected(bestUser);
                         }
                     }
                 });
@@ -116,7 +128,7 @@ export default function Guidance({ guide }: Props) {
                 deserial(settingsRef.current);
             }
         };
-    }, [data, deserial, replay, navigate, serial]);
+    }, [data, deserial, replay, navigate, serial, profiler, setSelected]);
 
     useEffect(() => {
         if (autoplay > 0 && data) {

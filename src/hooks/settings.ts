@@ -27,6 +27,10 @@ import {
     settingAutoCamera,
     settingAutoEdges,
     settingSocialNodeMenu,
+    userApp,
+    heatmapAutoUsers,
+    HeatmapMode,
+    heatmapMode,
 } from '@genaism/apps/Dashboard/state/settingsState';
 import { appConfiguration } from '@genaism/common/state/configState';
 import { SMConfig, mergeConfiguration } from '@genaism/common/state/smConfig';
@@ -65,12 +69,15 @@ export interface SomekoneUISettings {
     enableReplayControls?: boolean;
     replaySpeed?: number;
     selectedUser?: UserNodeId;
+    heatmapAutoUsers?: number;
+    heatmapMode?: HeatmapMode;
 }
 
 export interface SomekoneSettings {
     socialGraph?: SomekoneSocialSettings;
     applicationConfig?: Partial<SMConfig>;
     ui?: SomekoneUISettings;
+    appType?: 'feed' | 'flow';
 }
 
 export function useSettingDeserialise() {
@@ -159,6 +166,16 @@ export function useSettingDeserialise() {
                     if (data.ui.selectedUser !== undefined) {
                         set(menuSelectedUser, data.ui.selectedUser);
                     }
+                    if (data.ui.heatmapAutoUsers !== undefined) {
+                        set(heatmapAutoUsers, data.ui.heatmapAutoUsers);
+                    }
+                    if (data.ui.heatmapMode !== undefined) {
+                        set(heatmapMode, data.ui.heatmapMode);
+                    }
+                }
+
+                if (data.appType !== undefined) {
+                    set(userApp, data.appType);
                 }
             },
         []
@@ -198,7 +215,10 @@ export function useSettingSerialise() {
                         showReplay: await snapshot.getPromise(menuShowReplay),
                         enableReplayControls: await snapshot.getPromise(menuShowReplayControls),
                         replaySpeed: await snapshot.getPromise(menuReplaySpeed),
+                        heatmapAutoUsers: await snapshot.getPromise(heatmapAutoUsers),
+                        heatmapMode: await snapshot.getPromise(heatmapMode),
                     },
+                    appType: await snapshot.getPromise(userApp),
                 };
             },
         []
