@@ -1,5 +1,9 @@
 @value workspaceBg, bgColourful1, backgroundDark, textDark from "@knicos/genai-base/css/colours.module.css";
 
+.word {
+    transition: transform 1s;
+}
+
 .word rect {
     opacity: 0.9;
     fill: backgroundDark;

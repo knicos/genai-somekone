@@ -1,11 +1,14 @@
-import { PropsWithChildren } from 'react';
+import { HTMLProps, PropsWithChildren } from 'react';
 import style from './style.module.css';
 
-export default function Cards({ children }: PropsWithChildren) {
+type Props = PropsWithChildren & HTMLProps<HTMLUListElement>;
+
+export default function Cards({ children, ...props }: Props) {
     return (
         <ul
-            className={style.table}
             data-testid="data-cards"
+            {...props}
+            className={style.table}
         >
             {children}
         </ul>

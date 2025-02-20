@@ -21,6 +21,7 @@ const connections: IConnection[] = [
     { start: 'blackbox', end: 'recommendations', startPoint: 'right', endPoint: 'left' },
     { start: 'data', end: 'profile', startPoint: 'right', endPoint: 'left' },
     { start: 'profile', end: 'cluster', startPoint: 'bottom', endPoint: 'top' },
+    { start: 'profile', end: 'recommendations', startPoint: 'right', endPoint: 'left' },
     { start: 'cluster', end: 'recommendations', startPoint: 'right', endPoint: 'left' },
 ];
 

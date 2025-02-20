@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Card } from '../DataCard';
 import LogItem from './LogItem';
 import { LogEntry } from '@knicos/genai-recom';
+import { memo } from 'react';
 
 export interface ContentLogEntry {
     content: string;
@@ -13,7 +14,7 @@ interface Props {
     batch: ContentLogEntry[];
 }
 
-export default function LogBatch({ batch }: Props) {
+const LogBatch = memo(function LogBatch({ batch }: Props) {
     const { t } = useTranslation();
     if (batch.length === 0) return null;
 
@@ -35,4 +36,6 @@ export default function LogBatch({ batch }: Props) {
             ))}
         </Card>
     );
-}
+});
+
+export default LogBatch;
