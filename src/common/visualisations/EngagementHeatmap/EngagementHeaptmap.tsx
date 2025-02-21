@@ -5,6 +5,7 @@ import Heatmap from '../Heatmap/Heatmap';
 import { ContentNodeId, GraphService, uniqueSubset, UserNodeId, WeightedNode } from '@knicos/genai-recom';
 import { useUserProfile } from '@genaism/hooks/profiler';
 import { useProfilerService } from '@genaism/hooks/services';
+import MapService from '@genaism/services/map/MapService';
 
 interface Props {
     user: UserNodeId;
@@ -12,6 +13,7 @@ interface Props {
     showName?: boolean;
     invert?: boolean;
     deviationFactor?: number;
+    mapService?: MapService;
 }
 
 export function uniformUniqueSubset<T, V extends string | number>(
@@ -43,7 +45,7 @@ function heatmapImageSet(graph: GraphService, count: number, existing: ContentNo
     return uniformUniqueSubset(contents, count, (v) => v, new Set(existing));
 }
 
-export default function EngagementHeatmap({ user, dimensions, showName, invert, deviationFactor }: Props) {
+export default function EngagementHeatmap({ user, dimensions, showName, invert, deviationFactor, mapService }: Props) {
     const config = useRecoilValue(configuration(user));
     const images = useRef<ContentNodeId[]>();
     const [heats, setHeats] = useState<WeightedNode<ContentNodeId>[]>();
@@ -88,6 +90,7 @@ export default function EngagementHeatmap({ user, dimensions, showName, invert, 
             label={showName ? profile.name : undefined}
             invert={invert}
             deviationFactor={deviationFactor}
+            mapService={mapService}
         />
     );
 }

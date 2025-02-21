@@ -2,7 +2,7 @@ import { BusyButton } from '@knicos/genai-base';
 import { useEffect, useState } from 'react';
 import style from './style.module.css';
 import { Slider } from '@mui/material';
-import { findNearestSlot } from '@genaism/common/visualisations/Heatmap/grid';
+import { findNearestSlot } from '@genaism/services/map/grid';
 import { AutoEncoder, ContentNodeId, ContentService, Embedding } from '@knicos/genai-recom';
 import { useContentService } from '@genaism/hooks/services';
 import { Widget } from '@genaism/common/components/WorkflowLayout/Widget';

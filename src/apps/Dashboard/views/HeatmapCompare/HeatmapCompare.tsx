@@ -1,15 +1,17 @@
-import RecommendationsHeatmap from '@genaism/common/visualisations/RecommendationsHeatmap/RecommendationsHeatmap';
 import HeatmapMenu from './Menu';
-import { useEffect, useReducer, useState } from 'react';
+import { useEffect, useReducer, useRef, useState } from 'react';
 import UserDialog from '@genaism/common/views/UserListing/UserDialog';
-import { UserNodeId } from '@knicos/genai-recom';
+import { ContentNodeId, UserNodeId } from '@knicos/genai-recom';
 import style from './style.module.css';
 import ContentHeatmap from '../../visualisations/ContentHeatmap/ContentHeatmap';
-import EngagementHeatmap from '@genaism/common/visualisations/EngagementHeatmap/EngagementHeaptmap';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { heatmapAutoUsers, heatmapMode } from '../../state/settingsState';
-import { useProfilerService } from '@genaism/hooks/services';
+import { useServices } from '@genaism/hooks/services';
 import disimilarUsers from '../../../../util/autoUsers';
+import { heatmapImageSet } from '@genaism/common/visualisations/RecommendationsHeatmap/algorithm';
+import MapService from '@genaism/services/map/MapService';
+import RecommendationCompare from './RecommendationCompare';
+import EngagementCompare from './EngagementCompare';
 
 export default function HeatmapCompare() {
     const [openUserList, setOpenUserList] = useState(false);
@@ -18,13 +20,24 @@ export default function HeatmapCompare() {
     const [mode, setMode] = useRecoilState(heatmapMode);
     const [factor, setFactor] = useState(1);
     const autoUsers = useRecoilValue(heatmapAutoUsers);
-    const profiler = useProfilerService();
+    const { profiler, content } = useServices();
+    const imageSet = useRef<ContentNodeId[]>();
+    const [mapper, setMapper] = useState<MapService>();
+
+    if (!imageSet.current) {
+        imageSet.current = heatmapImageSet(profiler.graph);
+    }
 
     useEffect(() => {
         if ((mode === 'engagement' || mode === 'recommendation') && users.length === 0 && autoUsers === 0) {
             setOpenUserList(true);
         }
     }, [users, mode, autoUsers]);
+
+    useEffect(() => {
+        const dim = Math.floor(Math.sqrt(imageSet.current?.length || 0));
+        setMapper(new MapService(content, { dataSetSize: users.length, dim }));
+    }, [content, users, count, mode]);
 
     useEffect(() => {
         if (autoUsers > 0) {
@@ -37,44 +50,20 @@ export default function HeatmapCompare() {
     return (
         <>
             {mode === 'recommendation' && (
-                <div
-                    className={style[`grid${users.length}`]}
+                <RecommendationCompare
                     key={`g${count}`}
-                >
-                    {users.map((user) => (
-                        <div
-                            key={user}
-                            className={style.heatCard}
-                        >
-                            <RecommendationsHeatmap
-                                dimensions={0}
-                                user={user}
-                                showName
-                                deviationFactor={factor}
-                            />
-                        </div>
-                    ))}
-                </div>
+                    mapService={mapper}
+                    factor={factor}
+                    users={users}
+                />
             )}
             {mode === 'engagement' && (
-                <div
-                    className={style[`grid${users.length}`]}
+                <EngagementCompare
                     key={`g${count}`}
-                >
-                    {users.map((user) => (
-                        <div
-                            key={user}
-                            className={style.heatCard}
-                        >
-                            <EngagementHeatmap
-                                dimensions={0}
-                                user={user}
-                                showName
-                                deviationFactor={factor}
-                            />
-                        </div>
-                    ))}
-                </div>
+                    mapService={mapper}
+                    factor={factor}
+                    users={users}
+                />
             )}
             {mode === 'global' && (
                 <div

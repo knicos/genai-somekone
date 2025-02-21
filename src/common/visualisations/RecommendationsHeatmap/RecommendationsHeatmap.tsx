@@ -6,6 +6,7 @@ import Heatmap from '../Heatmap/Heatmap';
 import { ContentNodeId, UserNodeId, WeightedNode } from '@knicos/genai-recom';
 import { useUserProfile } from '@genaism/hooks/profiler';
 import { useRecommenderService } from '@genaism/hooks/services';
+import MapService from '@genaism/services/map/MapService';
 
 interface Props {
     user: UserNodeId;
@@ -13,15 +14,27 @@ interface Props {
     showName?: boolean;
     invert?: boolean;
     deviationFactor?: number;
+    imageSet?: ContentNodeId[];
+    mapService?: MapService;
 }
 
-export default function RecommendationsHeatmap({ user, dimensions, showName, invert, deviationFactor }: Props) {
+export default function RecommendationsHeatmap({
+    user,
+    dimensions,
+    showName,
+    invert,
+    deviationFactor,
+    imageSet,
+    mapService,
+}: Props) {
     const config = useRecoilValue(configuration(user));
     const images = useRef<ContentNodeId[]>();
     const [heats, setHeats] = useState<WeightedNode<ContentNodeId>[]>();
     const [loading, setLoading] = useState(false);
     const profile = useUserProfile(user);
     const recommender = useRecommenderService();
+
+    if (imageSet) images.current = imageSet;
 
     useEffect(() => {
         if (!images.current || images.current.length === 0) {
@@ -43,6 +56,7 @@ export default function RecommendationsHeatmap({ user, dimensions, showName, inv
             label={showName ? profile.name : undefined}
             invert={invert}
             deviationFactor={deviationFactor}
+            mapService={mapService}
         />
     );
 }

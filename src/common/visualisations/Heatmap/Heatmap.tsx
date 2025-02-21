@@ -1,8 +1,7 @@
-import { Fragment, MouseEvent, PointerEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, MouseEvent, PointerEvent, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { Spinner } from '@knicos/genai-base';
 import style from './style.module.css';
 import { zNormWeights } from '@genaism/util/weights';
-import { heatmapGrid } from './grid';
 import { ContentNodeId, WeightedNode } from '@knicos/genai-recom';
 import { useContentService } from '@genaism/hooks/services';
 import HeatLabel from './HeatLabel';
@@ -11,8 +10,7 @@ import { svgToPNG } from '@genaism/util/svgToPNG';
 import { saveAs } from 'file-saver';
 import ProgressDialog from '@genaism/common/components/ProgressDialog/ProgressDialog';
 import { useTranslation } from 'react-i18next';
-
-const GRID_UPDATE_FREQ = 10;
+import MapService from '@genaism/services/map/MapService';
 
 interface Props {
     data: WeightedNode<ContentNodeId>[];
@@ -21,6 +19,7 @@ interface Props {
     label?: string;
     invert?: boolean;
     deviationFactor?: number;
+    mapService?: MapService;
 }
 
 /*function heatMapColorforValue(value: number) {
@@ -32,17 +31,41 @@ interface Props {
 const ZOOM_SCALE = 60;
 const MIN_OPACITY = 0.1;
 
-export default function Heatmap({ data, dimensions, busy, label, invert, deviationFactor = 1 }: Props) {
+export default function Heatmap({ data, dimensions, busy, label, invert, mapService, deviationFactor = 1 }: Props) {
     const { t } = useTranslation();
-    const [grid, setGrid] = useState<(ContentNodeId | null)[][]>();
+    const [agrid, setGrid] = useState<(ContentNodeId | null)[][]>();
     const svgRef = useRef<SVGSVGElement>(null);
     const [zoom, setZoom] = useState(false);
     const content = useContentService();
     const [saving, setSaving] = useState(false);
-    const updateCounter = useRef(0);
+    const [mapper, setMapper] = useState<MapService>();
+    const id = useId();
 
-    const loading = data.length === 0 || !grid || busy;
+    const loading = data.length === 0 || !agrid || busy;
     const adim = dimensions || Math.floor(Math.sqrt(content.getAllContent().length));
+
+    useEffect(() => {
+        if (mapService) {
+            setMapper(mapService);
+        } else {
+            setMapper(new MapService(content, { dataSetSize: 1, dim: adim }));
+        }
+    }, [mapService, content, adim]);
+
+    useEffect(() => {
+        if (mapper) {
+            const h = (grid: ContentNodeId[][]) => {
+                setGrid(grid);
+            };
+            if (mapper.grid && mapper.grid.length > 0) {
+                setGrid(mapper.grid);
+            }
+            mapper.on('grid', h);
+            return () => {
+                mapper.off('grid', h);
+            };
+        }
+    }, [mapper]);
 
     const size = 200 / adim;
 
@@ -56,21 +79,12 @@ export default function Heatmap({ data, dimensions, busy, label, invert, deviati
     }, [normData]);
 
     useEffect(() => {
-        if (normData && normData.length > 0) {
-            setGrid((oldGrid) => {
-                if (oldGrid && oldGrid.length === adim && updateCounter.current < GRID_UPDATE_FREQ) {
-                    updateCounter.current += 1;
-                    return oldGrid;
-                }
-                updateCounter.current = 0;
-                return heatmapGrid(
-                    content,
-                    normData.map((n) => n.id),
-                    adim
-                );
-            });
+        if (mapper && normData && normData.length > 0) {
+            mapper.addData(id, normData);
         }
-    }, [normData, adim, content]);
+    }, [normData, id, mapper]);
+
+    useEffect(() => {});
 
     useEffect(() => {
         if (!zoom) {
@@ -129,7 +143,7 @@ export default function Heatmap({ data, dimensions, busy, label, invert, deviati
                 }}
             >
                 <g>
-                    {grid?.map((row, ix) => (
+                    {agrid?.map((row, ix) => (
                         <g key={ix}>
                             {row.map((img, ix2) => {
                                 const heat = img ? (heats.get(img) || 0) * (1 - MIN_OPACITY) + MIN_OPACITY : 0;
