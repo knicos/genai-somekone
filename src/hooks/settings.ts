@@ -31,6 +31,7 @@ import {
     heatmapAutoUsers,
     HeatmapMode,
     heatmapMode,
+    AppType,
 } from '@genaism/apps/Dashboard/state/settingsState';
 import { appConfiguration } from '@genaism/common/state/configState';
 import { SMConfig, mergeConfiguration } from '@genaism/common/state/smConfig';
@@ -77,7 +78,7 @@ export interface SomekoneSettings {
     socialGraph?: SomekoneSocialSettings;
     applicationConfig?: Partial<SMConfig>;
     ui?: SomekoneUISettings;
-    appType?: 'feed' | 'flow';
+    appType?: AppType;
 }
 
 export function useSettingDeserialise() {

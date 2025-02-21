@@ -3,6 +3,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import { QRCode } from '@knicos/genai-base';
 import { useSearchParams } from 'react-router-dom';
 import ViewContainer from './ViewContainer';
+import { appToCode } from '@genaism/apps/Start/codePrefix';
 
 export function Component() {
     const { t } = useTranslation();
@@ -19,7 +20,7 @@ export function Component() {
             />
             <div className={style.shareMessage}>
                 <Trans
-                    values={{ codeText: code }}
+                    values={{ codeText: appToCode('profile', code) }}
                     i18nKey="profile.messages.connection"
                     components={{
                         Code: <em />,

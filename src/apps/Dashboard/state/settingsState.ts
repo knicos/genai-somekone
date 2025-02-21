@@ -3,7 +3,8 @@ import { atom } from 'recoil';
 
 /* === General === */
 
-export const userApp = atom<'feed' | 'flow'>({
+export type AppType = 'feed' | 'flow' | 'profile';
+export const userApp = atom<AppType>({
     key: 'userApp',
     default: 'feed',
 });

@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import LangSelect from '@genaism/common/components/LangSelect/LangSelect';
 import { Privacy } from '@knicos/genai-base';
 import gitInfo from '../../generatedGitInfo.json';
+import { codeToApp } from './codePrefix';
 
 export function Component() {
     const { t } = useTranslation();
@@ -16,10 +17,13 @@ export function Component() {
         (e: React.KeyboardEvent<HTMLInputElement>) => {
             if (e.key === 'Enter') {
                 const value = (e.target as HTMLInputElement).value;
-                if (value.length === 10) {
-                    navigate(`/profile/${value}`);
-                } else {
-                    navigate(`/app/${value}`);
+                const app = codeToApp(value);
+                if (app === 'profile') {
+                    navigate(`/profile/${value.slice(1)}`);
+                } else if (app === 'feed') {
+                    navigate(`/app/${value.slice(1)}`);
+                } else if (app === 'flow') {
+                    navigate(`/flow/${value.slice(1)}`);
                 }
             }
         },
@@ -29,10 +33,13 @@ export function Component() {
     const doGo = useCallback(() => {
         if (inputRef.current) {
             const value = inputRef.current.value;
-            if (value.length === 10) {
-                navigate(`/profile/${value}`);
-            } else {
-                navigate(`/app/${value}`);
+            const app = codeToApp(value);
+            if (app === 'profile') {
+                navigate(`/profile/${value.slice(1)}`);
+            } else if (app === 'feed') {
+                navigate(`/app/${value.slice(1)}`);
+            } else if (app === 'flow') {
+                navigate(`/flow/${value.slice(1)}`);
             }
         }
     }, [navigate]);

@@ -12,6 +12,7 @@ import Simulation from '@genaism/services/simulation/Simulation';
 import { useServices } from '@genaism/hooks/services';
 import { currentSimulation } from '@genaism/apps/Dashboard/state/simulationState';
 import { userApp } from '@genaism/apps/Dashboard/state/settingsState';
+import { appToCode } from '@genaism/apps/Start/codePrefix';
 
 interface Props {
     users: UserInfo[];
@@ -51,7 +52,7 @@ export default function StartDialog({ users, code }: Props) {
                     <div className={style.column}>
                         <div style={{ textAlign: 'center' }}>
                             <Trans
-                                values={{ codeText: code }}
+                                values={{ codeText: appToCode(appType, code) }}
                                 i18nKey="dashboard.messages.connection"
                                 components={{
                                     Code: <em />,

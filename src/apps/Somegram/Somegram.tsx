@@ -23,7 +23,7 @@ export function Component() {
     const [username, setUsername] = useRecoilState<string | undefined>(currentUserName);
     const setContentLoaded = useSetRecoilState(contentLoaded);
 
-    const MYCODE = useRandom(10);
+    const MYCODE = useRandom(5);
 
     const doLoaded = useCallback(() => {
         setContentLoaded(true);
