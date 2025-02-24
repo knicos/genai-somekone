@@ -32,3 +32,15 @@
     position: relative;
     align-items: center;
 }
+
+@media only screen and (max-height: 500px), (max-width: 700px) {
+    .svglayer {
+        display: none;
+    }
+    .container {
+        display: flex;
+        flex-direction: column;
+        padding: 1rem 0;
+        width: 100%;
+    }
+}
