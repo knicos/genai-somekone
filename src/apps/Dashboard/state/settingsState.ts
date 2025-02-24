@@ -23,6 +23,11 @@ export const heatmapAutoUsers = atom<number>({
     default: 0,
 });
 
+export const heatmapDimension = atom<number>({
+    key: 'heatmapdimension',
+    default: 0,
+});
+
 export type HeatmapMode = 'global' | 'engagement' | 'recommendation';
 export const heatmapMode = atom<HeatmapMode>({
     key: 'heatmapmode',

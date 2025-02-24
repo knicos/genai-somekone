@@ -32,6 +32,7 @@ import {
     HeatmapMode,
     heatmapMode,
     AppType,
+    heatmapDimension,
 } from '@genaism/apps/Dashboard/state/settingsState';
 import { appConfiguration } from '@genaism/common/state/configState';
 import { SMConfig, mergeConfiguration } from '@genaism/common/state/smConfig';
@@ -72,6 +73,7 @@ export interface SomekoneUISettings {
     selectedUser?: UserNodeId;
     heatmapAutoUsers?: number;
     heatmapMode?: HeatmapMode;
+    heatmapDimension?: number;
 }
 
 export interface SomekoneSettings {
@@ -173,6 +175,9 @@ export function useSettingDeserialise() {
                     if (data.ui.heatmapMode !== undefined) {
                         set(heatmapMode, data.ui.heatmapMode);
                     }
+                    if (data.ui.heatmapDimension !== undefined) {
+                        set(heatmapDimension, data.ui.heatmapDimension);
+                    }
                 }
 
                 if (data.appType !== undefined) {
@@ -218,6 +223,7 @@ export function useSettingSerialise() {
                         replaySpeed: await snapshot.getPromise(menuReplaySpeed),
                         heatmapAutoUsers: await snapshot.getPromise(heatmapAutoUsers),
                         heatmapMode: await snapshot.getPromise(heatmapMode),
+                        heatmapDimension: await snapshot.getPromise(heatmapDimension),
                     },
                     appType: await snapshot.getPromise(userApp),
                 };

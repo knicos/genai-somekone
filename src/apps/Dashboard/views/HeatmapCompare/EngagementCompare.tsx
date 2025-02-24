@@ -1,4 +1,4 @@
-import { UserNodeId } from '@knicos/genai-recom';
+import { ContentNodeId, UserNodeId } from '@knicos/genai-recom';
 import style from './style.module.css';
 import MapService from '@genaism/services/map/MapService';
 import EngagementHeatmap from '@genaism/common/visualisations/EngagementHeatmap/EngagementHeaptmap';
@@ -7,9 +7,11 @@ interface Props {
     users: UserNodeId[];
     mapService?: MapService;
     factor: number;
+    dim: number;
+    imageSet?: ContentNodeId[];
 }
 
-export default function EngagementCompare({ users, mapService, factor }: Props) {
+export default function EngagementCompare({ users, mapService, factor, dim, imageSet }: Props) {
     return (
         <div className={style[`grid${users.length}`]}>
             {users.map((user) => (
@@ -18,11 +20,12 @@ export default function EngagementCompare({ users, mapService, factor }: Props) 
                     className={style.heatCard}
                 >
                     <EngagementHeatmap
-                        dimensions={0}
+                        dimensions={dim}
                         user={user}
                         showName
                         deviationFactor={factor}
                         mapService={mapService}
+                        imageSet={imageSet}
                     />
                 </div>
             ))}

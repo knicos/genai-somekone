@@ -5,7 +5,7 @@ import { ContentNodeId, UserNodeId } from '@knicos/genai-recom';
 import style from './style.module.css';
 import ContentHeatmap from '../../visualisations/ContentHeatmap/ContentHeatmap';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { heatmapAutoUsers, heatmapMode } from '../../state/settingsState';
+import { heatmapAutoUsers, heatmapDimension, heatmapMode } from '../../state/settingsState';
 import { useServices } from '@genaism/hooks/services';
 import disimilarUsers from '../../../../util/autoUsers';
 import { heatmapImageSet } from '@genaism/common/visualisations/RecommendationsHeatmap/algorithm';
@@ -23,8 +23,11 @@ export default function HeatmapCompare() {
     const { profiler, content } = useServices();
     const imageSet = useRef<ContentNodeId[]>();
     const [mapper, setMapper] = useState<MapService>();
+    const dim = useRecoilValue(heatmapDimension);
 
-    if (!imageSet.current) {
+    const adim = dim || Math.floor(Math.sqrt(content.getAllContent().length));
+
+    if (!imageSet.current || imageSet.current.length < adim * adim - adim) {
         imageSet.current = heatmapImageSet(profiler.graph);
     }
 
@@ -35,9 +38,8 @@ export default function HeatmapCompare() {
     }, [users, mode, autoUsers]);
 
     useEffect(() => {
-        const dim = Math.floor(Math.sqrt(imageSet.current?.length || 0));
-        setMapper(new MapService(content, { dataSetSize: users.length, dim }));
-    }, [content, users, count, mode]);
+        setMapper(new MapService(content, { dataSetSize: users.length, dim: adim }));
+    }, [content, users, count, mode, adim]);
 
     useEffect(() => {
         if (autoUsers > 0) {
@@ -55,6 +57,8 @@ export default function HeatmapCompare() {
                     mapService={mapper}
                     factor={factor}
                     users={users}
+                    dim={dim}
+                    imageSet={imageSet.current}
                 />
             )}
             {mode === 'engagement' && (
@@ -63,6 +67,8 @@ export default function HeatmapCompare() {
                     mapService={mapper}
                     factor={factor}
                     users={users}
+                    dim={dim}
+                    imageSet={imageSet.current}
                 />
             )}
             {mode === 'global' && (
@@ -72,7 +78,7 @@ export default function HeatmapCompare() {
                 >
                     <div className={style.heatCard}>
                         <ContentHeatmap
-                            dimensions={0}
+                            dimensions={dim}
                             deviationFactor={factor}
                         />
                     </div>

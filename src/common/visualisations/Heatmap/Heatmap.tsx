@@ -28,7 +28,7 @@ interface Props {
     return 'hsl(' + h + ', 100%, 50%)';
 }*/
 
-const ZOOM_SCALE = 60;
+const ZOOM_SCALE = 40;
 const MIN_OPACITY = 0.1;
 
 export default function Heatmap({ data, dimensions, busy, label, invert, mapService, deviationFactor = 1 }: Props) {

@@ -197,7 +197,8 @@
             "feedApp": "Instagram style",
             "flowApp": "Data-flow style",
             "blackboxFlow": "Blackbox the data flow",
-            "heatmapFactor": "Map Contrast"
+            "heatmapFactor": "Map Contrast",
+            "heatmapDimension": "Grid size"
         },
         "messages": {
             "connection": "Go to the address below and enter the code <Code>{{codeText}}</Code>, or use the QR code.",
