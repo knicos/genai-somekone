@@ -49,8 +49,9 @@ export default function ActionButton({ action, onAction }: Props) {
         <IconButton
             onClick={doClick}
             color="secondary"
+            data-testid="action-button"
         >
-            {action === 'pause' && config.disableFeedApp && <PlayArrowIcon />}
+            {action === 'pause' && config.disableFeedApp && <PlayArrowIcon data-testid="paused-app" />}
             {action === 'pause' && !config.disableFeedApp && <PauseIcon />}
             {action === 'sharecode' && <QrCode2Icon />}
             {action === 'download' && <SaveAltIcon />}

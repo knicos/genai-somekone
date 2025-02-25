@@ -11,6 +11,7 @@ import { cancelSessionSave } from '@genaism/services/loader/session';
 import disimilarUsers from '@genaism/util/autoUsers';
 import { useSetRecoilState } from 'recoil';
 import { menuSelectedUser } from '../../state/menuState';
+import { getZipBlob, loadFile } from '@genaism/services/loader/fileLoader';
 
 const AUTOPLAY_ACTIVITY_DELAY = 30 * 1000;
 
@@ -27,7 +28,7 @@ export default function Guidance({ guide }: Props) {
     const [params, setParams] = useSearchParams();
     const page = params.get('page');
     const index = page !== null ? parseInt(page) : -1;
-    const { replay, profiler } = useServices();
+    const { replay, profiler, content, actionLog } = useServices();
     const [autoplay, setAutoplay] = useState(-1);
     const setSelected = useSetRecoilState(menuSelectedUser);
 
@@ -36,6 +37,7 @@ export default function Guidance({ guide }: Props) {
     paramsRef.current = setParams;
 
     const settingsRef = useRef<SomekoneSettings | undefined>();
+    const dataRef = useRef(new Set<string>());
 
     const doAction = useCallback(
         (action: GuideAction) => {
@@ -60,8 +62,17 @@ export default function Guidance({ guide }: Props) {
                 const bestUser = disimilarUsers(profiler, 1)[0];
                 setSelected(bestUser);
             }
+            if (action.data) {
+                action.data.forEach((d) => {
+                    if (dataRef.current.has(d)) return;
+                    dataRef.current.add(d);
+                    getZipBlob(d).then((blob) => {
+                        loadFile(content, actionLog, blob);
+                    });
+                });
+            }
         },
-        [navigate, replay, deserial, search, setSelected, profiler]
+        [navigate, replay, deserial, search, setSelected, profiler, content, actionLog]
     );
 
     useEffect(() => {
@@ -155,8 +166,8 @@ export default function Guidance({ guide }: Props) {
                                 currentStep?.next !== undefined
                                     ? currentStep.next
                                     : p < data.steps.length - 1
-                                    ? p + 1
-                                    : 0;
+                                      ? p + 1
+                                      : 0;
                             prev.set('page', `${n}`);
                             return prev;
                         });
@@ -188,7 +199,10 @@ export default function Guidance({ guide }: Props) {
     const filtered = mappedSteps.filter((s) => s.step.title);
 
     return (
-        <nav className={style.container}>
+        <nav
+            className={style.container}
+            data-testid="guidance"
+        >
             <MenuList>
                 {filtered.map((step, i) => (
                     <MenuItem

@@ -99,7 +99,10 @@ export default function LogTable() {
 
     return (
         <div className={style.container}>
-            <div className={style.tableContainer}>
+            <div
+                className={style.tableContainer}
+                data-testid="log-table"
+            >
                 <DataGrid
                     localeText={{}}
                     slots={{ toolbar: TableToolbar }}

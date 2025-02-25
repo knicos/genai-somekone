@@ -88,7 +88,10 @@ export default function ContentEngagements() {
 
     return (
         <div className={style.container}>
-            <div className={style.tableContainer}>
+            <div
+                className={style.tableContainer}
+                data-testid="content-engagements"
+            >
                 <DataGrid
                     slots={{ toolbar: TableToolbar }}
                     rows={rows}

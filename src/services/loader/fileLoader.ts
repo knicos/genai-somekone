@@ -269,13 +269,15 @@ export async function loadFile(
         );
     });
 
-    /*store.users.forEach((u) => {
-        try {
-            if (u.name !== 'NoName') addUserProfile(u.id, u);
-        } catch (e) {
-            console.warn('User already exists');
-        }
-    });*/
+    if (!store.graph) {
+        store.users.forEach((u) => {
+            try {
+                if (u.name !== 'NoName') contentSvc.graph.addNode('user', u.id, u);
+            } catch (e) {
+                console.warn('User already exists');
+            }
+        });
+    }
 
     rebaseLog(store.logs, timeOffset);
     store.logs.forEach((l) => {

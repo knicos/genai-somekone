@@ -117,6 +117,7 @@ export default function Heatmap({ data, dimensions, busy, label, invert, mapServ
                 height="100%"
                 viewBox="0 0 200 200"
                 ref={svgRef}
+                data-testid="heatmap-svg"
                 onContextMenu={(e: MouseEvent) => e.preventDefault()}
                 onPointerDown={(e: PointerEvent) => {
                     setZoom(true);

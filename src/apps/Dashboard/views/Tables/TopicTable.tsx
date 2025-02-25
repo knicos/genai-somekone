@@ -73,7 +73,10 @@ export default function TopicTable() {
 
     return (
         <div className={style.container}>
-            <div className={style.tableContainer}>
+            <div
+                className={style.tableContainer}
+                data-testid="topic-table"
+            >
                 <DataGrid
                     slots={{ toolbar: TableToolbar }}
                     rows={rows}

@@ -13,7 +13,10 @@ export default function AppNavigation() {
 
     return (
         <div className={style.navOuter}>
-            <nav className={style.appNav}>
+            <nav
+                className={style.appNav}
+                data-testid="app-nav"
+            >
                 <IconButton
                     color="inherit"
                     size="large"

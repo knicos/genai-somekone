@@ -5,6 +5,7 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { usePeer } from '@knicos/genai-base';
 import TestWrapper from '@genaism/util/TestWrapper';
 import { appConfiguration } from '@genaism/common/state/configState';
+import { currentUserName } from '@genaism/common/state/sessionState';
 
 type PeerProps = Parameters<typeof usePeer>[0];
 
@@ -51,5 +52,40 @@ describe('Genagram view', () => {
         );
 
         await vi.waitFor(() => expect(screen.getByText('feed.labels.enterUsername')).toBeVisible());
+    });
+
+    it('renders feed', async ({ expect }) => {
+        render(
+            <TestWrapper
+                initializeState={({ set }) => {
+                    set(currentUserName, 'TestUser');
+                    set(appConfiguration, {
+                        recommendations: {
+                            taste: 0,
+                            random: 0,
+                            coengaged: 0,
+                            similarUsers: 0,
+                            popular: 0,
+                        },
+                    });
+                }}
+            >
+                <MemoryRouter initialEntries={['/feed/1234/feed']}>
+                    <Routes>
+                        <Route
+                            path="feed/:code"
+                            element={<Genagram />}
+                        >
+                            <Route
+                                path="feed"
+                                element={<div data-testid="feed-mock">Feed</div>}
+                            />
+                        </Route>
+                    </Routes>
+                </MemoryRouter>
+            </TestWrapper>
+        );
+
+        await vi.waitFor(() => expect(screen.getByTestId('feed-mock')).toBeVisible());
     });
 });

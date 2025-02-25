@@ -12,6 +12,7 @@ export interface GuideAction extends SomekoneSettings {
     replay?: boolean;
     autoPlay?: number;
     autoSelect?: boolean;
+    data?: string[];
 }
 
 export interface GuidanceStep {

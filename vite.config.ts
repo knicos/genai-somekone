@@ -13,6 +13,7 @@ export default defineConfig({
         coverage: {
             provider: 'v8',
             reporter: ['cobertura', 'html'],
+            include: ['src/**/*'],
         },
         server: {
             deps: {

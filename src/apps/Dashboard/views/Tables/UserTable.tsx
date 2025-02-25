@@ -78,7 +78,10 @@ export default function UserTable() {
 
     return (
         <div className={style.container}>
-            <div className={style.tableContainer}>
+            <div
+                className={style.tableContainer}
+                data-testid="user-table"
+            >
                 <DataGrid
                     slots={{ toolbar: TableToolbar }}
                     rows={rows}
