@@ -39,7 +39,7 @@ export default function CommentBox({ id, onComment, onClose }: Props) {
                 fullWidth
                 variant="outlined"
                 placeholder={t('feed.placeholders.comment')}
-                inputProps={{ 'data-testid': 'comment-input' }}
+                slotProps={{ htmlInput: { 'data-testid': 'comment-input', autoFocus: true } }}
                 multiline
                 maxRows={2}
             />
