@@ -34,6 +34,7 @@ interface Props {
     onMore?: () => void;
     onLog: (e: LogEntry) => void;
     alwaysActive?: boolean;
+    noPadding?: boolean;
 }
 
 export default function ImageFeed({
@@ -50,6 +51,7 @@ export default function ImageFeed({
     noFollow,
     noShare,
     noHeader,
+    noPadding,
 }: Props) {
     const { t } = useTranslation();
     const containerRef = useRef<HTMLDivElement>(null);
@@ -223,7 +225,7 @@ export default function ImageFeed({
         <div className={style.outer}>
             <div
                 ref={containerRef}
-                className={style.container}
+                className={noPadding ? style.nopadContainer : style.container}
                 onScroll={doScroll}
                 onMouseMove={doInteraction}
                 onKeyDown={doInteraction}

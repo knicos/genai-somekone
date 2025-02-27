@@ -17,9 +17,20 @@ interface Props {
     noActions?: boolean;
     alwaysActive?: boolean;
     noHeader?: boolean;
+    noPadding?: boolean;
 }
 
-export default function Feed({ onProfile, onLog, onRecommend, id, noLog, noActions, alwaysActive, noHeader }: Props) {
+export default function Feed({
+    onProfile,
+    onLog,
+    onRecommend,
+    id,
+    noLog,
+    noActions,
+    alwaysActive,
+    noHeader,
+    noPadding,
+}: Props) {
     const [feedList, setFeedList] = useState<FeedEntry[]>([]);
     const moreState = useRef(true);
     const profiler = useProfilerService();
@@ -84,6 +95,7 @@ export default function Feed({ onProfile, onLog, onRecommend, id, noLog, noActio
                     noLike={appConfig?.disableLiking}
                     noFollow={appConfig?.disableFollowing}
                     noShare={appConfig?.disableSharing}
+                    noPadding={noPadding}
                 />
             )}
 

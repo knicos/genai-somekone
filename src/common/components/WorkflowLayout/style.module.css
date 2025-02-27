@@ -23,7 +23,7 @@
     display: grid;
     gap: 3rem;
     padding: 2rem;
-    padding-top: 5rem;
+    /*padding-top: 5rem;*/
     box-sizing: border-box;
     grid-template-columns: repeat(6, max-content);
     min-width: 100%;

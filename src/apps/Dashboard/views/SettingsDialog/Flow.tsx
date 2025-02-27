@@ -19,6 +19,15 @@ export default function FlowSettings() {
                 }
                 label={t('dashboard.labels.blackboxFlow')}
             />
+            <FormControlLabel
+                control={
+                    <Checkbox
+                        checked={config?.hideFeedInWorkflow || false}
+                        onChange={(_, checked) => setConfig((old) => ({ ...old, hideFeedInWorkflow: checked }))}
+                    />
+                }
+                label={t('dashboard.labels.hideFeedInWorkflow')}
+            />
         </div>
     );
 }

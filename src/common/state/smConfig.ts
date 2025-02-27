@@ -33,6 +33,7 @@ interface RecommendationConfig {
 
 interface WorkflowConfig {
     blackboxWorkflow?: boolean;
+    hideFeedInWorkflow?: boolean;
 }
 
 export interface SMConfig extends RecommendationConfig, ViewConfig, FeedConfig, WorkflowConfig {

@@ -31,7 +31,7 @@ export default function FeedWidget({ id, onProfile, onRecommend, onLog, hideMenu
         <Widget
             title={name}
             dataWidget="feed"
-            style={{ width: '400px', maxWidth: '80%' }}
+            style={{ width: '400px' }}
             contentStyle={{ height: '600px' }}
             noPadding
             menu={
@@ -73,6 +73,7 @@ export default function FeedWidget({ id, onProfile, onRecommend, onLog, hideMenu
                 onProfile={onProfile}
                 onRecommend={onRecommend}
                 onLog={onLog}
+                noPadding
             />
         </Widget>
     );

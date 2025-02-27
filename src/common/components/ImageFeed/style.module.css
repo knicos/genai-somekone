@@ -18,6 +18,12 @@
     /*gap: 50px;*/
 }
 
+.nopadContainer {
+    composes: container;
+    padding: 0;
+    scrollbar-gutter: initial;
+}
+
 .placeholder {
     flex-shrink: 0;
     max-width: 500px;

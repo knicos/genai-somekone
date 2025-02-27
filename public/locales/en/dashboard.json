@@ -197,6 +197,7 @@
             "feedApp": "Instagram style",
             "flowApp": "Data-flow style",
             "blackboxFlow": "Blackbox the data flow",
+            "hideFeedInWorkflow": "Hide feed in data flow",
             "heatmapFactor": "Map Contrast",
             "heatmapDimension": "Grid size"
         },

@@ -63,14 +63,16 @@ export default function Workflow({ id, onProfile, onRecommend, onLog, hideFeedMe
             defaultNS="common"
         >
             <WorkflowLayout connections={connections}>
-                <FeedWidget
-                    id={aid}
-                    onProfile={onProfile}
-                    onRecommend={onRecommend}
-                    onLog={doLog}
-                    hideMenu={hideFeedMenu}
-                />
-                {config.blackboxWorkflow && <Blackbox spin={spin} />}
+                {!config.hideFeedInWorkflow && (
+                    <FeedWidget
+                        id={aid}
+                        onProfile={onProfile}
+                        onRecommend={onRecommend}
+                        onLog={doLog}
+                        hideMenu={hideFeedMenu}
+                    />
+                )}
+                {!config.hideFeedInWorkflow && config.blackboxWorkflow && <Blackbox spin={spin} />}
                 {!config.blackboxWorkflow && (
                     <Widget
                         title={t('workflow.titles.data')}

@@ -39,7 +39,9 @@ export default function WorkflowLayout({ children, connections }: Props) {
             <div
                 className={style.container}
                 ref={wkspaceRef}
-                style={{ gridTemplateColumns: `repeat(${Array.isArray(children) ? children.length : 1}, max-content)` }}
+                style={{
+                    gridTemplateColumns: `repeat(${Array.isArray(children) ? children.filter((c) => !!c).length : 1}, max-content)`,
+                }}
             >
                 <SvgLayer lines={lines} />
                 {children}
