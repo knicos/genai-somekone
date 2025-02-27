@@ -7,13 +7,16 @@ import { I18nextProvider, useTranslation } from 'react-i18next';
 import i18n from '@genaism/i18n';
 import RecommendationsHeatmap from '@genaism/common/visualisations/RecommendationsHeatmap/RecommendationsHeatmap';
 import MiniClusterGraph from '@genaism/common/visualisations/MiniClusterGraph/MiniClusterGraph';
-import { useProfilerService } from '@genaism/hooks/services';
+import { useServices } from '@genaism/hooks/services';
 import { ScoredRecommendation, UserNodeData, UserNodeId } from '@knicos/genai-recom';
 import style from './style.module.css';
 import { configuration } from '@genaism/common/state/configState';
 import Blackbox from './Blackbox';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import FeedWidget from './FeedWidget';
+import MapService from '@genaism/services/map/MapService';
+import { IconButton } from '@mui/material';
+import RefreshIcon from '@mui/icons-material/Refresh';
 
 const connections: IConnection[] = [
     { start: 'feed', end: 'data', startPoint: 'right', endPoint: 'left' },
@@ -36,10 +39,15 @@ interface Props {
 export default function Workflow({ id, onProfile, onRecommend, onLog, hideFeedMenu }: Props) {
     const { t } = useTranslation('common');
     const selectedUser = useRecoilValue(menuSelectedUser);
-    const profiler = useProfilerService();
+    const { profiler, content } = useServices();
     const aid = id || selectedUser || profiler.getCurrentUser();
     const config = useRecoilValue(configuration(aid || 'user:'));
     const [spin, setSpin] = useState(false);
+    const mapService = useRef<MapService>();
+
+    if (!mapService.current) {
+        mapService.current = new MapService(content, { dataSetSize: 1, dim: 20 });
+    }
 
     const doLog = useCallback(() => {
         if (onLog) {
@@ -127,12 +135,23 @@ export default function Workflow({ id, onProfile, onRecommend, onLog, hideFeedMe
                     style={{ width: '600px' }}
                     contentStyle={{ height: '600px' }}
                     noPadding
+                    menu={
+                        <div>
+                            <IconButton
+                                onClick={() => mapService.current?.refresh()}
+                                aria-label={t('workflow.actions.refresh')}
+                            >
+                                <RefreshIcon />
+                            </IconButton>
+                        </div>
+                    }
                 >
                     {aid && (
                         <RecommendationsHeatmap
                             user={aid}
                             dimensions={20}
                             deviationFactor={2}
+                            mapService={mapService.current}
                         />
                     )}
                 </Widget>

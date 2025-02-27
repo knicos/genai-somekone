@@ -35,6 +35,10 @@ export default class MapService extends EE<'grid'> {
         }
     }
 
+    public refresh() {
+        this.generateGrid();
+    }
+
     private generateGrid() {
         this.count = this.resetCount * this.dataSetSize;
 

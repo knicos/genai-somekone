@@ -122,7 +122,8 @@
             "map": "Recommendation Map"
         },
         "actions": {
-            "selectUser": "Select User"
+            "selectUser": "Select User",
+            "refresh": "Refresh"
         }
     },
     "feed": {
