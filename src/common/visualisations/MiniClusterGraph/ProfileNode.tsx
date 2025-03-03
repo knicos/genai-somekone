@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import style from './style.module.css';
 import { GraphNode } from '../Graph/types';
 import Label from '../../components/Label/Label';
@@ -17,15 +17,24 @@ interface Props {
 
 const ProfileNode = memo(function ProfileNode({ disabled, node }: Props) {
     const { content, profiler } = useServices();
-    const asize = node.size;
+    const [hover, setHover] = useState(false);
 
-    const name = node.data?.name as string | undefined;
+    const asize = node.size;
 
     const profile = profiler.getUserData(node.id as UserNodeId);
     const image = profile?.image;
 
+    const name = profile?.name;
+    const alwaysLabel = node.data?.alwaysShowLabel as boolean | undefined;
+    const showLabel = name && (alwaysLabel || hover);
+
     return (
-        <g className={disabled ? style.disabledGroup : style.group}>
+        <g
+            className={disabled ? style.disabledGroup : style.group}
+            onPointerEnter={() => setHover(true)}
+            onPointerLeave={() => setHover(false)}
+            data-testid={node.id}
+        >
             <circle
                 data-nodeitem
                 data-testid="profile-circle"
@@ -45,7 +54,7 @@ const ProfileNode = memo(function ProfileNode({ disabled, node }: Props) {
                     clipPath={`circle(${asize - BORDER_SIZE}px)`}
                 />
             )}
-            {name && (
+            {showLabel && (
                 <Label
                     label={name}
                     x={0}

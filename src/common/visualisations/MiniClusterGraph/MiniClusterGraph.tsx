@@ -47,7 +47,7 @@ export default function MiniClusterGraph({ userId }: Props) {
                 size: 50,
                 //fx: 0,
                 //fy: 0,
-                data: { name: profile.name, colour: colourLabel(cluster) },
+                data: { alwaysShowLabel: true, colour: colourLabel(cluster) },
             },
         ];
         setNodes(newNodes);
