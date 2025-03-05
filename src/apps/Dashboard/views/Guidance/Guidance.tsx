@@ -208,7 +208,7 @@ export default function Guidance({ guide }: Props) {
                     <MenuItem
                         selected={index >= step.index && index < (filtered[i + 1]?.index || index + 1)}
                         onClick={() =>
-                            setParams((prev) => {
+                            paramsRef.current((prev) => {
                                 prev.set('page', `${step.index}`);
                                 return prev;
                             })
