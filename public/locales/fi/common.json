@@ -121,7 +121,7 @@
             "data": "Sinun datasi",
             "cluster": "Samankaltaisia Käyttäjiä",
             "profile": "Profiilisi",
-            "map": "Suosittelumappia"
+            "map": "Suosittelukartta"
         },
         "actions": {
             "selectUser": "Valitse käyttäjä",
