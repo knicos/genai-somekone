@@ -5,6 +5,7 @@ import style from './style.module.css';
 import LanguageIcon from '@mui/icons-material/Language';
 
 export const LANGS = [
+    { name: 'de', label: 'Deutsch' },
     { name: 'en', label: 'English' },
     { name: 'fi', label: 'Suomi' },
 ];

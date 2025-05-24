@@ -20,7 +20,7 @@ i18n.use(detector)
             escapeValue: false, // react already safes from xss
         },
         fallbackLng: 'en',
-        supportedLngs: ['en', 'fi'],
+        supportedLngs: ['en', 'fi', 'de'],
         debug: false,
     });
 

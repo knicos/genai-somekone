@@ -1,0 +1,83 @@
+{
+  "creator": {
+    "titles": {
+      "creator": "Ersteller",
+      "captureImages": "Bilder aufnehmen",
+      "query": "Bilder finden",
+      "summary": "Schlagwort-Zusammenfassung",
+      "embedding": "Einbettungen erstellen",
+      "similarity": "Ähnlichkeit prüfen",
+      "mapping": "Auf Punkte abbilden",
+      "points": "Bildkarte",
+      "cluster": "Cluster",
+      "embeddingTrain": "Einbettungstraining",
+      "mapTraining": "Kartentraining",
+      "clusterViewer": "Cluster-Prüfer",
+      "browser": "Browser",
+      "imageDetail": "Ausgewähltes Bild",
+      "addTag": "Tag hinzufügen",
+      "local": "Hochladen",
+      "settings": "Inhaltseinstellungen"
+    },
+    "tooltips": {
+      "deleteAll": "Alle Bilder löschen",
+      "download": "Inhalte als ZIP herunterladen"
+    },
+    "labels": {
+      "search": "Suche",
+      "epochs": "Epochen",
+      "loss": "Verlust",
+      "validationLoss": "Validierungsverlust",
+      "maxMemberDist": "Maximale Mitgliedsdistanz",
+      "minClusters": "Zielanzahl der Cluster",
+      "minClusterSize": "Zielgröße des Clusters",
+      "count": "Anzahl: {{count}}",
+      "latest": "Neueste",
+      "popular": "Beliebt",
+      "numberOfImages": "Wie viele Bilder sollen hinzugefügt werden?",
+      "dimensions": "Dimensionen",
+      "useLabels": "Tags verwenden",
+      "usePixels": "Pixel-Daten verwenden",
+      "useEngagement": "Interaktionsdaten verwenden",
+      "learningRate": "Lernrate",
+      "imageSimilarity": "Bild",
+      "similarityDistrib": "Global",
+      "clusterImages": "Bilder",
+      "clusterStats": "Tags",
+      "clusterSummary": "Zusammenfassung",
+      "addTag": "Tag-Name",
+      "selectTag": "Tag auswählen",
+      "selectCluster": "Cluster auswählen",
+      "filter": "Filter",
+      "noFilter": "Keine",
+      "byTag": "Nach Tag",
+      "byCluster": "Nach Cluster",
+      "noTags": "Hat keine Tags",
+      "advanced": "Erweiterte Optionen anzeigen",
+      "showSettings": "Inhaltseinstellungen anzeigen"
+    },
+    "actions": {
+      "addImages": "Bilder hinzufügen",
+      "generateEmbed": "Erzeugen",
+      "saveEncoder": "Speichern",
+      "cluster": "Cluster erstellen",
+      "go": "Finden",
+      "add": "Hinzufügen",
+      "close": "Schließen",
+      "deleteTags": "Tags löschen",
+      "deleteImagesWithTags": "Bilder mit Tags löschen",
+      "mergeTags": "Tags zusammenführen",
+      "findMoreTag": "Mehr mit Tags finden",
+      "train": "Trainieren",
+      "deleteCluster": "Bilder im Cluster löschen",
+      "deleteImage": "Bild löschen",
+      "cancel": "Abbrechen",
+      "addTagToCluster": "Tag zu Cluster hinzufügen",
+      "unselectAll": "Alle abwählen"
+    },
+    "messages": {
+      "imageSearch": "Wähle eine Abfrage, bevor die Bilder automatisch hinzugefügt werden",
+      "needsRegen": "Die Einbettungen müssen neu erstellt werden"
+    }
+  }
+}
