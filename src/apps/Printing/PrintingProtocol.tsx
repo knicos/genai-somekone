@@ -1,5 +1,5 @@
 import { PropsWithChildren, useEffect, useState } from 'react';
-import { useSetRecoilState } from 'recoil';
+import { useSetAtom } from 'jotai';
 import { storedPrintData } from './state/printState';
 
 interface Props extends PropsWithChildren {
@@ -8,7 +8,7 @@ interface Props extends PropsWithChildren {
 
 export function PrintingProtocol({ children, code }: Props) {
     const [hasData, setHasData] = useState(false);
-    const setPrintData = useSetRecoilState(storedPrintData);
+    const setPrintData = useSetAtom(storedPrintData);
 
     useEffect(() => {
         if (!window.BroadcastChannel) return;

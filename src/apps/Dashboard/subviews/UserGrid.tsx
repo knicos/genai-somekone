@@ -2,7 +2,7 @@ import UserGrid from '../views/UserGrid/UserGrid';
 import { useEventListen } from '@genaism/hooks/events';
 import { menuSelectedUser } from '@genaism/apps/Dashboard/state/menuState';
 import { useEffect, useReducer } from 'react';
-import { useSetRecoilState } from 'recoil';
+import { useSetAtom } from 'jotai';
 
 export function Component() {
     const [count, refresh] = useReducer((a) => ++a, 0);
@@ -14,7 +14,7 @@ export function Component() {
         'refresh_graph'
     );
 
-    const setSelectedNode = useSetRecoilState(menuSelectedUser);
+    const setSelectedNode = useSetAtom(menuSelectedUser);
     useEffect(() => {
         setSelectedNode(undefined);
     }, [setSelectedNode]);

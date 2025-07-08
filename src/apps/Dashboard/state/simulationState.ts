@@ -1,8 +1,4 @@
 import Simulation from '@genaism/services/simulation/Simulation';
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
-export const currentSimulation = atom<Simulation | null>({
-    key: 'simulation',
-    default: null,
-    dangerouslyAllowMutability: true,
-});
+export const currentSimulation = atom<Simulation | null>(null);

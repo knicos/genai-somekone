@@ -1,4 +1,4 @@
-import { Outlet, useParams } from 'react-router';
+import { Outlet, useParams } from 'react-router-dom';
 import style from './style.module.css';
 import { PrintingProtocol } from './PrintingProtocol';
 import { useEffect } from 'react';

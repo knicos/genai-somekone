@@ -1,4 +1,4 @@
-@value bgSubdued1, textDark, primary from "@knicos/genai-base/css/colours.module.css";
+@value bgSubdued1, textDark, primary from "@genai-fi/base/css/colours.module.css";
 
 .logItem {
     display: flex;

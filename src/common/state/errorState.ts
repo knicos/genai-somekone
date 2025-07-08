@@ -1,4 +1,4 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
 type PeerErrorType = 'peer_failed' | 'peer_retrying' | 'peer_no_peer' | 'peer_nortc' | 'peer_nowebcam';
 type ErrorType =
@@ -10,7 +10,4 @@ type ErrorType =
     | 'missing_points'
     | 'missing_cluster';
 
-export const errorNotification = atom<Set<ErrorType>>({
-    key: 'errorNotification',
-    default: new Set<ErrorType>(),
-});
+export const errorNotification = atom<Set<ErrorType>>(new Set<ErrorType>());

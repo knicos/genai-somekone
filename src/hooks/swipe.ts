@@ -3,8 +3,8 @@ import { TouchEvent, useRef, useState } from 'react';
 export type SwipeDirection = 'none' | 'left' | 'right';
 
 export default function useSwipe() {
-    const startRef = useRef<number | undefined>();
-    const endRef = useRef<number | undefined>();
+    const startRef = useRef<number | undefined>(undefined);
+    const endRef = useRef<number | undefined>(undefined);
     const [direction, setDirection] = useState<SwipeDirection>('none');
     const [distance, setDistance] = useState(0);
 

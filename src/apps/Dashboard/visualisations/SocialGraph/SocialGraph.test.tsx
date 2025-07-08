@@ -6,6 +6,7 @@ import userEvent from '@testing-library/user-event';
 import { appConfiguration } from '@genaism/common/state/configState';
 import { createEmptyProfile, getGraphService } from '@knicos/genai-recom';
 import { settingDisplayLabel } from '../../state/settingsState';
+import { createStore } from 'jotai';
 
 describe('SocialGraph Component', () => {
     beforeEach(() => {
@@ -32,12 +33,10 @@ describe('SocialGraph Component', () => {
     });
 
     it('shows labels', async ({ expect }) => {
+        const store = createStore();
+        store.set(settingDisplayLabel, true);
         render(
-            <TestWrapper
-                initializeState={({ set }) => {
-                    set(settingDisplayLabel, true);
-                }}
-            >
+            <TestWrapper initializeState={store}>
                 <SocialGraph />
             </TestWrapper>
         );
@@ -109,13 +108,11 @@ describe('SocialGraph Component', () => {
 
     it('opens a recommendations view', async ({ expect }) => {
         const user = userEvent.setup();
+        const store = createStore();
+        store.set(appConfiguration, (p) => ({ ...p, showRecommendationWizard: true, experimental: true }));
 
         render(
-            <TestWrapper
-                initializeState={(snap) => {
-                    snap.set(appConfiguration, (p) => ({ ...p, showRecommendationWizard: true, experimental: true }));
-                }}
-            >
+            <TestWrapper initializeState={store}>
                 <SocialGraph />
             </TestWrapper>
         );

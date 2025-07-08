@@ -1,12 +1,12 @@
 import { Checkbox, FormControlLabel } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { useRecoilState } from 'recoil';
+import { useAtom } from 'jotai';
 import style from './style.module.css';
 import { appConfiguration } from '@genaism/common/state/configState';
 
 export default function FlowSettings() {
     const { t } = useTranslation();
-    const [config, setConfig] = useRecoilState(appConfiguration);
+    const [config, setConfig] = useAtom(appConfiguration);
 
     return (
         <div className={style.column}>

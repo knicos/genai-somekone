@@ -4,7 +4,7 @@ import { Dialog, DialogActions, DialogContent, DialogTitle, LinearProgress, Slid
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useContentService } from '@genaism/hooks/services';
-import { Button, Spinner } from '@knicos/genai-base';
+import { Button, Spinner } from '@genai-fi/base';
 import captureImages from './capture';
 import { ContentMetadata, ContentNodeId } from '@knicos/genai-recom';
 

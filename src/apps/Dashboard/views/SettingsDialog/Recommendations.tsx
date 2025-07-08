@@ -1,6 +1,6 @@
 import { Checkbox, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Slider } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { useRecoilState } from 'recoil';
+import { useAtom } from 'jotai';
 import style from './style.module.css';
 import { appConfiguration } from '@genaism/common/state/configState';
 import { useEffect, useRef, useState } from 'react';
@@ -8,7 +8,7 @@ import { SMConfig } from '@genaism/common/state/smConfig';
 
 export default function RecommendationSettings() {
     const { t } = useTranslation();
-    const [config, setConfig] = useRecoilState(appConfiguration);
+    const [config, setConfig] = useAtom(appConfiguration);
     const [localConfig, setLocalConfig] = useState<SMConfig>(config);
     const debounce = useRef(-1);
 

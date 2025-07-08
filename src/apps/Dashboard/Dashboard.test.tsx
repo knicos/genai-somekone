@@ -1,8 +1,8 @@
 import { describe, it, vi } from 'vitest';
-import { render, screen, act } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { Component as Dashboard } from './Dashboard';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
-import { Connection, usePeer } from '@knicos/genai-base';
+import { Connection } from '@genai-fi/base';
 import { EventProtocol } from '@genaism/protocol/protocol';
 import TestWrapper from '@genaism/util/TestWrapper';
 import { Component as UserGrid } from './subviews/UserGrid';
@@ -15,27 +15,36 @@ import { Component as TopicTable } from './subviews/TopicTable';
 import { Component as Workflow } from './subviews/Workflow';
 import { Component as ContentEngagements } from './subviews/ContentEngagements';
 import { Component as ContentGraph } from './subviews/ContentGraph';
+import { PropsWithChildren } from 'react';
+import EventEmitter from 'eventemitter3';
 
-type PeerProps = Parameters<typeof usePeer<EventProtocol>>[0];
-
-const { mockPeer } = vi.hoisted(() => ({
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    mockPeer: vi.fn((_props: PeerProps) => ({
-        ready: true,
-        peer: {
-            on: vi.fn(),
-            off: vi.fn(),
-        },
-        sender: vi.fn(),
-    })),
+const { mockPeer, mockPeerData, mockSender } = vi.hoisted(() => ({
+    mockPeer: {
+        on: vi.fn(),
+        off: vi.fn(),
+    },
+    mockPeerData: vi.fn(),
+    mockSender: vi.fn(),
 }));
 
-vi.mock('@knicos/genai-base', async (importOriginal) => ({
-    ...(await importOriginal<typeof import('@knicos/genai-base')>()),
-    usePeer: mockPeer,
+vi.mock('@genai-fi/base', async (importOriginal) => ({
+    ...(await importOriginal<typeof import('@genai-fi/base')>()),
+    ConnectionStatus: vi.fn(() => <div data-testid="connection-status">Connection Status</div>),
     QRCode: function QRCode() {
         return null;
     },
+}));
+
+vi.mock('@genai-fi/base/hooks/peer', async () => ({
+    //...(await importOriginal<typeof import('@genai-fi/base')>()),
+    Peer: function Peer(props: PropsWithChildren) {
+        return <div>{props.children}</div>;
+    },
+    usePeerObject: () => mockPeer,
+    usePeerStatus: () => 'ready',
+    usePeerSender: () => mockSender,
+    usePeerClose: vi.fn(),
+    usePeerData: mockPeerData,
 }));
 
 vi.mock('@genaism/services/loader/session', () => ({
@@ -67,29 +76,19 @@ describe('Dashboard view', () => {
             { wrapper: TestWrapper }
         );
 
-        vi.waitFor(() => {
+        await vi.waitFor(() => {
             expect(screen.getByTestId('dashboard-start-button')).toBeVisible();
-            expect(mockPeer).toHaveBeenCalled();
+            expect(mockPeerData).toHaveBeenCalled();
         });
     });
 
     it('shows one user connected', async ({ expect }) => {
-        const mockSender = vi.fn();
-        const propsObj = {
-            props: {} as PeerProps,
-        };
-
-        mockPeer.mockImplementation((props: PeerProps) => {
-            propsObj.props = props;
-            return {
-                ready: true,
-                peer: {
-                    on: vi.fn(),
-                    off: vi.fn(),
-                },
-                sender: mockSender,
-            };
+        const ee = new EventEmitter();
+        mockPeerData.mockImplementation((cb: (data: EventProtocol) => void) => {
+            ee.removeAllListeners('data');
+            ee.on('data', cb);
         });
+        const mockSender = vi.fn();
 
         render(
             <MemoryRouter initialEntries={['/dashboard?content=']}>
@@ -103,34 +102,22 @@ describe('Dashboard view', () => {
             { wrapper: TestWrapper }
         );
 
-        act(() => {
-            if (propsObj.props.onData) {
-                propsObj.props.onData({ event: 'eter:reguser', username: 'dummy', id: 'user:xyz1' }, {
-                    send: vi.fn(),
-                } as unknown as Connection<EventProtocol>);
-            }
-        });
+        setTimeout(() => {
+            ee.emit('data', { event: 'eter:reguser', username: 'dummy', id: 'user:xyz1' }, {
+                send: mockSender,
+            } as unknown as Connection<EventProtocol>);
+        }, 100);
 
         expect(await screen.findByText('dashboard.messages.onePerson')).toBeInTheDocument();
     });
 
     it('shows two users connected', async ({ expect }) => {
-        const mockSender = vi.fn();
-        const propsObj = {
-            props: {} as PeerProps,
-        };
-
-        mockPeer.mockImplementation((props: PeerProps) => {
-            propsObj.props = props;
-            return {
-                ready: true,
-                peer: {
-                    on: vi.fn(),
-                    off: vi.fn(),
-                },
-                sender: mockSender,
-            };
+        const ee = new EventEmitter();
+        mockPeerData.mockImplementation((cb: (data: EventProtocol) => void) => {
+            ee.removeAllListeners('data');
+            ee.on('data', cb);
         });
+        const mockSender = vi.fn();
 
         render(
             <MemoryRouter initialEntries={['/dashboard?content=']}>
@@ -144,16 +131,17 @@ describe('Dashboard view', () => {
             { wrapper: TestWrapper }
         );
 
-        act(() => {
-            if (propsObj.props.onData) {
-                propsObj.props.onData({ event: 'eter:reguser', username: 'dummy', id: 'user:xyz1' }, {
-                    send: vi.fn(),
-                } as unknown as Connection<EventProtocol>);
-                propsObj.props.onData({ event: 'eter:reguser', username: 'dumm2', id: 'user:xyz2' }, {
-                    send: vi.fn(),
-                } as unknown as Connection<EventProtocol>);
-            }
-        });
+        setTimeout(() => {
+            ee.emit('data', { event: 'eter:reguser', username: 'dummy', id: 'user:xyz1' }, {
+                send: mockSender,
+            } as unknown as Connection<EventProtocol>);
+        }, 100);
+
+        setTimeout(() => {
+            ee.emit('data', { event: 'eter:reguser', username: 'dummy2', id: 'user:xyz2' }, {
+                send: mockSender,
+            } as unknown as Connection<EventProtocol>);
+        }, 150);
 
         expect(await screen.findByText('dashboard.messages.manyPeople')).toBeInTheDocument();
     });
@@ -383,6 +371,6 @@ describe('Dashboard view', () => {
             { wrapper: TestWrapper }
         );
 
-        expect(screen.getByTestId('widget-workflow.titles.map')).toBeVisible();
+        expect(await screen.findByTestId('widget-workflow.titles.map')).toBeVisible();
     });
 });

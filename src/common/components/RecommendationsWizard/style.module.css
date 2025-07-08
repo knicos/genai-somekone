@@ -1,9 +1,13 @@
-@value bgSubdued1, textDark, primary, secondary, workspaceBg, textDark from "@knicos/genai-base/css/colours.module.css";
+@value bgSubdued1, textDark, primary, secondary, workspaceBg, textDark from "@genai-fi/base/css/colours.module.css";
 
 .wizard {
     background: bgSubdued1;
     color: textDark;
-    transition: height 0.3s, background 0.3s, border-top 0.3s, border-bottom 0.3s;
+    transition:
+        height 0.3s,
+        background 0.3s,
+        border-top 0.3s,
+        border-bottom 0.3s;
     flex: 1 0 auto;
     position: relative;
     border-top: 6px solid primary;

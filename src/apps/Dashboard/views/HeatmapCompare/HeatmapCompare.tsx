@@ -4,7 +4,7 @@ import UserDialog from '@genaism/common/views/UserListing/UserDialog';
 import { ContentNodeId, UserNodeId } from '@knicos/genai-recom';
 import style from './style.module.css';
 import ContentHeatmap from '../../visualisations/ContentHeatmap/ContentHeatmap';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useAtom, useAtomValue } from 'jotai';
 import { heatmapAutoUsers, heatmapDimension, heatmapMode } from '../../state/settingsState';
 import { useServices } from '@genaism/hooks/services';
 import disimilarUsers from '../../../../util/autoUsers';
@@ -17,13 +17,13 @@ export default function HeatmapCompare() {
     const [openUserList, setOpenUserList] = useState(false);
     const [users, setUser] = useState<UserNodeId[]>([]);
     const [count, refresh] = useReducer((old) => old + 1, 0);
-    const [mode, setMode] = useRecoilState(heatmapMode);
+    const [mode, setMode] = useAtom(heatmapMode);
     const [factor, setFactor] = useState(1);
-    const autoUsers = useRecoilValue(heatmapAutoUsers);
+    const autoUsers = useAtomValue(heatmapAutoUsers);
     const { profiler, content } = useServices();
-    const imageSet = useRef<ContentNodeId[]>();
+    const imageSet = useRef<ContentNodeId[]>([]);
     const [mapper, setMapper] = useState<MapService>();
-    const dim = useRecoilValue(heatmapDimension);
+    const dim = useAtomValue(heatmapDimension);
 
     const adim = dim || Math.floor(Math.sqrt(content.getAllContent().length));
 

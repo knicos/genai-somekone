@@ -6,11 +6,11 @@ import RecommendationsPanel from '@genaism/apps/Dashboard/visualisations/SocialG
 import GridMenu from './GridMenu';
 import { UserNodeId } from '@knicos/genai-recom';
 import UserGridItem from './UserGridItem';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { menuSelectedUser } from '@genaism/apps/Dashboard/state/menuState';
 import { settingClusterColouring } from '@genaism/apps/Dashboard/state/settingsState';
 import { colourLabel } from '@genaism/util/colourise';
-import colours from '@knicos/genai-base/css/colours.module.css';
+import colours from '@genai-fi/base/css/colours.module.css';
 import { useServices } from '@genaism/hooks/services';
 import { useEffect, useMemo } from 'react';
 import { useSimilarityData } from '@genaism/hooks/similarity';
@@ -27,8 +27,8 @@ export default function UserGrid({ users }: Props) {
     const similar = useSimilarityData();
     const fusers = useMemo(() => similar.users.filter((u) => u !== profiler.getCurrentUser()), [similar, profiler]);
     const ausers = users ? users : fusers;
-    const clustering = useRecoilValue(settingClusterColouring);
-    const setSelectedUser = useSetRecoilState(menuSelectedUser);
+    const clustering = useAtomValue(settingClusterColouring);
+    const setSelectedUser = useSetAtom(menuSelectedUser);
 
     useEffect(() => {
         similarity.setK(clustering);

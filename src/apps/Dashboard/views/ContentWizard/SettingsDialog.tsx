@@ -1,7 +1,7 @@
 import { Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
 import { Checkbox, FormControlLabel } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { useRecoilState } from 'recoil';
+import { useAtom } from 'jotai';
 import style from './style.module.css';
 import { settingContentWizardAdvanced } from '@genaism/apps/Dashboard/state/settingsState';
 import CloseIcon from '@mui/icons-material/Close';
@@ -13,7 +13,7 @@ interface Props {
 
 export default function ContentSettingsDialog({ open, onClose }: Props) {
     const { t } = useTranslation();
-    const [advanced, setAdvanced] = useRecoilState(settingContentWizardAdvanced);
+    const [advanced, setAdvanced] = useAtom(settingContentWizardAdvanced);
 
     return (
         <Dialog

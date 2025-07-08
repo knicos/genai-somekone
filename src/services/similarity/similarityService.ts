@@ -1,5 +1,5 @@
 import { debounce, Debouncer } from '@genaism/util/debounce';
-import { randomId } from '@knicos/genai-base';
+import { randomId } from '@genai-fi/base';
 import {
     clusterEmbeddings,
     findSimilarUsers,

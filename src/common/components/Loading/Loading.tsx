@@ -1,6 +1,6 @@
 import { PropsWithChildren } from 'react';
 import style from './style.module.css';
-import { AlertPara, Spinner } from '@knicos/genai-base';
+import { AlertPara, Spinner } from '@genai-fi/base';
 
 interface Props extends PropsWithChildren {
     loading: boolean;

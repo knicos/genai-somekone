@@ -2,14 +2,14 @@ import { menuSettingsDialog } from '@genaism/apps/Dashboard/state/menuState';
 import { Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
 import { useCallback } from 'react';
 import { I18nextProvider, useTranslation } from 'react-i18next';
-import { useRecoilState } from 'recoil';
+import { useAtom } from 'jotai';
 import RecomWizard from '@genaism/common/components/RecommendationsWizard/RecomWizard';
 import CloseIcon from '@mui/icons-material/Close';
 import i18n from '@genaism/i18n';
 
 export default function RecomSettingsDialog() {
     const { t } = useTranslation();
-    const [showDialog, setShowDialog] = useRecoilState(menuSettingsDialog);
+    const [showDialog, setShowDialog] = useAtom(menuSettingsDialog);
 
     const doClose = useCallback(() => setShowDialog('none'), [setShowDialog]);
 

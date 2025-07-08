@@ -22,7 +22,7 @@ export function useTabActive() {
 /*export function useInteractionDetector(timeout: number) {
     const timeRef = useRef(0);
     const intervalRef = useRef(-1);
-    const [status, setStatus] = useRecoilState(interactionStatus);
+    const [status, setStatus] = useAtom(interactionStatus);
     const tabActive = useTabActive();
 
     useEffect(() => {

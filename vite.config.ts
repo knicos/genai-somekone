@@ -17,7 +17,7 @@ export default defineConfig({
         },
         server: {
             deps: {
-                inline: ['@knicos/genai-base'],
+                inline: ['@genai-fi/base', '@mui/x-data-grid'],
             },
         },
     },

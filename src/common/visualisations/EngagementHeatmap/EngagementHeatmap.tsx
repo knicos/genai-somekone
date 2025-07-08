@@ -1,6 +1,6 @@
 import { configuration } from '@genaism/common/state/configState';
 import { useEffect, useRef, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useAtomValue } from 'jotai';
 import Heatmap from '../Heatmap/Heatmap';
 import { ContentNodeId, GraphService, uniqueSubset, UserNodeId, WeightedNode } from '@knicos/genai-recom';
 import { useUserProfile } from '@genaism/hooks/profiler';
@@ -55,8 +55,8 @@ export default function EngagementHeatmap({
     mapService,
     imageSet,
 }: Props) {
-    const config = useRecoilValue(configuration(user));
-    const images = useRef<ContentNodeId[]>();
+    const config = useAtomValue(configuration(user));
+    const images = useRef<ContentNodeId[] | undefined>(undefined);
     const [heats, setHeats] = useState<WeightedNode<ContentNodeId>[]>();
     const [loading, setLoading] = useState(false);
     const profile = useUserProfile(user);
@@ -68,6 +68,7 @@ export default function EngagementHeatmap({
 
     useEffect(() => {
         setLoading(true);
+
         const userEngagements = profiler.getEngagedContent(user);
 
         if (!images.current) {
@@ -90,6 +91,7 @@ export default function EngagementHeatmap({
             engagedImages.sort((a, b) => b.weight - a.weight);
             setHeats(engagedImages);
         }
+
         setLoading(false);
     }, [adim, user, config, profile, profiler]);
 

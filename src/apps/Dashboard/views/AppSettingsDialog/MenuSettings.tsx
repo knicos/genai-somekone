@@ -2,14 +2,14 @@ import Feed from '@genaism/common/views/Feed/Feed';
 import { appConfiguration } from '@genaism/common/state/configState';
 import AppNavigation from '@genaism/apps/Somegram/AppNavigation';
 import { Checkbox, FormControlLabel } from '@mui/material';
-import { useRecoilState } from 'recoil';
+import { useAtom } from 'jotai';
 import style from './style.module.css';
 import { I18nextProvider, useTranslation } from 'react-i18next';
 import i18n from '@genaism/i18n';
 
 export default function MenuSettings() {
     const { t } = useTranslation();
-    const [config, setConfig] = useRecoilState(appConfiguration);
+    const [config, setConfig] = useAtom(appConfiguration);
 
     return (
         <div className={style.settingsContainer}>

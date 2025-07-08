@@ -2,7 +2,7 @@ import { IconMenuItem } from '@genaism/common/components/IconMenu';
 import { IconButton, Popover, Slider } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useAtom } from 'jotai';
 import SpeedIcon from '@mui/icons-material/Speed';
 import style from './style.module.css';
 import { menuReplaySpeed } from '@genaism/apps/Dashboard/state/menuState';
@@ -10,7 +10,7 @@ import { menuReplaySpeed } from '@genaism/apps/Dashboard/state/menuState';
 export default function SpeedMenu() {
     const { t } = useTranslation();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const [speed, setSpeed] = useRecoilState(menuReplaySpeed);
+    const [speed, setSpeed] = useAtom(menuReplaySpeed);
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);

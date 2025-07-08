@@ -1,4 +1,4 @@
-import { LargeButton } from '@knicos/genai-base';
+import { LargeButton } from '@genai-fi/base';
 import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import uploadImages from '../upload';

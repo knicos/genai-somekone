@@ -1,4 +1,4 @@
-@value workspaceBg, textDark, borderGrey from "@knicos/genai-base/css/colours.module.css";
+@value workspaceBg, textDark, borderGrey from "@genai-fi/base/css/colours.module.css";
 
 .profileContainer {
     width: 100%;

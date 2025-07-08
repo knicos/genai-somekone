@@ -2,7 +2,7 @@ import { describe, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import DataProfile from './DataProfile';
 import { createEmptyProfile, LogEntry, UserNodeData } from '@knicos/genai-recom';
-import { TestWrapper } from '@knicos/genai-base';
+import TestWrapper from '@genaism/util/TestWrapper';
 
 const { mockProfile, mockLog } = vi.hoisted(() => ({
     mockProfile: vi.fn<(a: unknown[]) => UserNodeData>(() => ({

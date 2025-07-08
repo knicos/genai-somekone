@@ -1,4 +1,4 @@
-import { PropsWithChildren } from 'react';
+import { JSX, PropsWithChildren } from 'react';
 import style from './style.module.css';
 import { IconMenuContext } from './context';
 

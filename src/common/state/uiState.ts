@@ -1,6 +1,3 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
-export const uiDarkMode = atom<boolean>({
-    key: 'uiDarkMode',
-    default: false,
-});
+export const uiDarkMode = atom<boolean>(false);

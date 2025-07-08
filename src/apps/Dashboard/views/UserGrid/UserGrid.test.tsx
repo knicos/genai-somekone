@@ -1,11 +1,15 @@
 import { settingNodeMode } from '@genaism/apps/Dashboard/state/settingsState';
-import { TestWrapper } from '@knicos/genai-base';
 import { render, screen } from '@testing-library/react';
 import { beforeEach, describe, it } from 'vitest';
 import UserGrid from './UserGrid';
 import { getContentService, getGraphService, getProfilerService } from '@knicos/genai-recom';
 import userEvent from '@testing-library/user-event';
 import { getSimilarityService } from '@genaism/services/similarity';
+import TestWrapper from '@genaism/util/TestWrapper';
+import { createStore } from 'jotai';
+
+const store = createStore();
+store.set(settingNodeMode, 'profileImage');
 
 describe('UserGrid component', () => {
     beforeEach(() => {
@@ -17,11 +21,7 @@ describe('UserGrid component', () => {
 
     it('renders with no users', async ({ expect }) => {
         render(
-            <TestWrapper
-                initializeState={({ set }) => {
-                    set(settingNodeMode, 'profileImage');
-                }}
-            >
+            <TestWrapper initializeState={store}>
                 <UserGrid />
             </TestWrapper>
         );
@@ -34,11 +34,7 @@ describe('UserGrid component', () => {
         profiler.createUserProfile('user:1', 'TestUser1');
 
         render(
-            <TestWrapper
-                initializeState={({ set }) => {
-                    set(settingNodeMode, 'profileImage');
-                }}
-            >
+            <TestWrapper initializeState={store}>
                 <UserGrid />
             </TestWrapper>
         );
@@ -52,11 +48,7 @@ describe('UserGrid component', () => {
         profiler.createUserProfile('user:2', 'TestUser2');
 
         render(
-            <TestWrapper
-                initializeState={({ set }) => {
-                    set(settingNodeMode, 'profileImage');
-                }}
-            >
+            <TestWrapper initializeState={store}>
                 <UserGrid />
             </TestWrapper>
         );
@@ -75,11 +67,7 @@ describe('UserGrid component', () => {
         profile.affinities.contents.contents = [{ id: 'content:1', weight: 1 }];
 
         render(
-            <TestWrapper
-                initializeState={({ set }) => {
-                    set(settingNodeMode, 'profileImage');
-                }}
-            >
+            <TestWrapper initializeState={store}>
                 <UserGrid />
             </TestWrapper>
         );

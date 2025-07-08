@@ -2,8 +2,8 @@ import { menuShowSettings } from '@genaism/apps/Dashboard/state/menuState';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Tab, Tabs } from '@mui/material';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useRecoilState } from 'recoil';
-import { Button } from '@knicos/genai-base';
+import { useAtom } from 'jotai';
+import { Button } from '@genai-fi/base';
 import FeedSettings from './Feed';
 import GeneralSettings from './General';
 import RecommendationSettings from './Recommendations';
@@ -12,7 +12,7 @@ import FlowSettings from './Flow';
 
 export default function SettingsDialog() {
     const { t } = useTranslation();
-    const [showDialog, setShowDialog] = useRecoilState(menuShowSettings);
+    const [showDialog, setShowDialog] = useAtom(menuShowSettings);
     const [tabNumber, setTabNumber] = useState(0);
 
     const doClose = useCallback(() => setShowDialog(false), [setShowDialog]);

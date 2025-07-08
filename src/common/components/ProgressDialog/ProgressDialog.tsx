@@ -1,5 +1,5 @@
 import { Dialog, DialogContent, DialogTitle, LinearProgress } from '@mui/material';
-import { Spinner } from '@knicos/genai-base';
+import { Spinner } from '@genai-fi/base';
 
 interface Props {
     open: boolean;

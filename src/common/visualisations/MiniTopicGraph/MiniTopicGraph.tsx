@@ -2,7 +2,7 @@ import Graph from '../Graph/Graph';
 import { useCallback, useEffect, useReducer, useRef, useState } from 'react';
 import { GraphLink, GraphNode, InternalGraphLink } from '../Graph/types';
 import TopicNode from './TopicNode';
-import colours from '@knicos/genai-base/css/colours.module.css';
+import colours from '@genai-fi/base/css/colours.module.css';
 import { useUserProfile } from '@genaism/hooks/profiler';
 import { useServices } from '@genaism/hooks/services';
 import { ContentNodeId, getTopicId, TopicNodeId, UserNodeId } from '@knicos/genai-recom';
@@ -138,7 +138,7 @@ export default function MiniTopicGraph({ userId, topic, contentId }: Props) {
                 }),
         ];
         setLinks(newLinks);
-    }, [profile, userId, contentId, topic, count, content, graph, i18n]);
+    }, [profile, userId, contentId, topic, count, content, graph, i18n.language]);
 
     return (
         <Graph

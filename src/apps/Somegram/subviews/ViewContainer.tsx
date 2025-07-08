@@ -1,9 +1,9 @@
 import { PropsWithChildren } from 'react';
 import style from '../style.module.css';
-import { useRecoilValue } from 'recoil';
+import { useAtomValue } from 'jotai';
 import { uiDarkMode } from '@genaism/common/state/uiState';
 import { IconButton } from '@mui/material';
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
@@ -12,7 +12,7 @@ interface Props extends PropsWithChildren {
 }
 
 export default function ViewContainer({ title, children }: Props) {
-    const darkMode = useRecoilValue(uiDarkMode);
+    const darkMode = useAtomValue(uiDarkMode);
     const navigate = useNavigate();
     const { t } = useTranslation();
 

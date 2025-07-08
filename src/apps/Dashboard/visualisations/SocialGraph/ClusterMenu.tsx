@@ -2,7 +2,7 @@ import { IconMenuItem } from '@genaism/common/components/IconMenu';
 import { IconButton, Popover, Slider } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useAtom } from 'jotai';
 import { settingClusterColouring } from '@genaism/apps/Dashboard/state/settingsState';
 import WorkspacesIcon from '@mui/icons-material/Workspaces';
 import style from './style.module.css';
@@ -10,7 +10,7 @@ import style from './style.module.css';
 export default function ClusterMenu() {
     const { t } = useTranslation();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const [colouring, setColouring] = useRecoilState(settingClusterColouring);
+    const [colouring, setColouring] = useAtom(settingClusterColouring);
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);

@@ -24,9 +24,8 @@ describe('Settings hooks', () => {
                     },
                 });
 
-                serial().then((r) => {
-                    result.settings = r;
-                });
+                const r = serial();
+                result.settings = r;
             }, [deserial, serial]);
 
             return null;

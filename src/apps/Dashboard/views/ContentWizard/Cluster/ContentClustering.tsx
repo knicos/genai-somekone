@@ -1,4 +1,4 @@
-import { Button } from '@knicos/genai-base';
+import { Button } from '@genai-fi/base';
 import style from '../style.module.css';
 import { useEffect, useState } from 'react';
 import { Slider } from '@mui/material';
@@ -7,7 +7,7 @@ import { useContentService } from '@genaism/hooks/services';
 import ContentCluster from './ContentCluster';
 import { useTranslation } from 'react-i18next';
 import { Widget } from '@genaism/common/components/WorkflowLayout/Widget';
-import { useRecoilValue } from 'recoil';
+import { useAtomValue } from 'jotai';
 import { settingContentWizardAdvanced } from '@genaism/apps/Dashboard/state/settingsState';
 
 export default function ContentClustering() {
@@ -18,7 +18,7 @@ export default function ContentClustering() {
     const [minClusters, setMinClusters] = useState(6);
     const [minSize, setMinSize] = useState(200);
     const contentSvc = useContentService();
-    const advanced = useRecoilValue(settingContentWizardAdvanced);
+    const advanced = useAtomValue(settingContentWizardAdvanced);
 
     useEffect(() => {
         if (startCluster) {

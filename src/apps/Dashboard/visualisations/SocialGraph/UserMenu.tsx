@@ -10,7 +10,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid';
 import DeleteDialog from './DeleteDialog';
 import { useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useAtom } from 'jotai';
 import { menuSelectedUser, menuShowUserPanel } from '@genaism/apps/Dashboard/state/menuState';
 
 interface Props {
@@ -22,8 +22,8 @@ export default function UserMenu({ x, y }: Props) {
     const { t } = useTranslation();
     const { profiler, actionLog, similarity } = useServices();
     const [showDelete, setShowDelete] = useState(false);
-    const [panel, setPanel] = useRecoilState(menuShowUserPanel);
-    const [selectedUser, setSelectedUser] = useRecoilState(menuSelectedUser);
+    const [panel, setPanel] = useAtom(menuShowUserPanel);
+    const [selectedUser, setSelectedUser] = useAtom(menuSelectedUser);
 
     if (!selectedUser) return null;
 

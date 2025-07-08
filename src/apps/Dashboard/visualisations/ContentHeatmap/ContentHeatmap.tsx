@@ -11,7 +11,7 @@ interface Props {
 }
 
 export default function ContentHeatmap({ dimensions, invert, deviationFactor }: Props) {
-    const images = useRef<ContentNodeId[]>();
+    const images = useRef<ContentNodeId[] | undefined>(undefined);
     const [heats, setHeats] = useState<WeightedNode<ContentNodeId>[]>();
     const [loading, setLoading] = useState(false);
     const contentSvc = useContentService();

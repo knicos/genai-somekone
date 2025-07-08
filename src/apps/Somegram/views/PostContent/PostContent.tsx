@@ -2,14 +2,14 @@ import style from './style.module.css';
 import { useCallback, useEffect, useState } from 'react';
 import WebcamView from './WebcamView';
 import ImageEdit from './ImageEdit';
-import { useNavigate } from 'react-router';
-import { useSetRecoilState } from 'recoil';
+import { useNavigate } from 'react-router-dom';
+import { useSetAtom } from 'jotai';
 import { uiDarkMode } from '@genaism/common/state/uiState';
 //import { useUserProfile } from '@genaism/hooks/profiler';
 
 export default function PostContent() {
     const navigate = useNavigate();
-    const setDarkMode = useSetRecoilState(uiDarkMode);
+    const setDarkMode = useSetAtom(uiDarkMode);
 
     //const profile = useUserProfile(id);
 

@@ -9,7 +9,7 @@ import { DataProfilePure } from './DataProfilePure';
 import { useMemo, useRef } from 'react';
 import { IconMenuInline, IconMenuItem } from '@genaism/common/components/IconMenu';
 import { useTranslation } from 'react-i18next';
-import { useRecoilValue } from 'recoil';
+import { useAtomValue } from 'jotai';
 import { appConfiguration } from '@genaism/common/state/configState';
 import { svgToPNG } from '@genaism/util/svgToPNG';
 import { IconButton } from '@mui/material';
@@ -26,7 +26,7 @@ export default function Profile({ id, disableMenu, noImageCloud }: Props) {
     const profile = useUserProfile(id);
     const profiler = useProfilerService();
     const log = useActionLog(id || profiler.getCurrentUser());
-    const appConfig = useRecoilValue(appConfiguration);
+    const appConfig = useAtomValue(appConfiguration);
     const svgRef = useRef<SVGSVGElement>(null);
 
     const weightedImages = useMemo(

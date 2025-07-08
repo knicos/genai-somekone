@@ -1,6 +1,6 @@
 import { useServices } from '@genaism/hooks/services';
 import Simulation from '@genaism/services/simulation/Simulation';
-import { Button } from '@knicos/genai-base';
+import { Button } from '@genai-fi/base';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Slider } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import style from './style.module.css';

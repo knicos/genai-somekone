@@ -1,9 +1,9 @@
-import { TestWrapper } from '@knicos/genai-base';
 import { getContentService, getProfilerService } from '@knicos/genai-recom';
 import { render, screen } from '@testing-library/react';
 import { describe, it } from 'vitest';
 import PersonalProfile from './PersonalProfile';
-import { MemoryRouter } from 'react-router';
+import { MemoryRouter } from 'react-router-dom';
+import TestWrapper from '@genaism/util/TestWrapper';
 
 describe('PersonalProfile component', () => {
     it('shows an empty profile', async ({ expect }) => {

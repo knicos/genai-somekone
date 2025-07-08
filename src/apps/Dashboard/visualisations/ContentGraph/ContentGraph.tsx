@@ -9,7 +9,7 @@ import {
     settingContentNodeCharge,
     settingContentSimilarPercent,
 } from '@genaism/apps/Dashboard/state/settingsState';
-import { useRecoilValue } from 'recoil';
+import { useAtomValue } from 'jotai';
 import style from './style.module.css';
 import { ContentNodeId, GraphService } from '@knicos/genai-recom';
 import { useNodeType } from '@genaism/hooks/graph';
@@ -29,10 +29,10 @@ function calculateNodeSize(graph: GraphService, id: ContentNodeId) {
 export default function ContentGraph() {
     const [links, setLinks] = useState<GraphLink<ContentNodeId, ContentNodeId>[]>([]);
     const [nodes, setNodes] = useState<GraphNode<ContentNodeId>[]>([]);
-    const linkScale = useRecoilValue(settingContentLinkDistanceScale);
-    const showLines = useRecoilValue(settingContentDisplayLines);
-    const charge = useRecoilValue(settingContentNodeCharge);
-    const simPercent = useRecoilValue(settingContentSimilarPercent);
+    const linkScale = useAtomValue(settingContentLinkDistanceScale);
+    const showLines = useAtomValue(settingContentDisplayLines);
+    const charge = useAtomValue(settingContentNodeCharge);
+    const simPercent = useAtomValue(settingContentSimilarPercent);
     const content = useNodeType('content');
     const contentService = useContentService();
     const graph = useGraphService();

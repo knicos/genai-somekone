@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import style from './style.module.css';
 import ImageFeed, { FeedEntry } from '@genaism/common/components/ImageFeed/ImageFeed';
-import { useRecoilValue } from 'recoil';
+import { useAtomValue } from 'jotai';
 import { configuration } from '@genaism/common/state/configState';
 import { LogEntry, ScoredRecommendation, UserNodeData, UserNodeId } from '@knicos/genai-recom';
 import { useActionLogService, useProfilerService } from '@genaism/hooks/services';
@@ -35,12 +35,12 @@ export default function Feed({
     const moreState = useRef(true);
     const profiler = useProfilerService();
     const aid = id || profiler.getCurrentUser();
-    const appConfig = useRecoilValue(configuration(aid));
+    const appConfig = useAtomValue(configuration(aid));
     const config = useMemo(() => ({ ...appConfig?.recommendations, coldStart: !noLog }), [appConfig, noLog]);
     const { recommendations, more } = useRecommendations(5, aid, config);
     const actionLog = useActionLogService();
-    const contentReady = useRecoilValue(contentLoaded);
-    const injections = useRecoilValue(injectedContent);
+    const contentReady = useAtomValue(contentLoaded);
+    const injections = useAtomValue(injectedContent);
     const injectTime = useRef(Date.now());
 
     useEffect(() => {

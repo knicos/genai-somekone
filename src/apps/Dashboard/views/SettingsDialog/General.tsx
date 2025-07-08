@@ -1,4 +1,4 @@
-import { useRecoilState } from 'recoil';
+import { useAtom } from 'jotai';
 import style from './style.module.css';
 import { appConfiguration } from '@genaism/common/state/configState';
 import { useTranslation } from 'react-i18next';
@@ -9,10 +9,10 @@ import { userApp } from '../../state/settingsState';
 
 export default function GeneralSettings() {
     const { t } = useTranslation();
-    const [config, setConfig] = useRecoilState(appConfiguration);
-    const [replay, showReplay] = useRecoilState(menuShowReplay);
-    const [main, showMain] = useRecoilState(menuMainMenu);
-    const [appType, setAppType] = useRecoilState(userApp);
+    const [config, setConfig] = useAtom(appConfiguration);
+    const [replay, showReplay] = useAtom(menuShowReplay);
+    const [main, showMain] = useAtom(menuMainMenu);
+    const [appType, setAppType] = useAtom(userApp);
 
     return (
         <div className={style.column}>

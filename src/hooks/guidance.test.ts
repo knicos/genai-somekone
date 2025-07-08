@@ -6,7 +6,7 @@ const { getZip } = vi.hoisted(() => ({
     getZip: vi.fn(),
 }));
 
-vi.mock('@knicos/genai-base/util/zip', () => ({
+vi.mock('@genai-fi/base/util/zip', () => ({
     getZipBlob: getZip,
 }));
 

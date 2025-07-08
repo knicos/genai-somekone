@@ -2,7 +2,7 @@ import { menuSettingsDialog } from '@genaism/apps/Dashboard/state/menuState';
 import { Dialog, DialogContent, DialogTitle, IconButton, Tab, Tabs } from '@mui/material';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useRecoilState } from 'recoil';
+import { useAtom } from 'jotai';
 
 import CloseIcon from '@mui/icons-material/Close';
 import FeedSettings from './FeedSettings';
@@ -11,7 +11,7 @@ import RecomSettings from './RecomSettings';
 
 export default function AppSettingsDialog() {
     const { t } = useTranslation();
-    const [showDialog, setShowDialog] = useRecoilState(menuSettingsDialog);
+    const [showDialog, setShowDialog] = useAtom(menuSettingsDialog);
     const [tabNumber, setTabNumber] = useState(0);
 
     const doClose = useCallback(() => setShowDialog('none'), [setShowDialog]);

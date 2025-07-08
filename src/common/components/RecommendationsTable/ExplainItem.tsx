@@ -5,7 +5,7 @@ import style from './style.module.css';
 import gColors from '../../../style/graphColours.json';
 import LightbulbIcon from '@mui/icons-material/Lightbulb';
 import { ScoredRecommendation, Scores } from '@knicos/genai-recom';
-import sColors from '@knicos/genai-base/css/colours.module.css';
+import sColors from '@genai-fi/base/css/colours.module.css';
 
 const SCORE_SCALE = 20;
 const MIN_SCORE_SIZE = 60;

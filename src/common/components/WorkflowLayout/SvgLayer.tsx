@@ -17,7 +17,7 @@ interface Props {
 const CURVE = 20;
 
 export default function SvgLayer({ lines }: Props) {
-    // const activeLines = useRecoilValue(activeNodes);
+    // const activeLines = useAtomValue(activeNodes);
 
     return (
         <svg

@@ -1,7 +1,7 @@
-import { Spinner } from '@knicos/genai-base';
+import { Spinner } from '@genai-fi/base';
 import ScorePie from '@genaism/common/components/RecommendationsTable/ScorePie';
 import style from './style.module.css';
-import sColors from '@knicos/genai-base/css/colours.module.css';
+import sColors from '@genai-fi/base/css/colours.module.css';
 
 interface Props {
     progress?: number;

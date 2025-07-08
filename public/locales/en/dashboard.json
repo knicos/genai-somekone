@@ -233,6 +233,11 @@
             "userstats": "User Table",
             "contentengage": "Content Engagements",
             "topictable": "Topic Engagements"
+        },
+        "tooltips": {
+            "columns": "Columns",
+            "filter": "Filter",
+            "export": "Export CSV"
         }
     }
 }

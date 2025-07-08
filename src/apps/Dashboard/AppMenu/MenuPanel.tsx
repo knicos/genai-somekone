@@ -3,7 +3,7 @@ import style from './style.module.css';
 import SettingsIcon from '@mui/icons-material/Settings';
 import QrCode2Icon from '@mui/icons-material/QrCode2';
 import { useCallback, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useAtom, useAtomValue } from 'jotai';
 import {
     menuMainMenu,
     menuShowSettings,
@@ -30,12 +30,12 @@ import ShortCuts from './ShortCuts';
 export default function MenuPanel() {
     const { t } = useTranslation();
     const [open, setOpen] = useState(false);
-    const [showShare, setShowShare] = useRecoilState(menuShowShare);
-    const [showSettings, setShowSettings] = useRecoilState(menuShowSettings);
-    const [config, setConfig] = useRecoilState(appConfiguration);
-    const showTools = useRecoilValue(menuShowTools);
-    const showMainMenu = useRecoilValue(menuMainMenu);
-    const showTree = useRecoilValue(menuTreeMenu);
+    const [showShare, setShowShare] = useAtom(menuShowShare);
+    const [showSettings, setShowSettings] = useAtom(menuShowSettings);
+    const [config, setConfig] = useAtom(appConfiguration);
+    const showTools = useAtomValue(menuShowTools);
+    const showMainMenu = useAtomValue(menuMainMenu);
+    const showTree = useAtomValue(menuTreeMenu);
     const serial = useSettingSerialise();
     const { content: contentSvc, profiler: profilerSvc, actionLog } = useServices();
 

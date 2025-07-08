@@ -9,7 +9,7 @@ import {
     ServiceBroker,
 } from '@knicos/genai-recom';
 import { defaultServices, ServiceProvider } from '@genaism/hooks/services';
-import { MemoryRouter } from 'react-router';
+import { MemoryRouter } from 'react-router-dom';
 import ContentEngagements from './ContentEngagements';
 
 describe('ContentEngagements component', () => {

@@ -1,7 +1,7 @@
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import style from './style.module.css';
-import { Button } from '@knicos/genai-base';
+import { Button } from '@genai-fi/base';
 
 interface Props {
     name: string;

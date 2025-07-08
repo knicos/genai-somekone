@@ -6,7 +6,7 @@ import TextFieldsIcon from '@mui/icons-material/TextFields';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import style from './style.module.css';
 import { useTranslation } from 'react-i18next';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { settingNodeMode } from '@genaism/apps/Dashboard/state/settingsState';
 import { useEffect, useRef, useState } from 'react';
 
@@ -26,12 +26,12 @@ import SocialSettingsDialog from './SettingsDialog';
 
 export default function SocialMenu() {
     const { t } = useTranslation();
-    const [nodeMode, setNodeMode] = useRecoilState(settingNodeMode);
-    const setPanel = useSetRecoilState(menuShowUserPanel);
-    const selectedUser = useRecoilValue(menuSelectedUser);
-    const showMenu = useRecoilValue(menuShowSocialMenu);
-    const selectAction = useRecoilValue(menuNodeSelectAction);
-    const userRef = useRef<UserNodeId | undefined>();
+    const [nodeMode, setNodeMode] = useAtom(settingNodeMode);
+    const setPanel = useSetAtom(menuShowUserPanel);
+    const selectedUser = useAtomValue(menuSelectedUser);
+    const showMenu = useAtomValue(menuShowSocialMenu);
+    const selectAction = useAtomValue(menuNodeSelectAction);
+    const userRef = useRef<UserNodeId | undefined>(undefined);
     const saveGraph = useEventEmit('save_graph');
     const refreshGraph = useEventEmit('refresh_graph');
     const [showSettings, setShowSettings] = useState(false);

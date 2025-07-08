@@ -1,4 +1,4 @@
-@value textDark from "@knicos/genai-base/css/colours.module.css";
+@value textDark from "@genai-fi/base/css/colours.module.css";
 
 .lang {
     display: flex;

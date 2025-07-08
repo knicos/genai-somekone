@@ -1,4 +1,4 @@
-@value workspaceBg, backgroundDark, bgSubdued1, textDark, primary from "@knicos/genai-base/css/colours.module.css";
+@value workspaceBg, backgroundDark, bgSubdued1, textDark, primary from "@genai-fi/base/css/colours.module.css";
 
 .table {
     display: flex;

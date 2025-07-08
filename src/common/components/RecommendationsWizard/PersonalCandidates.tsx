@@ -1,6 +1,6 @@
 import { appConfiguration, configuration, userConfiguration } from '@genaism/common/state/configState';
 import { useTranslation } from 'react-i18next';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useAtomValue, useSetAtom } from 'jotai';
 import style from './style.module.css';
 import { RadioGroup } from '@mui/material';
 import { useEffect } from 'react';
@@ -57,9 +57,9 @@ function mapToValue(options: RecommendationOptions): CandidateTemplateType {
 
 export default function PersonalCandidates({ id, changePage }: Props) {
     const { t } = useTranslation();
-    const config = useRecoilValue(id ? configuration(id) : appConfiguration);
-    const setConfig = useSetRecoilState(userConfiguration(id || 'user:none'));
-    const setGlobalConfig = useSetRecoilState(appConfiguration);
+    const config = useAtomValue(id ? configuration(id) : appConfiguration);
+    const setConfig = useSetAtom(userConfiguration(id || 'user:none'));
+    const setGlobalConfig = useSetAtom(appConfiguration);
 
     useEffect(() => {
         if (config.showScoringWizard) {

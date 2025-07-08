@@ -1,6 +1,6 @@
 import ImageCloud from '../../../../common/visualisations/ImageCloud/ImageCloud';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useAtomValue } from 'jotai';
 import {
     //settingDisplayLabel,
     settingNodeMode,
@@ -46,9 +46,9 @@ const ProfileNode = memo(function ProfileNode({
     zoom = 1,
 }: Props) {
     const [size, setSize] = useState(100);
-    const shrinkOffline = useRecoilValue(settingShrinkOfflineUsers);
-    const nodeMode = useRecoilValue(settingNodeMode);
-    //const topicThreshold = useRecoilValue(settingTopicThreshold);
+    const shrinkOffline = useAtomValue(settingShrinkOfflineUsers);
+    const nodeMode = useAtomValue(settingNodeMode);
+    //const topicThreshold = useAtomValue(settingTopicThreshold);
     const content = useContentService();
 
     const profile = useUserProfile(id);

@@ -1,10 +1,10 @@
-import { useRecoilValue } from 'recoil';
+import { useAtomValue } from 'jotai';
 import style from '../style.module.css';
 import { UserProfilePure } from '@genaism/common/views/UserProfile/UserProfilePure';
 import { storedPrintData } from '../state/printState';
 
 export function Component() {
-    const printData = useRecoilValue(storedPrintData);
+    const printData = useAtomValue(storedPrintData);
 
     return printData &&
         printData.wordCloud &&

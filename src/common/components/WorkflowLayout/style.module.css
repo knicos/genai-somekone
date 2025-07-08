@@ -1,4 +1,4 @@
-@value workspaceBg from "@knicos/genai-base/css/colours.module.css";
+@value workspaceBg from "@genai-fi/base/css/colours.module.css";
 
 .svglayer {
     position: absolute;

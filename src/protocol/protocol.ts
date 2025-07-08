@@ -1,4 +1,4 @@
-import { PeerEvent, BuiltinEvent } from '@knicos/genai-base';
+import { PeerEvent, BuiltinEvent } from '@genai-fi/base';
 import { SMConfig } from '@genaism/common/state/smConfig';
 import {
     ContentMetadata,

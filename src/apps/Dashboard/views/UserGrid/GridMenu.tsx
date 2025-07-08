@@ -9,7 +9,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid';
 import style from './style.module.css';
 import { useTranslation } from 'react-i18next';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useAtom, useAtomValue } from 'jotai';
 import { settingNodeMode } from '@genaism/apps/Dashboard/state/settingsState';
 import { useEffect, useRef, useState } from 'react';
 import DeleteDialog from '@genaism/apps/Dashboard/visualisations/SocialGraph/DeleteDialog';
@@ -28,15 +28,15 @@ import ClusterMenu from '@genaism/apps/Dashboard/visualisations/SocialGraph/Clus
 
 export default function GridMenu() {
     const { t } = useTranslation();
-    const [nodeMode, setNodeMode] = useRecoilState(settingNodeMode);
+    const [nodeMode, setNodeMode] = useAtom(settingNodeMode);
     const [showDelete, setShowDelete] = useState(false);
-    const [panel, setPanel] = useRecoilState(menuShowUserPanel);
-    const [selectedUser, setSelectedUser] = useRecoilState(menuSelectedUser);
-    const showMenu = useRecoilValue(menuShowGridMenu);
-    const hideActions = useRecoilValue(menuHideGridMenuActions);
-    const hideContent = useRecoilValue(menuHideGridMenuContent);
-    const selectAction = useRecoilValue(menuNodeSelectAction);
-    const userRef = useRef<UserNodeId | undefined>();
+    const [panel, setPanel] = useAtom(menuShowUserPanel);
+    const [selectedUser, setSelectedUser] = useAtom(menuSelectedUser);
+    const showMenu = useAtomValue(menuShowGridMenu);
+    const hideActions = useAtomValue(menuHideGridMenuActions);
+    const hideContent = useAtomValue(menuHideGridMenuContent);
+    const selectAction = useAtomValue(menuNodeSelectAction);
+    const userRef = useRef<UserNodeId | undefined>(undefined);
     const { profiler, actionLog, similarity } = useServices();
 
     useEffect(() => {

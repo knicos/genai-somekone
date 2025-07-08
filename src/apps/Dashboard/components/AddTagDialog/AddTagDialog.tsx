@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import style from './style.module.css';
-import { Button } from '@knicos/genai-base';
+import { Button } from '@genai-fi/base';
 import AddIcon from '@mui/icons-material/Add';
 import TagIcon from '@mui/icons-material/Tag';
 import { useRef, useState } from 'react';

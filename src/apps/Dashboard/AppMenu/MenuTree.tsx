@@ -14,13 +14,13 @@ import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid';
 import PersonIcon from '@mui/icons-material/Person';
 import HandymanIcon from '@mui/icons-material/Handyman';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
-import { useLocation, useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useSearchParams } from 'react-router-dom';
 import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 import ImportContactsIcon from '@mui/icons-material/ImportContacts';
 import NotInterestedIcon from '@mui/icons-material/NotInterested';
 import SettingsIcon from '@mui/icons-material/Settings';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { menuDisabledTreeItems, menuSettingsDialog, menuShowSimulator } from '@genaism/apps/Dashboard/state/menuState';
 import AppSettingsAltIcon from '@mui/icons-material/AppSettingsAlt';
 import TuneIcon from '@mui/icons-material/Tune';
@@ -39,10 +39,10 @@ export default function MenuTree({ open }: Props) {
     const { pathname, search } = useLocation();
     const navigate = useNavigate();
     const [params, setParams] = useSearchParams();
-    const [settingsDialog, setSettingsDialog] = useRecoilState(menuSettingsDialog);
-    const [simulator, setSimulator] = useRecoilState(menuShowSimulator);
-    const disabledArray = useRecoilValue(menuDisabledTreeItems);
-    const setGuide = useSetRecoilState(guideFile);
+    const [settingsDialog, setSettingsDialog] = useAtom(menuSettingsDialog);
+    const [simulator, setSimulator] = useAtom(menuShowSimulator);
+    const disabledArray = useAtomValue(menuDisabledTreeItems);
+    const setGuide = useSetAtom(guideFile);
 
     const disabled = useMemo(() => new Set(disabledArray), [disabledArray]);
 

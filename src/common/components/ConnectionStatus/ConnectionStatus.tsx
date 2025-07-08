@@ -1,17 +1,16 @@
-import { ConnectionStatus as BaseConnectionStatus, Peer2Peer } from '@knicos/genai-base';
+import { ConnectionStatus as BaseConnectionStatus } from '@genai-fi/base';
 import style from './style.module.css';
-import { EventProtocol } from '@genaism/protocol/protocol';
 import { useEffect, useState } from 'react';
+import { usePeerObject } from '@genai-fi/base/hooks/peer';
 
 interface Props {
     position: 'corner' | 'center';
-    ready: boolean;
-    peer?: Peer2Peer<EventProtocol>;
     visibility?: number;
 }
 
-export default function ConnectionStatus({ peer, ready, position, visibility }: Props) {
+export default function ConnectionStatus({ position, visibility }: Props) {
     const [quality, setQuality] = useState(0);
+    const peer = usePeerObject();
 
     useEffect(() => {
         if (peer) {
@@ -31,8 +30,6 @@ export default function ConnectionStatus({ peer, ready, position, visibility }: 
             <BaseConnectionStatus
                 api={import.meta.env.VITE_APP_APIURL}
                 appName={import.meta.env.DEV ? 'dev' : 'somekone'}
-                ready={ready}
-                peer={peer}
                 visibility={visibility}
             />
         </div>

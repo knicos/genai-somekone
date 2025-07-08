@@ -1,4 +1,4 @@
-import { Button } from '@knicos/genai-base';
+import { Button } from '@genai-fi/base';
 import style from './style.module.css';
 import { useEffect, useRef, useState } from 'react';
 import SlideShow from '../SlideShow/SlideShow';
@@ -15,7 +15,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useTranslation } from 'react-i18next';
 import DiversityOptions from './DiversityOptions';
 import { UserNodeId } from '@knicos/genai-recom';
-import { useRecoilValue } from 'recoil';
+import { useAtomValue } from 'jotai';
 import { appConfiguration, configuration } from '@genaism/common/state/configState';
 
 interface Props {
@@ -32,7 +32,7 @@ export default function RecomWizard({ id, active, onClose, hideClose, variant = 
     const [height, setHeight] = useState(0);
     const [nextPage, setNextPage] = useState(1);
     const prevPage = useRef([0]);
-    const config = useRecoilValue(id ? configuration(id) : appConfiguration);
+    const config = useAtomValue(id ? configuration(id) : appConfiguration);
 
     useEffect(() => {
         if (active) {
@@ -61,8 +61,8 @@ export default function RecomWizard({ id, active, onClose, hideClose, variant = 
                         ? style.wizardClosed
                         : style.wizard
                     : !active
-                    ? style.plainwizardClosed
-                    : style.plainwizard
+                      ? style.plainwizardClosed
+                      : style.plainwizard
             }
             style={{ height: `${height}px` }}
             data-testid="recom-wizard"

@@ -3,7 +3,7 @@ import { ContentService, Embedding } from '@knicos/genai-recom';
 import { Chip, IconButton } from '@mui/material';
 import { useEffect, useState } from 'react';
 import style from './style.module.css';
-import { LargeButton, Spinner } from '@knicos/genai-base';
+import { LargeButton, Spinner } from '@genai-fi/base';
 import { v4 as uuidv4 } from 'uuid';
 import { useUserProfile } from '@genaism/hooks/profiler';
 import AddIcon from '@mui/icons-material/Add';

@@ -7,7 +7,7 @@ import { useRef, useState } from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
 import { I18nextProvider, useTranslation } from 'react-i18next';
 import UserDialog from '../UserListing/UserDialog';
-import { useSetRecoilState } from 'recoil';
+import { useSetAtom } from 'jotai';
 import { menuSelectedUser } from '@genaism/apps/Dashboard/state/menuState';
 import i18n from '@genaism/i18n';
 
@@ -26,7 +26,7 @@ export default function FeedWidget({ id, onProfile, onRecommend, onLog, hideMenu
     const { t } = useTranslation();
     const [menuOpen, setMenuOpen] = useState(false);
     const [openUserList, setOpenUserList] = useState(false);
-    const setSelected = useSetRecoilState(menuSelectedUser);
+    const setSelected = useSetAtom(menuSelectedUser);
 
     return (
         <Widget

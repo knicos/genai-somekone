@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import ProfileNode from './ProfileNode';
 import { GraphLink, GraphNode, InternalGraphLink, LinkStyle } from '../../../../common/visualisations/Graph/types';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useAtom, useAtomValue } from 'jotai';
 import {
     settingClusterColouring,
     settingDisplayLabel,
@@ -45,7 +45,7 @@ export default function SocialGraphElement({ liveUsers }: Props) {
     // Internal refs
     const sizesRef = useRef<Map<string, number>>(new Map<string, number>());
     const currentZoom = useRef(1);
-    const userElement = useRef<SVGElement>();
+    const userElement = useRef<SVGElement>(null);
 
     // State
     const [links, setLinks] = useState<GraphLink<UserNodeId, UserNodeId>[]>([]);
@@ -55,24 +55,24 @@ export default function SocialGraphElement({ liveUsers }: Props) {
     const [userMenu, setUserMenu] = useState<[number, number] | undefined>();
 
     // Global state
-    const [focusNode, setFocusNode] = useRecoilState(menuSelectedUser);
-    const panel = useRecoilValue(menuShowUserPanel);
+    const [focusNode, setFocusNode] = useAtom(menuSelectedUser);
+    const panel = useAtomValue(menuShowUserPanel);
 
     // Settings
-    const scale = useRecoilValue(settingSocialGraphScale);
-    const showLines = useRecoilValue(settingDisplayLines);
-    const showOfflineUsers = useRecoilValue(settingShowOfflineUsers);
-    const clusterColouring = useRecoilValue(settingClusterColouring);
-    const linkLimit = useRecoilValue(settingLinkLimit);
-    const egoSelect = useRecoilValue(settingEgoOnSelect);
-    const showLabel = useRecoilValue(settingDisplayLabel);
-    const allLinks = useRecoilValue(settingIncludeAllLinks);
-    const themeName = useRecoilValue(settingSocialGraphTheme);
-    const autoCamera = useRecoilValue(settingAutoCamera);
-    const autoEdges = useRecoilValue(settingAutoEdges);
-    const showNodeMenu = useRecoilValue(settingSocialNodeMenu);
+    const scale = useAtomValue(settingSocialGraphScale);
+    const showLines = useAtomValue(settingDisplayLines);
+    const showOfflineUsers = useAtomValue(settingShowOfflineUsers);
+    const clusterColouring = useAtomValue(settingClusterColouring);
+    const linkLimit = useAtomValue(settingLinkLimit);
+    const egoSelect = useAtomValue(settingEgoOnSelect);
+    const showLabel = useAtomValue(settingDisplayLabel);
+    const allLinks = useAtomValue(settingIncludeAllLinks);
+    const themeName = useAtomValue(settingSocialGraphTheme);
+    const autoCamera = useAtomValue(settingAutoCamera);
+    const autoEdges = useAtomValue(settingAutoEdges);
+    const showNodeMenu = useAtomValue(settingSocialNodeMenu);
 
-    const [similarPercent, setSimilarPercent] = useRecoilState(settingSimilarPercent);
+    const [similarPercent, setSimilarPercent] = useAtom(settingSimilarPercent);
 
     // External or calculated data
     const similar = useSimilarityData();
@@ -193,13 +193,13 @@ export default function SocialGraphElement({ liveUsers }: Props) {
                             ? egoSelect && linkStyles
                                 ? 0
                                 : l.source.data?.label && l.source.data?.label === l.target.data?.label
-                                ? 0.5
-                                : 0.1
+                                  ? 0.5
+                                  : 0.1
                             : egoSelect && linkStyles
-                            ? 0
-                            : l.source.data?.label && l.source.data?.label === l.target.data?.label
-                            ? 0.8
-                            : 0.3,
+                              ? 0
+                              : l.source.data?.label && l.source.data?.label === l.target.data?.label
+                                ? 0.8
+                                : 0.3,
                     width: (l: InternalGraphLink<UserNodeId, UserNodeId>) =>
                         MIN_LINE_THICKNESS + Math.floor(l.strength * LINE_THICKNESS_UNSELECTED),
                     colour: (l: InternalGraphLink<UserNodeId, UserNodeId>) =>
@@ -225,7 +225,7 @@ export default function SocialGraphElement({ liveUsers }: Props) {
                     setFocusNode(undefined);
                     setConnected(undefined);
                     setLinkStyles(undefined);
-                    userElement.current = undefined;
+                    userElement.current = null;
                     setUserMenu(undefined);
                 }}
                 onDragStop={() => {

@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useEffect } from 'react';
 import { useServiceEventMemo, useServices } from '@genaism/hooks/services';
 import style from './style.module.css';
-import { useRecoilValue } from 'recoil';
+import { useAtomValue } from 'jotai';
 import { menuReplaySpeed, menuShowReplayControls } from '@genaism/apps/Dashboard/state/menuState';
 import SpeedMenu from './SpeedMenu';
 
@@ -29,8 +29,8 @@ function formatTime(time: number) {
 
 export default function Replay() {
     const { t } = useTranslation();
-    const showControls = useRecoilValue(menuShowReplayControls);
-    const speed = useRecoilValue(menuReplaySpeed);
+    const showControls = useAtomValue(menuShowReplayControls);
+    const speed = useAtomValue(menuReplaySpeed);
     const { replay: replaySvc } = useServices();
 
     const [pos, time] = useServiceEventMemo(

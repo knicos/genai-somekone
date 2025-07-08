@@ -106,6 +106,7 @@ export default function LogTable() {
                 <DataGrid
                     localeText={{}}
                     slots={{ toolbar: TableToolbar }}
+                    showToolbar
                     rows={log}
                     columns={columns}
                     initialState={{

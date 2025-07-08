@@ -1,4 +1,4 @@
-@value bgError from "@knicos/genai-base/css/colours.module.css";
+@value bgError from "@genai-fi/base/css/colours.module.css";
 
 .errorTitle {
     background: bgError;

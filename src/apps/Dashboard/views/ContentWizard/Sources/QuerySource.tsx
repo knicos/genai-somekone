@@ -3,7 +3,7 @@ import style from '../style.module.css';
 import { useTranslation } from 'react-i18next';
 import SearchIcon from '@mui/icons-material/Search';
 import { KeyboardEvent, useCallback, useEffect, useRef, useState } from 'react';
-import { Button, canvasFromURL, LargeButton } from '@knicos/genai-base';
+import { Button, canvasFromURL, LargeButton } from '@genai-fi/base';
 import useImageSearch from '@genaism/services/imageSearch/hook';
 import { useContentService } from '@genaism/hooks/services';
 import CaptureDialog from '../CaptureDialog';
@@ -14,7 +14,7 @@ interface Props {
 
 export default function QuerySource({ disabled }: Props) {
     const { t } = useTranslation();
-    const inputRef = useRef<HTMLInputElement>();
+    const inputRef = useRef<HTMLInputElement>(null);
     const [query, setQuery] = useState<string | undefined>();
     const [order, setOrder] = useState<'latest' | 'popular'>('latest');
     const [content, setContent] = useState<string[]>([]);

@@ -94,6 +94,7 @@ export default function ContentEngagements() {
             >
                 <DataGrid
                     slots={{ toolbar: TableToolbar }}
+                    showToolbar
                     rows={rows}
                     columns={columns}
                     initialState={{

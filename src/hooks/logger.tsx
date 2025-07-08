@@ -1,7 +1,7 @@
 import { appConfiguration } from '@genaism/common/state/configState';
 import { PropsWithChildren, createContext, memo, useCallback, useContext } from 'react';
-import { useRecoilValue } from 'recoil';
-import { SenderType } from '@knicos/genai-base';
+import { useAtomValue } from 'jotai';
+import { SenderType } from '@genai-fi/base';
 import { ResearchLogEvent } from '@genaism/protocol/protocol';
 import { useProfilerService } from './services';
 
@@ -14,7 +14,7 @@ interface Props extends PropsWithChildren {
 }
 
 function LogProviderComp({ sender, children }: Props) {
-    const config = useRecoilValue(appConfiguration);
+    const config = useAtomValue(appConfiguration);
     const profiler = useProfilerService();
 
     const logFn = useCallback(

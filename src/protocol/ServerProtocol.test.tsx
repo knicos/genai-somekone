@@ -3,14 +3,35 @@ import ServerProtocol from './ServerProtocol';
 import { render } from '@testing-library/react';
 import TestWrapper from '@genaism/util/TestWrapper';
 import { getGraphService } from '@knicos/genai-recom';
+import { PropsWithChildren } from 'react';
+import EventEmitter from 'eventemitter3';
+import { EventProtocol } from './protocol';
+import DEFAULT from '../common/state/defaultConfig.json';
 
-const { mockPeer } = vi.hoisted(() => ({
-    mockPeer: vi.fn(),
+const { mockPeer, mockPeerData, mockSender } = vi.hoisted(() => ({
+    mockPeer: {
+        on: vi.fn(),
+        off: vi.fn(),
+    },
+    mockPeerData: vi.fn(),
+    mockSender: vi.fn(),
 }));
 
-vi.mock('@knicos/genai-base', async (importOriginal) => ({
-    ...(await importOriginal<typeof import('@knicos/genai-base')>()),
-    usePeer: mockPeer,
+vi.mock('@genai-fi/base', async (importOriginal) => ({
+    ...(await importOriginal<typeof import('@genai-fi/base')>()),
+    ConnectionStatus: vi.fn(() => <div data-testid="connection-status">Connection Status</div>),
+}));
+
+vi.mock('@genai-fi/base/hooks/peer', async () => ({
+    //...(await importOriginal<typeof import('@genai-fi/base')>()),
+    Peer: function Peer(props: PropsWithChildren) {
+        return <div>{props.children}</div>;
+    },
+    usePeerObject: () => mockPeer,
+    usePeerStatus: () => 'ready',
+    usePeerSender: () => mockSender,
+    usePeerClose: vi.fn(),
+    usePeerData: mockPeerData,
 }));
 
 describe('ServerProtocol Component', () => {
@@ -20,21 +41,17 @@ describe('ServerProtocol Component', () => {
     });
 
     it('responds with ready if connected', async ({ expect }) => {
-        mockPeer.mockImplementation(() => ({
-            ready: true,
-        }));
         const onReady = vi.fn();
         render(
             <TestWrapper>
                 <ServerProtocol
                     onReady={onReady}
-                    code="xyz"
                     content={[]}
                 />
             </TestWrapper>
         );
 
-        expect(mockPeer).toHaveBeenCalled();
+        expect(mockPeerData).toHaveBeenCalled();
         expect(onReady).toHaveBeenCalled();
     });
 
@@ -42,9 +59,10 @@ describe('ServerProtocol Component', () => {
         const conn = {
             send: vi.fn(),
         };
-        mockPeer.mockImplementation(({ onData }) => {
-            onData({ event: 'eter:join' }, conn);
-            return { ready: true };
+        const ee = new EventEmitter();
+        mockPeerData.mockImplementation((cb: (data: EventProtocol) => void) => {
+            ee.removeAllListeners('data');
+            ee.on('data', cb);
         });
 
         const onReady = vi.fn();
@@ -52,13 +70,22 @@ describe('ServerProtocol Component', () => {
             <TestWrapper>
                 <ServerProtocol
                     onReady={onReady}
-                    code="xyz"
                     content={[]}
                 />
             </TestWrapper>
         );
 
-        expect(conn.send).toHaveBeenCalledWith({ event: 'eter:config', configuration: undefined, content: [] });
-        expect(conn.send).toHaveBeenCalledWith({ event: 'eter:users', users: [] });
+        setTimeout(() => {
+            ee.emit('data', { event: 'eter:join' }, conn);
+        }, 100);
+
+        await vi.waitFor(() => {
+            expect(conn.send).toHaveBeenCalledWith({
+                event: 'eter:config',
+                configuration: DEFAULT.configuration,
+                content: [],
+            });
+            expect(conn.send).toHaveBeenCalledWith({ event: 'eter:users', users: [] });
+        });
     });
 });

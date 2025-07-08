@@ -1,4 +1,3 @@
-import { TestWrapper } from '@knicos/genai-base';
 import { describe, it, vi } from 'vitest';
 import ImageEdit from './ImageEdit';
 import { render, screen, waitFor } from '@testing-library/react';
@@ -13,6 +12,7 @@ import {
     ServiceBroker,
 } from '@knicos/genai-recom';
 import { SimilarityService } from '@genaism/services/similarity';
+import TestWrapper from '@genaism/util/TestWrapper';
 
 const { mockEncode, mockSimilar } = vi.hoisted(() => ({
     mockEncode: vi.fn(() => new Promise((resolve) => resolve([1, 1, 1]))),

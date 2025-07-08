@@ -1,7 +1,7 @@
 import Graph from '../Graph/Graph';
 import { useEffect, useState } from 'react';
 import { GraphLink, GraphNode, InternalGraphLink } from '../Graph/types';
-import colours from '@knicos/genai-base/css/colours.module.css';
+import colours from '@genai-fi/base/css/colours.module.css';
 import ContentNode from './ContentNode';
 import { ContentNodeId, UserNodeId } from '@knicos/genai-recom';
 import { useUserProfile } from '@genaism/hooks/profiler';

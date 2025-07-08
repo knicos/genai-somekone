@@ -1,6 +1,6 @@
 import { IconButton } from '@mui/material';
 import PrintIcon from '@mui/icons-material/Print';
-import { useRandom } from '@knicos/genai-base';
+import { useRandom } from '@genai-fi/base';
 import { PrintData } from '@genaism/protocol/printProtocol';
 
 interface Props {

@@ -8,12 +8,12 @@ import {
     Navigate,
     redirect,
 } from 'react-router-dom';
-import { RecoilRoot } from 'recoil';
+import { Provider } from 'jotai';
 import './App.css';
 import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 import Loading from './common/components/Loading/Loading';
 import About from './apps/About/About';
-import { theme } from '@knicos/genai-base';
+import { theme } from '@genai-fi/base';
 import { defaultServices, ServiceProvider } from './hooks/services';
 
 interface RouterError {
@@ -228,7 +228,7 @@ function App() {
     return (
         <StyledEngineProvider injectFirst>
             <ThemeProvider theme={theme}>
-                <RecoilRoot>
+                <Provider>
                     <ServiceProvider value={defaultServices}>
                         <React.Suspense
                             fallback={
@@ -241,7 +241,7 @@ function App() {
                             <RouterProvider router={router} />
                         </React.Suspense>
                     </ServiceProvider>
-                </RecoilRoot>
+                </Provider>
             </ThemeProvider>
         </StyledEngineProvider>
     );

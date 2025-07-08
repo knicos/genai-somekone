@@ -4,7 +4,7 @@ import style from './style.module.css';
 import { colourLabel } from '@genaism/util/colourise';
 import { useProfilerService } from '@genaism/hooks/services';
 import { useEffect, useState } from 'react';
-import { Button } from '@knicos/genai-base';
+import { Button } from '@genai-fi/base';
 import { useTranslation } from 'react-i18next';
 import { useSimilarityData } from '@genaism/hooks/similarity';
 

@@ -11,7 +11,7 @@ import {
 import { Checkbox, FormControlLabel, Slider } from '@mui/material';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useRecoilState } from 'recoil';
+import { useAtom } from 'jotai';
 import style from './style.module.css';
 import {
     settingAutoCamera,
@@ -35,16 +35,16 @@ interface Props {
 
 export default function SocialSettingsDialog({ open, onClose }: Props) {
     const { t } = useTranslation();
-    const [showLines, setShowLines] = useRecoilState(settingDisplayLines);
-    const [showLabels, setShowLabels] = useRecoilState(settingDisplayLabel);
-    const [scale, setScale] = useRecoilState(settingSocialGraphScale);
-    const [egoSelect, setEgoSelect] = useRecoilState(settingEgoOnSelect);
-    const [allLinks, setAllLinks] = useRecoilState(settingIncludeAllLinks);
-    const [graphTheme, setGraphTheme] = useRecoilState(settingSocialGraphTheme);
-    const [similarity, setSimilarity] = useRecoilState(settingSimilarPercent);
-    const [limit, setLimit] = useRecoilState(settingLinkLimit);
-    const [autoCamera, setAutoCamera] = useRecoilState(settingAutoCamera);
-    const [autoEdges, setAutoEdges] = useRecoilState(settingAutoEdges);
+    const [showLines, setShowLines] = useAtom(settingDisplayLines);
+    const [showLabels, setShowLabels] = useAtom(settingDisplayLabel);
+    const [scale, setScale] = useAtom(settingSocialGraphScale);
+    const [egoSelect, setEgoSelect] = useAtom(settingEgoOnSelect);
+    const [allLinks, setAllLinks] = useAtom(settingIncludeAllLinks);
+    const [graphTheme, setGraphTheme] = useAtom(settingSocialGraphTheme);
+    const [similarity, setSimilarity] = useAtom(settingSimilarPercent);
+    const [limit, setLimit] = useAtom(settingLinkLimit);
+    const [autoCamera, setAutoCamera] = useAtom(settingAutoCamera);
+    const [autoEdges, setAutoEdges] = useAtom(settingAutoEdges);
 
     const doScale = useCallback((_: unknown, value: number | number[]) => setScale(value as number), [setScale]);
 

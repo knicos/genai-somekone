@@ -4,15 +4,15 @@ import SettingsDialog from './SettingsDialog';
 import TestWrapper from '@genaism/util/TestWrapper';
 import { menuShowSettings } from '@genaism/apps/Dashboard/state/menuState';
 import userEvent from '@testing-library/user-event';
+import { createStore } from 'jotai';
+
+const store = createStore();
+store.set(menuShowSettings, true);
 
 describe('Settings Dialog', () => {
     it('shows general settings', async ({ expect }) => {
         render(
-            <TestWrapper
-                initializeState={({ set }) => {
-                    set(menuShowSettings, true);
-                }}
-            >
+            <TestWrapper initializeState={store}>
                 <SettingsDialog />
             </TestWrapper>
         );
@@ -24,11 +24,7 @@ describe('Settings Dialog', () => {
         const user = userEvent.setup();
 
         render(
-            <TestWrapper
-                initializeState={({ set }) => {
-                    set(menuShowSettings, true);
-                }}
-            >
+            <TestWrapper initializeState={store}>
                 <SettingsDialog />
             </TestWrapper>
         );
@@ -42,11 +38,7 @@ describe('Settings Dialog', () => {
         const user = userEvent.setup();
 
         render(
-            <TestWrapper
-                initializeState={({ set }) => {
-                    set(menuShowSettings, true);
-                }}
-            >
+            <TestWrapper initializeState={store}>
                 <SettingsDialog />
             </TestWrapper>
         );
@@ -60,11 +52,7 @@ describe('Settings Dialog', () => {
         const user = userEvent.setup();
 
         render(
-            <TestWrapper
-                initializeState={({ set }) => {
-                    set(menuShowSettings, true);
-                }}
-            >
+            <TestWrapper initializeState={store}>
                 <SettingsDialog />
             </TestWrapper>
         );
@@ -78,11 +66,7 @@ describe('Settings Dialog', () => {
         const user = userEvent.setup();
 
         render(
-            <TestWrapper
-                initializeState={({ set }) => {
-                    set(menuShowSettings, true);
-                }}
-            >
+            <TestWrapper initializeState={store}>
                 <SettingsDialog />
             </TestWrapper>
         );

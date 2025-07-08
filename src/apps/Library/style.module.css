@@ -1,4 +1,4 @@
-@value textDark, bgSubdued1, primary, secondary from "@knicos/genai-base/css/colours.module.css";
+@value textDark, bgSubdued1, primary, secondary from "@genai-fi/base/css/colours.module.css";
 
 .container {
     background: white;

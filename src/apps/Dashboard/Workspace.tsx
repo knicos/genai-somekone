@@ -5,20 +5,20 @@ import style from './style.module.css';
 import StartDialog from './views/StartDialog/StartDialog';
 import DEFAULT_CONFIG from '@genaism/common/state/defaultConfig.json';
 import MenuPanel from './AppMenu/MenuPanel';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { menuShowReplay } from '@genaism/apps/Dashboard/state/menuState';
 import SettingsDialog from './views/SettingsDialog/SettingsDialog';
 import Loading from '@genaism/common/components/Loading/Loading';
 import ErrorDialog from '../../common/views/ErrorDialog/ErrorDialog';
 import { errorNotification } from '@genaism/common/state/errorState';
 import { appConfiguration } from '@genaism/common/state/configState';
-import { useID } from '@knicos/genai-base';
+import { useID } from '@genai-fi/base';
 import Replay from './components/Replay/Replay';
 import { onlineUsers } from '@genaism/common/state/sessionState';
 import ServerProtocol from '../../protocol/ServerProtocol';
 import { ContentLoader } from '@genaism/common/components/ContentLoader';
 import Guidance from '@genaism/apps/Dashboard/views/Guidance/Guidance';
-import { Outlet } from 'react-router';
+import { Outlet } from 'react-router-dom';
 import AppSettingsDialog from './views/AppSettingsDialog/AppSettingsDialog';
 import RecomSettingsDialog from './views/RecomSettingsDialog/RecomSettingsDialog';
 import { SomekoneSettings, useSettingDeserialise } from '@genaism/hooks/settings';
@@ -26,6 +26,7 @@ import Simulator from './components/Simulator/Simulator';
 import { I18nextProvider } from 'react-i18next';
 import i18n from '@genaism/i18n';
 import { guideFile } from './state/settingsState';
+import { Peer } from '@genai-fi/base/hooks/peer';
 
 interface Props {
     contentUrls?: string;
@@ -36,17 +37,17 @@ interface Props {
 }
 
 export function Workspace({ contentUrls, cfg, guide, experimental, noSession }: Props) {
-    const setConfig = useSetRecoilState<SMConfig>(appConfiguration);
+    const setConfig = useSetAtom(appConfiguration);
     const [content, setContent] = useState<(ArrayBuffer | string)[]>();
-    const users = useRecoilValue(onlineUsers);
+    const users = useAtomValue(onlineUsers);
     const [loaded, setLoaded] = useState(false);
-    const setError = useSetRecoilState(errorNotification);
+    const setError = useSetAtom(errorNotification);
     const MYCODE = useID(5);
     const deserial = useSettingDeserialise();
-    const gfile = useRecoilValue(guideFile);
+    const gfile = useAtomValue(guideFile);
 
     const [ready, setReady] = useState(false);
-    const showReplay = useRecoilValue(menuShowReplay);
+    const showReplay = useAtomValue(menuShowReplay);
     const [fileToOpen, setFileToOpen] = useState<(ArrayBuffer | string)[] | undefined>();
 
     useEffect(() => {
@@ -88,7 +89,13 @@ export function Workspace({ contentUrls, cfg, guide, experimental, noSession }: 
     }, []);
 
     return (
-        <>
+        <Peer
+            host={import.meta.env.VITE_APP_PEER_SERVER}
+            secure={import.meta.env.VITE_APP_PEER_SECURE === '1'}
+            peerkey={import.meta.env.VITE_APP_PEER_KEY || 'peerjs'}
+            port={import.meta.env.VITE_APP_PEER_PORT ? parseInt(import.meta.env.VITE_APP_PEER_PORT) : 443}
+            code={`sm-${MYCODE}`}
+        >
             <Loading loading={!loaded}>
                 <I18nextProvider
                     i18n={i18n}
@@ -115,7 +122,6 @@ export function Workspace({ contentUrls, cfg, guide, experimental, noSession }: 
             <ServerProtocol
                 onReady={doReady}
                 content={content}
-                code={MYCODE}
             />
             <ContentLoader
                 content={content}
@@ -136,6 +142,6 @@ export function Workspace({ contentUrls, cfg, guide, experimental, noSession }: 
                 hidden={true}
                 accept=".zip,application/zip"
             />
-        </>
+        </Peer>
     );
 }

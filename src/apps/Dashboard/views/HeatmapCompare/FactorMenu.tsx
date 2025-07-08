@@ -5,7 +5,7 @@ import { useState } from 'react';
 import style from './style.module.css';
 import TuneIcon from '@mui/icons-material/Tune';
 import { heatmapDimension } from '../../state/settingsState';
-import { useRecoilState } from 'recoil';
+import { useAtom } from 'jotai';
 import { useContentService } from '@genaism/hooks/services';
 
 interface Props {
@@ -16,7 +16,7 @@ interface Props {
 export default function FactorMenu({ factor, onFactor }: Props) {
     const { t } = useTranslation();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const [dim, setDim] = useRecoilState(heatmapDimension);
+    const [dim, setDim] = useAtom(heatmapDimension);
     const contentSvc = useContentService();
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {

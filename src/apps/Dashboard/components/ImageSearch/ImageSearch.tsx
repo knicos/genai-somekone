@@ -7,8 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { InputAdornment } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { canvasFromURL } from '@genaism/util/canvas';
-import { LargeButton } from '@knicos/genai-base';
-import { AlertPara } from '@knicos/genai-base';
+import { LargeButton } from '@genai-fi/base';
+import { AlertPara } from '@genai-fi/base';
 
 interface Props {
     onAdd: (url: string, meta: ImageResult) => void;
@@ -26,7 +26,7 @@ export default function ImageSearch({ onAdd, columns, selected, onSelect, disabl
     const [images, setImages] = useState<ImageResult[]>([]);
     const newimages = useImageSearch(query, { page, source });
     const [more, setMore] = useState(false);
-    const inputRef = useRef<HTMLInputElement>();
+    const inputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         setImages((old) => [...old, ...newimages.results]);

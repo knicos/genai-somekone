@@ -1,13 +1,14 @@
 import { useEffect } from 'react';
-import { RecoilValue, useRecoilValue } from 'recoil';
+import { useAtomValue } from 'jotai';
+import { Atom } from 'jotai';
 
 interface Props {
-    node: RecoilValue<unknown>;
+    node: Atom<unknown>;
     onChange: (value: unknown) => void;
 }
 
-export const RecoilObserver = ({ node, onChange }: Props) => {
-    const value = useRecoilValue(node);
+export default function RecoilObserver({ node, onChange }: Props) {
+    const value = useAtomValue(node);
     useEffect(() => onChange(value), [onChange, value]);
     return null;
-};
+}

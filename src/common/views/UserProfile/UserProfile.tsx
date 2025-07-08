@@ -10,7 +10,7 @@ import { UserProfilePure } from './UserProfilePure';
 import PrintButton from '@genaism/common/components/PrintButton/PrintButton';
 import { IconMenuInline, IconMenuItem } from '@genaism/common/components/IconMenu';
 import { useTranslation } from 'react-i18next';
-import { useRecoilValue } from 'recoil';
+import { useAtomValue } from 'jotai';
 import { appConfiguration } from '@genaism/common/state/configState';
 import { svgToPNG } from '@genaism/util/svgToPNG';
 import DownloadIcon from '@mui/icons-material/Download';
@@ -27,7 +27,7 @@ export default function Profile({ id, disableMenu, noTagSummary }: Props) {
     const profiler = useProfilerService();
     const aid = id || profiler.getCurrentUser();
     const profile = useUserProfile(aid);
-    const appConfig = useRecoilValue(appConfiguration);
+    const appConfig = useAtomValue(appConfiguration);
     const svgRef = useRef<SVGSVGElement>(null);
 
     const summary = useMemo(() => {

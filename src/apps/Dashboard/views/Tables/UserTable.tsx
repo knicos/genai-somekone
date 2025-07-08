@@ -84,6 +84,7 @@ export default function UserTable() {
             >
                 <DataGrid
                     slots={{ toolbar: TableToolbar }}
+                    showToolbar
                     rows={rows}
                     columns={columns}
                     initialState={{

@@ -1,5 +1,5 @@
 import React from 'react';
-import { MutableSnapshot, RecoilRoot } from 'recoil';
+import { createStore, Provider } from 'jotai';
 import { createTheme, ThemeProvider } from '@mui/material';
 
 const themeOverrides = createTheme({
@@ -19,13 +19,13 @@ const themeOverrides = createTheme({
 });
 
 interface Props extends React.PropsWithChildren {
-    initializeState?: (snap: MutableSnapshot) => void;
+    initializeState?: ReturnType<typeof createStore>;
 }
 
 export default function TestWrapper({ initializeState, children }: Props) {
     return (
         <ThemeProvider theme={themeOverrides}>
-            <RecoilRoot initializeState={initializeState}>{children}</RecoilRoot>
+            <Provider store={initializeState}>{children}</Provider>
         </ThemeProvider>
     );
 }

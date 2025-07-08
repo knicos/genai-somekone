@@ -1,13 +1,13 @@
 import { Dialog, DialogContent, DialogTitle } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { useRecoilValue } from 'recoil';
+import { useAtomValue } from 'jotai';
 import style from './style.module.css';
 import { appConfiguration } from '@genaism/common/state/configState';
 import PauseCircleIcon from '@mui/icons-material/PauseCircle';
 
 export default function BlockDialog() {
     const { t } = useTranslation();
-    const config = useRecoilValue(appConfiguration);
+    const config = useAtomValue(appConfiguration);
 
     return (
         <Dialog open={config?.disableFeedApp || false}>

@@ -1,7 +1,7 @@
 import { ContentInjectReason, UserEntry } from '@genaism/protocol/protocol';
 import { UserInfo } from '@genaism/common/state/userInfo';
 import { ContentNodeId, UserNodeId } from '@knicos/genai-recom';
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
 const USERNAME_KEY = 'genai_somekone_username';
 
@@ -10,26 +10,13 @@ function loadUser() {
     return name || undefined;
 }
 
-export const availableUsers = atom<UserEntry[]>({
-    key: 'availableUsers',
-    default: [],
-});
+export const availableUsers = atom<UserEntry[]>([]);
 
-export const onlineUsers = atom<UserInfo[]>({
-    key: 'onlineUsers',
-    default: [],
-    dangerouslyAllowMutability: true,
-});
+export const onlineUsers = atom<UserInfo[]>([]);
 
-export const currentUserName = atom<string | undefined>({
-    key: 'currentUserName',
-    default: loadUser(),
-});
+export const currentUserName = atom<string | undefined>(loadUser());
 
-export const contentLoaded = atom<boolean>({
-    key: 'contentLoaded',
-    default: false,
-});
+export const contentLoaded = atom<boolean>(false);
 
 export interface InjectContentType {
     to: UserNodeId;
@@ -39,7 +26,4 @@ export interface InjectContentType {
     timestamp: number;
 }
 
-export const injectedContent = atom<InjectContentType[]>({
-    key: 'injectcontent',
-    default: [],
-});
+export const injectedContent = atom<InjectContentType[]>([]);

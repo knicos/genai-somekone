@@ -1,4 +1,4 @@
-import { BusyButton } from '@knicos/genai-base';
+import { BusyButton } from '@genai-fi/base';
 import { useEffect, useState } from 'react';
 import style from './style.module.css';
 import { Slider } from '@mui/material';
@@ -9,7 +9,7 @@ import { Widget } from '@genaism/common/components/WorkflowLayout/Widget';
 import { useTranslation } from 'react-i18next';
 import TrainingGraph, { TrainingDataPoint } from '../../visualisations/TrainingGraph/TrainingGraph';
 import { hslToHex } from '@genaism/util/colours';
-import { useRecoilValue } from 'recoil';
+import { useAtomValue } from 'jotai';
 import { settingContentWizardAdvanced } from '@genaism/apps/Dashboard/state/settingsState';
 
 // const CLUSTERS = 6;
@@ -91,7 +91,7 @@ export default function MappingTool() {
     const [points, setPoints] = useState<Point[]>([]);
     const contentSvc = useContentService();
     const [history, setHistory] = useState<TrainingDataPoint[]>([]);
-    const advanced = useRecoilValue(settingContentWizardAdvanced);
+    const advanced = useAtomValue(settingContentWizardAdvanced);
 
     useEffect(() => {
         const nodes = contentSvc.graph.getNodesByType('content');

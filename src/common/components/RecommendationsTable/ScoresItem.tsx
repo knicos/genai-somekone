@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import ScorePie from './ScorePie';
 import style from './style.module.css';
-import sColors from '@knicos/genai-base/css/colours.module.css';
+import sColors from '@genai-fi/base/css/colours.module.css';
 import { ScoredRecommendation } from '@knicos/genai-recom';
 
 interface Props {

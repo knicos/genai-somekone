@@ -1,7 +1,7 @@
 import { ContentNodeId, UserNodeId } from '@knicos/genai-recom';
 import style from './style.module.css';
 import MapService from '@genaism/services/map/MapService';
-import EngagementHeatmap from '@genaism/common/visualisations/EngagementHeatmap/EngagementHeaptmap';
+import EngagementHeatmap from '@genaism/common/visualisations/EngagementHeatmap/EngagementHeatmap';
 
 interface Props {
     users: UserNodeId[];

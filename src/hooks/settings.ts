@@ -37,7 +37,8 @@ import {
 import { appConfiguration } from '@genaism/common/state/configState';
 import { SMConfig, mergeConfiguration } from '@genaism/common/state/smConfig';
 import { UserNodeId } from '@knicos/genai-recom';
-import { useRecoilCallback } from 'recoil';
+import { useAtomCallback } from 'jotai/utils';
+import { useCallback, useMemo } from 'react';
 
 export interface SomekoneSocialSettings {
     // displayLines?: boolean;
@@ -84,9 +85,9 @@ export interface SomekoneSettings {
 }
 
 export function useSettingDeserialise() {
-    const deserializer = useRecoilCallback(
-        ({ set, snapshot }) =>
-            (data: SomekoneSettings) => {
+    const deserializer = useAtomCallback(
+        useCallback(
+            (get, set) => (data: SomekoneSettings) => {
                 if (data.socialGraph) {
                     if (data.socialGraph.displayLabels !== undefined) {
                         set(settingDisplayLabel, data.socialGraph.displayLabels);
@@ -120,11 +121,10 @@ export function useSettingDeserialise() {
                     }
                 }
                 if (data.applicationConfig) {
-                    snapshot.getPromise(appConfiguration).then((cfg) => {
-                        if (data.applicationConfig) {
-                            set(appConfiguration, mergeConfiguration(cfg, data.applicationConfig));
-                        }
-                    });
+                    const cfg = get(appConfiguration);
+                    if (data.applicationConfig) {
+                        set(appConfiguration, mergeConfiguration(cfg, data.applicationConfig));
+                    }
                 }
                 if (data.ui) {
                     if (data.ui.showTreeMenu !== undefined) {
@@ -184,51 +184,53 @@ export function useSettingDeserialise() {
                     set(userApp, data.appType);
                 }
             },
-        []
+            []
+        )
     );
 
-    return deserializer;
+    return useMemo(() => deserializer(), [deserializer]);
 }
 
 export function useSettingSerialise() {
-    const serialise = useRecoilCallback(
-        ({ snapshot }) =>
-            async (): Promise<SomekoneSettings> => {
+    const serialise = useAtomCallback(
+        useCallback(
+            (get) => (): SomekoneSettings => {
                 return {
                     socialGraph: {
-                        displayLabels: await snapshot.getPromise(settingDisplayLabel),
-                        clusterColouring: await snapshot.getPromise(settingClusterColouring),
-                        nodeDisplay: await snapshot.getPromise(settingNodeMode),
-                        scale: await snapshot.getPromise(settingSocialGraphScale),
-                        includeAllLinks: await snapshot.getPromise(settingIncludeAllLinks),
-                        linkLimit: await snapshot.getPromise(settingLinkLimit),
-                        similarityThreshold: await snapshot.getPromise(settingSimilarPercent),
-                        autoCamera: await snapshot.getPromise(settingAutoCamera),
-                        autoEdges: await snapshot.getPromise(settingAutoEdges),
-                        showNodeMenu: await snapshot.getPromise(settingSocialNodeMenu),
+                        displayLabels: get(settingDisplayLabel),
+                        clusterColouring: get(settingClusterColouring),
+                        nodeDisplay: get(settingNodeMode),
+                        scale: get(settingSocialGraphScale),
+                        includeAllLinks: get(settingIncludeAllLinks),
+                        linkLimit: get(settingLinkLimit),
+                        similarityThreshold: get(settingSimilarPercent),
+                        autoCamera: get(settingAutoCamera),
+                        autoEdges: get(settingAutoEdges),
+                        showNodeMenu: get(settingSocialNodeMenu),
                     },
-                    applicationConfig: await snapshot.getPromise(appConfiguration),
+                    applicationConfig: get(appConfiguration),
                     ui: {
-                        showUserPanel: await snapshot.getPromise(menuShowUserPanel),
-                        showShareCode: await snapshot.getPromise(menuShowShare),
-                        showSocialMenu: await snapshot.getPromise(menuShowSocialMenu),
-                        showGridMenu: await snapshot.getPromise(menuShowGridMenu),
-                        hideGridMenuActions: await snapshot.getPromise(menuHideGridMenuActions),
-                        hideGridMenuContent: await snapshot.getPromise(menuHideGridMenuContent),
-                        nodeSelectAction: await snapshot.getPromise(menuNodeSelectAction),
-                        showTreeMenu: await snapshot.getPromise(menuTreeMenu),
-                        disabledTreeItems: await snapshot.getPromise(menuDisabledTreeItems),
-                        showReplay: await snapshot.getPromise(menuShowReplay),
-                        enableReplayControls: await snapshot.getPromise(menuShowReplayControls),
-                        replaySpeed: await snapshot.getPromise(menuReplaySpeed),
-                        heatmapAutoUsers: await snapshot.getPromise(heatmapAutoUsers),
-                        heatmapMode: await snapshot.getPromise(heatmapMode),
-                        heatmapDimension: await snapshot.getPromise(heatmapDimension),
+                        showUserPanel: get(menuShowUserPanel),
+                        showShareCode: get(menuShowShare),
+                        showSocialMenu: get(menuShowSocialMenu),
+                        showGridMenu: get(menuShowGridMenu),
+                        hideGridMenuActions: get(menuHideGridMenuActions),
+                        hideGridMenuContent: get(menuHideGridMenuContent),
+                        nodeSelectAction: get(menuNodeSelectAction),
+                        showTreeMenu: get(menuTreeMenu),
+                        disabledTreeItems: get(menuDisabledTreeItems),
+                        showReplay: get(menuShowReplay),
+                        enableReplayControls: get(menuShowReplayControls),
+                        replaySpeed: get(menuReplaySpeed),
+                        heatmapAutoUsers: get(heatmapAutoUsers),
+                        heatmapMode: get(heatmapMode),
+                        heatmapDimension: get(heatmapDimension),
                     },
-                    appType: await snapshot.getPromise(userApp),
+                    appType: get(userApp),
                 };
             },
-        []
+            []
+        )
     );
-    return serialise;
+    return useMemo(() => serialise(), [serialise]);
 }

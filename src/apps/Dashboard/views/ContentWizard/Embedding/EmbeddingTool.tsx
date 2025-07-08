@@ -1,4 +1,4 @@
-import { AlertPara, BusyButton, Button } from '@knicos/genai-base';
+import { AlertPara, BusyButton, Button } from '@genai-fi/base';
 import { useEffect, useMemo, useState } from 'react';
 import style from '../style.module.css';
 import { Checkbox, FormControlLabel, IconButton, Slider, Tab, Tabs } from '@mui/material';
@@ -12,7 +12,7 @@ import TrainingGraph, { TrainingDataPoint } from '../../../visualisations/Traini
 import SimilarityDistribution from './SimilarityDistribution';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { useEventEmit } from '@genaism/hooks/events';
-import { useRecoilValue } from 'recoil';
+import { useAtomValue } from 'jotai';
 import { settingContentWizardAdvanced } from '@genaism/apps/Dashboard/state/settingsState';
 
 export default function EmbeddingTool() {
@@ -29,7 +29,7 @@ export default function EmbeddingTool() {
     const [history, setHistory] = useState<TrainingDataPoint[]>([]);
     const [learningRate, setLearningRate] = useState(0.001);
     const [tabNumber, setTabNumber] = useState(0);
-    const advanced = useRecoilValue(settingContentWizardAdvanced);
+    const advanced = useAtomValue(settingContentWizardAdvanced);
 
     const emitRefresh = useEventEmit('refresh_embeddings');
 

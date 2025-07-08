@@ -79,6 +79,7 @@ export default function TopicTable() {
             >
                 <DataGrid
                     slots={{ toolbar: TableToolbar }}
+                    showToolbar
                     rows={rows}
                     columns={columns}
                     initialState={{

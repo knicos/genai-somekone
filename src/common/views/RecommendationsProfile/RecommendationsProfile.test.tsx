@@ -5,6 +5,7 @@ import TestWrapper from '@genaism/util/TestWrapper';
 import { appConfiguration } from '@genaism/common/state/configState';
 import userEvent from '@testing-library/user-event';
 import { getContentService, ScoredRecommendation } from '@knicos/genai-recom';
+import { createStore } from 'jotai';
 
 interface RecReturn {
     more: () => void;
@@ -21,12 +22,10 @@ vi.mock('@genaism/hooks/recommender', () => ({
 
 describe('RecommendationsProfile component', () => {
     it('works with no content', async ({ expect }) => {
+        const store = createStore();
+        store.set(appConfiguration, (p) => ({ ...p, showRecommendationWizard: true, experimental: true }));
         render(
-            <TestWrapper
-                initializeState={(snap) => {
-                    snap.set(appConfiguration, (p) => ({ ...p, showRecommendationWizard: true, experimental: true }));
-                }}
-            >
+            <TestWrapper initializeState={store}>
                 <RecommendationsProfile />
             </TestWrapper>
         );
@@ -52,12 +51,12 @@ describe('RecommendationsProfile component', () => {
             },
         ];
         mockRecommendations.mockImplementation(() => ({ more: () => {}, recommendations }));
+
+        const store = createStore();
+        store.set(appConfiguration, (p) => ({ ...p, showRecommendationWizard: true, experimental: true }));
+
         render(
-            <TestWrapper
-                initializeState={(snap) => {
-                    snap.set(appConfiguration, (p) => ({ ...p, showRecommendationWizard: true, experimental: true }));
-                }}
-            >
+            <TestWrapper initializeState={store}>
                 <RecommendationsProfile />
             </TestWrapper>
         );
@@ -70,18 +69,17 @@ describe('RecommendationsProfile component', () => {
     it('can open the wizard', async ({ expect }) => {
         const user = userEvent.setup();
 
+        const store = createStore();
+        store.set(appConfiguration, (p) => ({
+            ...p,
+            showRecommendationWizard: true,
+            experimental: true,
+            showCandidateWizard: true,
+            recommendations: { random: 1, taste: 1, similarUsers: 1, coengaged: 1, popular: 1 },
+        }));
+
         render(
-            <TestWrapper
-                initializeState={(snap) => {
-                    snap.set(appConfiguration, (p) => ({
-                        ...p,
-                        showRecommendationWizard: true,
-                        showCandidateWizard: true,
-                        experimental: true,
-                        recommendations: { random: 1, taste: 1, similarUsers: 1, coengaged: 1, popular: 1 },
-                    }));
-                }}
-            >
+            <TestWrapper initializeState={store}>
                 <RecommendationsProfile />
             </TestWrapper>
         );
@@ -104,16 +102,15 @@ describe('RecommendationsProfile component', () => {
         });
         const user = userEvent.setup();
 
+        const store = createStore();
+        store.set(appConfiguration, (p) => ({
+            ...p,
+            experimental: true,
+            recommendations: { random: 1, taste: 1, similarUsers: 1, coengaged: 1, popular: 1 },
+        }));
+
         render(
-            <TestWrapper
-                initializeState={(snap) => {
-                    snap.set(appConfiguration, (p) => ({
-                        ...p,
-                        experimental: true,
-                        recommendations: { random: 1, taste: 1, similarUsers: 1, coengaged: 1, popular: 1 },
-                    }));
-                }}
-            >
+            <TestWrapper initializeState={store}>
                 <RecommendationsProfile />
             </TestWrapper>
         );

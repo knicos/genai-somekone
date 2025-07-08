@@ -1,5 +1,5 @@
 import style from './style.module.css';
-import { PropsWithChildren } from 'react';
+import { JSX, PropsWithChildren } from 'react';
 import { timeAgo } from './time';
 import ScorePie from '../RecommendationsTable/ScorePie';
 

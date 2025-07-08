@@ -4,12 +4,11 @@ import style from './style.module.css';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { SomekoneSettings, useSettingDeserialise, useSettingSerialise } from '@genaism/hooks/settings';
 import ActionButton from './ActionButton';
-import { useLocation, useNavigate } from 'react-router';
-import { useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { useServices } from '@genaism/hooks/services';
 import { cancelSessionSave } from '@genaism/services/loader/session';
 import disimilarUsers from '@genaism/util/autoUsers';
-import { useSetRecoilState } from 'recoil';
+import { useSetAtom } from 'jotai';
 import { menuSelectedUser } from '../../state/menuState';
 import { getZipBlob, loadFile } from '@genaism/services/loader/fileLoader';
 
@@ -30,13 +29,13 @@ export default function Guidance({ guide }: Props) {
     const index = page !== null ? parseInt(page) : -1;
     const { replay, profiler, content, actionLog } = useServices();
     const [autoplay, setAutoplay] = useState(-1);
-    const setSelected = useSetRecoilState(menuSelectedUser);
+    const setSelected = useSetAtom(menuSelectedUser);
 
     // Hack to fix react router conceptual bug
     const paramsRef = useRef(setParams);
     paramsRef.current = setParams;
 
-    const settingsRef = useRef<SomekoneSettings | undefined>();
+    const settingsRef = useRef<SomekoneSettings | undefined>(undefined);
     const dataRef = useRef(new Set<string>());
 
     const doAction = useCallback(
@@ -77,33 +76,32 @@ export default function Guidance({ guide }: Props) {
 
     useEffect(() => {
         // Save current settings for later restore
-        serial().then((oldSettings) => {
-            settingsRef.current = oldSettings;
-            if (data && data.initActions) {
-                data.initActions.forEach((act) => {
-                    const action = data.actions[act];
-                    if (action) {
-                        deserial(action);
+        const oldSettings = serial();
+        settingsRef.current = oldSettings;
+        if (data && data.initActions) {
+            data.initActions.forEach((act) => {
+                const action = data.actions[act];
+                if (action) {
+                    deserial(action);
 
-                        if (action.replay !== undefined) {
-                            if (action.replay && !replay.isPlaying()) {
-                                replay.start();
-                            }
-                            if (!action.replay) {
-                                replay.stop();
-                            }
+                    if (action.replay !== undefined) {
+                        if (action.replay && !replay.isPlaying()) {
+                            replay.start();
                         }
-                        if (action.autoPlay !== undefined) {
-                            setAutoplay(action.autoPlay);
-                        }
-                        if (action.autoSelect) {
-                            const bestUser = disimilarUsers(profiler, 1)[0];
-                            setSelected(bestUser);
+                        if (!action.replay) {
+                            replay.stop();
                         }
                     }
-                });
-            }
-        });
+                    if (action.autoPlay !== undefined) {
+                        setAutoplay(action.autoPlay);
+                    }
+                    if (action.autoSelect) {
+                        const bestUser = disimilarUsers(profiler, 1)[0];
+                        setSelected(bestUser);
+                    }
+                }
+            });
+        }
         let reloadHandler: () => void;
 
         if (data && data.reloadOnReplayEnd) {

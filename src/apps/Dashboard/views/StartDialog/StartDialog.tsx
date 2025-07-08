@@ -1,9 +1,9 @@
 import { UserInfo } from '@genaism/common/state/userInfo';
 import style from './style.module.css';
-import { QRCode } from '@knicos/genai-base';
+import { QRCode } from '@genai-fi/base';
 import { useTranslation, Trans } from 'react-i18next';
-import { LargeButton } from '@knicos/genai-base';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { LargeButton } from '@genai-fi/base';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { menuShowShare } from '@genaism/apps/Dashboard/state/menuState';
 import { useCallback } from 'react';
 import { Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
@@ -21,10 +21,10 @@ interface Props {
 
 export default function StartDialog({ users, code }: Props) {
     const { t } = useTranslation();
-    const [showDialog, setShowDialog] = useRecoilState(menuShowShare);
-    const appType = useRecoilValue(userApp);
+    const [showDialog, setShowDialog] = useAtom(menuShowShare);
+    const appType = useAtomValue(userApp);
     const { recommender, actionLog } = useServices();
-    const setSimulation = useSetRecoilState(currentSimulation);
+    const setSimulation = useSetAtom(currentSimulation);
 
     const doClose = useCallback(() => setShowDialog(false), [setShowDialog]);
 

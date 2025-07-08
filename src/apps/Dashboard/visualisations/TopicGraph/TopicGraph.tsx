@@ -9,7 +9,7 @@ import {
     settingTopicNodeCharge,
     settingTopicSimilarPercent,
 } from '@genaism/apps/Dashboard/state/settingsState';
-import { useRecoilValue } from 'recoil';
+import { useAtomValue } from 'jotai';
 import { TopicNodeId, WeightedNode } from '@knicos/genai-recom';
 import { useNodeType } from '@genaism/hooks/graph';
 import { useGraphService } from '@genaism/hooks/services';
@@ -18,10 +18,10 @@ export default function TopicGraph() {
     const [links, setLinks] = useState<GraphLink<TopicNodeId, TopicNodeId>[]>([]);
     const sizesRef = useRef<Map<string, number>>(new Map<string, number>());
     const [nodes, setNodes] = useState<GraphNode<TopicNodeId>[]>([]);
-    const linkScale = useRecoilValue(settingTopicLinkDistanceScale);
-    const showLines = useRecoilValue(settingTopicDisplayLines);
-    const similarityThreshold = useRecoilValue(settingTopicSimilarPercent);
-    const charge = useRecoilValue(settingTopicNodeCharge);
+    const linkScale = useAtomValue(settingTopicLinkDistanceScale);
+    const showLines = useAtomValue(settingTopicDisplayLines);
+    const similarityThreshold = useAtomValue(settingTopicSimilarPercent);
+    const charge = useAtomValue(settingTopicNodeCharge);
     const topics = useNodeType('topic');
     const graph = useGraphService();
 

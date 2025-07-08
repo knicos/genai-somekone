@@ -1,10 +1,10 @@
 import { DataProfilePure } from '@genaism/common/views/DataProfile/DataProfilePure';
-import { useRecoilValue } from 'recoil';
+import { useAtomValue } from 'jotai';
 import style from '../style.module.css';
 import { storedPrintData } from '../state/printState';
 
 export function Component() {
-    const printData = useRecoilValue(storedPrintData);
+    const printData = useAtomValue(storedPrintData);
 
     return printData && printData.actionLog && printData.weightedImages ? (
         <div className={style.page}>

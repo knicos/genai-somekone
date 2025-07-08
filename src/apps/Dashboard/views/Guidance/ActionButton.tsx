@@ -2,7 +2,7 @@ import { GuidanceAction } from '@genaism/hooks/guidance';
 import { appConfiguration } from '@genaism/common/state/configState';
 import { IconButton } from '@mui/material';
 import { useCallback } from 'react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useAtom, useSetAtom } from 'jotai';
 import PauseIcon from '@mui/icons-material/Pause';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import QrCode2Icon from '@mui/icons-material/QrCode2';
@@ -18,8 +18,8 @@ interface Props {
 }
 
 export default function ActionButton({ action, onAction }: Props) {
-    const [config, setConfig] = useRecoilState(appConfiguration);
-    const setShowShare = useSetRecoilState(menuShowShare);
+    const [config, setConfig] = useAtom(appConfiguration);
+    const setShowShare = useSetAtom(menuShowShare);
     const serial = useSettingSerialise();
     const { content: contentSvc, profiler: profilerSvc, actionLog } = useServices();
 

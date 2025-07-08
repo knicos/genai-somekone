@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { ContentNodeId, UserNodeId } from '@knicos/genai-recom';
 import { useContentService } from '@genaism/hooks/services';
 import { useContent, useContentStats } from '@genaism/hooks/content';
-import { Button } from '@knicos/genai-base';
+import { Button } from '@genai-fi/base';
 import { IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 

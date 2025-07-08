@@ -1,9 +1,9 @@
 import JSZip from 'jszip';
-import { getZipBlob } from '@knicos/genai-base/util/zip';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 
 import { SomekoneSettings } from '@genaism/hooks/settings';
+import { getZipBlob } from '@genai-fi/base/util/zip';
 
 export type GuidanceAction = 'pause' | 'sharecode' | 'download';
 

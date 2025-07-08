@@ -2,7 +2,7 @@ import { beforeEach, describe, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import UserProfileComp from './UserProfile';
 import { ContentNodeId, createEmptyProfile, getGraphService, UserNodeData } from '@knicos/genai-recom';
-import { TestWrapper } from '@knicos/genai-base';
+import TestWrapper from '@genaism/util/TestWrapper';
 
 const { mockProfile } = vi.hoisted(() => ({
     mockProfile: vi.fn<(a: unknown[]) => UserNodeData>(() => {
@@ -38,11 +38,13 @@ describe('UserProfile component', () => {
                 { label: 'topic2', weight: 0.3 },
                 { label: 'topic3', weight: 0.3 },
             ];
-            profile.affinities.topics.topics = [{ label: 'taste1', weight: 0.5 }];
+            profile.affinities.topics.topics = [{ label: 'topic1', weight: 0.5 }];
             return profile;
         });
         render(<UserProfileComp id="user:xyz" />, { wrapper: TestWrapper });
-        expect(await screen.findAllByText('topic1')).toHaveLength(2);
+        await vi.waitFor(() => {
+            expect(screen.getAllByText('topic1')).toHaveLength(2);
+        });
     });
 
     it('shows topic details', async ({ expect }) => {

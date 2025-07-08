@@ -4,7 +4,7 @@ import { FeedImage as IImage, LikeKind, ShareKind } from '@genaism/common/compon
 import FeedSpacer from './FeedSpacer';
 import { useTabActive } from '@genaism/hooks/interaction';
 import { useTranslation } from 'react-i18next';
-import { Spinner } from '@knicos/genai-base';
+import { Spinner } from '@genai-fi/base';
 import LangSelect from '../LangSelect/LangSelect';
 import { ContentNodeId, LogEntry, ScoredRecommendation, UserNodeId } from '@knicos/genai-recom';
 import { useActionLogService, useProfilerService } from '@genaism/hooks/services';
@@ -59,7 +59,7 @@ export default function ImageFeed({
     const prevRef = useRef<number>(-1);
     const startRef = useRef<number>(0);
     const lastRef = useRef<number>(0);
-    const viewedRef = useRef<FeedEntry>();
+    const viewedRef = useRef<FeedEntry>(undefined);
     const canMoreRef = useRef(true);
     const durationRef = useRef<number>(0);
     const active = useTabActive();

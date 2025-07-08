@@ -1,4 +1,4 @@
-@value borderGrey, textDark from "@knicos/genai-base/css/colours.module.css";
+@value borderGrey, textDark from "@genai-fi/base/css/colours.module.css";
 
 .panel {
     position: absolute;

@@ -16,10 +16,10 @@ import ContentBrowserWidget from './Browser/ContentBrowserWidget';
 import DownloadIcon from '@mui/icons-material/Download';
 import { saveFile } from '@genaism/services/saver/fileSaver';
 import { useSettingSerialise } from '@genaism/hooks/settings';
-import { useSetRecoilState } from 'recoil';
+import { useSetAtom } from 'jotai';
 import { errorNotification } from '@genaism/common/state/errorState';
 import i18n from '@genaism/i18n';
-import { canvasFromURL } from '@knicos/genai-base';
+import { canvasFromURL } from '@genai-fi/base';
 import SettingsIcon from '@mui/icons-material/Settings';
 import ContentSettingsDialog from './SettingsDialog';
 
@@ -40,9 +40,9 @@ export default function ContentWizard() {
     const { content: contentSvc, profiler: profilerSvc, actionLog } = useServices();
     const [lines, setLines] = useState<ILine[]>([]);
     const wkspaceRef = useRef<HTMLDivElement>(null);
-    const observer = useRef<ResizeObserver>();
+    const observer = useRef<ResizeObserver>(undefined);
     const serial = useSettingSerialise();
-    const setError = useSetRecoilState(errorNotification);
+    const setError = useSetAtom(errorNotification);
     const [showSettings, setShowSettings] = useState(false);
 
     useEffect(() => {

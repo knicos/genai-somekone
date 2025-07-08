@@ -4,11 +4,12 @@ import TestWrapper from '@genaism/util/TestWrapper';
 import Guidance from './Guidance';
 import { GuidanceData } from '@genaism/hooks/guidance';
 import userEvent from '@testing-library/user-event';
-import { RecoilObserver } from '@genaism/util/RecoilObserver';
+import RecoilObserver from '@genaism/util/RecoilObserver';
 import { appConfiguration } from '@genaism/common/state/configState';
 import { SMConfig } from '@genaism/common/state/smConfig';
 import defaultConfig from '../../../../common/state/defaultConfig.json';
 import { useCallback, useState } from 'react';
+import { createStore } from 'jotai';
 
 const { mockGuide, mockNavigate, mockParamsSet, mockZipBlob } = vi.hoisted(() => ({
     mockGuide: vi.fn(
@@ -29,17 +30,14 @@ vi.mock('@genaism/hooks/guidance', () => ({
     useGuide: mockGuide,
 }));
 
-vi.mock('react-router', () => ({
-    useLocation: () => ({ search: '' }),
-    useNavigate: () => mockNavigate,
-}));
-
 vi.mock('@genaism/services/loader/fileLoader', () => ({
     getZipBlob: mockZipBlob,
     loadFile: vi.fn(),
 }));
 
 vi.mock('react-router-dom', () => ({
+    useLocation: () => ({ search: '' }),
+    useNavigate: () => mockNavigate,
     useSearchParams: () => {
         const [p, setP] = useState(mockParamsSet);
         const cb = useCallback((fn: (params: URLSearchParams) => void) => {
@@ -54,8 +52,8 @@ vi.mock('react-router-dom', () => ({
     },
 }));
 
-vi.mock('@knicos/genai-base', async (importOriginal) => ({
-    ...(await importOriginal<typeof import('@knicos/genai-base')>()),
+vi.mock('@genai-fi/base', async (importOriginal) => ({
+    ...(await importOriginal<typeof import('@genai-fi/base')>()),
     QRCode: function QRCode() {
         return null;
     },
@@ -154,12 +152,11 @@ describe('Guidance', () => {
 
         const settings = vi.fn();
 
+        const store = createStore();
+        store.set(appConfiguration, defaultConfig.configuration as SMConfig);
+
         render(
-            <TestWrapper
-                initializeState={({ set }) => {
-                    set(appConfiguration, defaultConfig.configuration as SMConfig);
-                }}
-            >
+            <TestWrapper initializeState={store}>
                 <RecoilObserver
                     node={appConfiguration}
                     onChange={settings}
@@ -191,12 +188,11 @@ describe('Guidance', () => {
             ],
         }));
 
+        const store = createStore();
+        store.set(appConfiguration, defaultConfig.configuration as SMConfig);
+
         render(
-            <TestWrapper
-                initializeState={({ set }) => {
-                    set(appConfiguration, defaultConfig.configuration as SMConfig);
-                }}
-            >
+            <TestWrapper initializeState={store}>
                 <Guidance guide="default" />
             </TestWrapper>
         );

@@ -3,7 +3,7 @@ import ActionPanel from './ActionPanel';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import Comment from './Comment';
-import { Button } from '@knicos/genai-base';
+import { Button } from '@genai-fi/base';
 import { ContentNodeId } from '@knicos/genai-recom';
 import CommentBox from './CommentBox';
 import { useContentComments } from '@genaism/hooks/content';

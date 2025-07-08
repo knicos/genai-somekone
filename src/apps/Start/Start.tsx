@@ -5,7 +5,7 @@ import { Button, TextField } from '@mui/material';
 import { useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LangSelect from '@genaism/common/components/LangSelect/LangSelect';
-import { Privacy } from '@knicos/genai-base';
+import { Privacy } from '@genai-fi/base';
 import gitInfo from '../../generatedGitInfo.json';
 import { codeToApp } from './codePrefix';
 

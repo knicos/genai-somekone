@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button } from '@knicos/genai-base';
+import { Button } from '@genai-fi/base';
 import { useTranslation } from 'react-i18next';
 import { Cards } from '../DataCard';
 import LogBatch, { ContentLogEntry } from './LogBatch';

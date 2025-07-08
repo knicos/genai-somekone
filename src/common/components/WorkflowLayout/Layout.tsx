@@ -10,7 +10,7 @@ interface Props extends PropsWithChildren {
 export default function WorkflowLayout({ children, connections }: Props) {
     const [lines, setLines] = useState<ILine[]>([]);
     const wkspaceRef = useRef<HTMLDivElement>(null);
-    const observer = useRef<ResizeObserver>();
+    const observer = useRef<ResizeObserver>(undefined);
 
     useEffect(() => {
         if (wkspaceRef.current) {

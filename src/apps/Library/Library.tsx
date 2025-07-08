@@ -2,7 +2,7 @@ import { createSearchParams } from 'react-router-dom';
 import style from './style.module.css';
 import { compressToEncodedURIComponent } from 'lz-string';
 import ContentItem from './ContentItem';
-import { Privacy } from '@knicos/genai-base';
+import { Privacy } from '@genai-fi/base';
 import gitInfo from '../../generatedGitInfo.json';
 import { useTranslation } from 'react-i18next';
 

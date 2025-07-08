@@ -4,20 +4,18 @@ import TestWrapper from '@genaism/util/TestWrapper';
 import { appConfiguration } from '@genaism/common/state/configState';
 // import userEvent from '@testing-library/user-event';
 import PersonalCandidates from './PersonalCandidates';
+import { createStore } from 'jotai';
 
 describe('PersonalCandidates component', () => {
     it('shows taste selection correctly', async ({ expect }) => {
+        const store = createStore();
+        store.set(appConfiguration, {
+            showRecommendationWizard: true,
+            experimental: true,
+            recommendations: { random: 0, taste: 1, similarUsers: 0, coengaged: 0, popular: 0 },
+        });
         render(
-            <TestWrapper
-                initializeState={(snap) => {
-                    snap.set(appConfiguration, (p) => ({
-                        ...p,
-                        showRecommendationWizard: true,
-                        experimental: true,
-                        recommendations: { random: 0, taste: 1, similarUsers: 0, coengaged: 0, popular: 0 },
-                    }));
-                }}
-            >
+            <TestWrapper initializeState={store}>
                 <PersonalCandidates
                     id="user:x"
                     changePage={() => {}}
@@ -29,17 +27,14 @@ describe('PersonalCandidates component', () => {
     });
 
     it('shows coengaged selection correctly', async ({ expect }) => {
+        const store = createStore();
+        store.set(appConfiguration, {
+            showRecommendationWizard: true,
+            experimental: true,
+            recommendations: { random: 0, taste: 0, similarUsers: 0, coengaged: 1, popular: 0 },
+        });
         render(
-            <TestWrapper
-                initializeState={(snap) => {
-                    snap.set(appConfiguration, (p) => ({
-                        ...p,
-                        showRecommendationWizard: true,
-                        experimental: true,
-                        recommendations: { random: 0, taste: 0, similarUsers: 0, coengaged: 1, popular: 0 },
-                    }));
-                }}
-            >
+            <TestWrapper initializeState={store}>
                 <PersonalCandidates
                     id="user:x"
                     changePage={() => {}}
@@ -51,17 +46,14 @@ describe('PersonalCandidates component', () => {
     });
 
     it('shows user selection correctly', async ({ expect }) => {
+        const store = createStore();
+        store.set(appConfiguration, {
+            showRecommendationWizard: true,
+            experimental: true,
+            recommendations: { random: 0, taste: 0, similarUsers: 1, coengaged: 0, popular: 0 },
+        });
         render(
-            <TestWrapper
-                initializeState={(snap) => {
-                    snap.set(appConfiguration, (p) => ({
-                        ...p,
-                        showRecommendationWizard: true,
-                        experimental: true,
-                        recommendations: { random: 0, taste: 0, similarUsers: 1, coengaged: 0, popular: 0 },
-                    }));
-                }}
-            >
+            <TestWrapper initializeState={store}>
                 <PersonalCandidates
                     id="user:x"
                     changePage={() => {}}

@@ -1,5 +1,5 @@
 import { useContentService } from '@genaism/hooks/services';
-import { LargeButton } from '@knicos/genai-base';
+import { LargeButton } from '@genai-fi/base';
 import style from './style.module.css';
 
 export default function ResetContent() {

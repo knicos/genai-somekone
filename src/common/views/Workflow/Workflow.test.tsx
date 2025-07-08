@@ -1,9 +1,10 @@
 import { beforeEach, describe, it, beforeAll } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { getGraphService, getProfilerService } from '@knicos/genai-recom';
-import { TestWrapper } from '@knicos/genai-base';
 import Workflow from './Workflow';
 import { appConfiguration } from '@genaism/common/state/configState';
+import TestWrapper from '@genaism/util/TestWrapper';
+import { createStore } from 'jotai';
 
 describe('Workflow component', () => {
     beforeAll(() => {
@@ -37,12 +38,12 @@ describe('Workflow component', () => {
     it('renders a blackbox', async ({ expect }) => {
         const profiler = getProfilerService();
         profiler.createUserProfile('user:xyz', 'TestUser');
+
+        const store = createStore();
+        store.set(appConfiguration, (p) => ({ ...p, blackboxWorkflow: true }));
+
         render(
-            <TestWrapper
-                initializeState={({ set }) => {
-                    set(appConfiguration, (p) => ({ ...p, blackboxWorkflow: true }));
-                }}
-            >
+            <TestWrapper initializeState={store}>
                 <Workflow id="user:xyz" />
             </TestWrapper>
         );

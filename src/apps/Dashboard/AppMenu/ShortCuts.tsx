@@ -5,7 +5,7 @@ import AppsIcon from '@mui/icons-material/Apps';
 import BubbleChartIcon from '@mui/icons-material/BubbleChart';
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 import style from './style.module.css';
-import { useLocation, useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function ShortCuts() {
     const { t } = useTranslation();

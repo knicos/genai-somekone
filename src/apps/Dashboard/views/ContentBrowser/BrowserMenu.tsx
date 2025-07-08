@@ -20,7 +20,7 @@ const SearchField = styled(TextField)({
 });
 
 export default function BrowserMenu({ hasSelected, onSearch, onDelete }: Props) {
-    const inputRef = useRef<HTMLInputElement>();
+    const inputRef = useRef<HTMLInputElement>(null);
 
     const doChange = useCallback(
         (e: KeyboardEvent<HTMLInputElement>) => {

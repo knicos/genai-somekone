@@ -1,6 +1,6 @@
 import { IConnection, Widget, WorkflowLayout } from '@genaism/common/components/WorkflowLayout';
 import { menuSelectedUser } from '@genaism/apps/Dashboard/state/menuState';
-import { useRecoilValue } from 'recoil';
+import { useAtomValue } from 'jotai';
 import DataProfile from '../DataProfile/DataProfile';
 import UserProfile from '../UserProfile/UserProfile';
 import { I18nextProvider, useTranslation } from 'react-i18next';
@@ -38,12 +38,12 @@ interface Props {
 
 export default function Workflow({ id, onProfile, onRecommend, onLog, hideFeedMenu }: Props) {
     const { t } = useTranslation('common');
-    const selectedUser = useRecoilValue(menuSelectedUser);
+    const selectedUser = useAtomValue(menuSelectedUser);
     const { profiler, content } = useServices();
     const aid = id || selectedUser || profiler.getCurrentUser();
-    const config = useRecoilValue(configuration(aid || 'user:'));
+    const config = useAtomValue(configuration(aid || 'user:'));
     const [spin, setSpin] = useState(false);
-    const mapService = useRef<MapService>();
+    const mapService = useRef<MapService>(undefined);
 
     if (!mapService.current) {
         mapService.current = new MapService(content, { dataSetSize: 1, dim: 20 });

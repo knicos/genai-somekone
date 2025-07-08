@@ -1,10 +1,10 @@
-import { LargeButton } from '@knicos/genai-base';
+import { LargeButton } from '@genai-fi/base';
 import { Alert, IconButton, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import style from './style.module.css';
 import { useTranslation } from 'react-i18next';
 import { useLogger } from '@genaism/hooks/logger';
-import { useRecoilValue } from 'recoil';
+import { useAtomValue } from 'jotai';
 import { availableUsers } from '@genaism/common/state/sessionState';
 import RestoreIcon from '@mui/icons-material/Restore';
 import { useDuplicateTabCheck } from '@genaism/hooks/duplicateTab';
@@ -33,7 +33,7 @@ export default function EnterUsername({ onUsername, autoUsername }: Props) {
     const nameref = useRef<HTMLInputElement>(null);
     const logger = useLogger();
     const [errors, setErrors] = useState<FormErrors>({});
-    const users = useRecoilValue(availableUsers);
+    const users = useAtomValue(availableUsers);
     const [showRestore, setShowRestore] = useState(false);
     const foundTab = useDuplicateTabCheck();
     const profiler = useProfilerService();

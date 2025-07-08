@@ -1,20 +1,16 @@
 import { SMConfig } from '@genaism/common/state/smConfig';
 import { UserNodeId } from '@knicos/genai-recom';
-import { atom, atomFamily, selectorFamily } from 'recoil';
+import { Atom, atom } from 'jotai';
+import { atomFamily } from 'jotai/utils';
+import DEFAULT from './defaultConfig.json';
 
-export const appConfiguration = atom<SMConfig>({
-    key: 'appconfig',
-    default: undefined,
-});
+export const appConfiguration = atom<SMConfig>(DEFAULT.configuration as SMConfig);
 
-export const userConfiguration = atomFamily<Partial<SMConfig>, UserNodeId>({
-    key: 'userconfig',
-    default: undefined,
-});
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const userConfiguration = atomFamily((_: UserNodeId) => atom<Partial<SMConfig>>({}));
 
-export const configuration = selectorFamily<SMConfig, UserNodeId>({
-    key: 'configuration',
-    get:
-        (id: UserNodeId) =>
-        ({ get }) => ({ ...get(appConfiguration), ...get(userConfiguration(id)) }),
-});
+export const configuration = atomFamily<UserNodeId, Atom<SMConfig>>((id: UserNodeId) =>
+    atom((get) => {
+        return { ...get(appConfiguration), ...get(userConfiguration(id)) };
+    })
+);

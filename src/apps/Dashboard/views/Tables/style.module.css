@@ -1,4 +1,4 @@
-@value workspaceBg, primary from "@knicos/genai-base/css/colours.module.css";
+@value workspaceBg, primary from "@genai-fi/base/css/colours.module.css";
 
 .container {
     min-height: 0;

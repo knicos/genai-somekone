@@ -2,10 +2,13 @@ import { beforeEach, describe, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import TestWrapper from '@genaism/util/TestWrapper';
 import userEvent from '@testing-library/user-event';
-import { useRecoilValue } from 'recoil';
+import { createStore, useAtomValue } from 'jotai';
 import { menuSelectedUser, menuShowUserPanel } from '@genaism/apps/Dashboard/state/menuState';
 import { getGraphService } from '@knicos/genai-recom';
 import UserMenu from './UserMenu';
+
+const store = createStore();
+store.set(menuSelectedUser, 'user:test');
 
 describe('UserMenu component', () => {
     beforeEach(() => getGraphService().reset());
@@ -13,11 +16,7 @@ describe('UserMenu component', () => {
     it('renders a selected user menu', async ({ expect }) => {
         getGraphService().addNode('user', 'user:test', { name: 'FakeUsername' });
         render(
-            <TestWrapper
-                initializeState={({ set }) => {
-                    set(menuSelectedUser, 'user:test');
-                }}
-            >
+            <TestWrapper initializeState={store}>
                 <UserMenu
                     x={0}
                     y={0}
@@ -33,19 +32,15 @@ describe('UserMenu component', () => {
         const observerFn = vi.fn();
 
         const Observer = function () {
-            const user = useRecoilValue(menuSelectedUser);
-            const panel = useRecoilValue(menuShowUserPanel);
+            const user = useAtomValue(menuSelectedUser);
+            const panel = useAtomValue(menuShowUserPanel);
             if (user) observerFn(user, panel);
             return null;
         };
 
         getGraphService().addNode('user', 'user:test', { name: 'FakeUsername' });
         render(
-            <TestWrapper
-                initializeState={({ set }) => {
-                    set(menuSelectedUser, 'user:test');
-                }}
-            >
+            <TestWrapper initializeState={store}>
                 <Observer />
                 <UserMenu
                     x={0}
@@ -63,19 +58,15 @@ describe('UserMenu component', () => {
         const observerFn = vi.fn();
 
         const Observer = function () {
-            const user = useRecoilValue(menuSelectedUser);
-            const panel = useRecoilValue(menuShowUserPanel);
+            const user = useAtomValue(menuSelectedUser);
+            const panel = useAtomValue(menuShowUserPanel);
             if (user) observerFn(user, panel);
             return null;
         };
 
         getGraphService().addNode('user', 'user:test', { name: 'FakeUsername' });
         render(
-            <TestWrapper
-                initializeState={({ set }) => {
-                    set(menuSelectedUser, 'user:test');
-                }}
-            >
+            <TestWrapper initializeState={store}>
                 <Observer />
                 <UserMenu
                     x={0}
@@ -93,19 +84,15 @@ describe('UserMenu component', () => {
         const observerFn = vi.fn();
 
         const Observer = function () {
-            const user = useRecoilValue(menuSelectedUser);
-            const panel = useRecoilValue(menuShowUserPanel);
+            const user = useAtomValue(menuSelectedUser);
+            const panel = useAtomValue(menuShowUserPanel);
             if (user) observerFn(user, panel);
             return null;
         };
 
         getGraphService().addNode('user', 'user:test', { name: 'FakeUsername' });
         render(
-            <TestWrapper
-                initializeState={({ set }) => {
-                    set(menuSelectedUser, 'user:test');
-                }}
-            >
+            <TestWrapper initializeState={store}>
                 <Observer />
                 <UserMenu
                     x={0}
@@ -123,19 +110,15 @@ describe('UserMenu component', () => {
         const observerFn = vi.fn();
 
         const Observer = function () {
-            const user = useRecoilValue(menuSelectedUser);
-            const panel = useRecoilValue(menuShowUserPanel);
+            const user = useAtomValue(menuSelectedUser);
+            const panel = useAtomValue(menuShowUserPanel);
             if (user) observerFn(user, panel);
             return null;
         };
 
         getGraphService().addNode('user', 'user:test', { name: 'FakeUsername' });
         render(
-            <TestWrapper
-                initializeState={({ set }) => {
-                    set(menuSelectedUser, 'user:test');
-                }}
-            >
+            <TestWrapper initializeState={store}>
                 <Observer />
                 <UserMenu
                     x={0}

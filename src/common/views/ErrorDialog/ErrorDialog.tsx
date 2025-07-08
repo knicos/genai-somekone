@@ -1,13 +1,13 @@
 import { Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { useRecoilState } from 'recoil';
+import { useAtom } from 'jotai';
 import style from './style.module.css';
 import { errorNotification } from '@genaism/common/state/errorState';
 import CloseIcon from '@mui/icons-material/Close';
 
 export default function ErrorDialog() {
     const { t } = useTranslation();
-    const [errorType, setErrors] = useRecoilState(errorNotification);
+    const [errorType, setErrors] = useAtom(errorNotification);
 
     return (
         <Dialog open={errorType.size > 0}>

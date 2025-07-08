@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import style from './style.module.css';
-import { Webcam } from '@knicos/genai-base';
+import { Webcam } from '@genai-fi/base';
 import CaptureButton from './CaptureButton';
 
 interface Props {

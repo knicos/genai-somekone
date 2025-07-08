@@ -4,6 +4,7 @@ import ProfileNode from './ProfileNode';
 import TestWrapper from '@genaism/util/TestWrapper';
 import { settingDisplayLabel, settingShrinkOfflineUsers } from '@genaism/apps/Dashboard/state/settingsState';
 import { ContentNodeId, createEmptyProfile, UserNodeData, UserNodeId, WeightedNode } from '@knicos/genai-recom';
+import { createStore } from 'jotai';
 
 const { mockProfile, mockSimilar } = vi.hoisted(() => ({
     mockProfile: vi.fn<(a: unknown[]) => UserNodeData>(() => {
@@ -20,6 +21,10 @@ vi.mock('@genaism/hooks/profiler', () => ({
     useSimilarUsers: mockSimilar,
 }));
 
+const store = createStore();
+store.set(settingDisplayLabel, true);
+store.set(settingShrinkOfflineUsers, false);
+
 describe('ProfileNode component', () => {
     it('shows a circle and label on an empty profile', async ({ expect }) => {
         const resizeFn = vi.fn();
@@ -29,12 +34,7 @@ describe('ProfileNode component', () => {
         }));
 
         render(
-            <TestWrapper
-                initializeState={({ set }) => {
-                    set(settingDisplayLabel, true);
-                    set(settingShrinkOfflineUsers, false);
-                }}
-            >
+            <TestWrapper initializeState={store}>
                 <svg>
                     <ProfileNode
                         node={{ id: 'user:xyz', size: 100 }}
@@ -60,12 +60,7 @@ describe('ProfileNode component', () => {
         });
 
         render(
-            <TestWrapper
-                initializeState={({ set }) => {
-                    set(settingDisplayLabel, true);
-                    set(settingShrinkOfflineUsers, false);
-                }}
-            >
+            <TestWrapper initializeState={store}>
                 <svg>
                     <ProfileNode
                         id="user:xyz"

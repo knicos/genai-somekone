@@ -4,8 +4,8 @@ import { useCallback, useState } from 'react';
 import { SMConfig } from '../../common/state/smConfig';
 import EnterUsername from '../../common/components/EnterUsername/EnterUsername';
 import ErrorDialog from '../../common/views/ErrorDialog/ErrorDialog';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { Privacy, useRandom } from '@knicos/genai-base';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { Privacy, useRandom } from '@genai-fi/base';
 import { appConfiguration } from '@genaism/common/state/configState';
 import BlockDialog from '../../common/views/BlockDialog/BlockDialog';
 import LangSelect from '@genaism/common/components/LangSelect/LangSelect';
@@ -15,13 +15,14 @@ import { TabBlocker } from '@genaism/hooks/duplicateTab';
 import { ContentLoader } from '@genaism/common/components/ContentLoader';
 import AppNavigation from './AppNavigation';
 import gitInfo from '../../generatedGitInfo.json';
+import { Peer } from '@genai-fi/base/hooks/peer';
 
 export function Component() {
     const { code } = useParams();
-    const config = useRecoilValue<SMConfig>(appConfiguration);
+    const config = useAtomValue<SMConfig>(appConfiguration);
     const [content, setContent] = useState<(string | ArrayBuffer)[]>();
-    const [username, setUsername] = useRecoilState<string | undefined>(currentUserName);
-    const setContentLoaded = useSetRecoilState(contentLoaded);
+    const [username, setUsername] = useAtom<string | undefined>(currentUserName);
+    const setContentLoaded = useSetAtom(contentLoaded);
 
     const MYCODE = useRandom(5);
 
@@ -30,12 +31,18 @@ export function Component() {
     }, [setContentLoaded]);
 
     return (
-        <>
+        <Peer
+            host={import.meta.env.VITE_APP_PEER_SERVER}
+            secure={import.meta.env.VITE_APP_PEER_SECURE === '1'}
+            peerkey={import.meta.env.VITE_APP_PEER_KEY || 'peerjs'}
+            port={import.meta.env.VITE_APP_PEER_PORT ? parseInt(import.meta.env.VITE_APP_PEER_PORT) : 443}
+            server={`sm-${code}`}
+            code={`sm-${MYCODE}`}
+        >
             <FeedProtocol
                 content={content}
                 setContent={setContent}
                 server={code}
-                mycode={MYCODE}
             >
                 <main className={style.page}>
                     {config && !username && (
@@ -74,6 +81,6 @@ export function Component() {
             />
             <ErrorDialog />
             <TabBlocker />
-        </>
+        </Peer>
     );
 }

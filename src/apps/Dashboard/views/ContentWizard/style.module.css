@@ -1,4 +1,4 @@
-@value bgSubdued1, textDark, primary, secondary, workspaceBg, textDark from "@knicos/genai-base/css/colours.module.css";
+@value bgSubdued1, textDark, primary, secondary, workspaceBg, textDark from "@genai-fi/base/css/colours.module.css";
 
 .wizard {
     background: white;
@@ -143,8 +143,8 @@
 
 .pointSvg {
     background-size: 20px 20px;
-    background-image: linear-gradient(to right, white 1px, transparent 1px),
-        linear-gradient(to bottom, white 1px, bgSubdued1 1px);
+    background-image:
+        linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, bgSubdued1 1px);
 }
 
 .imageTags {

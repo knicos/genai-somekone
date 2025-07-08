@@ -1,5 +1,5 @@
 import { Fragment, MouseEvent, PointerEvent, useEffect, useId, useMemo, useRef, useState } from 'react';
-import { Spinner } from '@knicos/genai-base';
+import { Spinner } from '@genai-fi/base';
 import style from './style.module.css';
 import { zNormWeights } from '@genaism/util/weights';
 import { ContentNodeId, WeightedNode } from '@knicos/genai-recom';
@@ -83,8 +83,6 @@ export default function Heatmap({ data, dimensions, busy, label, invert, mapServ
             mapper.addData(id, normData);
         }
     }, [normData, id, mapper]);
-
-    useEffect(() => {});
 
     useEffect(() => {
         if (!zoom) {

@@ -10,6 +10,7 @@ import {
     FunctionComponent,
     KeyboardEvent,
     CSSProperties,
+    JSX,
 } from 'react';
 import * as d3 from 'd3';
 import style from './style.module.css';
@@ -117,7 +118,7 @@ export default function Graph<T extends NodeID>({
     const [nodeList, setNodeList] = useState<GraphNode<T>[]>([]);
     const [linkList, setLinkList] = useState<InternalGraphLink<T, T>[]>([]);
     const nodeRef = useRef<Map<string, GraphNode<T>>>(new Map<string, GraphNode<T>>());
-    const simRef = useRef<d3.Simulation<GraphNode<T>, undefined>>();
+    const simRef = useRef<d3.Simulation<GraphNode<T>, undefined>>(undefined);
     const internalState = useRef<InternalState>(DEFAULT_STATE);
     const [actualZoom, setActualZoom] = useState<ZoomState>({
         zoom: 5,
@@ -128,7 +129,7 @@ export default function Graph<T extends NodeID>({
         duration: CAMERA_DURATION,
     });
     const extents = useRef<[number, number, number, number]>([0, 0, 0, 0]);
-    const mover = useRef<Mover | undefined>();
+    const mover = useRef<Mover | undefined>(undefined);
     const drawCount = useRef(0);
     useEventListen(
         () => {

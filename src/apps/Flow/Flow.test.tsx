@@ -1,4 +1,4 @@
-import { MemoryRouter, Route, Routes } from 'react-router';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { beforeAll, describe, it, vi } from 'vitest';
 import { Component } from './Flow';
 import TestWrapper from '@genaism/util/TestWrapper';
@@ -7,7 +7,8 @@ import { currentUserName } from '@genaism/common/state/sessionState';
 import { appConfiguration } from '@genaism/common/state/configState';
 import defaultConfig from '../../common/state/defaultConfig.json';
 import { SMConfig } from '@genaism/common/state/smConfig';
-import { usePeer } from '@knicos/genai-base';
+import { usePeer } from '@genai-fi/base';
+import { createStore } from 'jotai';
 
 type PeerProps = Parameters<typeof usePeer>[0];
 
@@ -21,8 +22,8 @@ const { mockPeer } = vi.hoisted(() => ({
     })),
 }));
 
-vi.mock('@knicos/genai-base', async (importOriginal) => ({
-    ...(await importOriginal<typeof import('@knicos/genai-base')>()),
+vi.mock('@genai-fi/base', async (importOriginal) => ({
+    ...(await importOriginal<typeof import('@genai-fi/base')>()),
     usePeer: mockPeer,
 }));
 
@@ -42,13 +43,12 @@ describe('Flow App', () => {
     });
 
     it('should render', async ({ expect }) => {
+        const store = createStore();
+        store.set(currentUserName, 'TestUser');
+        store.set(appConfiguration, defaultConfig.configuration as SMConfig);
+
         render(
-            <TestWrapper
-                initializeState={({ set }) => {
-                    set(currentUserName, 'TestUser');
-                    set(appConfiguration, defaultConfig.configuration as SMConfig);
-                }}
-            >
+            <TestWrapper initializeState={store}>
                 <MemoryRouter initialEntries={['/flow/1234']}>
                     <Routes>
                         <Route

@@ -1,7 +1,4 @@
 import { PrintData } from '@genaism/protocol/printProtocol';
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
-export const storedPrintData = atom<PrintData | undefined>({
-    key: 'storedprintdata',
-    default: undefined,
-});
+export const storedPrintData = atom<PrintData | undefined>(undefined);

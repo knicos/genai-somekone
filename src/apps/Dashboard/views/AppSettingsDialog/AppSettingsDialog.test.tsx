@@ -6,18 +6,18 @@ import { menuSettingsDialog } from '../../state/menuState';
 import defaultConfig from '../../../../common/state/defaultConfig.json';
 import { appConfiguration } from '@genaism/common/state/configState';
 import { SMConfig } from '@genaism/common/state/smConfig';
-import { MemoryRouter, Route, Routes } from 'react-router';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
+import { createStore } from 'jotai';
+
+const store = createStore();
+store.set(appConfiguration, defaultConfig.configuration as SMConfig);
+store.set(menuSettingsDialog, 'app');
 
 describe('AppSettingsDialog', () => {
     it('should render', ({ expect }) => {
         render(
-            <TestWrapper
-                initializeState={({ set }) => {
-                    set(menuSettingsDialog, 'app');
-                    set(appConfiguration, defaultConfig.configuration as SMConfig);
-                }}
-            >
+            <TestWrapper initializeState={store}>
                 <MemoryRouter initialEntries={['/test']}>
                     <Routes>
                         <Route
@@ -37,12 +37,7 @@ describe('AppSettingsDialog', () => {
         const user = userEvent.setup();
 
         render(
-            <TestWrapper
-                initializeState={({ set }) => {
-                    set(menuSettingsDialog, 'app');
-                    set(appConfiguration, defaultConfig.configuration as SMConfig);
-                }}
-            >
+            <TestWrapper initializeState={store}>
                 <MemoryRouter initialEntries={['/test']}>
                     <Routes>
                         <Route
@@ -63,12 +58,7 @@ describe('AppSettingsDialog', () => {
         const user = userEvent.setup();
 
         render(
-            <TestWrapper
-                initializeState={({ set }) => {
-                    set(menuSettingsDialog, 'app');
-                    set(appConfiguration, defaultConfig.configuration as SMConfig);
-                }}
-            >
+            <TestWrapper initializeState={store}>
                 <MemoryRouter initialEntries={['/test']}>
                     <Routes>
                         <Route

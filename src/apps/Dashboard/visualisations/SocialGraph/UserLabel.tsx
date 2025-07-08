@@ -1,7 +1,7 @@
 import { UserNodeId } from '@knicos/genai-recom';
 import { GraphNode } from '../../../../common/visualisations/Graph/types';
 import { isLight } from '@genaism/util/colours';
-import { useRecoilValue } from 'recoil';
+import { useAtomValue } from 'jotai';
 import { settingSocialGraphTheme } from '@genaism/apps/Dashboard/state/settingsState';
 import graphThemes from './graphTheme';
 import { memo } from 'react';
@@ -13,7 +13,7 @@ interface Props {
 }
 
 const UserLabelContent = memo(function UserLabelContent({ node, scale }: Props) {
-    const themeName = useRecoilValue(settingSocialGraphTheme);
+    const themeName = useAtomValue(settingSocialGraphTheme);
     const maxLength = 5 + Math.floor(20 / scale);
     const name = node.label || 'None';
     const shortName = name.length >= maxLength ? `${name.slice(0, maxLength)}...` : name;

@@ -1,14 +1,14 @@
 import { menuAllowFeedActions, menuSelectedUser, menuShowUserPanel } from '@genaism/apps/Dashboard/state/menuState';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useAtom, useAtomValue } from 'jotai';
 import { AppPanel } from '@genaism/apps/Dashboard/components/AppPanel';
 import Feed from '@genaism/common/views/Feed/Feed';
 import { useProfilerService } from '@genaism/hooks/services';
 
 export default function FeedPanel() {
-    const [panel, setPanel] = useRecoilState(menuShowUserPanel);
+    const [panel, setPanel] = useAtom(menuShowUserPanel);
     const profiler = useProfilerService();
-    const selectedUser = useRecoilValue(menuSelectedUser);
-    const allowActions = useRecoilValue(menuAllowFeedActions);
+    const selectedUser = useAtomValue(menuSelectedUser);
+    const allowActions = useAtomValue(menuAllowFeedActions);
 
     return panel === 'feed' && selectedUser ? (
         <AppPanel

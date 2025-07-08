@@ -1,15 +1,13 @@
-import { usePeer, ConnectionStatus } from '@knicos/genai-base';
 import { EventProtocol } from '@genaism/protocol/protocol';
 import { currentUserName } from '@genaism/common/state/sessionState';
-import { PropsWithChildren, useCallback, useEffect, useState } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { SMConfig } from '../../common/state/smConfig';
+import { PropsWithChildren, useEffect, useState } from 'react';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { appConfiguration } from '@genaism/common/state/configState';
 import { LogProvider } from '@genaism/hooks/logger';
 import { ContentLoader } from '@genaism/common/components/ContentLoader';
 import { UserNodeId } from '@knicos/genai-recom';
 import { useServices } from '@genaism/hooks/services';
-import style from './style.module.css';
+import { usePeerData, usePeerSender, usePeerStatus } from '@genai-fi/base/hooks/peer';
 
 const USERNAME_KEY = 'genai_somekone_username';
 
@@ -19,51 +17,41 @@ interface Props extends PropsWithChildren {
     onID: (id: UserNodeId) => void;
 }
 
-export default function ViewerProtocol({ server, mycode, children, onID }: Props) {
-    const setConfig = useSetRecoilState<SMConfig>(appConfiguration);
-    const username = useRecoilValue<string | undefined>(currentUserName);
+export default function ViewerProtocol({ children, onID }: Props) {
+    const setConfig = useSetAtom(appConfiguration);
+    const username = useAtomValue<string | undefined>(currentUserName);
     const [content, setContent] = useState<(string | ArrayBuffer)[]>();
     const [loaded, setLoaded] = useState(false);
     const { profiler, recommender, actionLog } = useServices();
 
-    const onData = useCallback(
-        (data: EventProtocol) => {
-            if (data.event === 'eter:reguser') {
-                try {
-                    profiler.createUserProfile(data.id, data.username);
-                } catch (e) {
-                    console.warn(e);
-                }
-                onID(data.id);
-            } else if (data.event === 'eter:profile_data') {
-                try {
-                    profiler.replaceProfile(data.id, data.profile);
-                } catch (e) {
-                    // Ignore
-                }
-            } else if (data.event === 'eter:action_log') {
-                actionLog.appendActionLog(data.log, data.id);
-            } else if (data.event === 'eter:recommendations') {
-                recommender.appendRecommendations(data.id, data.recommendations);
-            } else if (data.event === 'eter:config') {
-                setConfig((old) => ({ ...old, ...data.configuration }));
-                if (data.content) {
-                    setContent(data.content);
-                }
+    usePeerData((data: EventProtocol) => {
+        if (data.event === 'eter:reguser') {
+            try {
+                profiler.createUserProfile(data.id, data.username);
+            } catch (e) {
+                console.warn(e);
             }
-        },
-        [setConfig, onID, profiler, actionLog, recommender]
-    );
-
-    const { ready, send, peer } = usePeer<EventProtocol>({
-        host: import.meta.env.VITE_APP_PEER_SERVER,
-        secure: import.meta.env.VITE_APP_PEER_SECURE === '1',
-        key: import.meta.env.VITE_APP_PEER_KEY || 'peerjs',
-        port: import.meta.env.VITE_APP_PEER_PORT ? parseInt(import.meta.env.VITE_APP_PEER_PORT) : 443,
-        code: server && `sm-${mycode}`,
-        server: `sm-${server}`,
-        onData,
+            onID(data.id);
+        } else if (data.event === 'eter:profile_data') {
+            try {
+                profiler.replaceProfile(data.id, data.profile);
+            } catch (e) {
+                // Ignore
+            }
+        } else if (data.event === 'eter:action_log') {
+            actionLog.appendActionLog(data.log, data.id);
+        } else if (data.event === 'eter:recommendations') {
+            recommender.appendRecommendations(data.id, data.recommendations);
+        } else if (data.event === 'eter:config') {
+            setConfig((old) => ({ ...old, ...data.configuration }));
+            if (data.content) {
+                setContent(data.content);
+            }
+        }
     });
+
+    const send = usePeerSender<EventProtocol>();
+    const ready = usePeerStatus() === 'ready';
 
     useEffect(() => {
         if (username && send && ready) {
@@ -75,7 +63,7 @@ export default function ViewerProtocol({ server, mycode, children, onID }: Props
             profiler.setUserName(profiler.getCurrentUser(), username);
             send({ event: 'eter:reguser', username, id: profiler.getCurrentUser() });
         }
-    }, [username, send, ready, profiler]);
+    }, [username, send, profiler, ready]);
 
     return (
         <>
@@ -85,15 +73,6 @@ export default function ViewerProtocol({ server, mycode, children, onID }: Props
                 onLoaded={() => setLoaded(true)}
                 noSession
             />
-            <div className={style.connectionStatus}>
-                <ConnectionStatus
-                    api={import.meta.env.VITE_APP_APIURL}
-                    appName={import.meta.env.DEV ? 'dev' : 'somekone'}
-                    ready={ready}
-                    peer={peer}
-                    visibility={0}
-                />
-            </div>
         </>
     );
 }

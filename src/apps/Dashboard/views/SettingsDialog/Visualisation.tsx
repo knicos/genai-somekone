@@ -1,4 +1,4 @@
-import { useRecoilState } from 'recoil';
+import { useAtom } from 'jotai';
 import style from './style.module.css';
 import { useTranslation } from 'react-i18next';
 import { Checkbox, FormControlLabel } from '@mui/material';
@@ -6,8 +6,8 @@ import { menuShowGridMenu, menuShowSocialMenu } from '@genaism/apps/Dashboard/st
 
 export default function VisualisationSettings() {
     const { t } = useTranslation();
-    const [socialMenu, setSocialMenu] = useRecoilState(menuShowSocialMenu);
-    const [gridMenu, setGridMenu] = useRecoilState(menuShowGridMenu);
+    const [socialMenu, setSocialMenu] = useAtom(menuShowSocialMenu);
+    const [gridMenu, setGridMenu] = useAtom(menuShowGridMenu);
 
     return (
         <div className={style.column}>

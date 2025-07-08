@@ -1,5 +1,5 @@
 import { getImageSearch, SearchSource } from '@genaism/services/imageSearch/hook';
-import { canvasFromURL } from '@knicos/genai-base';
+import { canvasFromURL } from '@genai-fi/base';
 import { ContentMetadata, ContentNodeId, ContentService } from '@knicos/genai-recom';
 
 export default async function captureImages(
