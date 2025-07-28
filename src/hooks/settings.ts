@@ -36,7 +36,7 @@ import {
 } from '@genaism/apps/Dashboard/state/settingsState';
 import { appConfiguration } from '@genaism/common/state/configState';
 import { SMConfig, mergeConfiguration } from '@genaism/common/state/smConfig';
-import { UserNodeId } from '@knicos/genai-recom';
+import { UserNodeId } from '@genai-fi/recom';
 import { useAtomCallback } from 'jotai/utils';
 import { useCallback, useMemo } from 'react';
 

@@ -10,7 +10,7 @@ import {
     ProfilerService,
     ServiceBroker,
     UserNodeData,
-} from '@knicos/genai-recom';
+} from '@genai-fi/recom';
 
 const { mockUsers, mockProfiles, mockSave, mockLog } = vi.hoisted(() => ({
     mockUsers: vi.fn(),
@@ -19,8 +19,8 @@ const { mockUsers, mockProfiles, mockSave, mockLog } = vi.hoisted(() => ({
     mockLog: vi.fn<(a: unknown[]) => LogEntry[]>(),
 }));
 
-vi.mock('@knicos/genai-recom', async () => {
-    const mod = await vi.importActual<typeof import('@knicos/genai-recom')>('@knicos/genai-recom');
+vi.mock('@genai-fi/recom', async () => {
+    const mod = await vi.importActual<typeof import('@genai-fi/recom')>('@genai-fi/recom');
     return {
         ...mod,
         GraphService: vi.fn(() => ({

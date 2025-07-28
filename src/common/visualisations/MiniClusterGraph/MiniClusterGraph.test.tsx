@@ -3,7 +3,7 @@ import { describe, it, vi } from 'vitest';
 import MiniClusterGraph from './MiniClusterGraph';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { createEmptyProfile, getGraphService, getProfilerService, normalise, UserNodeData } from '@knicos/genai-recom';
+import { createEmptyProfile, getGraphService, getProfilerService, normalise, UserNodeData } from '@genai-fi/recom';
 
 describe('MiniClusterGraph Component', () => {
     it('should render correctly', async ({ expect }) => {

@@ -7,7 +7,7 @@ import appVersion from '@genaism/generatedGitInfo.json';
 import { SMConfig } from '@genaism/common/state/smConfig';
 import { dependencies } from '../loader/tracker';
 import { SomekoneSettings } from '@genaism/hooks/settings';
-import { ActionLogService, ContentService, ProfilerService } from '@knicos/genai-recom';
+import { ActionLogService, ContentService, ProfilerService } from '@genai-fi/recom';
 
 function makeMeta(configuration?: SMConfig, name?: string, hasLow?: boolean): ProjectMeta {
     return {

@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import ProfileNode from './ProfileNode';
 import TestWrapper from '@genaism/util/TestWrapper';
 import { settingDisplayLabel, settingShrinkOfflineUsers } from '@genaism/apps/Dashboard/state/settingsState';
-import { ContentNodeId, createEmptyProfile, UserNodeData, UserNodeId, WeightedNode } from '@knicos/genai-recom';
+import { ContentNodeId, createEmptyProfile, UserNodeData, UserNodeId, WeightedNode } from '@genai-fi/recom';
 import { createStore } from 'jotai';
 
 const { mockProfile, mockSimilar } = vi.hoisted(() => ({

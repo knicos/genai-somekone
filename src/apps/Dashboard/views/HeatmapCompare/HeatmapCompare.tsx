@@ -1,7 +1,7 @@
 import HeatmapMenu from './Menu';
 import { useEffect, useReducer, useRef, useState } from 'react';
 import UserDialog from '@genaism/common/views/UserListing/UserDialog';
-import { ContentNodeId, UserNodeId } from '@knicos/genai-recom';
+import { ContentNodeId, UserNodeId } from '@genai-fi/recom';
 import style from './style.module.css';
 import ContentHeatmap from '../../visualisations/ContentHeatmap/ContentHeatmap';
 import { useAtom, useAtomValue } from 'jotai';

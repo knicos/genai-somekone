@@ -4,7 +4,7 @@ import DataPanel from '@genaism/apps/Dashboard/visualisations/SocialGraph/DataPa
 import ProfilePanel from '@genaism/apps/Dashboard/visualisations/SocialGraph/ProfilePanel';
 import RecommendationsPanel from '@genaism/apps/Dashboard/visualisations/SocialGraph/RecommendationsPanel';
 import GridMenu from './GridMenu';
-import { UserNodeId } from '@knicos/genai-recom';
+import { UserNodeId } from '@genai-fi/recom';
 import UserGridItem from './UserGridItem';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { menuSelectedUser } from '@genaism/apps/Dashboard/state/menuState';

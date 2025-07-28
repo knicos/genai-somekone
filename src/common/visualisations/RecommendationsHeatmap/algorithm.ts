@@ -9,7 +9,7 @@ import {
     UserNodeData,
     UserNodeId,
     WeightedNode,
-} from '@knicos/genai-recom';
+} from '@genai-fi/recom';
 
 const CANDIDATE_FACTOR = 10;
 

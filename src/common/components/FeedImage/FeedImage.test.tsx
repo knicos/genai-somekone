@@ -2,7 +2,7 @@ import { beforeEach, describe, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import FeedImage from './FeedImage';
 import userEvent from '@testing-library/user-event';
-import { getContentService, getGraphService, getProfilerService } from '@knicos/genai-recom';
+import { getContentService, getGraphService, getProfilerService } from '@genai-fi/recom';
 
 const TEST_IMAGE =
     'https://images.pexels.com/photos/3030647/pexels-photo-3030647.jpeg?cs=srgb&dl=pexels-nextvoyage-3030647.jpg&fm=jpg';

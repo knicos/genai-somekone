@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import ViewContainer from './ViewContainer';
 import OwnProfile from '@genaism/apps/Somegram/views/PersonalProfile/PersonalProfile';
-import { isUserID } from '@knicos/genai-recom';
+import { isUserID } from '@genai-fi/recom';
 
 export function Component() {
     const { userId } = useParams();

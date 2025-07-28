@@ -11,7 +11,7 @@ import {
 } from '@genaism/apps/Dashboard/state/settingsState';
 import { useAtomValue } from 'jotai';
 import style from './style.module.css';
-import { ContentNodeId, GraphService } from '@knicos/genai-recom';
+import { ContentNodeId, GraphService } from '@genai-fi/recom';
 import { useNodeType } from '@genaism/hooks/graph';
 import { useContentService, useGraphService } from '@genaism/hooks/services';
 

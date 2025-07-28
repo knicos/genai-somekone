@@ -1,6 +1,6 @@
 import { useContent, useContentComments } from '@genaism/hooks/content';
 import style from './style.module.css';
-import { ContentNodeId } from '@knicos/genai-recom';
+import { ContentNodeId } from '@genai-fi/recom';
 import { useServices } from '@genaism/hooks/services';
 import { Comment, CommentBox } from '@genaism/common/components/FeedImage';
 import FavoriteIcon from '@mui/icons-material/Favorite';

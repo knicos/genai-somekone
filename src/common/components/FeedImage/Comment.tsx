@@ -1,4 +1,4 @@
-import { UserNodeId } from '@knicos/genai-recom';
+import { UserNodeId } from '@genai-fi/recom';
 import style from './style.module.css';
 import { useProfilerService } from '@genaism/hooks/services';
 

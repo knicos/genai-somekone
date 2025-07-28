@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useContentService } from '@genaism/hooks/services';
 import { Button, Spinner } from '@genai-fi/base';
 import captureImages from './capture';
-import { ContentMetadata, ContentNodeId } from '@knicos/genai-recom';
+import { ContentMetadata, ContentNodeId } from '@genai-fi/recom';
 
 interface Props {
     open: boolean;

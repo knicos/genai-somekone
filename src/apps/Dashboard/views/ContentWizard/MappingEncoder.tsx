@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import style from './style.module.css';
 import { Slider } from '@mui/material';
 import { findNearestSlot } from '@genaism/services/map/grid';
-import { AutoEncoder, ContentNodeId, ContentService, Embedding } from '@knicos/genai-recom';
+import { AutoEncoder, ContentNodeId, ContentService, Embedding } from '@genai-fi/recom';
 import { useContentService } from '@genaism/hooks/services';
 import { Widget } from '@genaism/common/components/WorkflowLayout/Widget';
 import { useTranslation } from 'react-i18next';

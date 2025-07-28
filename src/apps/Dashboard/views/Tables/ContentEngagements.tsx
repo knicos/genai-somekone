@@ -1,5 +1,5 @@
 import { useServices } from '@genaism/hooks/services';
-import { ContentNodeId, UserNodeId } from '@knicos/genai-recom';
+import { ContentNodeId, UserNodeId } from '@genai-fi/recom';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import style from './style.module.css';
 import { useMemo } from 'react';

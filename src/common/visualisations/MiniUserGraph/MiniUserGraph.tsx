@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { GraphLink, GraphNode, InternalGraphLink } from '../Graph/types';
 import ProfileNode from './ProfileNode';
 import colours from '@genai-fi/base/css/colours.module.css';
-import { ContentNodeId, UserNodeId } from '@knicos/genai-recom';
+import { ContentNodeId, UserNodeId } from '@genai-fi/recom';
 import { useSimilarUsers, useUserProfile } from '@genaism/hooks/profiler';
 
 const LINE_THICKNESS_UNSELECTED = 20;

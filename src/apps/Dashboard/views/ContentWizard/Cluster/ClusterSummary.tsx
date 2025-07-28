@@ -1,6 +1,6 @@
 import StatsTable from '@genaism/apps/Dashboard/visualisations/TrainingGraph/StatsTable';
 import { useContentService } from '@genaism/hooks/services';
-import { ContentNodeId, Embedding, maxEmbeddingDistance } from '@knicos/genai-recom';
+import { ContentNodeId, Embedding, maxEmbeddingDistance } from '@genai-fi/recom';
 import { BarChart } from '@mui/x-charts';
 import { useMemo } from 'react';
 

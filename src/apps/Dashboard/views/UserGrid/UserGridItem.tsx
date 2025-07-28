@@ -1,5 +1,5 @@
 import { useUserProfile } from '@genaism/hooks/profiler';
-import { UserNodeId } from '@knicos/genai-recom';
+import { UserNodeId } from '@genai-fi/recom';
 import style from './style.module.css';
 import { useContentData } from '@genaism/hooks/content';
 import { useAtom, useAtomValue } from 'jotai';

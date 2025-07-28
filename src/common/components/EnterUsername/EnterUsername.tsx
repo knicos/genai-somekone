@@ -8,7 +8,7 @@ import { useAtomValue } from 'jotai';
 import { availableUsers } from '@genaism/common/state/sessionState';
 import RestoreIcon from '@mui/icons-material/Restore';
 import { useDuplicateTabCheck } from '@genaism/hooks/duplicateTab';
-import { anonUsername, UserNodeId } from '@knicos/genai-recom';
+import { anonUsername, UserNodeId } from '@genai-fi/recom';
 import { useProfilerService } from '@genaism/hooks/services';
 
 function generateUsername() {

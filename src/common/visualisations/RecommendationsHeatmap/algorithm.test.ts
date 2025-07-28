@@ -9,7 +9,7 @@ import {
     RecommenderService,
     ScoredRecommendation,
     ServiceBroker,
-} from '@knicos/genai-recom';
+} from '@genai-fi/recom';
 
 const { mockCandidates, mockScoring } = vi.hoisted(() => ({
     mockCandidates: vi.fn(() => 0.5),
@@ -27,8 +27,8 @@ const { mockCandidates, mockScoring } = vi.hoisted(() => ({
     }),
 }));
 
-vi.mock('@knicos/genai-recom', async () => {
-    const mod = await vi.importActual<typeof import('@knicos/genai-recom')>('@knicos/genai-recom');
+vi.mock('@genai-fi/recom', async () => {
+    const mod = await vi.importActual<typeof import('@genai-fi/recom')>('@genai-fi/recom');
     return {
         ...mod,
         RecommenderService: vi.fn(() => ({

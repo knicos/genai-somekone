@@ -1,5 +1,5 @@
 import { SMConfig } from '@genaism/common/state/smConfig';
-import { UserNodeId } from '@knicos/genai-recom';
+import { UserNodeId } from '@genai-fi/recom';
 import { Atom, atom } from 'jotai';
 import { atomFamily } from 'jotai/utils';
 import DEFAULT from './defaultConfig.json';

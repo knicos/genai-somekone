@@ -1,6 +1,6 @@
 import { beforeEach, describe, it, beforeAll } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { getGraphService, getProfilerService } from '@knicos/genai-recom';
+import { getGraphService, getProfilerService } from '@genai-fi/recom';
 import Workflow from './Workflow';
 import { appConfiguration } from '@genaism/common/state/configState';
 import TestWrapper from '@genaism/util/TestWrapper';

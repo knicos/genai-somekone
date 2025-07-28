@@ -1,6 +1,6 @@
 import { useChangeNodeType } from '@genaism/hooks/graph';
 import style from './style.module.css';
-import { ContentNodeId, ContentService } from '@knicos/genai-recom';
+import { ContentNodeId, ContentService } from '@genai-fi/recom';
 import { useCallback, useRef, useState } from 'react';
 import { useContentService, useServiceEventMemo } from '@genaism/hooks/services';
 import { DataGrid, GridColDef, useGridApiRef } from '@mui/x-data-grid';

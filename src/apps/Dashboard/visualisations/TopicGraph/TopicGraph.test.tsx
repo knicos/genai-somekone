@@ -2,7 +2,7 @@ import { beforeEach, describe, it } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import TopicGraph from './TopicGraph';
 import TestWrapper from '@genaism/util/TestWrapper';
-import { addTopic, getGraphService, getProfilerService } from '@knicos/genai-recom';
+import { addTopic, getGraphService, getProfilerService } from '@genai-fi/recom';
 
 describe('TopicGraph component', () => {
     beforeEach(() => {

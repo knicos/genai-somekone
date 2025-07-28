@@ -1,4 +1,4 @@
-import { RecommendationOptions, Scores } from '@knicos/genai-recom';
+import { RecommendationOptions, Scores } from '@genai-fi/recom';
 
 const FINAL_SCORE_WEIGHTS: Required<Scores> = {
     taste: 2,

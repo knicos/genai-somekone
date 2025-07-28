@@ -6,7 +6,7 @@ import { useTabActive } from '@genaism/hooks/interaction';
 import { useTranslation } from 'react-i18next';
 import { Spinner } from '@genai-fi/base';
 import LangSelect from '../LangSelect/LangSelect';
-import { ContentNodeId, LogEntry, ScoredRecommendation, UserNodeId } from '@knicos/genai-recom';
+import { ContentNodeId, LogEntry, ScoredRecommendation, UserNodeId } from '@genai-fi/recom';
 import { useActionLogService, useProfilerService } from '@genaism/hooks/services';
 import { InjectContentType } from '@genaism/common/state/sessionState';
 

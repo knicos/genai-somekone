@@ -2,7 +2,7 @@ import { useServices } from '@genaism/hooks/services';
 import style from './style.module.css';
 import ImageGrid from '@genaism/common/components/ImageGrid/ImageGrid';
 import { useUserProfile } from '@genaism/hooks/profiler';
-import { UserNodeId } from '@knicos/genai-recom';
+import { UserNodeId } from '@genai-fi/recom';
 import PhotoCameraOutlinedIcon from '@mui/icons-material/PhotoCameraOutlined';
 import { useTranslation } from 'react-i18next';
 import { useRelatedNodes } from '@genaism/hooks/graph';

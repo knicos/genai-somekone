@@ -1,4 +1,4 @@
-import { UserNodeId, WeightedLabel, WeightedNode } from '@knicos/genai-recom';
+import { UserNodeId, WeightedLabel, WeightedNode } from '@genai-fi/recom';
 import { useEffect, useState } from 'react';
 import { useSimilarityService } from './services';
 

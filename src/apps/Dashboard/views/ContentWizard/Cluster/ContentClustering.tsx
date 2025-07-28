@@ -2,7 +2,7 @@ import { Button } from '@genai-fi/base';
 import style from '../style.module.css';
 import { useEffect, useState } from 'react';
 import { Slider } from '@mui/material';
-import { clusterEmbeddings, ContentNodeId } from '@knicos/genai-recom';
+import { clusterEmbeddings, ContentNodeId } from '@genai-fi/recom';
 import { useContentService } from '@genaism/hooks/services';
 import ContentCluster from './ContentCluster';
 import { useTranslation } from 'react-i18next';

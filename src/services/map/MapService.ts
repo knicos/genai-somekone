@@ -1,5 +1,5 @@
 import { heatmapGrid } from '@genaism/services/map/grid';
-import { ContentNodeId, ContentService, WeightedNode } from '@knicos/genai-recom';
+import { ContentNodeId, ContentService, WeightedNode } from '@genai-fi/recom';
 import EE from 'eventemitter3';
 
 interface MapServiceConfig {

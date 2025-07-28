@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { heatmapImageSet } from '@genaism/common/visualisations/RecommendationsHeatmap/algorithm';
 import Heatmap from '../../../../common/visualisations/Heatmap/Heatmap';
-import { ContentNodeId, WeightedNode } from '@knicos/genai-recom';
+import { ContentNodeId, WeightedNode } from '@genai-fi/recom';
 import { useContentService } from '@genaism/hooks/services';
 
 interface Props {

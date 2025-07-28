@@ -1,4 +1,4 @@
-import { NodeID, WeightedNode } from '@knicos/genai-recom';
+import { NodeID, WeightedNode } from '@genai-fi/recom';
 
 export function normWeights<T extends NodeID>(nodes: WeightedNode<T>[]) {
     let min = Number.MAX_SAFE_INTEGER;

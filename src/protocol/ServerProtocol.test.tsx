@@ -2,7 +2,7 @@ import { beforeEach, describe, it, vi } from 'vitest';
 import ServerProtocol from './ServerProtocol';
 import { render } from '@testing-library/react';
 import TestWrapper from '@genaism/util/TestWrapper';
-import { getGraphService } from '@knicos/genai-recom';
+import { getGraphService } from '@genai-fi/recom';
 import { PropsWithChildren } from 'react';
 import EventEmitter from 'eventemitter3';
 import { EventProtocol } from './protocol';

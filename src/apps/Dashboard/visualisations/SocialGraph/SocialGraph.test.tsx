@@ -4,7 +4,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import TestWrapper from '@genaism/util/TestWrapper';
 import userEvent from '@testing-library/user-event';
 import { appConfiguration } from '@genaism/common/state/configState';
-import { createEmptyProfile, getGraphService } from '@knicos/genai-recom';
+import { createEmptyProfile, getGraphService } from '@genai-fi/recom';
 import { settingDisplayLabel } from '../../state/settingsState';
 import { createStore } from 'jotai';
 

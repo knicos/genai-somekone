@@ -7,7 +7,7 @@ import {
     UserNodeId,
     WeightedLabel,
     WeightedNode,
-} from '@knicos/genai-recom';
+} from '@genai-fi/recom';
 import EE from 'eventemitter3';
 
 function getSimilar(

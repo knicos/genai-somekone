@@ -1,4 +1,4 @@
-import { UserNodeData } from '@knicos/genai-recom';
+import { UserNodeData } from '@genai-fi/recom';
 
 export interface TopicSummaryItem {
     label: string;

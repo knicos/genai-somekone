@@ -3,7 +3,7 @@ import style from './style.module.css';
 import ImageFeed, { FeedEntry } from '@genaism/common/components/ImageFeed/ImageFeed';
 import { useAtomValue } from 'jotai';
 import { configuration } from '@genaism/common/state/configState';
-import { LogEntry, ScoredRecommendation, UserNodeData, UserNodeId } from '@knicos/genai-recom';
+import { LogEntry, ScoredRecommendation, UserNodeData, UserNodeId } from '@genai-fi/recom';
 import { useActionLogService, useProfilerService } from '@genaism/hooks/services';
 import { useRecommendations } from '@genaism/hooks/recommender';
 import { contentLoaded, injectedContent } from '@genaism/common/state/sessionState';

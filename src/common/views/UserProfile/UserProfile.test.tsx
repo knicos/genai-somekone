@@ -1,7 +1,7 @@
 import { beforeEach, describe, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import UserProfileComp from './UserProfile';
-import { ContentNodeId, createEmptyProfile, getGraphService, UserNodeData } from '@knicos/genai-recom';
+import { ContentNodeId, createEmptyProfile, getGraphService, UserNodeData } from '@genai-fi/recom';
 import TestWrapper from '@genaism/util/TestWrapper';
 
 const { mockProfile } = vi.hoisted(() => ({

@@ -2,7 +2,7 @@ import { beforeEach, describe, it } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import ContentGraph from './ContentGraph';
 import TestWrapper from '@genaism/util/TestWrapper';
-import { getGraphService } from '@knicos/genai-recom';
+import { getGraphService } from '@genai-fi/recom';
 
 describe('ContentGraph component', () => {
     beforeEach(() => {

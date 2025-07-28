@@ -10,7 +10,7 @@ import {
     settingTopicSimilarPercent,
 } from '@genaism/apps/Dashboard/state/settingsState';
 import { useAtomValue } from 'jotai';
-import { TopicNodeId, WeightedNode } from '@knicos/genai-recom';
+import { TopicNodeId, WeightedNode } from '@genai-fi/recom';
 import { useNodeType } from '@genaism/hooks/graph';
 import { useGraphService } from '@genaism/hooks/services';
 

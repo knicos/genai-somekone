@@ -2,7 +2,7 @@ import { settingNodeMode } from '@genaism/apps/Dashboard/state/settingsState';
 import { render, screen } from '@testing-library/react';
 import { beforeEach, describe, it } from 'vitest';
 import UserGrid from './UserGrid';
-import { getContentService, getGraphService, getProfilerService } from '@knicos/genai-recom';
+import { getContentService, getGraphService, getProfilerService } from '@genai-fi/recom';
 import userEvent from '@testing-library/user-event';
 import { getSimilarityService } from '@genaism/services/similarity';
 import TestWrapper from '@genaism/util/TestWrapper';

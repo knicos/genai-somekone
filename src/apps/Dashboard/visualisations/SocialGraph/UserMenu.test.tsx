@@ -4,7 +4,7 @@ import TestWrapper from '@genaism/util/TestWrapper';
 import userEvent from '@testing-library/user-event';
 import { createStore, useAtomValue } from 'jotai';
 import { menuSelectedUser, menuShowUserPanel } from '@genaism/apps/Dashboard/state/menuState';
-import { getGraphService } from '@knicos/genai-recom';
+import { getGraphService } from '@genai-fi/recom';
 import UserMenu from './UserMenu';
 
 const store = createStore();

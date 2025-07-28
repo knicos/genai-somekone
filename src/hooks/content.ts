@@ -1,4 +1,4 @@
-import { CommentEntry, ContentMetadata, ContentNodeId } from '@knicos/genai-recom';
+import { CommentEntry, ContentMetadata, ContentNodeId } from '@genai-fi/recom';
 import { useContentService, useServiceEventMemo } from './services';
 import { useEffect, useState } from 'react';
 

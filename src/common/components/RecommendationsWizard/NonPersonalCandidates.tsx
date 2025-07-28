@@ -5,7 +5,7 @@ import style from './style.module.css';
 import { RadioGroup } from '@mui/material';
 import { useEffect } from 'react';
 import WizardOption from './WizardOption';
-import { RecommendationOptions, UserNodeId } from '@knicos/genai-recom';
+import { RecommendationOptions, UserNodeId } from '@genai-fi/recom';
 
 interface Props {
     id?: UserNodeId;

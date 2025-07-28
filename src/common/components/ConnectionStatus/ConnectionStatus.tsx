@@ -2,6 +2,7 @@ import { ConnectionStatus as BaseConnectionStatus } from '@genai-fi/base';
 import style from './style.module.css';
 import { useEffect, useState } from 'react';
 import { usePeerObject } from '@genai-fi/base/hooks/peer';
+import PeerEnv from '@genaism/env';
 
 interface Props {
     position: 'corner' | 'center';
@@ -28,7 +29,7 @@ export default function ConnectionStatus({ position, visibility }: Props) {
     return visibility === undefined || quality <= visibility ? (
         <div className={position === 'corner' ? style.corner : style.center}>
             <BaseConnectionStatus
-                api={import.meta.env.VITE_APP_APIURL}
+                api={PeerEnv.apiUrl}
                 appName={import.meta.env.DEV ? 'dev' : 'somekone'}
                 visibility={visibility}
             />

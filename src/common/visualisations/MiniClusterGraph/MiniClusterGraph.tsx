@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { GraphLink, GraphNode, InternalGraphLink } from '../Graph/types';
 import ProfileNode from './ProfileNode';
 import colours from '@genai-fi/base/css/colours.module.css';
-import { ContentNodeId, UserNodeId, WeightedNode } from '@knicos/genai-recom';
+import { ContentNodeId, UserNodeId, WeightedNode } from '@genai-fi/recom';
 import { useUserProfile } from '@genaism/hooks/profiler';
 import { useSimilarityData } from '@genaism/hooks/similarity';
 import { colourLabel } from '@genaism/util/colourise';

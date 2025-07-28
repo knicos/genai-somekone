@@ -1,4 +1,4 @@
-import { ContentNodeId } from '@knicos/genai-recom';
+import { ContentNodeId } from '@genai-fi/recom';
 import style from '../style.module.css';
 import ImageGrid from '@genaism/common/components/ImageGrid/ImageGrid';
 import { IconButton, Menu, MenuItem, Pagination, Tab, Tabs } from '@mui/material';

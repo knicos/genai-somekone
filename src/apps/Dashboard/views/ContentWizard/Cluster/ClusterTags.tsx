@@ -1,4 +1,4 @@
-import { ContentNodeId } from '@knicos/genai-recom';
+import { ContentNodeId } from '@genai-fi/recom';
 import { BarChart } from '@mui/x-charts';
 import style from '../style.module.css';
 import { Pagination } from '@mui/material';

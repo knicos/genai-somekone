@@ -19,7 +19,7 @@
         "@emotion/react": "^11.14.0",
         "@emotion/styled": "^11.14.0",
         "@genai-fi/base": "^4.0.2",
-        "@knicos/genai-recom": "^0.3.17",
+        "@genai-fi/recom": "^0.3.18",
         "@mui/icons-material": "^7.1.0",
         "@mui/material": "^7.1.0",
         "@mui/x-charts": "^8.5.2",

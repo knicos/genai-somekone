@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Cards } from '../DataCard';
 import LogBatch, { ContentLogEntry } from './LogBatch';
 import style from './style.module.css';
-import { UserNodeId } from '@knicos/genai-recom';
+import { UserNodeId } from '@genai-fi/recom';
 import { batchLogs } from './batchers';
 
 interface Props {

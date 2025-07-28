@@ -27,6 +27,7 @@ import { I18nextProvider } from 'react-i18next';
 import i18n from '@genaism/i18n';
 import { guideFile } from './state/settingsState';
 import { Peer } from '@genai-fi/base/hooks/peer';
+import PeerEnv from '@genaism/env';
 
 interface Props {
     contentUrls?: string;
@@ -90,10 +91,10 @@ export function Workspace({ contentUrls, cfg, guide, experimental, noSession }: 
 
     return (
         <Peer
-            host={import.meta.env.VITE_APP_PEER_SERVER}
-            secure={import.meta.env.VITE_APP_PEER_SECURE === '1'}
-            peerkey={import.meta.env.VITE_APP_PEER_KEY || 'peerjs'}
-            port={import.meta.env.VITE_APP_PEER_PORT ? parseInt(import.meta.env.VITE_APP_PEER_PORT) : 443}
+            host={PeerEnv.host}
+            secure={PeerEnv.secure}
+            peerkey={PeerEnv.peerkey}
+            port={PeerEnv.port}
             code={`sm-${MYCODE}`}
         >
             <Loading loading={!loaded}>

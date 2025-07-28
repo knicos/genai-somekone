@@ -10,7 +10,7 @@ import {
     RecommenderService,
     ReplayService,
     ServiceBroker,
-} from '@knicos/genai-recom';
+} from '@genai-fi/recom';
 import { SimilarityService } from '@genaism/services/similarity';
 import TestWrapper from '@genaism/util/TestWrapper';
 
@@ -22,8 +22,8 @@ const { mockEncode, mockSimilar } = vi.hoisted(() => ({
     ]),
 }));
 
-vi.mock('@knicos/genai-recom', async (importOriginal) => ({
-    ...(await importOriginal<typeof import('@knicos/genai-recom')>()),
+vi.mock('@genai-fi/recom', async (importOriginal) => ({
+    ...(await importOriginal<typeof import('@genai-fi/recom')>()),
     ContentService: vi.fn(() => ({
         hasEncoder: () => true,
         createIsolatedEmbedding: mockEncode,

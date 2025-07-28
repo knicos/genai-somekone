@@ -1,5 +1,5 @@
 import style from './style.module.css';
-import { UserNodeId } from '@knicos/genai-recom';
+import { UserNodeId } from '@genai-fi/recom';
 import { useUserProfile } from '@genaism/hooks/profiler';
 import { useProfilerService } from '@genaism/hooks/services';
 import { useActionLog } from '@genaism/hooks/actionLog';

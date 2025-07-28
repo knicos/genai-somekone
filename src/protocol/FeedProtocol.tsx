@@ -7,7 +7,7 @@ import { SMConfig } from '../common/state/smConfig';
 import { appConfiguration } from '@genaism/common/state/configState';
 import { LogProvider } from '@genaism/hooks/logger';
 import { decompressFromUTF16 } from 'lz-string';
-import { ContentNodeId, ScoredRecommendation, Snapshot, UserNodeData } from '@knicos/genai-recom';
+import { ContentNodeId, ScoredRecommendation, Snapshot, UserNodeData } from '@genai-fi/recom';
 import { useServices } from '@genaism/hooks/services';
 import { bytesToBase64DataUrl, dataUrlToBytes } from '@genaism/util/base64';
 import ConnectionStatus from '@genaism/common/components/ConnectionStatus/ConnectionStatus';

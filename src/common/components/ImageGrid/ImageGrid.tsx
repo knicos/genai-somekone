@@ -1,4 +1,4 @@
-import { ContentNodeId } from '@knicos/genai-recom';
+import { ContentNodeId } from '@genai-fi/recom';
 import style from './style.module.css';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { useTranslation } from 'react-i18next';

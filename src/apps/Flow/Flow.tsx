@@ -16,6 +16,7 @@ import { ContentLoader } from '@genaism/common/components/ContentLoader';
 import gitInfo from '../../generatedGitInfo.json';
 import FlowWrapper from './FlowWrapper';
 import { Peer } from '@genai-fi/base/hooks/peer';
+import PeerEnv from '@genaism/env';
 
 export function Component() {
     const { code } = useParams();
@@ -32,10 +33,10 @@ export function Component() {
 
     return (
         <Peer
-            host={import.meta.env.VITE_APP_PEER_SERVER}
-            secure={import.meta.env.VITE_APP_PEER_SECURE === '1'}
-            peerkey={import.meta.env.VITE_APP_PEER_KEY || 'peerjs'}
-            port={import.meta.env.VITE_APP_PEER_PORT ? parseInt(import.meta.env.VITE_APP_PEER_PORT) : 443}
+            host={PeerEnv.host}
+            secure={PeerEnv.secure}
+            peerkey={PeerEnv.peerkey}
+            port={PeerEnv.port}
             server={`sm-${code}`}
             code={`sm-${MYCODE}`}
         >

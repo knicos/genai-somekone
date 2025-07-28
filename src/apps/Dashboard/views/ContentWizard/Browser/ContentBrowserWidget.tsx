@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { Widget } from '@genaism/common/components/WorkflowLayout/Widget';
 import ImageGrid from '@genaism/common/components/ImageGrid/ImageGrid';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { ContentNodeId } from '@knicos/genai-recom';
+import { ContentNodeId } from '@genai-fi/recom';
 import { useContentService } from '@genaism/hooks/services';
 import ImageDetails from './ImageDetails';
 import style from '../style.module.css';

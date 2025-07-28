@@ -1,4 +1,4 @@
-import { getProfilerService } from '@knicos/genai-recom';
+import { getProfilerService } from '@genai-fi/recom';
 import SimilarityService from './similarityService';
 export { SimilarityService };
 

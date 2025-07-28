@@ -1,4 +1,4 @@
-import { UserNodeId } from '@knicos/genai-recom';
+import { UserNodeId } from '@genai-fi/recom';
 
 interface ResearchLogData {
     action: string;

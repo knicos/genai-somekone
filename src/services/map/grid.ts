@@ -1,4 +1,4 @@
-import { ContentNodeId, ContentService } from '@knicos/genai-recom';
+import { ContentNodeId, ContentService } from '@genai-fi/recom';
 
 interface QueueItem {
     pt: [number, number];

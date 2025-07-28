@@ -6,7 +6,7 @@ import { RadioGroup } from '@mui/material';
 import WizardOption from './WizardOption';
 import { mapScoring } from './mappings';
 import { useEffect } from 'react';
-import { RecommendationOptions, UserNodeId } from '@knicos/genai-recom';
+import { RecommendationOptions, UserNodeId } from '@genai-fi/recom';
 
 type ScoringTemplateType = 'all' | 'profile' | 'noprofile' | 'random';
 

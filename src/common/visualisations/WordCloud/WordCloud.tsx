@@ -1,7 +1,7 @@
 import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import style from './style.module.css';
 import cloudLayout, { LocationItem, SizedItem } from '@genaism/common/visualisations/ImageCloud/cloudLayout';
-import { WeightedLabel } from '@knicos/genai-recom';
+import { WeightedLabel } from '@genai-fi/recom';
 import { localiser } from '@genaism/services/localiser/localiser';
 import { useTranslation } from 'react-i18next';
 

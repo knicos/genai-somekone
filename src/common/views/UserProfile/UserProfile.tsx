@@ -2,7 +2,7 @@ import style from './style.module.css';
 import topicSummary from './topicSummary';
 import { useMemo, useRef } from 'react';
 import { TopicData } from './TopicDetail';
-import { ContentNodeId, getTopicLabel, UserNodeId, WeightedNode } from '@knicos/genai-recom';
+import { ContentNodeId, getTopicLabel, UserNodeId, WeightedNode } from '@genai-fi/recom';
 import { useProfilerService } from '@genaism/hooks/services';
 import { useUserProfile } from '@genaism/hooks/profiler';
 import { saveAs } from 'file-saver';

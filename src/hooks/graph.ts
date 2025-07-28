@@ -1,4 +1,4 @@
-import { DestinationFor, EdgeType, NodeID, NodeType, SourceFor, WeightedNode } from '@knicos/genai-recom';
+import { DestinationFor, EdgeType, NodeID, NodeType, SourceFor, WeightedNode } from '@genai-fi/recom';
 import { useEffect, useMemo, useReducer } from 'react';
 import { useBroker, useGraphService } from './services';
 

@@ -1,5 +1,5 @@
 import { useBroker, useGraphService } from '@genaism/hooks/services';
-import { ContentNodeId, GraphService, NodeID, WeightedNode } from '@knicos/genai-recom';
+import { ContentNodeId, GraphService, NodeID, WeightedNode } from '@genai-fi/recom';
 import { useEffect, useMemo, useReducer, useRef } from 'react';
 
 interface Similarities {

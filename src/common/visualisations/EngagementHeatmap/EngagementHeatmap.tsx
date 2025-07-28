@@ -2,7 +2,7 @@ import { configuration } from '@genaism/common/state/configState';
 import { useEffect, useRef, useState } from 'react';
 import { useAtomValue } from 'jotai';
 import Heatmap from '../Heatmap/Heatmap';
-import { ContentNodeId, GraphService, uniqueSubset, UserNodeId, WeightedNode } from '@knicos/genai-recom';
+import { ContentNodeId, GraphService, uniqueSubset, UserNodeId, WeightedNode } from '@genai-fi/recom';
 import { useUserProfile } from '@genaism/hooks/profiler';
 import { useProfilerService } from '@genaism/hooks/services';
 import MapService from '@genaism/services/map/MapService';

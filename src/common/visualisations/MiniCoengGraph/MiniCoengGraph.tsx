@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { GraphLink, GraphNode, InternalGraphLink } from '../Graph/types';
 import colours from '@genai-fi/base/css/colours.module.css';
 import ContentNode from './ContentNode';
-import { ContentNodeId, UserNodeId } from '@knicos/genai-recom';
+import { ContentNodeId, UserNodeId } from '@genai-fi/recom';
 import { useUserProfile } from '@genaism/hooks/profiler';
 import { useGraphService } from '@genaism/hooks/services';
 

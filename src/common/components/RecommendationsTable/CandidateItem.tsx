@@ -5,7 +5,7 @@ import style from './style.module.css';
 import MiniUserGraph from '@genaism/common/visualisations/MiniUserGraph/MiniUserGraph';
 import MiniTopicGraph from '@genaism/common/visualisations/MiniTopicGraph/MiniTopicGraph';
 import MiniCoengGraph from '@genaism/common/visualisations/MiniCoengGraph/MiniCoengGraph';
-import { ProfilerService, ScoredRecommendation, UserNodeId } from '@knicos/genai-recom';
+import { ProfilerService, ScoredRecommendation, UserNodeId } from '@genai-fi/recom';
 import { useProfilerService } from '@genaism/hooks/services';
 
 function generateCandidateMessage(profiler: ProfilerService, item: ScoredRecommendation, t: TFunction) {

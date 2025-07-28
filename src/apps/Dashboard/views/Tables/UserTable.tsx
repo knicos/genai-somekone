@@ -1,5 +1,5 @@
 import { useServices } from '@genaism/hooks/services';
-import { UserNodeId } from '@knicos/genai-recom';
+import { UserNodeId } from '@genai-fi/recom';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import style from './style.module.css';
 import TableToolbar from './TableToolbar';

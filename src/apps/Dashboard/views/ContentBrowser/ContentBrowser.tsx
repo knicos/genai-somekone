@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import ImageGrid from '@genaism/common/components/ImageGrid/ImageGrid';
-import { ContentNodeId } from '@knicos/genai-recom';
+import { ContentNodeId } from '@genai-fi/recom';
 import { useContentService } from '@genaism/hooks/services';
 import style from './style.module.css';
 import BrowserMenu from './BrowserMenu';

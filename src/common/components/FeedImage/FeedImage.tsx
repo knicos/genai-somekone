@@ -10,7 +10,7 @@ import CommentPanel from './CommentPanel';
 import LabelsPanel from './LabelsPanel';
 import IconButtonDot from '../IconButtonDot/IconButtonDot';
 import { useTranslation } from 'react-i18next';
-import { ContentNodeId, UserNodeId } from '@knicos/genai-recom';
+import { ContentNodeId, UserNodeId } from '@genai-fi/recom';
 import { useContentService } from '@genaism/hooks/services';
 import { useContent, useContentStats } from '@genaism/hooks/content';
 import { Button } from '@genai-fi/base';

@@ -5,7 +5,7 @@ import TopicNode from './TopicNode';
 import colours from '@genai-fi/base/css/colours.module.css';
 import { useUserProfile } from '@genaism/hooks/profiler';
 import { useServices } from '@genaism/hooks/services';
-import { ContentNodeId, getTopicId, TopicNodeId, UserNodeId } from '@knicos/genai-recom';
+import { ContentNodeId, getTopicId, TopicNodeId, UserNodeId } from '@genai-fi/recom';
 import { localiser } from '@genaism/services/localiser/localiser';
 import { useTranslation } from 'react-i18next';
 

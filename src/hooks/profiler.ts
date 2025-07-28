@@ -1,4 +1,4 @@
-import { createEmptyProfile, UserNodeData, UserNodeId } from '@knicos/genai-recom';
+import { createEmptyProfile, UserNodeData, UserNodeId } from '@genai-fi/recom';
 import { useEffect, useMemo } from 'react';
 import { useProfilerService } from './services';
 import { useDebouncedState } from './debounce';

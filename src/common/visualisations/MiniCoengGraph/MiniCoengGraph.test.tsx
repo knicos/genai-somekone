@@ -1,7 +1,7 @@
 import TestWrapper from '@genaism/util/TestWrapper';
 import { describe, it } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { getGraphService } from '@knicos/genai-recom';
+import { getGraphService } from '@genai-fi/recom';
 import MiniCoengGraph from './MiniCoengGraph';
 
 describe('MiniCoengGraph Component', () => {

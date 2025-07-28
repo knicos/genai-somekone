@@ -1,4 +1,4 @@
-import { ContentNodeId } from '@knicos/genai-recom';
+import { ContentNodeId } from '@genai-fi/recom';
 import { Widget } from '@genaism/common/components/WorkflowLayout/Widget';
 import { useTranslation } from 'react-i18next';
 import { Chip, IconButton, Menu, MenuItem } from '@mui/material';

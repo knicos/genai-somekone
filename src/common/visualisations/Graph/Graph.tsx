@@ -21,7 +21,7 @@ import Lines from './Lines';
 import { createSimulation } from './simulation';
 import { makeLinks, makeNodes } from './utilities';
 import { Mover, ZoomState, wheelZoom } from './controls';
-import { NodeID } from '@knicos/genai-recom';
+import { NodeID } from '@genai-fi/recom';
 import { useEventListen } from '@genaism/hooks/events';
 import { saveAs } from 'file-saver';
 import { svgToPNG } from '@genaism/util/svgToPNG';

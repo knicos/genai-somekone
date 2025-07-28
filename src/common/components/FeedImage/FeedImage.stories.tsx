@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
 import FeedImage from './FeedImage';
-import { getContentService, getGraphService } from '@knicos/genai-recom';
+import { getContentService, getGraphService } from '@genai-fi/recom';
 
 const meta: Meta<typeof FeedImage> = {
     component: FeedImage,

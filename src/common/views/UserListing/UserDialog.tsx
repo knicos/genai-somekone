@@ -1,7 +1,7 @@
 import { Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import UserListing from './UserListing';
-import { UserNodeId } from '@knicos/genai-recom';
+import { UserNodeId } from '@genai-fi/recom';
 import CloseIcon from '@mui/icons-material/Close';
 
 interface Props {

@@ -2,7 +2,7 @@ import { generateMessage } from './message';
 import { useTranslation } from 'react-i18next';
 import { Card } from '../DataCard';
 import LogItem from './LogItem';
-import { LogEntry } from '@knicos/genai-recom';
+import { LogEntry } from '@genai-fi/recom';
 import { memo } from 'react';
 
 export interface ContentLogEntry {

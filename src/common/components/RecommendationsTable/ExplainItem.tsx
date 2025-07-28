@@ -4,7 +4,7 @@ import ScorePie from './ScorePie';
 import style from './style.module.css';
 import gColors from '../../../style/graphColours.json';
 import LightbulbIcon from '@mui/icons-material/Lightbulb';
-import { ScoredRecommendation, Scores } from '@knicos/genai-recom';
+import { ScoredRecommendation, Scores } from '@genai-fi/recom';
 import sColors from '@genai-fi/base/css/colours.module.css';
 
 const SCORE_SCALE = 20;

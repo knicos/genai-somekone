@@ -1,4 +1,4 @@
-import { cosinesim, ProfilerService, UserNodeId } from '@knicos/genai-recom';
+import { cosinesim, ProfilerService, UserNodeId } from '@genai-fi/recom';
 
 interface PairwiseDistance {
     d: number;

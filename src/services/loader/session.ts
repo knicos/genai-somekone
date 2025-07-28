@@ -1,6 +1,6 @@
 import { compress, decompress } from 'lz-string';
 import { LogItem } from './loaderTypes';
-import { ActionLogService, GNode, GraphService, NodeType } from '@knicos/genai-recom';
+import { ActionLogService, GNode, GraphService, NodeType } from '@genai-fi/recom';
 
 const GRAPH_KEY = 'genai_somekone_graph';
 const LOG_KEY = 'genai_somekone_logs';

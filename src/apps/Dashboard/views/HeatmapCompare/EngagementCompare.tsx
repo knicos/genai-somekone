@@ -1,4 +1,4 @@
-import { ContentNodeId, UserNodeId } from '@knicos/genai-recom';
+import { ContentNodeId, UserNodeId } from '@genai-fi/recom';
 import style from './style.module.css';
 import MapService from '@genaism/services/map/MapService';
 import EngagementHeatmap from '@genaism/common/visualisations/EngagementHeatmap/EngagementHeatmap';

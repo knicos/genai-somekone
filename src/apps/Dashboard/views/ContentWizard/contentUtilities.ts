@@ -1,4 +1,4 @@
-import { ContentService, uniqueSubset } from '@knicos/genai-recom';
+import { ContentService, uniqueSubset } from '@genai-fi/recom';
 
 export function deleteWithTags(contentSvc: ContentService, tags: string[]) {
     const tagSet = new Set(tags);

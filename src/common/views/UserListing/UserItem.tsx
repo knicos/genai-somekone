@@ -1,5 +1,5 @@
 import { useServices } from '@genaism/hooks/services';
-import { UserNodeId } from '@knicos/genai-recom';
+import { UserNodeId } from '@genai-fi/recom';
 import style from './style.module.css';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 

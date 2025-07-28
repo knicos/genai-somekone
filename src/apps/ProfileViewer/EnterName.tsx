@@ -4,7 +4,7 @@ import { useCallback, useRef, useState } from 'react';
 import style from './style.module.css';
 import { useTranslation } from 'react-i18next';
 import { useLogger } from '@genaism/hooks/logger';
-import { UserNodeId } from '@knicos/genai-recom';
+import { UserNodeId } from '@genai-fi/recom';
 
 interface Props {
     onName: (name: string) => void;

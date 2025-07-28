@@ -1,4 +1,4 @@
-import { RecommendationOptions } from '@knicos/genai-recom';
+import { RecommendationOptions } from '@genai-fi/recom';
 
 interface FeedConfig {
     disableComments?: boolean;

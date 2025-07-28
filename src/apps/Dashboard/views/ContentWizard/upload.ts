@@ -1,5 +1,5 @@
 import { canvasFromFile } from '@genai-fi/base';
-import { anonUsername, ContentMetadata, ContentService } from '@knicos/genai-recom';
+import { anonUsername, ContentMetadata, ContentService } from '@genai-fi/recom';
 
 export default async function uploadImages(contentSvc: ContentService, files: File[]) {
     files.forEach((file) => {

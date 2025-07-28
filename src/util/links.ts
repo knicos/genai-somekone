@@ -1,4 +1,4 @@
-import { UserNodeId, WeightedNode } from '@knicos/genai-recom';
+import { UserNodeId, WeightedNode } from '@genai-fi/recom';
 import { GraphLink } from '../common/visualisations/Graph/types';
 
 export function generateLinks(

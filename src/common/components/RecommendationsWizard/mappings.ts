@@ -1,4 +1,4 @@
-import { RecommendationOptions } from '@knicos/genai-recom';
+import { RecommendationOptions } from '@genai-fi/recom';
 
 export function isPersonalised(options: RecommendationOptions): boolean {
     return options.taste > 0 || options.coengaged > 0 || options.similarUsers > 0;

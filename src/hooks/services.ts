@@ -14,7 +14,7 @@ import {
     RecommenderService,
     ReplayService,
     ServiceEvents,
-} from '@knicos/genai-recom';
+} from '@genai-fi/recom';
 import SimilarityService from '@genaism/services/similarity/similarityService';
 import { getSimilarityService } from '@genaism/services/similarity';
 

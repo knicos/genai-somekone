@@ -1,4 +1,4 @@
-import { NodeID } from '@knicos/genai-recom';
+import { NodeID } from '@genai-fi/recom';
 import Graph, { Props } from './Graph';
 import { ReactNode, useCallback, useEffect, useState } from 'react';
 import { debounce } from '@genaism/util/debounce';

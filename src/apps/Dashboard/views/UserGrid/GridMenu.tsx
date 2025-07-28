@@ -21,7 +21,7 @@ import {
     menuShowGridMenu,
     menuShowUserPanel,
 } from '@genaism/apps/Dashboard/state/menuState';
-import { UserNodeId } from '@knicos/genai-recom';
+import { UserNodeId } from '@genai-fi/recom';
 import { useServices } from '@genaism/hooks/services';
 import ImageIcon from '@mui/icons-material/Image';
 import ClusterMenu from '@genaism/apps/Dashboard/visualisations/SocialGraph/ClusterMenu';

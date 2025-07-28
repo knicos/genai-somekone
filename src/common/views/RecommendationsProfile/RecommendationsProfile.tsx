@@ -15,7 +15,7 @@ import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 import AppsIcon from '@mui/icons-material/Apps';
 import { IconMenuItem, Spacer, IconMenuInline } from '@genaism/common/components/IconMenu';
 import RecommendationsHeatmap from '../../visualisations/RecommendationsHeatmap/RecommendationsHeatmap';
-import { ContentNodeId, UserNodeId, WeightedNode } from '@knicos/genai-recom';
+import { ContentNodeId, UserNodeId, WeightedNode } from '@genai-fi/recom';
 import { useRecommendations } from '@genaism/hooks/recommender';
 import { useProfilerService } from '@genaism/hooks/services';
 import InvertColorsIcon from '@mui/icons-material/InvertColors';

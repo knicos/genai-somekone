@@ -1,7 +1,7 @@
 import TestWrapper from '@genaism/util/TestWrapper';
 import { describe, it } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { createEmptyProfile, getGraphService, UserNodeData } from '@knicos/genai-recom';
+import { createEmptyProfile, getGraphService, UserNodeData } from '@genai-fi/recom';
 import MiniUserGraph from './MiniUserGraph';
 
 describe('MiniUserGraph Component', () => {

@@ -8,7 +8,7 @@ import {
     getGraphService,
     getProfilerService,
     ScoredRecommendation,
-} from '@knicos/genai-recom';
+} from '@genai-fi/recom';
 
 function makeRecommendation(id: ContentNodeId): ScoredRecommendation {
     return {

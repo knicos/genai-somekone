@@ -9,7 +9,7 @@ import {
     Snapshot,
     UserNodeData,
     UserNodeId,
-} from '@knicos/genai-recom';
+} from '@genai-fi/recom';
 
 export interface ConfigurationEvent extends PeerEvent {
     event: 'eter:config';

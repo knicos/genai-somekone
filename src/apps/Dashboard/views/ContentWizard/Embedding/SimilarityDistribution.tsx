@@ -1,6 +1,6 @@
 import style from '../style.module.css';
 import { useEffect, useReducer, useState } from 'react';
-import { embeddingSimilarity } from '@knicos/genai-recom';
+import { embeddingSimilarity } from '@genai-fi/recom';
 import { useContentService } from '@genaism/hooks/services';
 import { BarChart } from '@mui/x-charts';
 import { useEventListen } from '@genaism/hooks/events';

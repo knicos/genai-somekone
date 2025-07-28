@@ -1,4 +1,4 @@
-import { UserNodeId } from '@knicos/genai-recom';
+import { UserNodeId } from '@genai-fi/recom';
 import { atom } from 'jotai';
 
 export const menuShowShare = atom<boolean>(true);

@@ -1,6 +1,6 @@
 import { Connection } from '@genai-fi/base';
 import { EventProtocol } from '@genaism/protocol/protocol';
-import { UserNodeId } from '@knicos/genai-recom';
+import { UserNodeId } from '@genai-fi/recom';
 
 export interface UserInfo {
     username: string;

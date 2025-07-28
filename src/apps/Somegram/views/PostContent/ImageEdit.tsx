@@ -1,5 +1,5 @@
 import { useContentService } from '@genaism/hooks/services';
-import { ContentService, Embedding } from '@knicos/genai-recom';
+import { ContentService, Embedding } from '@genai-fi/recom';
 import { Chip, IconButton } from '@mui/material';
 import { useEffect, useState } from 'react';
 import style from './style.module.css';

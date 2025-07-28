@@ -2,7 +2,7 @@ import { memo, useState } from 'react';
 import style from './style.module.css';
 import { GraphNode } from '../Graph/types';
 import Label from '../../components/Label/Label';
-import { ContentNodeId, UserNodeId } from '@knicos/genai-recom';
+import { ContentNodeId, UserNodeId } from '@genai-fi/recom';
 import { useServices } from '@genaism/hooks/services';
 
 const BORDER_SIZE = 5;

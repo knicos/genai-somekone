@@ -1,4 +1,4 @@
-import { Edge } from '@knicos/genai-recom';
+import { Edge } from '@genai-fi/recom';
 import { LogItem } from './loaderTypes';
 
 export function findLargestEdgeTimestamp(edges: Edge[]) {

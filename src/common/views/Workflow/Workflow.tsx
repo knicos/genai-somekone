@@ -8,7 +8,7 @@ import i18n from '@genaism/i18n';
 import RecommendationsHeatmap from '@genaism/common/visualisations/RecommendationsHeatmap/RecommendationsHeatmap';
 import MiniClusterGraph from '@genaism/common/visualisations/MiniClusterGraph/MiniClusterGraph';
 import { useServices } from '@genaism/hooks/services';
-import { ScoredRecommendation, UserNodeData, UserNodeId } from '@knicos/genai-recom';
+import { ScoredRecommendation, UserNodeData, UserNodeId } from '@genai-fi/recom';
 import style from './style.module.css';
 import { configuration } from '@genaism/common/state/configState';
 import Blackbox from './Blackbox';

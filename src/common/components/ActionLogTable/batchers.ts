@@ -1,4 +1,4 @@
-import { engagementFromLog } from '@knicos/genai-recom';
+import { engagementFromLog } from '@genai-fi/recom';
 import { ContentLogEntry } from './LogBatch';
 
 export function batchLogs(log: ContentLogEntry[], oldBatch: ContentLogEntry[][]): ContentLogEntry[][] {

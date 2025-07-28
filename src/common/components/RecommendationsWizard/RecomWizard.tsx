@@ -14,7 +14,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import CloseIcon from '@mui/icons-material/Close';
 import { useTranslation } from 'react-i18next';
 import DiversityOptions from './DiversityOptions';
-import { UserNodeId } from '@knicos/genai-recom';
+import { UserNodeId } from '@genai-fi/recom';
 import { useAtomValue } from 'jotai';
 import { appConfiguration, configuration } from '@genaism/common/state/configState';
 

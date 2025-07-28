@@ -7,7 +7,7 @@ import { SMConfig } from '../common/state/smConfig';
 import { compressToUTF16 } from 'lz-string';
 import { appendResearchLog } from '@genaism/services/research/research';
 import { onlineUsers } from '@genaism/common/state/sessionState';
-import { ContentNodeId, makeUserSnapshot, ProfilerService, UserNodeId } from '@knicos/genai-recom';
+import { ContentNodeId, makeUserSnapshot, ProfilerService, UserNodeId } from '@genai-fi/recom';
 import { useServices } from '@genaism/hooks/services';
 import { bytesToBase64DataUrl, dataUrlToBytes } from '@genaism/util/base64';
 import { Connection } from '@genai-fi/base/main/services/peer2peer/types';

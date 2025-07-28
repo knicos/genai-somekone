@@ -1,4 +1,4 @@
-import { GraphService, TopicNodeId, WeightedNode } from '@knicos/genai-recom';
+import { GraphService, TopicNodeId, WeightedNode } from '@genai-fi/recom';
 
 export function topicUserSimilarity(graph: GraphService, id: TopicNodeId): WeightedNode<TopicNodeId>[] {
     const scores = new Map<TopicNodeId, number>();

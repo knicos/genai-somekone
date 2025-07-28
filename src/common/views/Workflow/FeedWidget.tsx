@@ -1,6 +1,6 @@
 import { Widget } from '@genaism/common/components/WorkflowLayout';
 import { useProfilerService } from '@genaism/hooks/services';
-import { ScoredRecommendation, UserNodeData, UserNodeId } from '@knicos/genai-recom';
+import { ScoredRecommendation, UserNodeData, UserNodeId } from '@genai-fi/recom';
 import Feed from '../Feed/Feed';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import { useRef, useState } from 'react';

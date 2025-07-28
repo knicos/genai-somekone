@@ -21,7 +21,7 @@ import {
 import style from './style.module.css';
 import UserLabel from './UserLabel';
 import { menuSelectedUser, menuShowUserPanel } from '@genaism/apps/Dashboard/state/menuState';
-import { UserNodeId } from '@knicos/genai-recom';
+import { UserNodeId } from '@genai-fi/recom';
 import { useServices } from '@genaism/hooks/services';
 import { calculateParameters } from './parameters';
 import graphThemes from './graphTheme';

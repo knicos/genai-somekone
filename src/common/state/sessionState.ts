@@ -1,6 +1,6 @@
 import { ContentInjectReason, UserEntry } from '@genaism/protocol/protocol';
 import { UserInfo } from '@genaism/common/state/userInfo';
-import { ContentNodeId, UserNodeId } from '@knicos/genai-recom';
+import { ContentNodeId, UserNodeId } from '@genai-fi/recom';
 import { atom } from 'jotai';
 
 const USERNAME_KEY = 'genai_somekone_username';

@@ -1,4 +1,4 @@
-import { getContentService, getProfilerService } from '@knicos/genai-recom';
+import { getContentService, getProfilerService } from '@genai-fi/recom';
 import { render, screen } from '@testing-library/react';
 import { describe, it } from 'vitest';
 import PersonalProfile from './PersonalProfile';

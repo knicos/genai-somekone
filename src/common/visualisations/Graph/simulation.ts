@@ -1,4 +1,4 @@
-import { NodeID } from '@knicos/genai-recom';
+import { NodeID } from '@genai-fi/recom';
 import { GraphNode, InternalGraphLink } from './types';
 import * as d3 from 'd3';
 

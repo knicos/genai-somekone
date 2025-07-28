@@ -1,4 +1,4 @@
-import { UserNodeId } from '@knicos/genai-recom';
+import { UserNodeId } from '@genai-fi/recom';
 import { GraphNode } from '../../../../common/visualisations/Graph/types';
 import { isLight } from '@genaism/util/colours';
 import { useAtomValue } from 'jotai';

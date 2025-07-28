@@ -2,7 +2,7 @@ import { Fragment, MouseEvent, PointerEvent, useEffect, useId, useMemo, useRef, 
 import { Spinner } from '@genai-fi/base';
 import style from './style.module.css';
 import { zNormWeights } from '@genaism/util/weights';
-import { ContentNodeId, WeightedNode } from '@knicos/genai-recom';
+import { ContentNodeId, WeightedNode } from '@genai-fi/recom';
 import { useContentService } from '@genaism/hooks/services';
 import HeatLabel from './HeatLabel';
 import { useEventListen } from '@genaism/hooks/events';

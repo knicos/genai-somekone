@@ -1,4 +1,4 @@
-import { RecommendationOptions, ScoredRecommendation, UserNodeId } from '@knicos/genai-recom';
+import { RecommendationOptions, ScoredRecommendation, UserNodeId } from '@genai-fi/recom';
 import { useCallback, useEffect, useState } from 'react';
 import { useServices } from './services';
 

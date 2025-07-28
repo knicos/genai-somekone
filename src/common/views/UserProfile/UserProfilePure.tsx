@@ -5,7 +5,7 @@ import { Card, Cards } from '@genaism/common/components/DataCard';
 import TopicPie from '@genaism/common/components/TopicPie/TopicPie';
 import { useTranslation } from 'react-i18next';
 import { ForwardedRef, forwardRef, RefObject, useCallback, useState } from 'react';
-import { WeightedLabel } from '@knicos/genai-recom';
+import { WeightedLabel } from '@genai-fi/recom';
 import { TopicSummary } from './topicSummary';
 
 interface Props {

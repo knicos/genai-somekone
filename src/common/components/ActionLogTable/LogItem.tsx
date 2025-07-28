@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { generateMessage } from './message';
 import style from './style.module.css';
 import { timeAgo } from '../DataCard';
-import { LogEntry } from '@knicos/genai-recom';
+import { LogEntry } from '@genai-fi/recom';
 
 interface Props {
     item: LogEntry;

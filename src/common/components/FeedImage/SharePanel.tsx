@@ -3,7 +3,7 @@ import style from './style.module.css';
 import ActionPanel from './ActionPanel';
 import { useTranslation } from 'react-i18next';
 import UserListing from '../../views/UserListing/UserListing';
-import { UserNodeId } from '@knicos/genai-recom';
+import { UserNodeId } from '@genai-fi/recom';
 
 export type ShareKind = 'none' | 'public';
 

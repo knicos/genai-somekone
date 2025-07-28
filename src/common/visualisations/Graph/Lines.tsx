@@ -1,7 +1,7 @@
 import { InternalGraphLink, LinkStyle } from './types';
 import style from './style.module.css';
 import colours from '@genai-fi/base/css/colours.module.css';
-import { NodeID } from '@knicos/genai-recom';
+import { NodeID } from '@genai-fi/recom';
 
 interface Props<T extends NodeID> {
     linkList: InternalGraphLink<T, T>[];

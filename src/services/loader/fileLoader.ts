@@ -18,7 +18,7 @@ import {
     TopicNodeId,
     UserNodeData,
     UserNodeId,
-} from '@knicos/genai-recom';
+} from '@genai-fi/recom';
 import topics from './disallowedTopics.json';
 import { localiser } from '../localiser/localiser';
 

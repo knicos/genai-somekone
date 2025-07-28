@@ -1,4 +1,4 @@
-import { UserNodeId, WeightedLabel, WeightedNode } from '@knicos/genai-recom';
+import { UserNodeId, WeightedLabel, WeightedNode } from '@genai-fi/recom';
 import UserItem from './UserItem';
 import style from './style.module.css';
 import { colourLabel } from '@genaism/util/colourise';

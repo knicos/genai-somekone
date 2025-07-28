@@ -4,7 +4,7 @@ import RecommendationsProfile from './RecommendationsProfile';
 import TestWrapper from '@genaism/util/TestWrapper';
 import { appConfiguration } from '@genaism/common/state/configState';
 import userEvent from '@testing-library/user-event';
-import { getContentService, ScoredRecommendation } from '@knicos/genai-recom';
+import { getContentService, ScoredRecommendation } from '@genai-fi/recom';
 import { createStore } from 'jotai';
 
 interface RecReturn {

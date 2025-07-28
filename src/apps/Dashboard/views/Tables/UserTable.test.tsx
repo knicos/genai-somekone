@@ -1,6 +1,6 @@
 import { beforeEach, describe, it } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { ActionLogService, getContentService, GraphService, ProfilerService, ServiceBroker } from '@knicos/genai-recom';
+import { ActionLogService, getContentService, GraphService, ProfilerService, ServiceBroker } from '@genai-fi/recom';
 import { defaultServices, ServiceProvider } from '@genaism/hooks/services';
 import { MemoryRouter } from 'react-router-dom';
 import UserTable from './UserTable';

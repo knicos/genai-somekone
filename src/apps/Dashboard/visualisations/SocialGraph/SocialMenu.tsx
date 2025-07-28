@@ -18,7 +18,7 @@ import {
 } from '@genaism/apps/Dashboard/state/menuState';
 import ClusterMenu from './ClusterMenu';
 import ImageIcon from '@mui/icons-material/Image';
-import { UserNodeId } from '@knicos/genai-recom';
+import { UserNodeId } from '@genai-fi/recom';
 import DownloadIcon from '@mui/icons-material/Download';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { useEventEmit } from '@genaism/hooks/events';

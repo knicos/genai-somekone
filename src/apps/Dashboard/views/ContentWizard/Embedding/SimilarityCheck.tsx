@@ -1,6 +1,6 @@
 import style from '../style.module.css';
 import { useEffect, useReducer, useState } from 'react';
-import { ContentNodeId, embeddingSimilarity, WeightedNode } from '@knicos/genai-recom';
+import { ContentNodeId, embeddingSimilarity, WeightedNode } from '@genai-fi/recom';
 import { useContentService } from '@genaism/hooks/services';
 import ImageGrid from '@genaism/common/components/ImageGrid/ImageGrid';
 import { BarChart } from '@mui/x-charts';

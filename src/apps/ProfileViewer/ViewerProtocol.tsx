@@ -5,7 +5,7 @@ import { useAtomValue, useSetAtom } from 'jotai';
 import { appConfiguration } from '@genaism/common/state/configState';
 import { LogProvider } from '@genaism/hooks/logger';
 import { ContentLoader } from '@genaism/common/components/ContentLoader';
-import { UserNodeId } from '@knicos/genai-recom';
+import { UserNodeId } from '@genai-fi/recom';
 import { useServices } from '@genaism/hooks/services';
 import { usePeerData, usePeerSender, usePeerStatus } from '@genai-fi/base/hooks/peer';
 

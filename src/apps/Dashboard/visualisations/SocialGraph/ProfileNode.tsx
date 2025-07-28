@@ -10,7 +10,7 @@ import WordCloud from '../../../../common/visualisations/WordCloud/WordCloud';
 import style from './style.module.css';
 import Label from '@genaism/common/components/Label/Label';
 import { GraphNode } from '../../../../common/visualisations/Graph/types';
-import { ContentNodeId, UserNodeId, WeightedLabel } from '@knicos/genai-recom';
+import { ContentNodeId, UserNodeId, WeightedLabel } from '@genai-fi/recom';
 import { useUserProfile } from '@genaism/hooks/profiler';
 import { useContentService } from '@genaism/hooks/services';
 

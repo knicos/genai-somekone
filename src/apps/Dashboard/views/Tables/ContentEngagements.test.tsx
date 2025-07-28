@@ -7,7 +7,7 @@ import {
     GraphService,
     ProfilerService,
     ServiceBroker,
-} from '@knicos/genai-recom';
+} from '@genai-fi/recom';
 import { defaultServices, ServiceProvider } from '@genaism/hooks/services';
 import { MemoryRouter } from 'react-router-dom';
 import ContentEngagements from './ContentEngagements';

@@ -6,7 +6,7 @@ import {
     RecommendationOptions,
     RecommenderService,
     UserNodeId,
-} from '@knicos/genai-recom';
+} from '@genai-fi/recom';
 
 interface MinMax {
     min: number;

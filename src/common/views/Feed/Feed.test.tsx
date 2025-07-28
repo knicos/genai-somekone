@@ -2,7 +2,7 @@ import { describe, it, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import Feed from './Feed';
 import TestWrapper from '@genaism/util/TestWrapper';
-import { getContentService, getGraphService, getProfilerService } from '@knicos/genai-recom';
+import { getContentService, getGraphService, getProfilerService } from '@genai-fi/recom';
 
 const TEST_IMAGE =
     'https://images.pexels.com/photos/3030647/pexels-photo-3030647.jpeg?cs=srgb&dl=pexels-nextvoyage-3030647.jpg&fm=jpg';

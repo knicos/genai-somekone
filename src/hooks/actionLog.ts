@@ -1,4 +1,4 @@
-import { LogEntry, UserNodeId } from '@knicos/genai-recom';
+import { LogEntry, UserNodeId } from '@genai-fi/recom';
 import { useEffect, useMemo, useReducer } from 'react';
 import { useActionLogService, useBroker } from './services';
 

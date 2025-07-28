@@ -1,5 +1,5 @@
 import { Button } from '@genai-fi/base';
-import { ContentNodeId } from '@knicos/genai-recom';
+import { ContentNodeId } from '@genai-fi/recom';
 import { TextField } from '@mui/material';
 import { ChangeEvent, useCallback, useState } from 'react';
 import style from './style.module.css';

@@ -1,4 +1,4 @@
-import { NodeID } from '@knicos/genai-recom';
+import { NodeID } from '@genai-fi/recom';
 import { GraphNode } from './types';
 import { ZoomState } from './controls';
 

@@ -1,4 +1,4 @@
-import { ProfilerService, UserNodeId } from '@knicos/genai-recom';
+import { ProfilerService, UserNodeId } from '@genai-fi/recom';
 import { GraphNode } from '../../../../common/visualisations/Graph/types';
 import { SimilarityData } from '@genaism/hooks/similarity';
 import { colourLabel } from '../../../../util/colourise';

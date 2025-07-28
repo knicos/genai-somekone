@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import style from './style.module.css';
-import { ContentNodeId } from '@knicos/genai-recom';
+import { ContentNodeId } from '@genai-fi/recom';
 import { useContentData } from '@genaism/hooks/content';
 
 interface Props {

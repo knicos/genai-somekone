@@ -1,4 +1,4 @@
-import { getProfilerService } from '@knicos/genai-recom';
+import { getProfilerService } from '@genai-fi/recom';
 import { render, screen } from '@testing-library/react';
 import { describe, it, vi } from 'vitest';
 import UserListing from './UserListing';

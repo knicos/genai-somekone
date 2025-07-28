@@ -1,6 +1,6 @@
 import { describe, it } from 'vitest';
 import { findNearestSlot, heatmapGrid } from './grid';
-import { getContentService } from '@knicos/genai-recom';
+import { getContentService } from '@genai-fi/recom';
 
 describe('Grid findNearestSlot', () => {
     it('finds the first slot if empty', async ({ expect }) => {
