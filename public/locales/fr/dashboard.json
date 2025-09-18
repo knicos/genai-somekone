@@ -1,33 +1,246 @@
 {
   "library": {
-    "title": "Bibliothèque",
-    "guidedDefault": {
-      "title": "Parcours guidé (par défaut)",
-      "description": "Commencer avec un guide et un jeu de contenus par défaut."
+    "title": "Sélection du contenu",
+    "generic": {
+      "title": "Contenu original",
+      "description": "Le jeu de données Somekone original sélectionné par des enfants."
     },
-    "reetta": {
-      "title": "Jeu de contenus Reetta",
-      "description": "Charger le jeu d’images Reetta pour explorer le fil et les recommandations."
+    "guidedDefault": {
+      "title": "Concepts clés",
+      "description": "Présenter les principaux mécanismes des réseaux sociaux avec une interface guidée pas à pas pour la classe."
+    },
+    "kiosk": {
+      "title": "Démo kiosque",
+      "description": "Une démonstration automatisée qui tourne en boucle jusqu’à ce que l’utilisateur interagisse."
     },
     "public": {
       "title": "Démonstration publique",
-      "description": "Mode démo : impression désactivée, nom d’utilisateur automatique et sessions limitées."
+      "description": "Utiliser un réseau social restreint et plus sûr lors de présentations à un large public."
     },
     "example": {
-      "title": "Exemple (données de démonstration)",
-      "description": "Charger un ensemble d’images et des données de démo pour tester les fonctionnalités."
-    },
-    "generic": {
-      "title": "Tableau de bord (par défaut)",
-      "description": "Ouvrir le tableau de bord sans contenu spécifique."
+      "title": "Données d’exemple",
+      "description": "Démontrer avec des données anonymisées provenant de 19 enfants en contexte de classe."
     },
     "blank": {
-      "title": "Projet vierge",
-      "description": "Ouvrir l’assistant de contenu sans fichier (configuration vierge)."
+      "title": "Vierge",
+      "description": "Ajouter vos propres photos ou sélectionner depuis le web pour créer un contenu personnalisé pour l’app."
     },
-    "kiosk": {
-      "title": "Mode kiosque",
-      "description": "Afficher un ensemble prédéfini d’images en mode kiosque."
+    "reetta": {
+      "title": "Contenu générique",
+      "description": "Plus de 700 images libres soigneusement sélectionnées dans 7 catégories principales : nourriture, loisirs, animaux, style de vie, mode, sport et paysages."
+    }
+  },
+
+  "menu": {
+    "vis": {
+      "title": "Visualisations",
+      "socialgraph": "Réseau social",
+      "heatmap": "Cartes thermiques",
+      "usergrid": "Grille d’utilisateurs",
+      "coengagement": "Relations entre contenus",
+      "topics": "Relations entre sujets",
+      "workflow": "Flux de données"
+    },
+    "tables": {
+      "title": "Tableaux de données",
+      "actionlog": "Journal des actions",
+      "userstats": "Table des utilisateurs",
+      "contentengage": "Engagements sur les contenus",
+      "topicengage": "Engagements par sujet"
+    },
+    "guides": {
+      "title": "Interfaces guidées",
+      "default": "Concepts clés",
+      "kiosk": "Kiosque",
+      "none": "Aucune",
+      "custom": "Ouvrir un guide"
+    },
+    "tools": {
+      "title": "Outils",
+      "addcontent": "Ajouter du contenu",
+      "browseContent": "Parcourir le contenu",
+      "simulator": "Simulateur d’utilisateurs"
+    },
+    "settings": {
+      "title": "Réglages",
+      "app": "Interface de l’app",
+      "recommendation": "Recommandations"
+    }
+  },
+
+  "settings": {
+    "titles": {
+      "app": "Réglages de l’interface",
+      "feed": "Actions du fil",
+      "appmenu": "Éléments du menu",
+      "recom": "Recommandations",
+      "visualisation": "Visualisations"
+    },
+    "app": {
+      "hideFeedMenu": "Masquer le menu du bas",
+      "hideDataView": "Désactiver la vue des données",
+      "hideProfileView": "Désactiver la vue profil",
+      "hideRecommendationsView": "Désactiver la vue recommandations",
+      "hidePostContent": "Désactiver la publication de contenu",
+      "hideOwnProfile": "Désactiver la page de profil personnel",
+      "showFeedImageLabels": "Afficher les hashtags sur les images",
+      "hideSharing": "Désactiver le partage",
+      "disableComments": "Désactiver les commentaires",
+      "disableLiking": "Désactiver les mentions J’aime",
+      "disableFollowing": "Désactiver l’abonnement",
+      "disableSharing": "Désactiver le partage",
+      "showRecommendationWizard": "Afficher l’assistant",
+      "showCandidateWizard": "Personnalisé ou non personnalisé",
+      "showCandidateRefinementWizard": "Afficher plus d’options de candidats",
+      "showScoringWizard": "Afficher les options de score",
+      "showDiversityWizard": "Afficher les options de diversité",
+      "hideRecommendationMenu": "Masquer le menu",
+      "hideExplainedScores": "Masquer l’explication du score",
+      "hideCandidateOrigin": "Masquer l’origine de l’image"
+    },
+    "vis": {
+      "socialMenu": "Afficher le menu du réseau social",
+      "gridMenu": "Afficher le menu de la grille d’utilisateurs"
+    }
+  },
+
+  "dashboard": {
+    "titles": {
+      "settings": "Réglages",
+      "general": "Général",
+      "feedApp": "Application Fil",
+      "flowApp": "Application Flux",
+      "recommendations": "Recommandations",
+      "socialGraph": "Graphe social",
+      "people": "Personnes",
+      "deleteUser": "Supprimer l’utilisateur",
+      "connectUsers": "Relier des utilisateurs",
+      "userSelect": "Sélectionner un utilisateur",
+      "usersSelect": "Sélectionner des utilisateurs",
+      "simulator": "Simulateur d’utilisateurs",
+      "replay": "Relecture"
+    },
+    "labels": {
+      "usePopularCandidates": "Utiliser des candidats populaires",
+      "popularityScore": "Utiliser la popularité",
+      "heatmapGlobal": "Popularité des images",
+      "heatmapEngagement": "Engagement passé sur les images",
+      "heatmapRecommendation": "Probabilité de recommandation d’image",
+      "theme": "Thème",
+      "themeDefault": "Par défaut",
+      "themeHighContrast": "Haut contraste",
+      "showSocialGraphSettings": "Réglages du graphe",
+      "saveGraphImage": "Télécharger le graphe en image",
+      "heatmapUsers": "Sélectionner les utilisateurs à afficher",
+      "refresh": "Actualiser",
+      "invertHeatmap": "Inverser la carte thermique",
+      "shareTip": "Afficher le code de connexion",
+      "openTip": "Importer des données enregistrées",
+      "saveTip": "Télécharger les données",
+      "engagedImages": "Afficher les images ayant reçu des interactions",
+      "topicCloud": "Afficher le nuage de sujets",
+      "showLines": "Afficher les lignes de liaison",
+      "showLabels": "Afficher les noms des utilisateurs",
+      "edgeScaling": "Modifier la taille du graphe",
+      "similarPercent": "Seuil de similarité pour afficher les liens",
+      "nodeCharge": "Force de répulsion",
+      "hideFeedMenu": "Masquer le menu dans la vue Fil",
+      "refreshGraph": "Actualiser l’affichage du graphe",
+      "clusterColouring": "Colorer les utilisateurs par cluster",
+      "egoSelect": "Masquer les non liés lors d’une sélection",
+      "useTopicCandidates": "Utiliser des candidats depuis les étiquettes de goût",
+      "useRandomCandidates": "Utiliser des candidats aléatoires",
+      "useCoengagedCandidates": "Utiliser des candidats co-engagés",
+      "useSimilarUserCandidates": "Utiliser des candidats d’utilisateurs similaires",
+      "candidates": "Mécanismes de sélection des candidats",
+      "scoring": "Caractéristiques de score",
+      "selectionMechanism": "Stratégie de sélection finale",
+      "tasteScore": "Utiliser le score de similarité de goût",
+      "sharingScore": "Utiliser la probabilité de partage",
+      "coengagementScore": "Utiliser la similarité de co-engagements",
+      "followingScore": "Utiliser la probabilité d’abonnement",
+      "commentingScore": "Utiliser la probabilité de commenter",
+      "lastSeenScore": "Utiliser le temps écoulé depuis la dernière vue",
+      "reactionScore": "Utiliser la probabilité de réaction",
+      "viewingScore": "Utiliser la probabilité de visualisation",
+      "rankSelection": "Utiliser les candidats les mieux classés",
+      "distributionSelection": "Utiliser le score comme probabilité de sélection",
+      "disableFeedApp": "Mettre tous les utilisateurs en pause",
+      "hideDataView": "Masquer la vue des données",
+      "hideProfileView": "Masquer la vue profil",
+      "hideRecommendationsView": "Masquer la vue recommandations",
+      "showData": "Afficher les données des journaux",
+      "showProfile": "Afficher le profil utilisateur",
+      "showRecommendations": "Afficher les recommandations",
+      "deleteUser": "Supprimer l’utilisateur",
+      "showFeed": "Afficher le fil utilisateur",
+      "collectResearch": "Collecter des données de recherche",
+      "showFeedImageLabels": "Afficher les étiquettes d’images dans le fil",
+      "allLinks": "Inclure tous les liens",
+      "showReplay": "Afficher les contrôles de relecture",
+      "stop": "Arrêter",
+      "play": "Lire",
+      "appOptions": "Options de l’app Fil",
+      "none": "aucun",
+      "showSettings": "Réglages avancés",
+      "showTools": "Afficher le menu des outils avancés",
+      "toolsMenu": "Outils avancés",
+      "toolAnonymise": "Anonymiser toutes les données",
+      "showMainMenu": "Afficher le menu principal de l’app",
+      "alwaysActive": "Garder l’image actuelle active",
+      "profileImage": "Images de profil",
+      "similarityThreshold": "Seuil de différence de similarité",
+      "limitLinks": "Nombre maximal de liens par nœud",
+      "agentCount": "Nombre d’agents",
+      "playbackSpeed": "Vitesse",
+      "autoCamera": "Caméra automatique",
+      "autoEdges": "Réglage automatique des liens",
+      "appType": "Type d’application utilisateur",
+      "feedApp": "Style Instagram",
+      "flowApp": "Style flux de données",
+      "blackboxFlow": "Boîter le flux de données (mode boîte noire)",
+      "hideFeedInWorkflow": "Masquer le fil dans le flux de données",
+      "heatmapFactor": "Contraste de la carte",
+      "heatmapDimension": "Taille de la grille"
+    },
+    "messages": {
+      "connection": "Allez à l’adresse ci-dessous et entrez le code <Code>{{codeText}}</Code>, ou utilisez le code QR.",
+      "waitingPeople": "En attente de personnes…",
+      "onePerson": "{{count}} personne a rejoint.",
+      "manyPeople": "{{count}} personnes ont rejoint.",
+      "loading": "Création de votre réseau social…",
+      "confirmDeleteUser": "Voulez-vous vraiment supprimer l’utilisateur « {{name}} »"
+    },
+    "actions": {
+      "start": "Démarrer",
+      "cancel": "Annuler",
+      "close": "Fermer",
+      "delete": "Supprimer",
+      "demo": "Démo",
+      "select": "Sélectionner",
+      "simulate": "Simuler",
+      "zoomIn": "Zoom avant",
+      "zoomOut": "Zoom arrière"
+    },
+    "aria": {
+      "linkForFeed": "Lien pour un nouveau fil utilisateur",
+      "socialMenu": "Menu du graphe social",
+      "socialUserMenu": "Menu pour un utilisateur",
+      "mainMenu": "Ouvrir ou fermer le menu latéral principal"
+    }
+  },
+
+  "tables": {
+    "titles": {
+      "actionlog": "Journal des actions",
+      "userstats": "Table des utilisateurs",
+      "contentengage": "Engagements sur les contenus",
+      "topictable": "Engagements par sujet"
+    },
+    "tooltips": {
+      "columns": "Colonnes",
+      "filter": "Filtrer",
+      "export": "Exporter en CSV"
     }
   }
 }
