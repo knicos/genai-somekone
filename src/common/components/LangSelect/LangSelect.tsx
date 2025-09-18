@@ -8,6 +8,7 @@ export const LANGS = [
     { name: 'de', label: 'Deutsch' },
     { name: 'en', label: 'English' },
     { name: 'fi', label: 'Suomi' },
+    { name: 'fr', label: 'Français' },
 ];
 
 export default function LangSelect() {
