@@ -1,0 +1,33 @@
+{
+  "library": {
+    "title": "Bibliothèque",
+    "guidedDefault": {
+      "title": "Parcours guidé (par défaut)",
+      "description": "Commencer avec un guide et un jeu de contenus par défaut."
+    },
+    "reetta": {
+      "title": "Jeu de contenus Reetta",
+      "description": "Charger le jeu d’images Reetta pour explorer le fil et les recommandations."
+    },
+    "public": {
+      "title": "Démonstration publique",
+      "description": "Mode démo : impression désactivée, nom d’utilisateur automatique et sessions limitées."
+    },
+    "example": {
+      "title": "Exemple (données de démonstration)",
+      "description": "Charger un ensemble d’images et des données de démo pour tester les fonctionnalités."
+    },
+    "generic": {
+      "title": "Tableau de bord (par défaut)",
+      "description": "Ouvrir le tableau de bord sans contenu spécifique."
+    },
+    "blank": {
+      "title": "Projet vierge",
+      "description": "Ouvrir l’assistant de contenu sans fichier (configuration vierge)."
+    },
+    "kiosk": {
+      "title": "Mode kiosque",
+      "description": "Afficher un ensemble prédéfini d’images en mode kiosque."
+    }
+  }
+}

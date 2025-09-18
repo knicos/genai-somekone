@@ -1,7 +1,5 @@
 {
-  "app": {
-    "language": "Changer de langue"
-  },
+  "app": { "language": "Changer de langue" },
   "about": {
     "back": "Retour",
     "title": "Génération IA",
@@ -110,9 +108,7 @@
       "contentLoad": "Contenu multimédia",
       "networkType": "Information"
     },
-    "actions": {
-      "close": "Fermer"
-    }
+    "actions": { "close": "Fermer" }
   },
   "workflow": {
     "titles": {
@@ -121,10 +117,7 @@
       "profile": "Profil",
       "map": "Carte des recommandations"
     },
-    "actions": {
-      "selectUser": "Sélectionner un utilisateur",
-      "refresh": "Actualiser"
-    }
+    "actions": { "selectUser": "Sélectionner un utilisateur", "refresh": "Actualiser" }
   },
   "feed": {
     "actions": {
@@ -144,9 +137,7 @@
       "recommendations": "Vos recommandations",
       "post": "Publier un contenu"
     },
-    "placeholders": {
-      "comment": "écrire un commentaire ici…"
-    },
+    "placeholders": { "comment": "écrire un commentaire ici…" },
     "messages": {
       "noComments": "Pas encore de commentaires.",
       "usernameError": {
@@ -154,9 +145,7 @@
         "long": "Le nom d’utilisateur est trop long",
         "short": "Le nom d’utilisateur doit comporter au moins 3 caractères"
       },
-      "fullnameError": {
-        "missing": "Votre nom complet est requis"
-      },
+      "fullnameError": { "missing": "Votre nom complet est requis" },
       "alreadyOpen": "Vous avez déjà l’application ouverte dans un autre onglet.",
       "sharedBy": "Partagé par {{name}}."
     },
@@ -208,12 +197,7 @@
       "yourPosts": "Vos publications",
       "missingPosts": "Quand vous ajouterez vos propres publications, elles apparaîtront ici."
     },
-    "actions": {
-      "more": "Plus",
-      "post": "Publier",
-      "print": "Imprimer",
-      "download": "Télécharger l’image"
-    },
+    "actions": { "more": "Plus", "post": "Publier", "print": "Imprimer", "download": "Télécharger l’image" },
     "messages": {
       "connection": "Allez à l’adresse ci-dessous et saisissez le code <Code>{{codeText}}</Code>, ou utilisez le code QR."
     }
@@ -306,13 +290,7 @@
     }
   },
   "start": {
-    "actions": {
-      "createNew": "Créer une nouvelle session",
-      "go": "Aller"
-    },
-    "labels": {
-      "enterCode": "Saisir le code PIN",
-      "or": "ou"
-    }
+    "actions": { "createNew": "Créer une nouvelle session", "go": "Aller" },
+    "labels": { "enterCode": "Saisir le code PIN", "or": "ou" }
   }
 }

@@ -1,0 +1,83 @@
+{
+  "creator": {
+    "titles": {
+      "creator": "Créateur",
+      "captureImages": "Capturer des images",
+      "query": "Rechercher des images",
+      "summary": "Résumé des tags",
+      "embedding": "Créer des embeddings",
+      "similarity": "Vérifier la similarité",
+      "mapping": "Projeter en points",
+      "points": "Carte des images",
+      "cluster": "Regroupement (clustering)",
+      "embeddingTrain": "Entraînement des embeddings",
+      "mapTraining": "Entraînement de la projection",
+      "clusterViewer": "Vérification des clusters",
+      "browser": "Navigateur",
+      "imageDetail": "Image sélectionnée",
+      "addTag": "Ajouter un tag",
+      "local": "Téléverser",
+      "settings": "Réglages de l’outil de contenus"
+    },
+    "tooltips": {
+      "deleteAll": "Supprimer toutes les images",
+      "download": "Télécharger le contenu (Zip)"
+    },
+    "labels": {
+      "search": "Rechercher",
+      "epochs": "Époques",
+      "loss": "Perte (loss)",
+      "validationLoss": "Perte de validation",
+      "maxMemberDist": "Distance maximale entre membres",
+      "minClusters": "Nombre cible de clusters",
+      "minClusterSize": "Taille cible de cluster",
+      "count": "Compte : {{count}}",
+      "latest": "Récents",
+      "popular": "Populaires",
+      "numberOfImages": "Combien d’images ajouter ?",
+      "dimensions": "Dimensions",
+      "useLabels": "Utiliser les tags",
+      "usePixels": "Utiliser les pixels",
+      "useEngagement": "Utiliser les données d’engagement",
+      "learningRate": "Taux d’apprentissage",
+      "imageSimilarity": "Image",
+      "similarityDistrib": "Global",
+      "clusterImages": "Images",
+      "clusterStats": "Tags",
+      "clusterSummary": "Résumé",
+      "addTag": "Nom du tag",
+      "selectTag": "Sélectionner un tag",
+      "selectCluster": "Sélectionner un cluster",
+      "filter": "Filtrer",
+      "noFilter": "Aucun",
+      "byTag": "Par tag",
+      "byCluster": "Par cluster",
+      "noTags": "Aucun tag",
+      "advanced": "Afficher les options avancées",
+      "showSettings": "Afficher les réglages de l’outil de contenus"
+    },
+    "actions": {
+      "addImages": "Ajouter des images",
+      "generateEmbed": "Générer",
+      "saveEncoder": "Enregistrer",
+      "cluster": "Créer les clusters",
+      "go": "Chercher",
+      "add": "Ajouter",
+      "close": "Fermer",
+      "deleteTags": "Supprimer les tags",
+      "deleteImagesWithTags": "Supprimer les images ayant ces tags",
+      "mergeTags": "Fusionner les tags",
+      "findMoreTag": "Trouver plus avec ces tags",
+      "train": "Entraîner",
+      "deleteCluster": "Supprimer les images du cluster",
+      "deleteImage": "Supprimer l’image",
+      "cancel": "Annuler",
+      "addTagToCluster": "Ajouter un tag au cluster",
+      "unselectAll": "Tout désélectionner"
+    },
+    "messages": {
+      "imageSearch": "Choisissez une requête avant d’ajouter automatiquement les images",
+      "needsRegen": "Les embeddings doivent être recréés"
+    }
+  }
+}
