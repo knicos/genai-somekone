@@ -1,0 +1,296 @@
+{
+  "app": { "language": "Changer de langue" },
+  "about": {
+    "back": "Retour",
+    "title": "Génération IA",
+    "privacyTitle": "Avis de confidentialité",
+    "privacy": [
+      "Bienvenue dans notre Avis de confidentialité, conçu pour vous informer sur la manière dont nous traitons vos données personnelles conformément au Règlement général sur la protection des données (RGPD) lorsque vous utilisez notre site web intégrant l’outil GenAI Somekone.",
+      "Pour clarifier les termes utilisés, rappelons quelques notions du RGPD. Le « responsable du traitement » désigne notre organisation, car nous décidons comment et pourquoi vos données personnelles sont utilisées ; à ce titre, nous sommes responsables de leur protection. Les « données personnelles » comprennent toute information permettant de vous identifier directement ou indirectement, comme votre adresse IP. Le « traitement » couvre toutes les opérations effectuées sur vos données, comme la collecte, le stockage, l’utilisation et la suppression.",
+      "Il est important de lire cet avis pour comprendre quelles données nous collectons, pourquoi nous les collectons, ce que nous en faisons et quels sont vos droits.",
+      "Si vous avez des questions à propos de cet avis, veuillez contacter le responsable du traitement :",
+      "**Dr. Nicolas Pope**,",
+      "**Adresse postale :** University of Eastern Finland, Länsikatu 15, 80110 Joensuu, Finlande.",
+      "**E-mail :** nicolas.pope@uef.fi",
+      "**Téléphone :** +358 505 288 449.",
+      "### 1. Activité de traitement :",
+      "Nous journalisons les adresses IP.",
+      "Cependant, nous n’utilisons pas de cookies à des fins de suivi ou d’analytique ; le contenu est fourni uniquement sur la base de vos entrées.",
+      "### 2. Finalités du traitement :",
+      "La journalisation des adresses IP nous aide à maintenir l’intégrité et la sécurité du site en identifiant et en empêchant les activités malveillantes.",
+      "### 3. Base juridique du traitement :",
+      "Principalement, nous traitons les adresses IP pour des raisons de sécurité, sur la base de notre intérêt légitime à protéger notre site et nos données au sens de l’article 6(1)(f) du RGPD. Nous pouvons également traiter des données sur la base de votre consentement au titre de l’article 6(1)(a) si vous souhaitez exercer votre droit d’accès à votre adresse IP enregistrée. En outre, nous pouvons traiter vos données personnelles si nous y sommes tenus par une décision d’un tribunal compétent au titre de l’article 6(1)(c).",
+      "### 4. Intérêts légitimes poursuivis :",
+      "Notre objectif est d’assurer le fonctionnement du site en maintenant son intégrité, sa sécurité et en prévenant les abus.",
+      "### 5. Sécurité :",
+      "Nous mettons en œuvre des mesures de sécurité pour protéger vos adresses IP contre les accès illicites ou les dommages. Vos adresses IP sont chiffrées lors de tout transfert ultérieur.",
+      "### 6. Destinataires des données :",
+      "Seul le personnel autorisé du site peut accéder à votre adresse IP à des fins de sécurité et de maintenance.",
+      "### 7. Transferts de données :",
+      "Les adresses IP peuvent être transférées vers des serveurs Microsoft ; nous veillons au respect du RGPD pour la protection des données.",
+      "### 8. Limitation de conservation :",
+      "Nous conservons les adresses IP uniquement le temps nécessaire, généralement jusqu’à 7 jours, sauf obligation légale contraire.",
+      "### 9. Vos droits :",
+      "Au titre du RGPD, vous disposez de droits, notamment :",
+      "* Droit à l’information : en plus d’être informé des finalités du traitement, des durées de conservation et des destinataires, vous avez le droit de savoir comment nous collectons vos données. Nous collectons votre adresse IP lorsque vous visitez notre site.",
+      "* Droit d’accès : vous pouvez demander une copie de votre adresse IP enregistrée et des données de journal associées.",
+      "* Droit de rectification : si les données enregistrées sont inexactes ou incomplètes, vous pouvez demander leur rectification, bien que l’adresse IP ne se corrige pas de la même manière que d’autres données.",
+      "* Droit à l’effacement : vous pouvez demander la suppression de votre adresse IP dans les 7 jours suivant votre dernière visite, puisque votre adresse est automatiquement supprimée après 7 jours.",
+      "* Droit d’opposition : vous pouvez vous opposer au traitement de vos adresses IP.",
+      "* Droit d’introduire une réclamation : vous pouvez déposer une réclamation auprès de l’autorité de contrôle si vous estimez que vos données ne sont pas traitées conformément au RGPD.",
+      "### 10. Mises à jour de cet avis :",
+      "Nous pouvons mettre à jour cet avis pour refléter les changements de nos pratiques de traitement ou des exigences légales. Nous vous informerons de toute modification.",
+      "Nous accordons une grande importance à votre vie privée et nous nous engageons à protéger vos données et à respecter le RGPD. Pour toute question ou pour exercer vos droits, contactez-nous à nicolas.pope@uef.fi."
+    ]
+  },
+  "common": {
+    "errors": {
+      "unknown": "Un problème est survenu, veuillez réessayer.",
+      "content_not_found": "Impossible de télécharger le contenu de l’image",
+      "peer_failed": "Connexion impossible",
+      "peer_retrying": "Connexion perdue, nouvelle tentative…",
+      "peer_nortc": "Impossible de démarrer le pair-à-pair, avez-vous une connexion Internet ?",
+      "peer_no_peer": "Le pair est introuvable",
+      "peer_nowebcam": "Vous devez autoriser l’utilisation de la webcam pour créer l’appel",
+      "missing_dependency": "Ce fichier dépend d’un contenu manquant",
+      "missing_embeddings": "Les images n’ont pas d’empreintes (embeddings)",
+      "missing_points": "Les images ne sont pas cartographiées",
+      "missing_cluster": "Les images n’ont pas de cluster"
+    },
+    "titles": {
+      "error": "Problème",
+      "saving": "Enregistrement",
+      "paused": "En pause"
+    },
+    "messages": {
+      "paused": "L’application a été mise en pause."
+    },
+    "actions": {
+      "close": "Fermer"
+    }
+  },
+  "loader": {
+    "messages": {
+      "cameraPermission": "Pour permettre des connexions directes entre appareils, autorisez temporairement l’accès à la caméra.",
+      "connecting": "Tentative de connexion…",
+      "disconnected": "Déconnecté de l’autre appareil",
+      "retry": "Nouvelle tentative…",
+      "content_load": "Chargement du contenu",
+      "content_download": "Téléchargement du contenu",
+      "ready": "Connecté",
+      "content_none": "Contenu prêt",
+      "starting": "Connexion…",
+      "wifiNetwork": "Vos données transitent par Internet car vous n’utilisez pas le même réseau Wi-Fi.",
+      "permNetwork": "Vos données transitent par Internet car vous n’avez pas autorisé l’accès à la caméra.",
+      "quality0": "Vérification…",
+      "quality1": "Mauvaise connexion",
+      "quality2": "Connecté",
+      "quality3": "Connecté",
+      "failed": "Aucune connexion"
+    },
+    "errors": {
+      "unknown": "Un problème de connexion est survenu",
+      "id-in-use": "Quelqu’un utilise déjà ce code",
+      "peer-not-found": "Le code est introuvable",
+      "missing-ice": "Connexion impossible, vous êtes peut-être hors ligne.",
+      "no-signaling": "Notre serveur ne répond pas",
+      "bad-browser": "Votre appareil ne prend pas en charge cette application",
+      "unknownContent": "Problème avec le contenu multimédia",
+      "load": "Impossible de charger le contenu multimédia",
+      "download": "Impossible de télécharger le contenu multimédia",
+      "none": "Ok"
+    },
+    "titles": {
+      "iceConfig": "Configuration",
+      "permission": "Autorisations",
+      "connecting": "Connexion",
+      "error": "Problème",
+      "contentLoad": "Contenu multimédia",
+      "networkType": "Information"
+    },
+    "actions": { "close": "Fermer" }
+  },
+  "workflow": {
+    "titles": {
+      "data": "Données",
+      "cluster": "Utilisateurs similaires",
+      "profile": "Profil",
+      "map": "Carte des recommandations"
+    },
+    "actions": { "selectUser": "Sélectionner un utilisateur", "refresh": "Actualiser" }
+  },
+  "feed": {
+    "actions": {
+      "follow": "Suivre",
+      "unfollow": "Ne plus suivre",
+      "enterUser": "Entrer",
+      "moreComments": "Plus de commentaires",
+      "post": "Publier"
+    },
+    "titles": {
+      "shareWith": "Partager avec",
+      "main": "Somekone",
+      "home": "Fil d’images",
+      "data": "Vos données",
+      "share": "Partager avec d’autres",
+      "profile": "Votre profil",
+      "recommendations": "Vos recommandations",
+      "post": "Publier un contenu"
+    },
+    "placeholders": { "comment": "écrire un commentaire ici…" },
+    "messages": {
+      "noComments": "Pas encore de commentaires.",
+      "usernameError": {
+        "missing": "Un nom d’utilisateur est requis",
+        "long": "Le nom d’utilisateur est trop long",
+        "short": "Le nom d’utilisateur doit comporter au moins 3 caractères"
+      },
+      "fullnameError": { "missing": "Votre nom complet est requis" },
+      "alreadyOpen": "Vous avez déjà l’application ouverte dans un autre onglet.",
+      "sharedBy": "Partagé par {{name}}."
+    },
+    "actionlog": {
+      "dwell": "Vu pendant {{time}} seconde(s)",
+      "inactive": "Inactif pendant {{time}} seconde(s)",
+      "seen": "Image vue",
+      "follow": "Créateur suivi",
+      "like": "Image aimée",
+      "share_public": "Image partagée",
+      "comment": "Commentaire de longueur {{length}}",
+      "engagement": "Engagement",
+      "end": "Arrêt de l’utilisation de l’app",
+      "unreact": "Réaction supprimée",
+      "hide": "Image masquée"
+    },
+    "labels": {
+      "enterUsername": "Entrer le nom d’utilisateur",
+      "enterFullname": "Entrer le nom complet",
+      "hidden": "Masqué"
+    },
+    "aria": {
+      "showLikeOptions": "Aimer l’image",
+      "showComments": "Afficher les commentaires",
+      "showShareOptions": "Afficher les options de partage",
+      "shareLink": "Lien pour ouvrir l’application du fil",
+      "restoreUser": "Restaurer une session précédente",
+      "hide": "Masquer cette image"
+    }
+  },
+  "profile": {
+    "titles": {
+      "sharingPreference": "Préférences de partage",
+      "viewPreference": "Préférences d’affichage",
+      "commentPreference": "Préférences de commentaires",
+      "followPreference": "Préférences d’abonnements",
+      "reactPreference": "Préférences de réactions",
+      "yourData": "Vos données",
+      "yourProfile": "Votre profil",
+      "yourRecommendations": "Vos recommandations",
+      "shareProfile": "Partager le profil",
+      "engagement": "Votre engagement",
+      "newPost": "Créer une publication"
+    },
+    "labels": {
+      "followers": "abonnés",
+      "posts": "publications",
+      "follows": "abonnements",
+      "yourPosts": "Vos publications",
+      "missingPosts": "Quand vous ajouterez vos propres publications, elles apparaîtront ici."
+    },
+    "actions": { "more": "Plus", "post": "Publier", "print": "Imprimer", "download": "Télécharger l’image" },
+    "messages": {
+      "connection": "Allez à l’adresse ci-dessous et saisissez le code <Code>{{codeText}}</Code>, ou utilisez le code QR."
+    }
+  },
+  "recommendations": {
+    "actions": {
+      "back": "Retour",
+      "continue": "Continuer",
+      "close": "Fermer",
+      "change": "Modifier",
+      "refresh": "Actualiser l’affichage",
+      "invert": "Inverser"
+    },
+    "labels": {
+      "topicCandidate": "Trouvé via #{{topic}}.",
+      "popularCandidate": "Trouvé parmi les images populaires.",
+      "random": "Trouvé au hasard parmi toutes les images.",
+      "coengagedCandidate": "Trouvé à partir d’une autre image avec laquelle vous avez interagi.",
+      "similarUserCandidate": "L’utilisateur « {{userName}} » vous ressemble et a interagi avec cette image.",
+      "candidateAll": "Tous ceux-ci (par défaut)",
+      "candidateLabels": "En utilisant vos hashtags favoris",
+      "candidateUsers": "Depuis des personnes similaires",
+      "candidateCoengaged": "Depuis vos interactions récentes",
+      "candidateRandom": "N’importe quelles images",
+      "candidatePersonal": "Personnalisé",
+      "candidatePopular": "Populaire",
+      "candidateRecent": "Récemment publié",
+      "candidateNonPersonal": "Non personnalisé",
+      "candidatePersonalAndNon": "Les deux (par défaut)",
+      "scoringPredict": "Prédire l’engagement",
+      "scoringGeneral": "Score basé seulement sur le contenu",
+      "scoringRandom": "Image aléatoire",
+      "scoringAll": "Combiner tous les scores (par défaut)",
+      "score": "Score",
+      "diversity": "Diversité",
+      "selectionProbability": "Ajouter un peu de diversité",
+      "selectionRank": "Sans diversité",
+      "imageGrid": "Afficher les meilleures recommandations",
+      "heatmap": "Afficher toutes les images"
+    },
+    "titles": {
+      "candidateDiscovery": "Comment les candidats sont-ils découverts ?",
+      "scoringOptions": "Comment classer les images ?",
+      "candidatesPersonal": "Quels candidats personnels ?",
+      "candidatesNonPersonal": "Comment sélectionner les candidats non personnels ?",
+      "diversityOptions": "Faut-il de la diversité ?",
+      "candidateOrigin": "Origine",
+      "predictedScore": "Engagement prédit",
+      "explainScore": "Pourquoi vous pourriez interagir"
+    },
+    "descriptions": {
+      "selectHint": "Sélectionnez une image pour voir pourquoi elle est suggérée.",
+      "heatHint": "Cliquez pour zoomer et explorer ce que vous pouvez voir.",
+      "scoringPredict": "Prédire si vous pourriez interagir avec l’image",
+      "scoringGeneral": "Ne considérer que la popularité",
+      "scoringRandom": "Choisir un ordre quelconque sans score",
+      "scoringAll": "Utiliser une combinaison de tout",
+      "candidateAll": "",
+      "candidateUsers": "Images appréciées par des personnes du même cluster que vous",
+      "candidateLabels": "Rechercher des images correspondant à vos centres d’intérêt",
+      "candidateCoengaged": "Ce que d’autres ont aimé en voyant les mêmes images",
+      "candidateRandom": "Choisir n’importe quoi parmi toutes les images",
+      "candidatePopular": "Parmi les images les plus populaires",
+      "candidateRecent": "Contenu récent qui a été peu vu",
+      "candidatePersonal": "Utiliser uniquement votre profil pour trouver des images",
+      "candidateNonPersonal": "Rechercher des images sans votre profil",
+      "candidatePersonalAndNon": "Mélanger candidats personnels et non personnels",
+      "selectionProbability": "Autoriser la sélection d’images avec des scores plus faibles",
+      "selectionRank": "Sélectionner uniquement les meilleures images selon le score"
+    },
+    "features": {
+      "taste": "Similarité de goûts",
+      "coengagement": "Engagements communs",
+      "sharing": "Susceptible d’être partagé",
+      "commenting": "Susceptible de commenter",
+      "following": "Susceptible de s’abonner",
+      "reacting": "Susceptible de réagir",
+      "viewing": "Susceptible de voir",
+      "lastSeen": "Pas vu récemment",
+      "popularity": "Popularité",
+      "reaction": "Susceptible de réagir",
+      "lastEngaged": "Sans interaction récente"
+    },
+    "aria": {
+      "imageSelect": "Sélectionner la recommandation numéro {{number}}",
+      "refresh": "Actualiser les recommandations",
+      "invert": "Inverser la carte thermique",
+      "heatmap": "Afficher une carte de toutes les probabilités d’images",
+      "imageGrid": "Afficher une grille des meilleures recommandations"
+    }
+  },
+  "start": {
+    "actions": { "createNew": "Créer une nouvelle session", "go": "Aller" },
+    "labels": { "enterCode": "Saisir le code PIN", "or": "ou" }
+  }
+}
