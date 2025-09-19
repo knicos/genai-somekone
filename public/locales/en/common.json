@@ -311,7 +311,7 @@
             "go": "Go"
         },
         "labels": {
-            "enterCode": "Enter PIN",
+            "enterCode": "Enter Session PIN",
             "or": "or"
         }
     }

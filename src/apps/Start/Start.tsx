@@ -51,11 +51,19 @@ export function Component() {
             </div>
             <div className={style.innerContainer}>
                 <img
-                    src="/logo192_bw.png"
+                    src="/genai_logo_bw_192.png"
                     alt="GenAI logo"
                     width={192}
                     height={192}
                 />
+                <Button
+                    variant="outlined"
+                    href="/library"
+                    className={style.createButton}
+                >
+                    {t('start.actions.createNew')}
+                </Button>
+                <div className={style.or}>{t('start.labels.or')}</div>
                 <TextField
                     label={t('start.labels.enterCode')}
                     onKeyDown={doKeyDown}
@@ -71,14 +79,6 @@ export function Component() {
                     onClick={doGo}
                 >
                     {t('start.actions.go')}
-                </Button>
-                <div className={style.or}>{t('start.labels.or')}</div>
-                <Button
-                    variant="outlined"
-                    href="/library"
-                    className={style.createButton}
-                >
-                    {t('start.actions.createNew')}
                 </Button>
                 <ErrorDialog />
             </div>
