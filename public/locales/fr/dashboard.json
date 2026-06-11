@@ -32,6 +32,14 @@
         "jussi": {
             "title": "Contenu sûr",
             "description": "Contenu générique avec filtrage supplémentaire du contenu sensible."
+        },
+        "open": {
+            "title": "Ouvrir du contenu",
+            "description": "Importez votre propre contenu dans un fichier .zip au même format que le jeu de données original de Somekone.",
+            "open": "Ouvrir",
+            "cancel": "Annuler",
+            "inputLabel": "Lien vers le fichier .zip de contenu",
+            "alert": "Le fichier doit être hébergé sur un serveur qui autorise les requêtes CORS."
         }
     },
     "menu": {

@@ -32,6 +32,14 @@
         "jussi": {
             "title": "Safe Content",
             "description": "Generic content with additional filtering of sensitive content."
+        },
+        "open": {
+            "title": "Open Content",
+            "description": "Upload your own content in a .zip file with the same format as the original Somekone dataset.",
+            "open": "Open",
+            "cancel": "Cancel",
+            "inputLabel": "Link to content .zip file",
+            "alert": "The file must be hosted on a server that allows CORS requests."
         }
     },
     "menu": {

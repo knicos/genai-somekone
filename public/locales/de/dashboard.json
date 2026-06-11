@@ -32,6 +32,14 @@
         "jussi": {
             "title": "Sichere Inhalte",
             "description": "Allgemeine Inhalte mit zusätzlicher Filterung sensibler Inhalte."
+        },
+        "open": {
+            "title": "Inhalte öffnen",
+            "description": "Lade eigene Inhalte als .zip-Datei im selben Format wie der originale Somekone-Datensatz hoch.",
+            "open": "Öffnen",
+            "cancel": "Abbrechen",
+            "inputLabel": "Link zur Inhalts-.zip-Datei",
+            "alert": "Die Datei muss auf einem Server gehostet sein, der CORS-Anfragen erlaubt."
         }
     },
     "menu": {

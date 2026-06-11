@@ -5,6 +5,7 @@ import ContentItem from './ContentItem';
 import { Privacy } from '@genai-fi/base';
 import gitInfo from '../../generatedGitInfo.json';
 import { useTranslation } from 'react-i18next';
+import OpenItem from './OpenItem';
 
 export function Component() {
     const { t } = useTranslation(['dashboard']);
@@ -92,6 +93,10 @@ export function Component() {
                             noSession: 'true',
                         })}`}
                         description={t('library.blank.description')}
+                    />
+                    <OpenItem
+                        title={t('library.open.title')}
+                        description={t('library.open.description')}
                     />
                 </ul>
             </div>

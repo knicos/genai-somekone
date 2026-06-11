@@ -32,6 +32,14 @@
         "jussi": {
             "title": "Turvallinen sisältö",
             "description": "Geneerinen sisältö, jossa on lisäsuodatus arkaluontoiselle sisällölle."
+        },
+        "open": {
+            "title": "Avaa sisältö",
+            "description": "Lataa oma sisältösi .zip-tiedostona samassa muodossa kuin alkuperäinen Somekone-aineisto.",
+            "open": "Avaa",
+            "cancel": "Peruuta",
+            "inputLabel": "Linkki sisältöä sisältävään .zip-tiedostoon",
+            "alert": "Tiedoston on oltava palvelimella, joka sallii CORS-pyynnöt."
         }
     },
     "menu": {

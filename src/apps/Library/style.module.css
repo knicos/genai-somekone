@@ -52,9 +52,28 @@
     line-height: 0;
 }
 
+.iconContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    width: 300px;
+    background: bgSubdued1;
+    font-size: 4rem;
+}
+
 .container a {
     text-decoration: none;
     color: textDark;
+}
+
+.container button {
+    all: unset;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    cursor: pointer;
 }
 
 .container h2 {
