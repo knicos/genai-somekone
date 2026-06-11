@@ -21,6 +21,10 @@ stages:
           - job: ESLint
             displayName: ESLint
             steps:
+                - task: UseNode@1
+                  inputs:
+                      version: '22.x'
+                  displayName: 'Install Node.js'
                 - task: Cache@2
                   inputs:
                       key: '"npmcache" | "$(Agent.OS)" | package-lock.json'
@@ -40,9 +44,9 @@ stages:
           - job: Ubuntu_x64
             displayName: Build Ubuntu X64
             steps:
-                - task: NodeTool@0
+                - task: UseNode@1
                   inputs:
-                      versionSpec: '18.x'
+                      version: '22.x'
                   displayName: 'Install Node.js'
 
                 - task: Cache@2
@@ -70,6 +74,10 @@ stages:
           - job: Ubuntu_x64
             displayName: Test Ubuntu X64
             steps:
+                - task: UseNode@1
+                  inputs:
+                      version: '22.x'
+                  displayName: 'Install Node.js'
                 - task: Cache@2
                   inputs:
                       key: '"npmcache" | "$(Agent.OS)" | package-lock.json'

@@ -1,7 +1,7 @@
 import { SMConfig } from '@genaism/common/state/smConfig';
 import { UserNodeId } from '@genai-fi/recom';
 import { Atom, atom } from 'jotai';
-import { atomFamily } from 'jotai/utils';
+import { atomFamily } from 'jotai-family';
 import DEFAULT from './defaultConfig.json';
 
 export const appConfiguration = atom<SMConfig>(DEFAULT.configuration as SMConfig);

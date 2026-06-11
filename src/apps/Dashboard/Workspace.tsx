@@ -65,8 +65,13 @@ export function Workspace({ contentUrls, cfg, guide, experimental, noSession }: 
 
         const contentParam = contentUrls;
         if (contentParam) {
-            const component = decompressFromEncodedURIComponent(contentParam);
-            contentObj = JSON.parse(component);
+            if (contentParam.startsWith('http')) {
+                const urls = contentParam.split(',').map((u) => u.trim());
+                contentObj = urls;
+            } else {
+                const component = decompressFromEncodedURIComponent(contentParam);
+                contentObj = JSON.parse(component);
+            }
         } else if (contentParam === '') {
             contentObj = [];
         }

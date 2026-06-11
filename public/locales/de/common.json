@@ -303,16 +303,16 @@
             "invert": "Heatmap invertieren",
             "heatmap": "Karte aller Bildwahrscheinlichkeiten anzeigen",
             "imageGrid": "Raster der Top-Empfehlungen anzeigen"
+        }
+    },
+    "start": {
+        "actions": {
+            "createNew": "Neue Sitzung erstellen",
+            "go": "Los"
         },
-        "start": {
-            "actions": {
-                "createNew": "Neue Sitzung erstellen",
-                "go": "Los"
-            },
-            "labels": {
-                "enterCode": "PIN eingeben",
-                "or": "oder"
-            }
+        "labels": {
+            "enterCode": "PIN eingeben",
+            "or": "oder"
         }
     }
 }
