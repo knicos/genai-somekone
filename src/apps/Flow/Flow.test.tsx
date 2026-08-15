@@ -1,4 +1,4 @@
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import { beforeAll, describe, it, vi } from 'vitest';
 import { Component } from './Flow';
 import TestWrapper from '@genaism/util/TestWrapper';

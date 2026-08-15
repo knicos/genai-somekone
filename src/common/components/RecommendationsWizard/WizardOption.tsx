@@ -20,7 +20,7 @@ export default function WizardOption({ label, description, value, color, disable
             <Radio
                 value={value}
                 disabled={disabled}
-                inputProps={{ 'data-testid': `${value}-option` } as InputHTMLAttributes<HTMLInputElement>}
+                slotProps={{ input: { 'data-testid': `${value}-option` } as InputHTMLAttributes<HTMLInputElement> }}
             />
             <div className={style.wizardLabelGroup}>
                 <span className={selected ? style.wizardLabelSelect : style.wizardLabel}>{label}</span>

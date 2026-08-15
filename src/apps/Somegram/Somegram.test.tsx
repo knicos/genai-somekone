@@ -1,7 +1,7 @@
 import { describe, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { Component as Genagram } from './Somegram';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import TestWrapper from '@genaism/util/TestWrapper';
 import { appConfiguration } from '@genaism/common/state/configState';
 import { currentUserName } from '@genaism/common/state/sessionState';

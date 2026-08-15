@@ -3,7 +3,7 @@ import style from '../style.module.css';
 import { useAtomValue } from 'jotai';
 import { uiDarkMode } from '@genaism/common/state/uiState';
 import { IconButton } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 

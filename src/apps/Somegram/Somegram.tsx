@@ -1,5 +1,5 @@
 import style from './style.module.css';
-import { Outlet, useParams } from 'react-router-dom';
+import { Outlet, useParams } from 'react-router';
 import { useCallback, useState } from 'react';
 import { SMConfig } from '../../common/state/smConfig';
 import EnterUsername from '../../common/components/EnterUsername/EnterUsername';

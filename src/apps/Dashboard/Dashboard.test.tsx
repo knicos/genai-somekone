@@ -1,7 +1,7 @@
 import { describe, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { Component as Dashboard } from './Dashboard';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import { Connection } from '@genai-fi/base';
 import { EventProtocol } from '@genaism/protocol/protocol';
 import TestWrapper from '@genaism/util/TestWrapper';

@@ -18,7 +18,7 @@ import { onlineUsers } from '@genaism/common/state/sessionState';
 import ServerProtocol from '../../protocol/ServerProtocol';
 import { ContentLoader } from '@genaism/common/components/ContentLoader';
 import Guidance from '@genaism/apps/Dashboard/views/Guidance/Guidance';
-import { Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router';
 import AppSettingsDialog from './views/AppSettingsDialog/AppSettingsDialog';
 import RecomSettingsDialog from './views/RecomSettingsDialog/RecomSettingsDialog';
 import { SomekoneSettings, useSettingDeserialise } from '@genaism/hooks/settings';

@@ -101,6 +101,6 @@ export function useServiceEventMemo<TEventName extends keyof ServiceEvents & str
         }
     }, [service, name]);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/use-memo, react-hooks/exhaustive-deps
     return useMemo(f, [state, ...deps]);
 }

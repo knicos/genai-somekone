@@ -2,7 +2,7 @@ import { getContentService, getProfilerService } from '@genai-fi/recom';
 import { render, screen } from '@testing-library/react';
 import { describe, it } from 'vitest';
 import PersonalProfile from './PersonalProfile';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import TestWrapper from '@genaism/util/TestWrapper';
 
 describe('PersonalProfile component', () => {

@@ -6,7 +6,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { IconButton, Tooltip } from '@mui/material';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router';
 import style from './style.module.css';
 import { useAtomValue } from 'jotai';
 import { uiDarkMode } from '@genaism/common/state/uiState';

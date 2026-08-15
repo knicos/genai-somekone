@@ -19,18 +19,18 @@ export default function DebounceGraph<T extends NodeID>({
     const [dLinks, setDLinks] = useState(links);
     const [dChildren, setChildren] = useState(children);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     const debouncer = useCallback(
-        debounce((n: GraphNode<T>[], c: ReactNode, l?: GraphLink<T, T>[]) => {
-            setDNodes(n);
-            setDLinks(l);
-            setChildren(c);
-        }, rateLimit)[0],
+        () =>
+            debounce((n: GraphNode<T>[], c: ReactNode, l?: GraphLink<T, T>[]) => {
+                setDNodes(n);
+                setDLinks(l);
+                setChildren(c);
+            }, rateLimit)[0],
         [rateLimit]
     );
 
     useEffect(() => {
-        debouncer(nodes, children, links);
+        debouncer()(nodes, children, links);
     }, [nodes, links, debouncer, children]);
 
     return (

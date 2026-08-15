@@ -6,7 +6,7 @@ import { menuSettingsDialog } from '../../state/menuState';
 import defaultConfig from '../../../../common/state/defaultConfig.json';
 import { appConfiguration } from '@genaism/common/state/configState';
 import { SMConfig } from '@genaism/common/state/smConfig';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import userEvent from '@testing-library/user-event';
 import { createStore } from 'jotai';
 

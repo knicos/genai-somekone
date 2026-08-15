@@ -62,12 +62,14 @@ export default function QuerySource({ disabled }: Props) {
                         variant="outlined"
                         onKeyDown={doChange}
                         inputRef={inputRef}
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position="start">
-                                    <SearchIcon />
-                                </InputAdornment>
-                            ),
+                        slotProps={{
+                            input: {
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <SearchIcon />
+                                    </InputAdornment>
+                                ),
+                            },
                         }}
                     />
                     <Button

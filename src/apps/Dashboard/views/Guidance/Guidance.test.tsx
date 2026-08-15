@@ -35,7 +35,7 @@ vi.mock('@genaism/services/loader/fileLoader', () => ({
     loadFile: vi.fn(),
 }));
 
-vi.mock('react-router-dom', () => ({
+vi.mock('react-router', () => ({
     useLocation: () => ({ search: '' }),
     useNavigate: () => mockNavigate,
     useSearchParams: () => {

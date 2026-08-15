@@ -1,7 +1,7 @@
 import style from '../style.module.css';
 import { Trans, useTranslation } from 'react-i18next';
 import { QRCode } from '@genai-fi/base';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router';
 import ViewContainer from './ViewContainer';
 import { appToCode } from '@genaism/apps/Start/codePrefix';
 

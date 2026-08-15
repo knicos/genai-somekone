@@ -113,12 +113,14 @@ export default function ImageSearch({ onAdd, columns, selected, onSelect, disabl
                             onKeyDown={doChange}
                             disabled={disabled}
                             inputRef={inputRef}
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <SearchIcon />
-                                    </InputAdornment>
-                                ),
+                            slotProps={{
+                                input: {
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <SearchIcon />
+                                        </InputAdornment>
+                                    ),
+                                },
                             }}
                         />
                         <LargeButton

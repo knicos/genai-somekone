@@ -1,4 +1,4 @@
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import { describe, it, vi } from 'vitest';
 import { Component } from './ProfileViewer';
 import TestWrapper from '@genaism/util/TestWrapper';

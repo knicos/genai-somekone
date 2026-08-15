@@ -11,6 +11,12 @@
     max-width: 1000px;
 }
 
+.container header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
 .outerContainer {
     display: flex;
     flex-direction: column;
@@ -38,10 +44,61 @@
 .container li {
     flex: 0 1 300px;
     min-height: 200px;
-    background: white;
-    border-radius: 6px;
-    box-shadow: 0 0 4px #888;
+    background: #f4faff;
+    border-radius: 16px;
+    box-shadow: 2px 2px 4px #a4acbb;
     overflow: hidden;
+    animation: stepIn 420ms ease-out forwards;
+    animation-delay: calc(var(--step-index, 0) * 120ms);
+    opacity: 0;
+    transform: translateY(12px);
+}
+
+@keyframes stepIn {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.container li:nth-child(1) {
+    --step-index: 0;
+}
+.container li:nth-child(2) {
+    --step-index: 1;
+}
+.container li:nth-child(3) {
+    --step-index: 2;
+}
+.container li:nth-child(4) {
+    --step-index: 3;
+}
+.container li:nth-child(5) {
+    --step-index: 4;
+}
+.container li:nth-child(6) {
+    --step-index: 5;
+}
+.container li:nth-child(7) {
+    --step-index: 6;
+}
+.container li:nth-child(8) {
+    --step-index: 7;
+}
+.container li:nth-child(9) {
+    --step-index: 8;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .container li {
+        animation: none;
+        opacity: 1;
+        transform: none;
+    }
 }
 
 .container li:hover {
@@ -50,6 +107,8 @@
 
 .imageContainer {
     line-height: 0;
+    border-radius: 16px;
+    overflow: hidden;
 }
 
 .iconContainer {

@@ -4,7 +4,7 @@ import AddLinkIcon from '@mui/icons-material/AddLink';
 import { useRef, useState } from 'react';
 import { Button } from '@genai-fi/base';
 import { useTranslation } from 'react-i18next';
-import { createSearchParams } from 'react-router-dom';
+import { createSearchParams } from 'react-router';
 import { compressToEncodedURIComponent } from 'lz-string';
 
 interface Props {

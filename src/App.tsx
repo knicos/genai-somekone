@@ -7,7 +7,7 @@ import {
     useRouteError,
     Navigate,
     redirect,
-} from 'react-router-dom';
+} from 'react-router';
 import { Provider } from 'jotai';
 import './App.css';
 import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';

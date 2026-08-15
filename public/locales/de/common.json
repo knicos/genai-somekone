@@ -306,6 +306,10 @@
         }
     },
     "start": {
+        "title": "Somekone",
+        "subtitle": "Erstelle eine Social‑Media‑Plattform im Klassenzimmer, um zu sehen, wie sie funktioniert.",
+        "teachingMaterials": "Unterrichtsmaterialien",
+        "teachingMaterialsUrl": "https://www.gen-ai.fi/en/materials/somekone-unit",
         "actions": {
             "createNew": "Neue Sitzung erstellen",
             "go": "Los"

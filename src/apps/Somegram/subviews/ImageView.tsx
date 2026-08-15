@@ -1,5 +1,5 @@
 import ViewContainer from './ViewContainer';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 import ImageDetail from '@genaism/apps/Somegram/views/ImageDetail/ImageDetail';
 import { ContentNodeId } from '@genai-fi/recom';
 

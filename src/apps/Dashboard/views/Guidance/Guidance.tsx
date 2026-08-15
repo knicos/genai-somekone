@@ -4,7 +4,7 @@ import style from './style.module.css';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { SomekoneSettings, useSettingDeserialise, useSettingSerialise } from '@genaism/hooks/settings';
 import ActionButton from './ActionButton';
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router';
 import { useServices } from '@genaism/hooks/services';
 import { cancelSessionSave } from '@genaism/services/loader/session';
 import disimilarUsers from '@genaism/util/autoUsers';
@@ -192,7 +192,7 @@ export default function Guidance({ guide }: Props) {
         }
     }, [index, data, doAction]);
 
-    const mappedSteps = useMemo(() => data?.steps.map((step, index) => ({ step, index })), [data]) || [];
+    const mappedSteps = useMemo(() => data?.steps.map((step, index) => ({ step, index })) || [], [data]);
     const currentStep = data?.steps[index];
     const filtered = mappedSteps.filter((s) => s.step.title);
 

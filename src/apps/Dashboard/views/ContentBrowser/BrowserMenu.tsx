@@ -46,12 +46,14 @@ export default function BrowserMenu({ hasSelected, onSearch, onDelete }: Props) 
                 variant="outlined"
                 onKeyDown={doChange}
                 inputRef={inputRef}
-                InputProps={{
-                    startAdornment: (
-                        <InputAdornment position="start">
-                            <SearchIcon />
-                        </InputAdornment>
-                    ),
+                slotProps={{
+                    input: {
+                        startAdornment: (
+                            <InputAdornment position="start">
+                                <SearchIcon />
+                            </InputAdornment>
+                        ),
+                    },
                 }}
             />
             <Spacer />

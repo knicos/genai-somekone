@@ -3,7 +3,7 @@ import style from './style.module.css';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { useTranslation } from 'react-i18next';
 import { useContent } from '@genaism/hooks/content';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { useMemo } from 'react';
 
 interface Props {

@@ -306,6 +306,10 @@
         }
     },
     "start": {
+        "title": "Somekone",
+        "subtitle": "Create a social media platform in a classroom to see how it works.",
+        "teachingMaterials": "Teaching Materials",
+        "teachingMaterialsUrl": "https://www.gen-ai.fi/en/materials/somekone-unit",
         "actions": {
             "createNew": "Create New Session",
             "go": "Go"

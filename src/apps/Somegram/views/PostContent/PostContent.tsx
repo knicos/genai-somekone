@@ -2,7 +2,7 @@ import style from './style.module.css';
 import { useCallback, useEffect, useState } from 'react';
 import WebcamView from './WebcamView';
 import ImageEdit from './ImageEdit';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { useSetAtom } from 'jotai';
 import { uiDarkMode } from '@genaism/common/state/uiState';
 //import { useUserProfile } from '@genaism/hooks/profiler';

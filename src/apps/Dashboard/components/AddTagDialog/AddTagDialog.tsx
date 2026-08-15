@@ -54,13 +54,16 @@ export default function AddTagDialog({ open, onClose, onAdd }: Props) {
                                 {...params}
                                 inputRef={inputRef}
                                 label={t('creator.labels.addTag')}
-                                InputProps={{
-                                    ...params.InputProps,
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <TagIcon />
-                                        </InputAdornment>
-                                    ),
+                                slotProps={{
+                                    ...params.slotProps,
+                                    input: {
+                                        ...params.slotProps?.input,
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <TagIcon />
+                                            </InputAdornment>
+                                        ),
+                                    },
                                 }}
                             />
                         )}

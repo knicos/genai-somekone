@@ -1,4 +1,4 @@
-import { Outlet, useParams } from 'react-router-dom';
+import { Outlet, useParams } from 'react-router';
 import ErrorDialog from '../../common/views/ErrorDialog/ErrorDialog';
 import { ConnectionStatus, useRandom } from '@genai-fi/base';
 import style from './style.module.css';

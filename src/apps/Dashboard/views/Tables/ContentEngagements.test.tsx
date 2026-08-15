@@ -9,7 +9,7 @@ import {
     ServiceBroker,
 } from '@genai-fi/recom';
 import { defaultServices, ServiceProvider } from '@genaism/hooks/services';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import ContentEngagements from './ContentEngagements';
 
 describe('ContentEngagements component', () => {

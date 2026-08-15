@@ -8,7 +8,7 @@ import {
     ToolbarButton,
 } from '@mui/x-data-grid';
 import style from './style.module.css';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { Tooltip } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';

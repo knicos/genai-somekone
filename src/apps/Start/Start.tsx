@@ -3,9 +3,9 @@ import ErrorDialog from '../../common/views/ErrorDialog/ErrorDialog';
 import { useTranslation } from 'react-i18next';
 import { Button, TextField } from '@mui/material';
 import { useCallback, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import LangSelect from '@genaism/common/components/LangSelect/LangSelect';
-import { Privacy } from '@genai-fi/base';
+import { HomeBanner, Privacy } from '@genai-fi/base';
 import gitInfo from '../../generatedGitInfo.json';
 import { codeToApp } from './codePrefix';
 
@@ -76,13 +76,15 @@ export function Component() {
             <div className={style.language}>
                 <LangSelect />
             </div>
+            <HomeBanner
+                title={t('start.title')}
+                subtitle={t('start.subtitle')}
+                githubUrl="https://github.com/knicos/genai-somekone"
+                githubLabel="Github"
+                teachingMaterialsUrl={t('start.teachingMaterialsUrl')}
+                teachingMaterialsLabel={t('start.teachingMaterials')}
+            />
             <div className={style.innerContainer}>
-                <img
-                    src="/genai_logo_bw_192.png"
-                    alt="GenAI logo"
-                    width={192}
-                    height={192}
-                />
                 <Button
                     variant="outlined"
                     href="/library"

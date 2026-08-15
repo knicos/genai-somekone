@@ -1,4 +1,4 @@
-import { createSearchParams } from 'react-router-dom';
+import { createSearchParams } from 'react-router';
 import style from './style.module.css';
 import { compressToEncodedURIComponent } from 'lz-string';
 import ContentItem from './ContentItem';
@@ -14,6 +14,12 @@ export function Component() {
         <main className={style.outerContainer}>
             <div className={style.container}>
                 <header>
+                    <img
+                        src="/logo48_bw.png"
+                        alt="Somekone logo"
+                        width={48}
+                        height={48}
+                    />
                     <h1>{t('library.title')}</h1>
                 </header>
                 <ul className={style.grid}>

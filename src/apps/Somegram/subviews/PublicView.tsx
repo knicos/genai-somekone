@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 import ViewContainer from './ViewContainer';
 import OwnProfile from '@genaism/apps/Somegram/views/PersonalProfile/PersonalProfile';
 import { isUserID } from '@genai-fi/recom';

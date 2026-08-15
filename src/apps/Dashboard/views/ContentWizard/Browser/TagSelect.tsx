@@ -26,13 +26,16 @@ export default function TagSelect({ value, onChange }: Props) {
                     {...params}
                     label={t('creator.labels.selectTag')}
                     size="small"
-                    InputProps={{
-                        ...params.InputProps,
-                        startAdornment: (
-                            <InputAdornment position="start">
-                                <TagIcon fontSize="small" />
-                            </InputAdornment>
-                        ),
+                    slotProps={{
+                        ...params.slotProps,
+                        input: {
+                            ...params.slotProps?.input,
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <TagIcon fontSize="small" />
+                                </InputAdornment>
+                            ),
+                        },
                     }}
                 />
             )}

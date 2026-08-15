@@ -307,6 +307,10 @@
         }
     },
     "start": {
+        "title": "Somekone",
+        "subtitle": "Luo luokkahuoneeseen sosiaalisen median alusta nähdäksesi, miten se toimii.",
+        "teachingMaterials": "Opetusmateriaalit",
+        "teachingMaterialsUrl": "https://www.gen-ai.fi/fi/materials/somekone-unit",
         "actions": {
             "createNew": "Luo uusi",
             "go": "Aloita"
