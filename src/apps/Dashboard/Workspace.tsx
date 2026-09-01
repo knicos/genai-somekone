@@ -28,6 +28,7 @@ import i18n from '@genaism/i18n';
 import { guideFile } from './state/settingsState';
 import { Peer } from '@genai-fi/base/hooks/peer';
 import PeerEnv from '@genaism/env';
+import ReportButton from './components/ReportButton/ReportButton';
 
 interface Props {
     contentUrls?: string;
@@ -121,6 +122,7 @@ export function Workspace({ contentUrls, cfg, guide, experimental, noSession }: 
                             <RecomSettingsDialog />
                             {showReplay && <Replay />}
                             <Simulator />
+                            <ReportButton />
                         </section>
                     </main>
                 </I18nextProvider>

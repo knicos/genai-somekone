@@ -240,6 +240,19 @@
             "socialMenu": "Menu du graphe social",
             "socialUserMenu": "Menu pour un utilisateur",
             "mainMenu": "Ouvrir ou fermer le menu latéral principal"
+        },
+        "report": {
+            "tip": "Signaler un problème ou une suggestion",
+            "button": "Commentaires",
+            "cancel": "Annuler",
+            "title": "Commentaire ou bug",
+            "reason": "Raison",
+            "bug": "Il y a un problème",
+            "feedback": "J'ai une suggestion",
+            "other": "Autre raison",
+            "message": "Message",
+            "send": "Envoyer",
+            "error": "Échec de l'envoi du rapport."
         }
     },
     "tables": {

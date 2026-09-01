@@ -241,6 +241,19 @@
             "socialUserMenu": "Menü für einen Benutzer",
             "mainMenu": "Hauptseitenmenü öffnen oder schließen"
         },
+        "report": {
+            "tip": "Problem oder Vorschlag melden",
+            "button": "Feedback",
+            "cancel": "Abbrechen",
+            "title": "Feedback oder Fehler",
+            "reason": "Grund",
+            "bug": "Es gibt ein Problem",
+            "feedback": "Ich habe einen Vorschlag",
+            "other": "Anderer Grund",
+            "message": "Nachricht",
+            "send": "Senden",
+            "error": "Senden des Berichts fehlgeschlagen."
+        },
         "tables": {
             "titles": {
                 "actionlog": "Aktionsprotokoll",

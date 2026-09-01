@@ -240,6 +240,19 @@
             "socialMenu": "Social graph menu",
             "socialUserMenu": "Menu for a user",
             "mainMenu": "Open or close the main side menu"
+        },
+        "report": {
+            "tip": "Report a problem or suggestion",
+            "button": "Feedback",
+            "cancel": "Cancel",
+            "title": "Feedback or Bug",
+            "reason": "Reason",
+            "bug": "There is a problem",
+            "feedback": "I have a suggestion",
+            "other": "Other reason",
+            "message": "Message",
+            "send": "Send",
+            "error": "Failed to send report."
         }
     },
     "tables": {

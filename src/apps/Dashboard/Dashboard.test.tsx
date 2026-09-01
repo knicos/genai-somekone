@@ -62,6 +62,16 @@ vi.mock('@genaism/services/loader/fileLoader', () => ({
     loadFile: vi.fn(async () => {}),
 }));
 
+vi.mock('@genaism/common/state/uiState', async (importOriginal) => {
+    const original = await importOriginal<typeof import('@genaism/common/state/uiState')>();
+    const { atom } = await import('jotai');
+
+    return {
+        ...original,
+        featureFlagsAtom: atom({ allowReportProblem: true }),
+    };
+});
+
 describe('Dashboard view', () => {
     it('renders the initial connection screen', async ({ expect }) => {
         render(

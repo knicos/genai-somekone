@@ -234,6 +234,19 @@
             "socialMenu": "Sosiaalisen verkoston valikko",
             "socialUserMenu": "Käyttäjän valikko",
             "mainMenu": "Avaa tai sulje sivupäävalikko"
+        },
+        "report": {
+            "tip": "Ilmoita ongelmasta tai ehdotuksesta",
+            "button": "Palaute",
+            "cancel": "Peruuta",
+            "title": "Palaute tai virhe",
+            "reason": "Syy",
+            "bug": "On ongelma",
+            "feedback": "Minulla on ehdotus",
+            "other": "Muu syy",
+            "message": "Viesti",
+            "send": "Lähetä",
+            "error": "Palautteen lähetys epäonnistui."
         }
     },
     "tables": {
