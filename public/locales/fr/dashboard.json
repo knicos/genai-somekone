@@ -1,6 +1,9 @@
 {
     "library": {
         "title": "Sélection du contenu",
+        "showMore": {
+            "title": "Plus d'options"
+        },
         "generic": {
             "title": "Contenu original",
             "description": "Le jeu de données Somekone original sélectionné par des enfants."
@@ -213,7 +216,8 @@
             "heatmapDimension": "Taille de la grille"
         },
         "messages": {
-            "connection": "Allez à l’adresse ci-dessous et entrez le code <Code>{{codeText}}</Code>, ou utilisez le code QR.",
+            "connection": "Connectez de nouveaux utilisateurs à votre réseau social avec le code QR, ou utilisez le code PIN <Code>{{codeText}}</Code> via le lien ci-dessous.",
+            "tip": "Cliquez sur le code QR pour vous connecter vous-même.",
             "waitingPeople": "En attente de personnes…",
             "onePerson": "{{count}} personne a rejoint.",
             "manyPeople": "{{count}} personnes ont rejoint.",

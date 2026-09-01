@@ -217,7 +217,7 @@
             "download": "Lataa kuva"
         },
         "messages": {
-            "connection": "Mene alla olevaan osoitteeseen ja syötä koodi <Code>{{codeText}}</Code>, tai käytä QR-koodia."
+            "connection": "Yhdistä uusia käyttäjiä sosiaaliseen verkostoosi QR-koodilla tai käytä alla olevan linkin PIN-koodia <Code>{{codeText}}</Code>."
         }
     },
     "recommendations": {
@@ -308,15 +308,15 @@
     },
     "start": {
         "title": "Somekone",
-        "subtitle": "Luo luokkahuoneeseen sosiaalisen median alusta nähdäksesi, miten se toimii.",
+        "subtitle": "Luo oma sosiaalisen median alusta nähdäksesi, miten se toimii.",
         "teachingMaterials": "Opetusmateriaalit",
         "teachingMaterialsUrl": "https://www.gen-ai.fi/fi/materials/somekone-unit",
         "actions": {
-            "createNew": "Luo uusi",
+            "createNew": "Luo uusi sosiaalinen verkosto",
             "go": "Aloita"
         },
         "labels": {
-            "enterCode": "Syötä koodi",
+            "enterCode": "Olemassa olevan verkoston PIN",
             "or": "tai"
         }
     }

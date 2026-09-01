@@ -215,7 +215,7 @@
             "download": "Télécharger l’image"
         },
         "messages": {
-            "connection": "Allez à l’adresse ci-dessous et saisissez le code <Code>{{codeText}}</Code>, ou utilisez le code QR."
+            "connection": "Connectez de nouveaux utilisateurs à votre réseau social avec le code QR, ou utilisez le code PIN <Code>{{codeText}}</Code> via le lien ci-dessous."
         }
     },
     "recommendations": {
@@ -307,15 +307,15 @@
     },
     "start": {
         "title": "Somekone",
-        "subtitle": "Créez une plateforme de réseau social en classe pour voir comment cela fonctionne.",
+        "subtitle": "Créez votre propre plateforme de réseau social pour voir comment cela fonctionne.",
         "teachingMaterials": "Matériel pédagogique",
         "teachingMaterialsUrl": "https://www.gen-ai.fi/en/materials/somekone-unit",
         "actions": {
-            "createNew": "Créer une nouvelle session",
+            "createNew": "Créer un nouveau réseau social",
             "go": "Aller"
         },
         "labels": {
-            "enterCode": "Saisir le code PIN",
+            "enterCode": "PIN du réseau existant",
             "or": "ou"
         }
     }

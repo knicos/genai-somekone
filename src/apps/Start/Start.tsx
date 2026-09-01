@@ -93,23 +93,23 @@ export function Component() {
                     {t('start.actions.createNew')}
                 </Button>
                 <div className={style.or}>{t('start.labels.or')}</div>
-                <TextField
-                    label={t('start.labels.enterCode')}
-                    onKeyDown={doKeyDown}
-                    fullWidth
-                    className={style.textbox}
-                    inputRef={inputRef}
-                    error={pinError}
-                />
-                <Button
-                    variant="contained"
-                    fullWidth
-                    size="large"
-                    component="a"
-                    onClick={doGo}
-                >
-                    {t('start.actions.go')}
-                </Button>
+                <div className={style.codeContainer}>
+                    <TextField
+                        label={t('start.labels.enterCode')}
+                        onKeyDown={doKeyDown}
+                        className={style.textbox}
+                        inputRef={inputRef}
+                        error={pinError}
+                    />
+                    <Button
+                        variant="contained"
+                        size="large"
+                        component="a"
+                        onClick={doGo}
+                    >
+                        {t('start.actions.go')}
+                    </Button>
+                </div>
                 <ErrorDialog />
             </div>
             <Privacy

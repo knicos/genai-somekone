@@ -215,7 +215,7 @@
             "download": "Download image"
         },
         "messages": {
-            "connection": "Go to the address below and enter the code <Code>{{codeText}}</Code>, or use the QR code."
+            "connection": "Connect new users with the QR code or use the existing network PIN <Code>{{codeText}}</Code>."
         }
     },
     "recommendations": {
@@ -307,15 +307,15 @@
     },
     "start": {
         "title": "Somekone",
-        "subtitle": "Create a social media platform in a classroom to see how it works.",
+        "subtitle": "Create your own social media platform to see how it works.",
         "teachingMaterials": "Teaching Materials",
         "teachingMaterialsUrl": "https://www.gen-ai.fi/en/materials/somekone-unit",
         "actions": {
-            "createNew": "Create New Session",
+            "createNew": "Create New Social Network",
             "go": "Go"
         },
         "labels": {
-            "enterCode": "Enter Session PIN",
+            "enterCode": "Existing Network PIN",
             "or": "or"
         }
     }

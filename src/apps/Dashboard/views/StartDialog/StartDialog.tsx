@@ -6,7 +6,7 @@ import { LargeButton } from '@genai-fi/base';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { menuShowShare } from '@genaism/apps/Dashboard/state/menuState';
 import { useCallback } from 'react';
-import { Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
+import { Alert, Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import Simulation from '@genaism/services/simulation/Simulation';
 import { useServices } from '@genaism/hooks/services';
@@ -44,13 +44,16 @@ export default function StartDialog({ users, code }: Props) {
             <DialogTitle className={style.title}>{t('dashboard.titles.connectUsers')}</DialogTitle>
             <DialogContent>
                 <div className={style.connectMessage}>
-                    <QRCode
-                        url={`${window.location.origin}/${app}/${code}`}
-                        size="large"
-                        label={t('dashboard.aria.linkForFeed')}
-                    />
                     <div className={style.column}>
-                        <div style={{ textAlign: 'center' }}>
+                        <QRCode
+                            url={`${window.location.origin}/${app}/${code}`}
+                            size="large"
+                            label={t('dashboard.aria.linkForFeed')}
+                        />
+                        <Alert severity="info">{t('dashboard.messages.tip')}</Alert>
+                    </div>
+                    <div className={style.column}>
+                        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
                             <Trans
                                 values={{ codeText: appToCode(appType, code) }}
                                 i18nKey="dashboard.messages.connection"

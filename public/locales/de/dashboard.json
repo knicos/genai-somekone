@@ -1,6 +1,9 @@
 {
     "library": {
         "title": "Inhalte auswählen",
+        "showMore": {
+            "title": "Mehr Optionen"
+        },
         "generic": {
             "title": "Originalinhalt",
             "description": "Der originale Somekone-Datensatz, ausgewählt von Kindern."
@@ -213,7 +216,8 @@
             "heatmapDimension": "Rastergröße"
         },
         "messages": {
-            "connection": "Gehe zur folgenden Adresse und gib den Code <Code>{{codeText}}</Code> ein oder verwende den QR-Code.",
+            "connection": "Verbinde neue Benutzer mit deinem sozialen Netzwerk per QR-Code oder nutze den PIN <Code>{{codeText}}</Code> unter dem Link unten.",
+            "tip": "Klicke auf den QR-Code, um dich selbst zu verbinden.",
             "waitingPeople": "Warte auf Personen...",
             "onePerson": "{{count}} Person ist beigetreten.",
             "manyPeople": "{{count}} Personen sind beigetreten.",

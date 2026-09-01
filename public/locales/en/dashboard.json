@@ -1,13 +1,16 @@
 {
     "library": {
-        "title": "Select Content",
+        "title": "Choose a version",
+        "showMore": {
+            "title": "More Options"
+        },
         "generic": {
             "title": "Original Content",
             "description": "The original Somekone dataset selected by children."
         },
         "guidedDefault": {
-            "title": "Core Concepts",
-            "description": "Introduce key social media mechanisms with a structured step-by-step interface for the classroom."
+            "title": "For the classroom",
+            "description": "Introduce key social media mechanisms with a scaffolded step-by-step interface for the classroom."
         },
         "kiosk": {
             "title": "Kiosk Demo",
@@ -26,8 +29,8 @@
             "description": "Add your own photos or select from the web to create custom social media content for the app."
         },
         "reetta": {
-            "title": "Generic Content",
-            "description": "Over 700 carefully selected free images in 7 main categories, food, hobbies, animals, lifestyle, fashion, sports and landscapes."
+            "title": "For other users",
+            "description": "The full social network application with over 700 carefully selected free images in 7 main categories, food, hobbies, animals, lifestyle, fashion, sports and landscapes."
         },
         "jussi": {
             "title": "Safe Content",
@@ -213,7 +216,8 @@
             "heatmapDimension": "Grid size"
         },
         "messages": {
-            "connection": "Go to the address below and enter the code <Code>{{codeText}}</Code>, or use the QR code.",
+            "connection": "Connect new users to your social network with the QR code or use the PIN <Code>{{codeText}}</Code> at the link below.",
+            "tip": "Click the QR code to connect yourself.",
             "waitingPeople": "Waiting for people...",
             "onePerson": "{{count}} person has joined.",
             "manyPeople": "{{count}} people have joined.",

@@ -1,6 +1,9 @@
 {
     "library": {
         "title": "Valitse sisältö",
+        "showMore": {
+            "title": "Lisää vaihtoehtoja"
+        },
         "generic": {
             "title": "Alkuperäinen sisältö",
             "description": "Alkuperäinen Somekone-sisältö, jonka lapset ovat valinneet."
@@ -207,7 +210,8 @@
             "flowApp": "Data-flow style"
         },
         "messages": {
-            "connection": "Mene allaolevaan www-osoitteeseen ja syötä koodi <Code>{{codeText}}</Code>, tai käytä QR -koodia.",
+            "connection": "Yhdistä uusia käyttäjiä sosiaaliseen verkostoosi QR-koodilla tai käytä alla olevan linkin PIN-koodia <Code>{{codeText}}</Code>.",
+            "tip": "Liitä itsesi verkostoon klikkaamalla QR-koodia.",
             "waitingPeople": "Odotetaan käyttäjiä...",
             "onePerson": "{{count}} käyttäjä on liittynyt mukaan.",
             "manyPeople": "{{count}} käyttäjää on liittynyt mukaan.",

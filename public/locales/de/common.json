@@ -215,7 +215,7 @@
             "download": "Bild herunterladen"
         },
         "messages": {
-            "connection": "Gehe zur folgenden Adresse und gib den Code <Code>{{codeText}}</Code> ein oder verwende den QR-Code."
+            "connection": "Verbinde neue Benutzer mit deinem sozialen Netzwerk per QR-Code oder nutze den PIN <Code>{{codeText}}</Code> unter dem Link unten."
         }
     },
     "recommendations": {
@@ -307,15 +307,15 @@
     },
     "start": {
         "title": "Somekone",
-        "subtitle": "Erstelle eine Social‑Media‑Plattform im Klassenzimmer, um zu sehen, wie sie funktioniert.",
+        "subtitle": "Erstelle deine eigene Social-Media-Plattform, um zu sehen, wie sie funktioniert.",
         "teachingMaterials": "Unterrichtsmaterialien",
         "teachingMaterialsUrl": "https://www.gen-ai.fi/en/materials/somekone-unit",
         "actions": {
-            "createNew": "Neue Sitzung erstellen",
+            "createNew": "Neues soziales Netzwerk erstellen",
             "go": "Los"
         },
         "labels": {
-            "enterCode": "PIN eingeben",
+            "enterCode": "PIN des bestehenden Netzwerks",
             "or": "oder"
         }
     }
