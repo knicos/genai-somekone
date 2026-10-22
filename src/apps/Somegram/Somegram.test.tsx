@@ -22,6 +22,16 @@ vi.mock('@genai-fi/base', async (importOriginal) => ({
     ConnectionStatus: vi.fn(() => <div data-testid="connection-status">Connection Status</div>),
 }));
 
+vi.mock('@genaism/common/state/uiState', async (importOriginal) => {
+    const original = await importOriginal<typeof import('@genaism/common/state/uiState')>();
+    const { atom } = await import('jotai');
+
+    return {
+        ...original,
+        featureFlagsAtom: atom({ allowReportProblem: true }),
+    };
+});
+
 vi.mock('@genai-fi/base/hooks/peer', async () => ({
     //...(await importOriginal<typeof import('@genai-fi/base')>()),
     Peer: function Peer(props: PropsWithChildren) {

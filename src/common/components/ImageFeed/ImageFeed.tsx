@@ -245,7 +245,7 @@ export default function ImageFeed({
                     {!noActions && !noHeader && (
                         <header className={style.title}>
                             <img
-                                src="/logo48_bw.png"
+                                src="/logo64_bw.png"
                                 alt="GenAIMedia Logo"
                                 width={48}
                                 height={48}

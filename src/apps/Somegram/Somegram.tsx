@@ -17,6 +17,7 @@ import AppNavigation from './AppNavigation';
 import gitInfo from '../../generatedGitInfo.json';
 import { Peer } from '@genai-fi/base/hooks/peer';
 import PeerEnv from '@genaism/env';
+import { featureFlagsAtom } from '@genaism/common/state/uiState';
 
 export function Component() {
     const { code } = useParams();
@@ -24,6 +25,9 @@ export function Component() {
     const [content, setContent] = useState<(string | ArrayBuffer)[]>();
     const [username, setUsername] = useAtom<string | undefined>(currentUserName);
     const setContentLoaded = useSetAtom(contentLoaded);
+
+    // Force evaluation of feature flags
+    useAtomValue(featureFlagsAtom);
 
     const MYCODE = useRandom(5);
 
